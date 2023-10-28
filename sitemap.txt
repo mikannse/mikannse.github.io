@@ -1,6 +1,7 @@
+http://mikannse.top/2023/10/28/IntroductiontoBashScriptingHTB/
 http://mikannse.top/2023/10/24/HackingWordPressHTB/
-http://mikannse.top/2023/10/23/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%BA%94%E5%9B%9B)%E4%B9%8BHTBTwoMillion/
 http://mikannse.top/2023/10/21/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%BA%94%E4%B8%89)%E4%B9%8B%E6%98%A5%E7%A7%8B%E4%BA%91%E5%A2%83Brute4Road/
+http://mikannse.top/2023/10/23/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%BA%94%E5%9B%9B)%E4%B9%8BHTBTwoMillion/
 http://mikannse.top/2023/10/13/log4jexploitTHM/
 http://mikannse.top/2023/10/16/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%BA%94%E4%BA%8C)%E4%B9%8B%E6%98%A5%E7%A7%8B%E4%BA%91%E5%A2%83Inital/
 http://mikannse.top/2023/10/13/kali%E4%BD%BF%E7%94%A8proxychains%E5%AE%9E%E7%8E%B0%E4%BB%A3%E7%90%86/
