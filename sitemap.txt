@@ -1,5 +1,6 @@
-http://mikannse.top/2023/11/05/23-10%E6%9D%82%E8%B0%88/
+http://mikannse.top/2023/11/07/IntroToAssemblyShellcoding&Skill/
 http://mikannse.top/2023/11/05/IntroToAssemblyBasicInstructions&Functions/
+http://mikannse.top/2023/11/05/23-10%E6%9D%82%E8%B0%88/
 http://mikannse.top/2023/11/04/IntroToAssemblyArch&AssembDebugger/
 http://mikannse.top/2023/10/30/ServersideAttacksHTB/
 http://mikannse.top/2023/10/13/NAT%E9%85%8D%E7%BD%AE%E4%BB%A5%E5%8F%8Akali%E4%BD%BF%E7%94%A8proxychains%E5%AE%9E%E7%8E%B0%E4%BB%A3%E7%90%86/
