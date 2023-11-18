@@ -1,5 +1,6 @@
-http://mikannse.top/2023/11/17/Cross-Site%20Scripting%20(XSS)/
-http://mikannse.top/2023/11/15/Information%20Gathering%20-%20Web%20Edition/
+http://mikannse.top/2023/11/18/Web%20RequestsHTB/
+http://mikannse.top/2023/11/15/Information%20Gathering%20-%20Web%20EditionHTB/
+http://mikannse.top/2023/11/17/Cross-Site%20Scripting%20(XSS)HTB/
 http://mikannse.top/2023/11/11/Stack-BasedBufferOverflowsonLinuxx86HTB/
 http://mikannse.top/2023/11/07/IntroToAssemblyShellcoding&Skill/
 http://mikannse.top/2023/11/09/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%BA%94%E4%BA%94)%E4%B9%8BTHMAnonymousPlayground/
