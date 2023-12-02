@@ -4,6 +4,37 @@
   
     
     <entry>
+      <title>打靶记录(六十)之THMCyberCraft</title>
+      <link href="/2023/12/02/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E5%85%AD%E5%8D%81)%E4%B9%8BTHMCyberCraft/"/>
+      <url>/2023/12/02/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E5%85%AD%E5%8D%81)%E4%B9%8BTHMCyberCraft/</url>
+      
+        <content type="html"><![CDATA[<h1 id="端口扫描"><a href="#端口扫描" class="headerlink" title="端口扫描"></a>端口扫描</h1><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">sudo nmap --min-rate 10000 -p- 10.10.180.170   </span><br><span class="line">Starting Nmap 7.94 ( https://nmap.org ) at 2023-12-02 01:48 UTC</span><br><span class="line">Nmap scan report for 10.10.180.170</span><br><span class="line">Host is up (0.23s latency).</span><br><span class="line">Not shown: 65532 closed tcp ports (reset)</span><br><span class="line">PORT      STATE SERVICE</span><br><span class="line">22/tcp    open  ssh</span><br><span class="line">80/tcp    open  http</span><br><span class="line">25565/tcp open  minecraft</span><br><span class="line"></span><br><span class="line">Nmap done: 1 IP address (1 host up) scanned in 11.73 seconds</span><br></pre></td></tr></tbody></table></figure><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">sudo nmap -sT -sV -sC -O -p22,80,25565 10.10.180.170</span><br><span class="line">Starting Nmap 7.94 ( https://nmap.org ) at 2023-12-02 01:49 UTC</span><br><span class="line">Nmap scan report for 10.10.180.170</span><br><span class="line">Host is up (0.23s latency).</span><br><span class="line"></span><br><span class="line">PORT      STATE SERVICE   VERSION</span><br><span class="line">22/tcp    open  ssh       OpenSSH 7.6p1 Ubuntu 4ubuntu0.5 (Ubuntu Linux; protocol 2.0)</span><br><span class="line">| ssh-hostkey: </span><br><span class="line">|   2048 37:36:ce:b9:ac:72:8a:d7:a6:b7:8e:45:d0:ce:3c:00 (RSA)</span><br><span class="line">|   256 e9:e7:33:8a:77:28:2c:d4:8c:6d:8a:2c:e7:88:95:30 (ECDSA)</span><br><span class="line">|_  256 76:a2:b1:cf:1b:3d:ce:6c:60:f5:63:24:3e:ef:70:d8 (ED25519)</span><br><span class="line">80/tcp    open  http      Apache httpd 2.4.29 ((Ubuntu))</span><br><span class="line">|_http-title: Did not follow redirect to http://cybercrafted.thm/</span><br><span class="line">|_http-server-header: Apache/2.4.29 (Ubuntu)</span><br><span class="line">25565/tcp open  minecraft Minecraft 1.7.2 (Protocol: 127, Message: ck00r lcCyberCraftedr ck00rrck00r e-TryHackMe-r  ck00r, Users: 0/1)</span><br><span class="line">Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port</span><br><span class="line">Aggressive OS guesses: Linux 3.1 (95%), Linux 3.2 (95%), AXIS 210A or 211 Network Camera (Linux 2.6.17) (95%), ASUS RT-N56U WAP (Linux 3.4) (93%), Linux 3.16 (93%), Linux 2.6.32 (93%), Linux 2.6.39 - 3.2 (93%), Linux 3.1 - 3.2 (93%), Linux 3.2 - 4.9 (93%), Linux 3.7 - 3.10 (93%)</span><br><span class="line">No exact OS matches for host (test conditions non-ideal).</span><br><span class="line">Network Distance: 2 hops</span><br><span class="line">Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel</span><br><span class="line"></span><br><span class="line">OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .</span><br><span class="line">Nmap done: 1 IP address (1 host up) scanned in 19.63 seconds</span><br></pre></td></tr></tbody></table></figure><p>cybercrafted.thm添加进hosts</p><h1 id="Web"><a href="#Web" class="headerlink" title="Web"></a>Web</h1><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">ffuf -w /usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-110000.txt -u 'http://cybercrafted.thm/' -H 'HOST:FUZZ.cybercrafted.thm' -fw 1</span><br></pre></td></tr></tbody></table></figure><p>扫下子域</p><p>得到：</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">store                   [Status: 403, Size: 287, Words: 20, Lines: 10, Duration: 228ms]</span><br><span class="line">www                     [Status: 200, Size: 832, Words: 236, Lines: 35, Duration: 2182ms]</span><br><span class="line">www.admin               [Status: 200, Size: 937, Words: 218, Lines: 31, Duration: 229ms]</span><br><span class="line">admin                   [Status: 200, Size: 937, Words: 218, Lines: 31, Duration: 5216ms]</span><br><span class="line">www.store               [Status: 403, Size: 291, Words: 20, Lines: 10, Duration: 910ms]</span><br></pre></td></tr></tbody></table></figure><p>添加进hosts</p><p>对三个域名都进行目录扫描，在store的域名找到一个search.php，看上去像是一个查询搜索框，试了一下没有XSS,那也许有sql注入了，直接抓包放sqlmap跑</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">sqlmap -r sql.txt --dump</span><br></pre></td></tr></tbody></table></figure><p>得到一个webflag和一对凭证，哈希直接用john爆破</p><p>xXUltimateCreeperXx:diamond123456789</p><p>在admin网页中直接登录，发现可以执行命令</p><p>直接用wget上传一个php反弹shell</p><p>开启监听，访问得到shell</p><h1 id="横向移动"><a href="#横向移动" class="headerlink" title="横向移动"></a>横向移动</h1><p>有xxultimatecreeperxx和cybercrafted两个用户</p><p>xxultimatecreeperxx的家目录我们有访问权限，在.ssh中加入我们的公钥进行ssh连接，但是发现我们没有读写的权限，那就试着爆破这个用户的私钥。用ssh2john转为hash</p><p>得到creepin2006</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">chmod 600 key</span><br></pre></td></tr></tbody></table></figure><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">ssh -i key xxultimatecreeperxx@10.10.180.170</span><br></pre></td></tr></tbody></table></figure><p>然后我们就有权限进入/opt/minecraft目录了</p><p>可以在目录中看到插件名称LoginSystem</p><p>因为看到crontab中有个计划任务，曾想着用tar来横向的，但是参数不太对</p><p>但是在plugins/LoginSystem中有个日志，直接暴露了密码JavaEdition&gt;Bedrock</p><h1 id="提权"><a href="#提权" class="headerlink" title="提权"></a>提权</h1><p>ssh连接一下</p><p>sudo -l</p><p>发现可以执行一个screen -r </p><p>执行后直接Ctrl+a+c生成一root权限的新的会话</p><h1 id="碎碎念"><a href="#碎碎念" class="headerlink" title="碎碎念"></a>碎碎念</h1><p>因为MCtag就直接来打了233有兴趣的可以看看之前写的MC开服教程。</p><p>靶机总体来说还是偏简单的233</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 网安 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
+            
+            <tag> 打靶 </tag>
+            
+            <tag> linux </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>打靶记录(五九)之THMDave&#39;sBlog</title>
       <link href="/2023/12/01/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%BA%94%E4%B9%9D)%E4%B9%8BTHMDave&#39;sBlog/"/>
       <url>/2023/12/01/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%BA%94%E4%B9%9D)%E4%B9%8BTHMDave&#39;sBlog/</url>
