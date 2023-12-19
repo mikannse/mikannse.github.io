@@ -4,6 +4,39 @@
   
     
     <entry>
+      <title>打靶记录(七一)之THMH4cked</title>
+      <link href="/2023/12/19/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%83%E4%B8%80)%E4%B9%8BTHMH4cked/"/>
+      <url>/2023/12/19/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%83%E4%B8%80)%E4%B9%8BTHMH4cked/</url>
+      
+        <content type="html"><![CDATA[<h1 id="TASK1"><a href="#TASK1" class="headerlink" title="TASK1"></a>TASK1</h1><p>打开流量包，发现了一堆TCP和FTP协议的流量，所以是攻击的是FTP服务</p><p>爆破工具，所以是hydra</p><p>跟踪TCP流，用户名是jenny</p><p>筛选出ftp协议，并且找到显示登陆成功的那个响应，找到密码是password123</p><p>同样能找到工作目录是/var/www/html</p><p>后门服务是shell.php</p><p>“ftp-data” 是指FTP（文件传输协议）数据通道上的数据包。FTP协议通常使用两个通道进行通信：命令通道（control channel）和数据通道（data channel）。命令通道用于发送控制命令，而数据通道用于传输实际的文件数据。</p><p>“ftp-data” 数据包是在数据通道上传输的文件数据的捕获。</p><p>筛选ftp-data协议，可以找到上传的php的webshell，可以找到 <a href="http://pentestmonkey.net/tools/php-reverse-shell">http://pentestmonkey.net/tools/php-reverse-shell</a> (非常著名的pentestmonkey)</p><p>跟踪GETshell.php之后的TCP流，第一个命令执行的是whoami</p><p>主机名是wir3，在shell中每一行开头就是</p><p>python3 -c ‘import pty; pty.spawn(“/bin/bash”)’</p><p>sudo su</p><p>Reptile</p><p>rootkit</p><h1 id="TASK2"><a href="#TASK2" class="headerlink" title="TASK2"></a>TASK2</h1><p>FTP爆破密码</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">hydra -l jenny -P /usr/share/wordlists/rockyou.txt ftp://10.10.254.51</span><br></pre></td></tr></tbody></table></figure><p>密码是987654321</p><p>传个reverseshell上去，发现没执行成功？看了一眼流量包，是要chmod 777 </p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">python3 -c 'import pty; pty.spawn("/bin/bash")'</span><br></pre></td></tr></tbody></table></figure><p>su jenny之后sudo su成为root</p><h1 id="碎碎念"><a href="#碎碎念" class="headerlink" title="碎碎念"></a>碎碎念</h1><p>想打一些取证，应急响应之类的房间换换口味。这个房间还是挺简单的。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 网安 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
+            
+            <tag> 打靶 </tag>
+            
+            <tag> linux </tag>
+            
+            <tag> 溯源取证 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>打靶记录(七十)之THMRacetrackBank</title>
       <link href="/2023/12/17/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%83%E5%8D%81)%E4%B9%8BTHMRacetrackBank/"/>
       <url>/2023/12/17/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%83%E5%8D%81)%E4%B9%8BTHMRacetrackBank/</url>
