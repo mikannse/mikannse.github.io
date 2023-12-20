@@ -4,6 +4,105 @@
   
     
     <entry>
+      <title>打靶记录(七四)之THMCarnage</title>
+      <link href="/2023/12/20/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%83%E5%9B%9B)%E4%B9%8BTHMCarnage/"/>
+      <url>/2023/12/20/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%83%E5%9B%9B)%E4%B9%8BTHMCarnage/</url>
+      
+        <content type="html"><![CDATA[<p>收到攻击的主机ip应该是10.9.23.102</p><p>第一次HTTP连接到恶意IP的日期和时间是什么？</p><p>选择wireshark最上方的”view-&gt;display format-&gt;UTC data time of day”</p><p>过滤http协议，第一条流量，右键copy-&gt;as filter</p><p>2021-09-24 16:44:38</p><p>下载的zip文件的名称是什么？</p><p>也是第一条流量，documents.zip</p><p>托管恶意zip文件的域是什么？</p><p>追踪第一条流量的http流，可以找到请求中的host是attirenepal.com</p><p>如果不下载文件，zip文件中的文件名是什么？</p><p>在同一条流量中，能看到zip的文件头中chart-1530076591.xls</p><p>下载zip文件的恶意IP的Web服务器的名称是什么？</p><p>在同一条流量中，server字段:LiteSpeed</p><p>上一个问题中的Web服务器版本是什么？</p><p>同一条流量中x-powered-by字段:PHP/7.2.34</p><p>恶意文件从多个域下载到受害者主机。这项活动涉及哪三个</p><p>根据房间提示,https协议，并且有时间范围</p><p>既然有https，那么必然涉及到加密协议，这个流量包中的加密协议是tlsv1.2</p><p>过滤出开始tls握手的流量，并且限制时间范围</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">tls.handshake.type==1 and frame.time &gt;= "2021-09-24 16:45:11" and frame.time &lt;= "2021-09-24 16:45:30"</span><br></pre></td></tr></tbody></table></figure><p><a href="https://www.cloudflare.com/zh-cn/learning/ssl/what-happens-in-a-tls-handshake/">https://www.cloudflare.com/zh-cn/learning/ssl/what-happens-in-a-tls-handshake/</a></p><p>Des一共有5个ip，查看server_name:</p><p>jewels.com.au,thietbiagt.com,new.americold.com</p><p>有两个似乎不是用于下载的</p><p>哪个证书颁发机构向上一个问题中的第一个域颁发了SSL证书？</p><p>第一条流量跟踪tcp流，在开头能找到证书颁发的组织</p><p>GoDaddy</p><p>Cobalt Strike服务器的第一个IP地址的域名是什么？</p><p>贴一篇介绍CS的文章</p><p><a href="https://www.mandiant.com/resources/blog/defining-cobalt-strike-components">https://www.mandiant.com/resources/blog/defining-cobalt-strike-components</a></p><p>CS通常通过DNS和HTTPS请求的方式进行通信，房间提示根据conversation menu来查看</p><p>点击wireshark最上方”statistics-&gt;conversations”，寻找端口是80或者8080的IP，也许是因为这两个监听端口比较常见而且容易规避防火墙？</p><p><a href="https://www.virustotal.com/gui/ip-address">https://www.virustotal.com/gui/ip-address</a></p><p>一个个搜索，没什么别的办法，在COMMUNITY能看是否是CS服务器</p><p>185.106.96.158,185.125.204.174</p><p>上一个问题中第一个Cobalt Strike IP地址的主机头是什么？</p><p>同样在COMMUNITY能找到server header</p><p>ocsp.verisign.com</p><p>Cobalt Strike服务器的第一个IP地址的域名是什么？</p><p>同样在COMMUNITY找到survmeter.live</p><p>第二个Cobalt Strike服务器IP的域名是什么？</p><p>securitybusinpuff.com</p><p>感染后流量的域名是什么？</p><p>在计算机安全领域，这通常指的是系统或网络在被恶意软件感染后，与恶意控制服务器进行通信的网络流量。这些流量可能包含了受感染系统上传数据、接收命令等操作。</p><p>根据房间提示：</p><p>http.request.method==POST</p><p>全部指向208.91.128.6这个IP，跟踪HTTP流找到:maldivehost.net</p><p>受害主机发送到感染后流量中涉及的恶意域的前11个字符是什么?</p><p>找第一条流量:zLIisQRWZI9</p><p>发送到C2服务器的第一个数据包的长度是多少？</p><p>也是第一条流量:281</p><p>上一个问题中恶意域的服务器标头是什么？</p><p>同一条流量:</p><p>Apache/2.4.49 (cPanel) OpenSSL/1.1.1l mod_bwlimited/1.4</p><p>恶意软件使用API来检查受害者机器的IP地址。对IP检查域的DNS查询发生的日期和时间是什么？</p><p>筛选dns流量，并且Ctrl+F搜索”api”选择字符串找到api.ipify.org</p><p>2021-09-24 17:00:04</p><p>上一个问题中DNS查询中的域是什么？</p><p>看起来有一些恶意垃圾邮件（malspam）活动正在进行。在流量中观察到的第一个MAIL FROM地址是什么？</p><p>过滤smtp协议，找到一条MAIL FROM流量: <a href="mailto:farshin@mailfa.com">farshin@mailfa.com</a></p><p>观察到SMTP通信有多少个数据包？</p><p>直接看wireshark右下角Dispalyed:1439</p><h1 id="碎碎念"><a href="#碎碎念" class="headerlink" title="碎碎念"></a>碎碎念</h1><p>进一步熟悉了一些wireshark的操作，对于https还得更加深入了解。流量分析还是很有意思的233</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 网安 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
+            
+            <tag> 打靶 </tag>
+            
+            <tag> linux </tag>
+            
+            <tag> 溯源取证 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>打靶记录(七三)之THMTheGreenholtPhish</title>
+      <link href="/2023/12/19/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%83%E4%B8%89)%E4%B9%8BTHMTheGreenholtPhish/"/>
+      <url>/2023/12/19/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%83%E4%B8%89)%E4%B9%8BTHMTheGreenholtPhish/</url>
+      
+        <content type="html"><![CDATA[<p>什么时候收到的:</p><p>6/10/20(最右上角)</p><p>谁发送的:</p><p>Mr. James Jackson</p><p>他的电子邮件地址是什么:</p><p><a href="mailto:info@mutawamarine.com">info@mutawamarine.com</a></p><p>什么电子邮件地址将收到回复此电子邮件:</p><p><a href="mailto:info.mutawamarine@mail.com">info.mutawamarine@mail.com</a></p><p>原始IP是什么:</p><p>10.201.192.162 右上角”more-&gt;view source”</p><p>谁是原始IP的所有者？</p><p>使用: <a href="https://www.whois.com/whois">https://www.whois.com/whois</a> 搜索192.119.71.157 </p><p>Hostwinds LLC</p><p>返回路径域的SPF记录是什么:</p><p>“返回域”（Return-Path）通常是指电子邮件中的一个字段，用于指定在邮件无法成功投递时接收反弹（bounces）或非递送通知的邮件地址</p><p>Sender Policy Framework（SPF）记录是一种DNS记录，通过指定哪些邮件服务器被授权代表域发送电子邮件</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">dig txt mutawamarine.com</span><br></pre></td></tr></tbody></table></figure><p>v=spf1 include:spf.protection.outlook.com -all</p><p>返回路径域的DMARC记录是什么:</p><p>DMARC（Domain-based Message Authentication, Reporting, and Conformance）是一种邮件身份验证协议，用于防止电子邮件的伪造和欺诈。DMARC记录是域的DNS记录，它提供有关域的电子邮件验证策略的信息</p><p><a href="https://dmarc.live/info/mutawamarine.com">https://dmarc.live/info/mutawamarine.com</a></p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">v=DMARC1;p=quarantine;fo=1;</span><br></pre></td></tr></tbody></table></figure><p>附件的名称是什么:</p><p>最下面，点击可以下载</p><p>SWT_#09674321____PDF__.CAB</p><p>文件附件的SHA256哈希值是多少：</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">sha256sum SWT_#09674321____PDF__.CAB</span><br></pre></td></tr></tbody></table></figure><p>2e91c533615a9bb8929ac4bb76707b2444597ce063d84a4b33525e25074fff3f</p><p>附件文件大小是多少:</p><p>ls -liah</p><p>401KB，但是发现并不是。也许并不够准确</p><p><a href="https://www.virustotal.com/gui/home/search">https://www.virustotal.com/gui/home/search</a></p><p>400.26 KB</p><p>附件的实际文件扩展名是什么:</p><p>file SWT_#09674321____PDF__.CAB</p><p>RAR</p><h1 id="碎碎念"><a href="#碎碎念" class="headerlink" title="碎碎念"></a>碎碎念</h1><p>稍微了解了一下关于邮箱，邮箱服务器，DNS之类的操作。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 网安 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
+            
+            <tag> 打靶 </tag>
+            
+            <tag> linux </tag>
+            
+            <tag> 溯源取证 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>打靶记录(七二)之THMJuicyDetails</title>
+      <link href="/2023/12/19/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%83%E4%BA%8C)%E4%B9%8BTHMJuicyDetails/"/>
+      <url>/2023/12/19/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%83%E4%BA%8C)%E4%B9%8BTHMJuicyDetails/</url>
+      
+        <content type="html"><![CDATA[<h1 id="Task1"><a href="#Task1" class="headerlink" title="Task1"></a>Task1</h1><p>打开access.log</p><p>根据User-agent都能找到，但是格式有点奇葩</p><p>nmap, hydra, sqlmap, curl, and feroxbuster</p><p>/rest/user/login端点被hydra疯狂爆破</p><p>/rest/products/search被sqlmap攻击，参数是q</p><p>/ftp端点允许下载服务器上的网站备份文件</p><h1 id="Task2"><a href="#Task2" class="headerlink" title="Task2"></a>Task2</h1><p>product reviews 产品评价</p><p>直接搜索”POST /rest/user/login HTTP/1.0” 200”</p><p>Yay,11/Apr/2021:09:16:31 +0000</p><p>直接查看最后一条sql攻击，email password(没有id)</p><p>查看ftp协议，www-data.bak coupons_2013.md.bak</p><p>查看vsftpd.log</p><p>ftp,anonymous</p><p>查看auth.log</p><p>ssh,www-data</p><h1 id="碎碎念"><a href="#碎碎念" class="headerlink" title="碎碎念"></a>碎碎念</h1><p>没啥好说的</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 网安 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
+            
+            <tag> 打靶 </tag>
+            
+            <tag> linux </tag>
+            
+            <tag> 溯源取证 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>打靶记录(七一)之THMH4cked</title>
       <link href="/2023/12/19/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%83%E4%B8%80)%E4%B9%8BTHMH4cked/"/>
       <url>/2023/12/19/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%83%E4%B8%80)%E4%B9%8BTHMH4cked/</url>
