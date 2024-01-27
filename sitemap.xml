@@ -1129,13 +1129,6 @@
   </url>
   
   <url>
-    <loc>http://mikannse.top/tags/%E5%85%B6%E4%BB%96/</loc>
-    <lastmod>2024-01-27</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>http://mikannse.top/tags/%E9%9F%B3%E4%B9%90/</loc>
     <lastmod>2024-01-27</lastmod>
     <changefreq>weekly</changefreq>
@@ -1158,6 +1151,13 @@
   
   <url>
     <loc>http://mikannse.top/tags/linux/</loc>
+    <lastmod>2024-01-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://mikannse.top/tags/%E5%85%B6%E4%BB%96/</loc>
     <lastmod>2024-01-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -1201,14 +1201,14 @@
   </url>
   
   <url>
-    <loc>http://mikannse.top/categories/%E5%85%B6%E4%BB%96/</loc>
+    <loc>http://mikannse.top/categories/%E6%9D%82%E8%B0%88/%E9%9F%B3%E4%B9%90/</loc>
     <lastmod>2024-01-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>http://mikannse.top/categories/%E6%9D%82%E8%B0%88/%E9%9F%B3%E4%B9%90/</loc>
+    <loc>http://mikannse.top/categories/%E5%85%B6%E4%BB%96/</loc>
     <lastmod>2024-01-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
