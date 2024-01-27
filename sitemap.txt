@@ -1,3 +1,4 @@
+http://mikannse.space/2023/11/07/IntroToAssemblyShellcodingANDSkill/
 http://mikannse.space/2023/11/05/IntroToAssemblyBasicInstructionsANDFunctions/
 http://mikannse.space/2024/01/01/2023%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%93/
 http://mikannse.space/2023/12/30/23-12%E6%9D%82%E8%B0%88/
@@ -38,7 +39,6 @@ http://mikannse.space/2023/11/18/Web%20RequestsHTB/
 http://mikannse.space/2023/11/15/Information%20Gathering%20-%20Web%20EditionHTB/
 http://mikannse.space/2023/11/17/Cross-Site%20Scripting%20(XSS)HTB/
 http://mikannse.space/2023/11/11/Stack-BasedBufferOverflowsonLinuxx86HTB/
-http://mikannse.space/2023/11/07/IntroToAssemblyShellcoding&Skill/
 http://mikannse.space/2023/11/09/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%BA%94%E4%BA%94)%E4%B9%8BTHMAnonymousPlayground/
 http://mikannse.space/2023/11/05/23-10%E6%9D%82%E8%B0%88/
 http://mikannse.space/2023/11/04/IntroToAssemblyArch&AssembDebugger/

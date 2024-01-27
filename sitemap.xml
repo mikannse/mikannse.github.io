@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://mikannse.space/2023/11/07/IntroToAssemblyShellcodingANDSkill/</loc>
+    
+    <lastmod>2024-01-27</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>http://mikannse.space/2023/11/05/IntroToAssemblyBasicInstructionsANDFunctions/</loc>
     
     <lastmod>2024-01-27</lastmod>
@@ -354,15 +363,6 @@
   
   <url>
     <loc>http://mikannse.space/2023/11/11/Stack-BasedBufferOverflowsonLinuxx86HTB/</loc>
-    
-    <lastmod>2023-11-11</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://mikannse.space/2023/11/07/IntroToAssemblyShellcoding&Skill/</loc>
     
     <lastmod>2023-11-11</lastmod>
     
