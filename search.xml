@@ -4,6 +4,62 @@
   
     
     <entry>
+      <title>24-1杂谈</title>
+      <link href="/2024/01/31/24-1%E6%9D%82%E8%B0%88/"/>
+      <url>/2024/01/31/24-1%E6%9D%82%E8%B0%88/</url>
+      
+        <content type="html"><![CDATA[<p><strong>24年的第一个月啊。前半段时间总之是在复习期末考，也是非常无聊。放假之后就是一直开摆吧，这才叫假期啊，非常巴适。网安的东西也是一个月没碰了233</strong></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 杂谈 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 杂谈 </tag>
+            
+            <tag> month </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>关于渗透测试中内网穿透问题</title>
+      <link href="/2024/01/30/%E5%85%B3%E4%BA%8E%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E4%B8%AD%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F%E7%9A%84%E4%BB%A3%E7%90%86%E9%97%AE%E9%A2%98/"/>
+      <url>/2024/01/30/%E5%85%B3%E4%BA%8E%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E4%B8%AD%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F%E7%9A%84%E4%BB%A3%E7%90%86%E9%97%AE%E9%A2%98/</url>
+      
+        <content type="html"><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在内网渗透中经常遇到在需要利用已经拿到权限的机器来进行内网穿透来访问内网中的其他机器。于是本文用于整理和学习自己之前常用的一些方式。</p><p>演示靶机采用</p><p><a href="https://github.com/CTF-Archives/Puff-Pastry">https://github.com/CTF-Archives/Puff-Pastry</a></p><p>先从8080端口入手，是一个shiro框架，可以用shiroattack直接一把梭拿到权限再做一个反弹shell</p><h1 id="反向SSH"><a href="#反向SSH" class="headerlink" title="反向SSH"></a>反向SSH</h1><p>如果能拿到ssh登录权限的话</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">ssh -L target-port:localhost:port user@ip</span><br></pre></td></tr></tbody></table></figure><p>-L参数指定目标机器上需要进行流量转发的端口</p><p>localhost:port指定在本机上来接收流量的端口</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 网安 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
+            
+            <tag> 笔记 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>2023年度总结</title>
       <link href="/2024/01/01/2023%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%93/"/>
       <url>/2024/01/01/2023%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%93/</url>
@@ -2145,7 +2201,7 @@
       <link href="/2023/08/28/linux%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%90%AD%E5%BB%BAmc1.20.1%E6%9C%8D%E5%8A%A1%E5%99%A8/"/>
       <url>/2023/08/28/linux%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%90%AD%E5%BB%BAmc1.20.1%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
       
-        <content type="html"><![CDATA[<h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>本文讲的是利用linux云服务器安装Mcsmanager面板，并利用docker来运行1.20.1纯净版少量玩家的服务器。</p><h1 id="前提准备"><a href="#前提准备" class="headerlink" title="前提准备"></a>前提准备</h1><h2 id="一台云服务器"><a href="#一台云服务器" class="headerlink" title="一台云服务器"></a>一台云服务器</h2><p>选购服务器，我选的是6h8g8mbps的centos7服务器</p><p>在云服务器管理界面设置23333,24444,25565三个端口的入口安全组</p><h2 id="一个MC服务端核心"><a href="#一个MC服务端核心" class="headerlink" title="一个MC服务端核心"></a>一个MC服务端核心</h2><p>我选择的是paper服务端，相对来说适合普通配置的服务器</p><p><a href="https://papermc.io/downloads/paper">https://papermc.io/downloads/paper</a></p><h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p>我是在/root目录下安装mcmanager，一个方便管理和应用MC服务器的Web应用</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">sudo wget -qO- https://gitee.com/mcsmanager/script/raw/master/setup_cn.sh | bash</span><br></pre></td></tr></tbody></table></figure><p>因为我是选择安装在虚拟化容器中，所以安装docker</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun</span><br></pre></td></tr></tbody></table></figure><p>换源</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">yum install vim &amp;&amp; vim /etc/docker/daemon.json</span><br></pre></td></tr></tbody></table></figure><p>添加</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">{  "registry-mirrors": ["https://docker.mirrors.ustc.edu.cn"] }</span><br></pre></td></tr></tbody></table></figure><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">systemctl restart docker.service</span><br></pre></td></tr></tbody></table></figure><p><img src="/images/mcserver/image-20230828143911210.png"></p><p><img src="/images/mcserver/image-20230828143925669.png"></p><p><img src="/images/mcserver/image-20230828143935100.png"></p><p>构建需要一段时间</p><p><img src="/images/mcserver/image-20230828144046558.png"></p><p><img src="/images/mcserver/image-20230828144153808.png"></p><p>选择上传单个服务端软件</p><p><img src="/images/mcserver/image-20230829161954947.png"></p><p><img src="/images/mcserver/image-20230831091126405.png"></p><p>上传下好的paper核心.jar，等待上传</p><p><img src="/images/mcserver/image-20230828145609495.png"></p><p><img src="/images/mcserver/image-20230831091234176.png"></p><p>来到控制台，点击开启实例。第一次运行会报错，然后启动失败。</p><p><img src="/images/mcserver/image-20230831091410292.png"></p><p>需要更改服务器配置文件</p><p><img src="/images/mcserver/image-20230831091436115.png"></p><p><img src="/images/mcserver/image-20230831091447801.png"></p><p>选择”是“，然后右上角保存配置</p><p><img src="/images/mcserver/image-20230831093419116.png"></p><p><img src="/images/mcserver/image-20230831093502115.png"></p><p>关闭正版验证，右上角保存。</p><p>回到控制台，启动实例，第一次启动会自动生成存档。</p><p>进入MC，多人游戏。添加服务器输入服务器外网IP:25565进入游戏</p>]]></content>
+        <content type="html"><![CDATA[<h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>本文讲的是利用linux云服务器安装Mcsmanager面板，并利用docker来运行1.20.1纯净版少量玩家的服务器。</p><h1 id="前提准备"><a href="#前提准备" class="headerlink" title="前提准备"></a>前提准备</h1><h2 id="一台云服务器"><a href="#一台云服务器" class="headerlink" title="一台云服务器"></a>一台云服务器</h2><p>选购服务器，我选的是6h8g8mbps的centos7服务器</p><p>在云服务器管理界面开放23333,24444,25565三个端口的入口安全组</p><h2 id="一个MC服务端核心"><a href="#一个MC服务端核心" class="headerlink" title="一个MC服务端核心"></a>一个MC服务端核心</h2><p>我选择的是paper服务端，相对来说适合普通配置的服务器</p><p><a href="https://papermc.io/downloads/paper">https://papermc.io/downloads/paper</a></p><h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p>我是在/root目录下安装mcmanager，一个方便管理和应用MC服务器的Web应用</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">sudo wget -qO- https://gitee.com/mcsmanager/script/raw/master/setup_cn.sh | bash</span><br></pre></td></tr></tbody></table></figure><p>因为我是选择安装在虚拟化容器中，所以安装docker</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun</span><br></pre></td></tr></tbody></table></figure><p>换源</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">yum install vim &amp;&amp; vim /etc/docker/daemon.json</span><br></pre></td></tr></tbody></table></figure><p>添加</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">{  "registry-mirrors": ["https://docker.mirrors.ustc.edu.cn"] }</span><br></pre></td></tr></tbody></table></figure><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">systemctl restart docker.service</span><br></pre></td></tr></tbody></table></figure><p>访问http://服务器公网IP:23333来访问MCmanager的Web服务</p><p><img src="/images/mcserver/image-20230828143911210.png"></p><p><img src="/images/mcserver/image-20230828143925669.png"></p><p><img src="/images/mcserver/image-20230828143935100.png"></p><p>构建需要一段时间</p><p><img src="/images/mcserver/image-20230828144046558.png"></p><p><img src="/images/mcserver/image-20230828144153808.png"></p><p>选择上传单个服务端软件</p><p><img src="/images/mcserver/image-20230829161954947.png"></p><p><img src="/images/mcserver/image-20230831091126405.png"></p><p>上传下好的paper核心.jar，等待上传</p><p><img src="/images/mcserver/image-20230828145609495.png"></p><p><img src="/images/mcserver/image-20230831091234176.png"></p><p>来到控制台，点击开启实例。第一次运行会报错，然后启动失败。</p><p><img src="/images/mcserver/image-20230831091410292.png"></p><p>需要更改服务器配置文件</p><p><img src="/images/mcserver/image-20230831091436115.png"></p><p><img src="/images/mcserver/image-20230831091447801.png"></p><p>选择”是“，然后右上角保存配置</p><p><img src="/images/mcserver/image-20230831093419116.png"></p><p><img src="/images/mcserver/image-20230831093502115.png"></p><p>关闭正版验证，右上角保存。</p><p>回到控制台，启动实例，第一次启动会自动生成存档。</p><p>进入MC，多人游戏。添加服务器输入服务器外网IP:25565进入游戏</p>]]></content>
       
       
       <categories>
