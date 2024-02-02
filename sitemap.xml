@@ -2,15 +2,6 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://mikannse.space/2024/02/02/cl/</loc>
-    
-    <lastmod>2024-02-02</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>http://mikannse.space/2024/02/02/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E5%85%AB%E4%BA%8C)%E4%B9%8BHMVTiny/</loc>
     
     <lastmod>2024-02-02</lastmod>
@@ -1103,14 +1094,14 @@
   </url>
   
   <url>
-    <loc>http://mikannse.space/tags/month/</loc>
+    <loc>http://mikannse.space/tags/year/</loc>
     <lastmod>2024-02-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>http://mikannse.space/tags/year/</loc>
+    <loc>http://mikannse.space/tags/month/</loc>
     <lastmod>2024-02-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
