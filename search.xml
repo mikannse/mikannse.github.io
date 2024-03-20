@@ -4,6 +4,35 @@
   
     
     <entry>
+      <title>shell编程练习(一)</title>
+      <link href="/2024/03/20/shell%E7%BC%96%E7%A8%8B%E7%BB%83%E4%B9%A0(%E4%B8%80)/"/>
+      <url>/2024/03/20/shell%E7%BC%96%E7%A8%8B%E7%BB%83%E4%B9%A0(%E4%B8%80)/</url>
+      
+        <content type="html"><![CDATA[<h1 id="1"><a href="#1" class="headerlink" title="1"></a>1</h1><p>给定一个文本文件 <code>file.txt</code>，请只打印这个文件中的第十行。</p><p><strong>示例:</strong></p><p>假设 <code>file.txt</code> 有如下内容：</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">Line 1</span><br><span class="line">Line 2</span><br><span class="line">Line 3</span><br><span class="line">Line 4</span><br><span class="line">Line 5</span><br><span class="line">Line 6</span><br><span class="line">Line 7</span><br><span class="line">Line 8</span><br><span class="line">Line 9</span><br><span class="line">Line 10</span><br></pre></td></tr></tbody></table></figure><p>你的脚本应当显示第十行：</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">Line 10</span><br></pre></td></tr></tbody></table></figure><p>解:</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">sed -n '10p' file.txt</span><br></pre></td></tr></tbody></table></figure><p>-n 指除了第十行都不打印</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">awk 'NR == 10' file.txt</span><br></pre></td></tr></tbody></table></figure><p><code>NR</code> 是 <code>awk</code> 内置的一个变量，表示当前处理的行号（行号从1开始）。这个模式表示如果当前行号等于10，则匹配成功。</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">tail -n +10 file.txt | head -1</span><br></pre></td></tr></tbody></table></figure><p>tail -n +10 从文件的第十行开始打印，head -1 从头开始打印一行</p><h1 id="2"><a href="#2" class="headerlink" title="2"></a>2</h1><p>给定一个包含电话号码列表（一行一个电话号码）的文本文件 <code>file.txt</code>，写一个单行 bash 脚本输出所有有效的电话号码。</p><p>你可以假设一个有效的电话号码必须满足以下两种格式： (xxx) xxx-xxxx 或 xxx-xxx-xxxx。（x 表示一个数字）</p><p>你也可以假设每行前后没有多余的空格字符。</p><p><strong>示例：</strong></p><p>假设 <code>file.txt</code> 内容如下：</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">987-123-4567</span><br><span class="line">123 456 7890</span><br><span class="line">(123) 456-7890</span><br></pre></td></tr></tbody></table></figure><p>你的脚本应当输出下列有效的电话号码：</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">987-123-4567</span><br><span class="line">(123) 456-7890</span><br></pre></td></tr></tbody></table></figure><p>解:</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">grep -E '^(\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$' file.txt</span><br></pre></td></tr></tbody></table></figure><p>-E 启用正则表达式</p><ul><li><p><code>^</code>: 匹配行的开始。</p></li><li><p><code>\(</code>: 匹配左括号 <code>(</code>。</p></li><li><p><code>[0-9]{3}</code>: 匹配三个数字。</p></li><li><p><code>\)</code> 或者 ``: 匹配右括号 <code>)</code> 或者空格。</p></li><li><p>| 表示或者 </p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">(\([0-9]{3}\) |[0-9]{3}-)</span><br></pre></td></tr></tbody></table></figure></li><li><p><code>[0-9]{3}</code>: 匹配三个数字。</p></li><li><p><code>-</code>: 匹配短横线 <code>-</code>。</p></li><li><p><code>[0-9]{4}</code>: 匹配四个数字。</p></li><li><p><code>$</code>: 匹配行的结尾。</p></li></ul><h1 id="3"><a href="#3" class="headerlink" title="3"></a>3</h1><p>给定一个文件 <code>file.txt</code>，转置它的内容。</p><p>你可以假设每行列数相同，并且每个字段由 <code>' '</code> 分隔。</p><p><strong>示例：</strong></p><p>假设 <code>file.txt</code> 文件内容如下：</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">name age</span><br><span class="line">alice 21</span><br><span class="line">ryan 30</span><br></pre></td></tr></tbody></table></figure><p>应当输出：</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">name alice ryan</span><br><span class="line">age 21 30</span><br></pre></td></tr></tbody></table></figure><p>解:</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">columns=$(cat file.txt | head -n 1 | wc -w)</span><br><span class="line">for i in $(seq 1 $columns)</span><br><span class="line">do</span><br><span class="line">awk '{print $'$i'}' file.txt | xargs</span><br><span class="line">done</span><br></pre></td></tr></tbody></table></figure><p>wc -w 统计单词数</p><p>$(seq 1 $columns) 表示循环列数,seq用于生成1-seq的数字,seq 1表示生成数字1</p><p>awk ‘{print $’$i’}’  是一个动态引用,print $i 表示打印每行的第几个字段</p><p>xargs 逐列将每列转换为行。但是这里我们只需要每次取一列所以需要前置处理</p><h1 id="4"><a href="#4" class="headerlink" title="4"></a>4</h1><p>写一个 bash 脚本以统计一个文本文件 <code>words.txt</code> 中每个单词出现的</p><p>频率</p><p>为了简单起见，你可以假设：</p><ul><li><code>words.txt</code>只包括小写字母和 <code>' '</code> 。</li><li>每个单词只由小写字母组成。</li><li>单词间由一个或多个空格字符分隔。</li></ul><p><strong>示例:</strong></p><p>假设 <code>words.txt</code> 内容如下：</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">the day is sunny the the</span><br><span class="line">the sunny is is</span><br></pre></td></tr></tbody></table></figure><p>你的脚本应当输出（以词频降序排列）：</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">the 4</span><br><span class="line">is 3</span><br><span class="line">sunny 2</span><br><span class="line">day 1</span><br></pre></td></tr></tbody></table></figure><p><strong>说明:</strong></p><ul><li>不要担心词频相同的单词的排序问题，每个单词出现的频率都是唯一的。</li><li>你可以使用一行 <a href="http://tldp.org/HOWTO/Bash-Prog-Intro-HOWTO-4.html">Unix pipes</a> 实现吗？</li></ul><p>解:</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">awk '{for(i=1; i&lt;=NF; i++) {count[$i]++;}} END {for(word in count) {print word, count[word];}}' words.txt | sort -k2,2nr</span><br></pre></td></tr></tbody></table></figure><p>awk可以逐行读取每行的单词，NF表示每行的字段数,以单词($i)作为索引来建立计数数组</p><p><code>sort -k2,2nr</code> 对输入进行排序。具体参数含义如下：</p><ul><li><code>-k2,2nr</code> 表示按照第二列（单词出现的次数）进行逆序排序。2,2表示从第二列到第二列</li><li><code>-n</code> 表示按照数值大小排序。</li><li><code>-r</code> 表示逆序排序。</li></ul><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">cat words.txt | tr -s ' ' '\n' | sort | uniq -c | sort -r | awk '{ print $2, $1 }' </span><br></pre></td></tr></tbody></table></figure><ol><li><code>tr -s ' ' '\n'</code>：<code>tr</code> 命令用于字符替换，<code>-s ' '</code> 表示将多个连续的空格字符替换成一个空格，<code>'\n'</code> 表示将空格替换成换行符，因此这一步将文本中的空格分隔的单词转换成每行一个单词的形式。</li><li><code>sort</code>：对单词进行排序。</li><li><code>uniq -c</code>：<code>uniq</code> 命令用于去除连续重复的行，<code>-c</code> 选项会显示每行重复出现的次数。因此，这一步会统计每个单词出现的次数。</li><li><code>sort -r</code>：对统计结果按照出现次数进行逆序排序。</li></ol>]]></content>
+      
+      
+      <categories>
+          
+          <category> 网安 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 网安 </tag>
+            
+            <tag> 笔记 </tag>
+            
+            <tag> 编程 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>打靶记录(一零九)之THMCMSplit</title>
       <link href="/2024/03/19/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E9%9B%B6%E4%B9%9D)%E4%B9%8BTHMCMSplit/"/>
       <url>/2024/03/19/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E9%9B%B6%E4%B9%9D)%E4%B9%8BTHMCMSplit/</url>
@@ -84,9 +113,9 @@
             
             <tag> 网安 </tag>
             
-            <tag> 工具 </tag>
-            
             <tag> 笔记 </tag>
+            
+            <tag> 工具 </tag>
             
         </tags>
       
