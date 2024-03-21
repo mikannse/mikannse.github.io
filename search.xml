@@ -4,6 +4,35 @@
   
     
     <entry>
+      <title>k8s入门初学习</title>
+      <link href="/2024/03/21/k8s%E5%85%A5%E9%97%A8%E5%88%9D%E5%AD%A6%E4%B9%A0/"/>
+      <url>/2024/03/21/k8s%E5%85%A5%E9%97%A8%E5%88%9D%E5%AD%A6%E4%B9%A0/</url>
+      
+        <content type="html"><![CDATA[<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p><a href="https://www.kubernetes.org.cn/"><strong>Kubernetes</strong></a>是一个开源的，用于管理云平台中多个主机上的容器化的应用，Kubernetes的目标是让部署容器化的应用简单并且高效（powerful）,Kubernetes提供了应用部署，规划，更新，维护的一种机制。</p><p>在Kubenetes中，所有的容器均在<a href="https://www.kubernetes.org.cn/tags/pod"><strong>Pod</strong></a>中运行,一个Pod可以承载一个或者多个相关的容器，在后边的案例中，同一个Pod中的容器会部署在同一个物理机器上并且能够共享资源。一个Pod也可以包含O个或者多个磁盘卷组（volumes）,这些卷组将会以目录的形式提供给一个容器，或者被所有Pod中的容器共享，对于用户创建的每个Pod,系统会自动选择那个健康并且有足够容量的机器，然后创建类似容器的容器,当容器创建失败的时候，容器会被node agent自动的重启,这个node agent叫kubelet,但是，如果是Pod失败或者机器，它不会自动的转移并且启动，除非用户定义了 replication controller。</p><h1 id="minikube"><a href="#minikube" class="headerlink" title="minikube"></a>minikube</h1><p>一个轻量级得k8s实现，部署仅包含一个节点的简单集群</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64</span><br><span class="line">sudo install minikube-linux-amd64 /usr/local/bin/minikube</span><br></pre></td></tr></tbody></table></figure><p>启动</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">minikube start --image-mirror-country='cn'</span><br></pre></td></tr></tbody></table></figure><h1 id="kubectl"><a href="#kubectl" class="headerlink" title="kubectl"></a>kubectl</h1><p>用于交互的命令行工具</p><p>安装:</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"</span><br><span class="line">sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl</span><br></pre></td></tr></tbody></table></figure><p>查看节点</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">kubectl get nodes</span><br><span class="line">NAME       STATUS   ROLES           AGE   VERSION</span><br><span class="line">minikube   Ready    control-plane   13h   v1.28.3</span><br></pre></td></tr></tbody></table></figure><p>查看服务</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">kubectl get svc</span><br><span class="line">NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE</span><br><span class="line">kubernetes   ClusterIP   10.96.0.1    &lt;none&gt;        443/TCP   13h</span><br></pre></td></tr></tbody></table></figure><p>查看pod</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">kubectl get pod</span><br><span class="line">No resources found in default namespace.</span><br></pre></td></tr></tbody></table></figure><p>创建pod</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">kubectl run nginx --image=nginx</span><br></pre></td></tr></tbody></table></figure><p>或者</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">kubectl create deployment nginx-deployment --image=nginx</span><br></pre></td></tr></tbody></table></figure><p>编辑</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">kubectl edit deployment nginx-deployment</span><br></pre></td></tr></tbody></table></figure><p>查看日志</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">kubectl log pod名</span><br></pre></td></tr></tbody></table></figure><p>进入容器</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">kubectl exec -it pod名 -- /bin/bash</span><br></pre></td></tr></tbody></table></figure><p>获取所有资源对象</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">kubectl get all</span><br></pre></td></tr></tbody></table></figure><p>删除资源对象</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">kubectl delete 对象名</span><br></pre></td></tr></tbody></table></figure><p>配置文件应用</p><p>创建</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">kubectl create -f xxx.yaml</span><br></pre></td></tr></tbody></table></figure><p>删除</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">kubectl delete -f xxx.yaml</span><br></pre></td></tr></tbody></table></figure><p>应用</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">kubectl apply -f xxx.yaml</span><br></pre></td></tr></tbody></table></figure><p>service的使用</p><p>将一个pod设置为service</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">kubectl create -f xxx.yaml</span><br></pre></td></tr></tbody></table></figure><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Service</span><br><span class="line">metadata:</span><br><span class="line">  name: nginx-service</span><br><span class="line">spec:</span><br><span class="line">  selector:</span><br><span class="line">    app: nginx</span><br><span class="line">  ports:</span><br><span class="line">    - protocol: TCP</span><br><span class="line">      port: 80</span><br><span class="line">      targetPort: 80</span><br><span class="line">  type: ClusterIP</span><br></pre></td></tr></tbody></table></figure><p>或者</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">kubectl expose pod nginx --name=nginx-service --type=ClusterIP --port=80 --target-port=80</span><br></pre></td></tr></tbody></table></figure><p>查询详细信息</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">kubectl describe service 服务名</span><br></pre></td></tr></tbody></table></figure><p>更改为NodePort类型(使其在集群外部可以访问)</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Service</span><br><span class="line">metadata:</span><br><span class="line">  name: nginx-service</span><br><span class="line">spec:</span><br><span class="line">  type: NodePort</span><br><span class="line">  selector:</span><br><span class="line">    app: nginx</span><br><span class="line">  ports:</span><br><span class="line">    - protocol: TCP</span><br><span class="line">      port: 80</span><br><span class="line">      targetPort: 80</span><br><span class="line">      nodePort: 30080</span><br></pre></td></tr></tbody></table></figure><p>获取ip</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">kubectl get nodes -o wide</span><br></pre></td></tr></tbody></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> 网安 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 网安 </tag>
+            
+            <tag> 笔记 </tag>
+            
+            <tag> 运维 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>shell编程练习(一)</title>
       <link href="/2024/03/20/shell%E7%BC%96%E7%A8%8B%E7%BB%83%E4%B9%A0(%E4%B8%80)/"/>
       <url>/2024/03/20/shell%E7%BC%96%E7%A8%8B%E7%BB%83%E4%B9%A0(%E4%B8%80)/</url>
@@ -113,9 +142,9 @@
             
             <tag> 网安 </tag>
             
-            <tag> 笔记 </tag>
-            
             <tag> 工具 </tag>
+            
+            <tag> 笔记 </tag>
             
         </tags>
       
