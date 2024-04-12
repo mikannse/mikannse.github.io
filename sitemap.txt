@@ -1,3 +1,5 @@
+http://mikannse.space/2024/04/12/THM%E5%9F%9F%E5%AD%A6%E4%B9%A0BreachingActiveDirectory/
+http://mikannse.space/2024/04/12/THM%E5%9F%9F%E5%AD%A6%E4%B9%A0ActiveDirectoryBasics/
 http://mikannse.space/2024/04/09/THM%E5%85%8D%E6%9D%80%E5%AD%A6%E4%B9%A0SignatureEvasion/
 http://mikannse.space/2024/04/08/THM%E5%85%8D%E6%9D%80%E5%AD%A6%E4%B9%A0ObfuscationPrinciples/
 http://mikannse.space/2024/04/08/THM%E5%85%8D%E6%9D%80%E5%AD%A6%E4%B9%A0IntroductiontoAntivirus/
