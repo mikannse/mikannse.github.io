@@ -4,6 +4,37 @@
   
     
     <entry>
+      <title>TSharkTheBasicsTHM</title>
+      <link href="/2024/06/18/TSharkTheBasicsTHM/"/>
+      <url>/2024/06/18/TSharkTheBasicsTHM/</url>
+      
+        <content type="html"><![CDATA[<h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>TShark 是一个开源命令行网络流量分析器。它由 Wireshark 开发人员创建，具有 Wireshark 的大部分功能。它通常用作 Wireshark 的命令行版本。但是，它也可以像 tcpdump 一样使用。因此，它是进行全面数据包评估的首选。</p><p>学习目标</p><p>使用 TShark 过滤流量<br>在 TShark 中实现 Wireshark 过滤器<br>使用 TShark 扩展和自动化数据包过滤</p><h1 id="Command-Line-Packet-Analysis-Hints-TShark-and-Supplemental-CLI-Tools"><a href="#Command-Line-Packet-Analysis-Hints-TShark-and-Supplemental-CLI-Tools" class="headerlink" title="Command-Line Packet Analysis Hints | TShark and Supplemental CLI Tools"></a>Command-Line Packet Analysis Hints | TShark and Supplemental CLI Tools</h1><p>命令行数据包分析提示</p><p>TShark 是一种基于文本的工具，适用于数据雕刻、深入的数据包分析和使用脚本的自动化。这种优势和灵活性源自 CLI 工具的本质，因为生成/处理的数据可以流水线传输到其他工具。数据包分析中最常用的工具如下。</p><table><thead><tr><th><strong>工具/实用程序</strong></th><th><strong>目的和好处</strong></th></tr></thead><tbody><tr><td><strong>capinfos</strong></td><td>提供指定捕获文件详细信息的程序。建议在开始调查之前查看捕获文件的摘要。</td></tr><tr><td><strong>grep</strong></td><td>帮助搜索纯文本数据。</td></tr><tr><td><strong>cut</strong></td><td>帮助从指定数据源剪切部分行。</td></tr><tr><td><strong>uniq</strong></td><td>过滤重复的行/值。</td></tr><tr><td><strong>nl</strong></td><td>查看显示的行数。</td></tr><tr><td><strong>sed</strong></td><td>流编辑器。</td></tr><tr><td><strong>awk</strong></td><td>有助于模式搜索和处理的脚本语言。</td></tr></tbody></table><p><strong>注意：</strong>这些工具的示例用法在 <strong><a href="https://tryhackme.com/room/zeekbro">Zeek</a> 房间</strong> 中介绍。</p><p>打开终端并按照给出的说明进行操作。您可以通过切换到以下目录来跟随交互式材料。</p><ul><li><code>cd Desktop/exercise-files/</code></li></ul><p>Capinfos 演示</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           user@ubuntu$ capinfos demo.pcapng </span><br><span class="line">File name:           demo.pcapng</span><br><span class="line">File type:           Wireshark/tcpdump/... - pcap</span><br><span class="line">File encapsulation:  Ethernet</span><br><span class="line">File timestamp precision:  microseconds (6)</span><br><span class="line">Packet size limit:   file hdr: 65535 bytes</span><br><span class="line">Number of packets:   4...</span><br><span class="line">File size:           25 kB</span><br><span class="line">Data size:           25 kB</span><br><span class="line">Capture duration:    30.393704 seconds</span><br><span class="line">First packet time:   2004-05-13 10:17:07.311224</span><br><span class="line">Last packet time:    2004-05-13 10:17:37.704928</span><br><span class="line">Data byte rate:      825 bytes/s</span><br><span class="line">Data bit rate:       6604 bits/s</span><br><span class="line">Average packet size: 583.51 bytes</span><br><span class="line">Average packet rate: 1 packets/s</span><br><span class="line">SHA256:              25a72bdf10339...</span><br><span class="line">RIPEMD160:           6ef5f0c165a1d...</span><br><span class="line">SHA1:                3aac91181c3b7...</span><br><span class="line">Strict time order:   True</span><br><span class="line">Number of interfaces in file: 1</span><br><span class="line">Interface #0 info:</span><br><span class="line">                     Encapsulation = Ethernet (1 - ether)</span><br><span class="line">                     Capture length = 65535</span><br><span class="line">                     Time precision = microseconds (6)</span><br><span class="line">                     Time ticks per second = 1000000</span><br><span class="line">                     Number of stat entries = 0</span><br><span class="line">                     Number of packets = 4...</span><br><span class="line">..</span><br></pre></td></tr></tbody></table></figure><h1 id="TShark-Fundamentals-I-Main-Parameters-I"><a href="#TShark-Fundamentals-I-Main-Parameters-I" class="headerlink" title="TShark Fundamentals I | Main Parameters I"></a>TShark Fundamentals I | Main Parameters I</h1><p>命令行界面和参数</p><p>TShark 是一个基于文本（命令行）的工具。因此，对获得的结果进行深入和连续的分析很容易。多个内置选项随时可用，帮助分析师进行此类调查。但是，学习参数是必不可少的；您将需要内置选项和相关参数来控制输出，而不会被 TShark 的详细输出淹没。下表解释了最常用的参数。请注意，TShark 需要超级用户权限才能嗅探实时流量并列出所有可用接口。</p><table><thead><tr><th><strong>参数</strong></th><th><strong>目的</strong></th></tr></thead><tbody><tr><td>-h</td><td>显示包含最常用功能的帮助页面。<code>tshark -h</code></td></tr><tr><td>-v</td><td>显示版本信息。<code>tshark -v</code></td></tr><tr><td>-D</td><td>列出可用的嗅探接口。<code>tshark -D</code></td></tr><tr><td>-i</td><td>选择一个接口来捕获实时流量。<code>tshark -i 1</code> or <code>tshark -i ens55</code></td></tr><tr><td><strong>无参数</strong></td><td>像 tcpdump 一样嗅探流量。<code>tshark</code></td></tr></tbody></table><p>让我们查看给定 VM 中 TShark 实例的版本信息。打开终端并按照给定的说明进行操作。</p><p>查看版本</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           user@ubuntu$ tshark -v                           </span><br><span class="line">TShark (Wireshark) 3 (Git v3. packaged as 3.)</span><br><span class="line"></span><br><span class="line">Copyright 1998-2020 Gerald Combs and contributors. License GPLv2+: GNU GPL version 2 or later.</span><br><span class="line">This is free software; see the source for copying conditions.</span><br><span class="line">..  </span><br></pre></td></tr></tbody></table></figure><p>嗅探</p><p>嗅探是 TShark 的基本功能之一。计算机节点可以有多个网络接口，允许主机通过网络进行通信和嗅探流量。特定接口可能与特定任务/作业相关联。因此，选择嗅探接口的能力有助于用户决定和设置适当的嗅探接口。</p><p>让我们查看给定 VM 中的可用接口。</p><p>列出接口</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           user@ubuntu$ sudo tshark -D</span><br><span class="line">1. ens5</span><br><span class="line">2. lo (Loopback)</span><br><span class="line">3. any</span><br><span class="line">4. bluetooth-monitor</span><br><span class="line">5. nflog</span><br><span class="line">..     </span><br></pre></td></tr></tbody></table></figure><p>嗅探可以在选择或不选择特定接口的情况下进行。选择特定接口后，TShark 会使用该接口嗅探流量。未选择任何接口时，TShark 将使用第一个可用接口，通常在终端中列为 1。没有接口参数是 <code>-i 1</code> 的别名。您还可以使用参数 <code>-i</code> 设置不同的嗅探接口。TShark 总是在嗅探开始时回显使用的接口名称。</p><p>嗅探流量</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           # Sniffing with the default interface.</span><br><span class="line">user@ubuntu$ tshark                           </span><br><span class="line">Capturing on 'ens5'</span><br><span class="line">    1   0.000000 aaa.aaa.aaa.aaa ? bbb.bbb.bbb.bbb TCP 3372 ? 80 [SYN] Seq=0 Win=8760 Len=0 MSS=1460 SACK_PERM=1 </span><br><span class="line">    2   0.911310 aaa.aaa.aaa.aaa ? bbb.bbb.bbb.bbb TCP 80 ? 3372 [SYN, ACK] Seq=0 Ack=1 Win=5840 Len=0 MSS=1380 SACK_PERM=1 </span><br><span class="line">    3   0.911310 aaa.aaa.aaa.aaa ? bbb.bbb.bbb.bbb TCP 3372 ? 80 [ACK] Seq=1 Ack=1 Win=9660 Len=0 </span><br><span class="line">...</span><br><span class="line">100 packets captured</span><br><span class="line"></span><br><span class="line"># Choosing an interface</span><br><span class="line">user@ubuntu$ tshark -i 2</span><br><span class="line">Capturing on 'Loopback: lo'</span><br><span class="line">...</span><br></pre></td></tr></tbody></table></figure><h1 id="TShark-Fundamentals-I-Main-Parameters-II"><a href="#TShark-Fundamentals-I-Main-Parameters-II" class="headerlink" title="TShark Fundamentals I | Main Parameters II"></a>TShark Fundamentals I | Main Parameters II</h1><p>命令行界面和参数 II</p><p>让我们继续探索 TShark 的主要参数。</p><table><thead><tr><th><strong>参数</strong></th><th><strong>目的</strong></th></tr></thead><tbody><tr><td>-r</td><td>读取/输入功能。读取捕获文件。<code>tshark -r demo.pcapng</code></td></tr><tr><td>-c</td><td>数据包计数。捕获指定数量的数据包后停止。例如，捕获/过滤/读取 10 个数据包后停止。<code>tshark -c 10</code></td></tr><tr><td>-w</td><td>写入/输出功能。将嗅探到的流量写入文件。<code>tshark -w sample-capture.pcap</code></td></tr><tr><td>-V</td><td>详细。为每个数据包提供<strong>详细信息</strong>。此选项将提供类似于 Wireshark 的“数据包详细信息窗格”的详细信息。<code>tshark -V</code></td></tr><tr><td>-q</td><td>静默模式。抑制终端上的数据包输出。<code>tshark -q</code></td></tr><tr><td>-x</td><td>显示数据包字节。以十六进制和 ASCII 转储形式显示每个数据包的详细信息。<code>tshark -x</code></td></tr></tbody></table><p>读取捕获文件</p><p>TShark 还可以处理 PCAP 文件。您可以使用 <code>-r</code> 参数来处理文件并调查数据包。您可以使用 <code>-c</code> 参数限制显示的数据包数量。</p><p> 读取数据</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           user@ubuntu$ tshark -r demo.pcapng</span><br><span class="line">    1   0.000000 145.254.160.237 ? 65.208.228.223 TCP 3372 ? 80 [SYN] Seq=0 Win=8760 Len=0 MSS=1460 SACK_PERM=1 </span><br><span class="line">    2   0.911310 65.208.228.223 ? 145.254.160.237 TCP 80 ? 3372 [SYN, ACK] Seq=0 Ack=1 Win=5840 Len=0 MSS=1380 SACK_PERM=1 </span><br><span class="line">    3   0.911310 145.254.160.237 ? 65.208.228.223 TCP 3372 ? 80 [ACK] Seq=1 Ack=1 Win=9660 Len=0 </span><br><span class="line"></span><br><span class="line">..</span><br><span class="line"></span><br><span class="line"># Read by count, show only the first 2 packets.</span><br><span class="line">user@ubuntu$ tshark -r demo.pcapng -c 2</span><br><span class="line">    1   0.000000 145.254.160.237 ? 65.208.228.223 TCP 3372 ? 80 [SYN] Seq=0 Win=8760 Len=0 MSS=1460 SACK_PERM=1 </span><br><span class="line">    2   0.911310 65.208.228.223 ? 145.254.160.237 TCP 80 ? 3372 [SYN, ACK] Seq=0 Ack=1 Win=5840 Len=0 MSS=1380 SACK_PERM=1 </span><br><span class="line">        </span><br></pre></td></tr></tbody></table></figure><p>写入数据</p><p>TShark 还可以将嗅探或过滤的数据包写入文件。您可以使用 <code>-w</code> 参数将嗅探到的流量保存到文件中。此选项可帮助分析师从文件/流量中分离出特定数据包并保存以供进一步分析。它还允许分析师仅与更高级别的调查人员共享可疑数据包/范围。</p><p> 写入数据</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           # Read the first packet of the demo.pcapng, create write-demo.pcap and save the first packet there.</span><br><span class="line">user@ubuntu$ tshark -r demo.pcapng -c 1 -w write-demo.pcap</span><br><span class="line"></span><br><span class="line"># List the contents of the current folder.</span><br><span class="line">user@ubuntu$ ls</span><br><span class="line">demo.pcapng  write-demo.pcap</span><br><span class="line"></span><br><span class="line"># Read the write-demo.pcap and show the packet bytes/details.</span><br><span class="line">user@ubuntu$ tshark -r write-demo.pcap </span><br><span class="line">    1   0.000000 145.254.160.237 ? 65.208.228.223 TCP 3372 ? 80 [SYN] Seq=0 Win=8760 Len=0 MSS=1460 SACK_PERM=1 </span><br><span class="line">        </span><br></pre></td></tr></tbody></table></figure><p>显示数据包字节</p><p>TShark 可以以十六进制和 ASCII 格式显示数据包详细信息。您可以使用 <code>-x</code> 参数查看数据包的转储。一旦使用此参数，所有数据包都将以十六进制和 ASCII 格式显示。因此，可能很难一眼就发现异常，因此在减少数据包数量后使用此选项将更加有效。</p><p> 显示数据包字节</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           # Read the packets from write-demo.pcap</span><br><span class="line">user@ubuntu$ tshark -r write-demo.pcap </span><br><span class="line">    1   0.000000 145.254.160.237 ? 65.208.228.223 TCP 3372 ? 80 [SYN] Seq=0 Win=8760 Len=0 MSS=1460 SACK_PERM=1 </span><br><span class="line"></span><br><span class="line"># Read the packets from write-demo.pcap and show the packet bytes/details.</span><br><span class="line">user@ubuntu$ tshark -r write-demo.pcap -x</span><br><span class="line">0000  fe ff 20 00 01 00 00 00 01 00 00 00 08 00 45 00   .. ...........E.</span><br><span class="line">0010  00 30 0f 41 40 00 80 06 91 eb 91 fe a0 ed 41 d0   .0.A@.........A.</span><br><span class="line">0020  e4 df 0d 2c 00 50 38 af fe 13 00 00 00 00 70 02   ...,.P8.......p.</span><br><span class="line">0030  22 38 c3 0c 00 00 02 04 05 b4 01 01 04 02         "8............</span><br><span class="line">        </span><br></pre></td></tr></tbody></table></figure><p>详细程度</p><p>默认的 TShark 数据包处理和嗅探操作提供一行信息，并排除详细程度。默认方法可以轻松跟踪已处理/嗅探的数据包数量；但是，TShark 还可以在需要时为每个数据包提供详细程度。详细程度的提供方式与 Wireshark 的“数据包详细信息窗格”类似。由于详细程度提供了一长串数据包详细信息，因此建议对特定数据包使用该选项，而不是一系列数据包。</p><p> 详细程度</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           # Default view</span><br><span class="line">user@ubuntu$ tshark -r demo.pcapng -c 1</span><br><span class="line">    1   0.000000 145.254.160.237 ? 65.208.228.223 TCP 3372 ? 80 [SYN] Seq=0 Win=8760 Len=0 MSS=1460 SACK_PERM=1 </span><br><span class="line"></span><br><span class="line"># Verbosity</span><br><span class="line">user@ubuntu$ tshark -r demo.pcapng -c 1 -V</span><br><span class="line">Frame 1: 62 bytes on wire (496 bits), 62 bytes captured (496 bits)</span><br><span class="line">...</span><br><span class="line">Ethernet II, Src: 00:00:01:00:00:00, Dst: fe:ff:20:00:01:00</span><br><span class="line">...</span><br><span class="line">Internet Protocol Version 4, Src: 145.254.160.237, Dst: 65.208.228.223</span><br><span class="line">    0100 .... = Version: 4</span><br><span class="line">    .... 0101 = Header Length: 20 bytes (5)</span><br><span class="line">    Total Length: 48</span><br><span class="line">    Identification: 0x0f41 (3905)</span><br><span class="line">    Flags: 0x4000, Don't fragment</span><br><span class="line">    Fragment offset: 0</span><br><span class="line">    Time to live: 128</span><br><span class="line">    Protocol: TCP (6)</span><br><span class="line">    Source: 145.254.160.237</span><br><span class="line">    Destination: 65.208.228.223</span><br><span class="line">Transmission Control Protocol, Src Port: 3372, Dst Port: 80, Seq: 0, Len: 0</span><br><span class="line"> ...</span><br><span class="line">        </span><br></pre></td></tr></tbody></table></figure><p>详细程度提供了完整的数据包详细信息，使得调查变得困难（每个数据包的终端输出很长且很复杂）。但是，它仍然有助于深入的数据包分析和脚本编写，使 TShark 脱颖而出。请记住，详细程度的最佳利用时间是在过滤数据包之后。您可以将上面的输出与下面的屏幕截图进行比较，看看您拥有的脚本编写、雕刻和关联机会！</p><p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/fe35b2c763af7fbd88747141c0d0d2a6.png" alt="TShark CLI vs Wireshark GUI"></p><h1 id="TShark-Fundamentals-II-Capture-Conditions"><a href="#TShark-Fundamentals-II-Capture-Conditions" class="headerlink" title="TShark Fundamentals II | Capture Conditions"></a>TShark Fundamentals II | Capture Conditions</h1><p>捕获条件参数</p><p>作为网络嗅探器和数据包分析器，TShark 可以配置为计数数据包并在特定点停止或以循环结构运行。下面解释了最常见的参数。</p><table><thead><tr><th><strong>参数</strong></th><th><strong>目的</strong></th></tr></thead><tbody><tr><td></td><td>定义单次运行/循环的捕获条件。完成条件后<strong>STOP</strong>。也称为“自动停止”。</td></tr><tr><td>-a</td><td><strong>持续时间：</strong>嗅探流量并在 X 秒后停止。创建一个新文件并将输出写入其中。<code>tshark -w test.pcap -a duration:1</code> <strong>文件大小：</strong>定义最大捕获文件大小。达到 X 文件大小（KB）后停止。<code>tshark -w test.pcap -a filesize:10</code> <strong>文件：</strong>定义最大输出文件数。达到 X 文件后停止。<code>tshark -w test.pcap -a filesize:10 -a files:3</code></td></tr><tr><td></td><td><strong>环形缓冲区控制选项。</strong>定义多次运行/循环的捕获条件。<strong>（无限循环）</strong>。</td></tr><tr><td>-b</td><td><strong>持续时间：</strong>嗅探流量 X 秒，创建一个新文件并将输出写入其中。<code>tshark -w test.pcap -b duration:1</code><strong>文件大小：</strong>定义最大捕获文件大小。在达到文件大小 X（KB）后创建一个新文件并将输出写入其中。<code>tshark -w test.pcap -b filesize:10</code><strong>文件：</strong>定义输出文件的最大数量。在创建 X 个文件后重写第一个/最旧的文件。<code>tshark -w test.pcap -b filesize:10 -b files:3</code></td></tr></tbody></table><p>捕获条件参数仅在“捕获/嗅探”模式下有效。如果您尝试读取 pcap 文件并应用捕获条件参数，您将收到一条错误消息。这个想法是在实时捕获期间将捕获文件保存为特定大小以用于不同目的。如果您需要从特定捕获文件中提取各种数据包，则需要使用上一个任务中讨论的读写选项。</p><p><strong>提示：</strong> TShark 支持将自动停止（<code>-a</code>）参数与环形缓冲区控制参数（<code>-b</code>）相结合。您可以根据需要组合参数。谨慎使用无限循环选项；请记住，您必须使用至少一个自动停止参数来停止无限循环。</p><p> 自动停止查询示例</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           # Start sniffing the traffic and stop after 2 seconds, and save the dump into 5 files, each 5kb.</span><br><span class="line"></span><br><span class="line">user@ubuntu$ tshark -w autostop-demo.pcap -a duration:2 -a filesize:5 -a files:5</span><br><span class="line">Capturing on 'ens5'</span><br><span class="line">13 </span><br><span class="line"></span><br><span class="line"># List the contents of the current folder.</span><br><span class="line">user@ubuntu$ ls</span><br><span class="line">-rw------- 1 ubuntu ubuntu   autostop-demo_..1_2022.pcap</span><br><span class="line">-rw------- 1 ubuntu ubuntu   autostop-demo_..2_2022.pcap</span><br><span class="line">-rw------- 1 ubuntu ubuntu   autostop-demo_..3_2022.pcap</span><br><span class="line">-rw------- 1 ubuntu ubuntu   autostop-demo_..4_2022.pcap</span><br><span class="line">-rw------- 1 ubuntu ubuntu   autostop-demo_..5_2022.pcap</span><br></pre></td></tr></tbody></table></figure><h1 id="TShark-Fundamentals-III-Packet-Filtering-Options-Capture-vs-Display-Filters"><a href="#TShark-Fundamentals-III-Packet-Filtering-Options-Capture-vs-Display-Filters" class="headerlink" title="TShark Fundamentals III | Packet Filtering Options: Capture vs. Display Filters"></a>TShark Fundamentals III | Packet Filtering Options: Capture vs. Display Filters</h1><p>数据包过滤参数 | 捕获和显示过滤器</p><p>TShark 中的数据包过滤有两个维度：实时（捕获）和捕获后（显示）过滤。这两个维度可以用两种不同的方法进行过滤：使用预定义语法或 Berkeley 数据包过滤器 (BPF)。TShark 支持这两种方法，因此您可以使用 Wireshark 过滤器和 BPF 来过滤流量。如前所述，TShark 是 Wireshark 的命令行版本，因此我们需要使用不同的过滤器来捕获和过滤数据包。<a href="https://tryhackme.com/r/room/wiresharkpacketoperations">Wireshark：数据包操作</a> 房间的快速回顾：</p><table><thead><tr><th><strong>捕获过滤器</strong></th><th>实时过滤选项。目的是仅<strong>保存</strong>流量的特定部分。它是在捕获流量之前设置的，在实时捕获期间不可更改。</th></tr></thead><tbody><tr><td><strong>显示过滤器</strong></td><td>捕获后过滤选项。目的是通过<strong>减少可见数据包的数量</strong>来调查数据包，这在调查过程中是可以改变的。</td></tr></tbody></table><p>捕获过滤器用于在捕获文件中包含特定类型的流量，而不是包含所有内容。捕获过滤器具有有限的过滤功能，目的是实现按范围、协议和方向过滤的范围。这听起来可能像批量/原始过滤，但它仍然提供具有合理文件大小的有组织的捕获文件。显示过滤器会深入调查捕获文件，而无需修改数据包。</p><table><thead><tr><th><strong>参数</strong></th><th><strong>目的</strong></th></tr></thead><tbody><tr><td>-f</td><td>捕获过滤器。与 BPF 语法和<strong>Wireshark 的捕获过滤器</strong>相同。</td></tr><tr><td>-Y</td><td>显示过滤器。与<strong>Wireshark 的显示过滤器</strong>相同。</td></tr></tbody></table><p>如果您想查看数据包过滤的原理，请查看 <a href="https://tryhackme.com/room/wiresharkpacketoperations"><strong>Wireshark：数据包操作</strong></a> 房间（任务 4 和 5）。</p><h1 id="TShark-Fundamentals-IV-Packet-Filtering-Options-Capture-Filters"><a href="#TShark-Fundamentals-IV-Packet-Filtering-Options-Capture-Filters" class="headerlink" title="TShark Fundamentals IV | Packet Filtering Options: Capture Filters"></a>TShark Fundamentals IV | Packet Filtering Options: Capture Filters</h1><p>捕获过滤器</p><p>此处使用 Wireshark 的捕获过滤器语法。捕获/BPF 过滤器的基本语法如下所示。您可以在 <a href="https://www.wireshark.org/docs/man-pages/pcap-filter.html">此处</a> 和 <a href="https://gitlab.com/wireshark/wireshark/-/wikis/CaptureFilters#useful-filters">此处</a> 了解有关捕获过滤器语法的更多信息。布尔运算符也可用于这两种类型的过滤器。</p><table><thead><tr><th><strong>限定符</strong></th><th><strong>详细信息和可用选项</strong></th></tr></thead><tbody><tr><td><strong>类型</strong></td><td>目标匹配类型。您可以过滤 IP 地址、主机名、IP 范围和端口号。请注意，如果您未设置限定符，则默认使用“host”限定符。host | net | port | portrange过滤主机<code>tshark -f "host 10.10.10.10"</code>过滤网络范围<code>tshark -f "net 10.10.10.0/24"</code>过滤端口<code>tshark -f "port 80"</code>过滤端口范围<code>tshark -f "portrange 80-100"</code></td></tr><tr><td><strong>方向</strong></td><td>目标方向/流。请注意，如果不使用方向运算符，它将等于“either”并覆盖两个方向。src | dst过滤源地址<code>tshark -f "src host 10.10.10.10"</code>过滤目标地址<code>tshark -f "dst host 10.10.10.10"</code></td></tr><tr><td><strong>协议</strong></td><td>目标协议。arp | ether | icmp | ip | ip6 | tcp | udp过滤 TCP<code>tshark -f "tcp"</code>过滤 MAC 地址<code>tshark -f "ether host F8:DB:C5:A2:5D:81"</code>您还可以使用 IANA 分配的 IP 协议号过滤协议。过滤 IP 协议 1 (ICMP)<code>tshark -f "ip proto 1"</code><a href="https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml"><strong>已分配的 Internet 协议号</strong></a></td></tr></tbody></table><p>我们需要创建流量噪声来测试和模拟捕获过滤器。我们将使用“terminator”终端实例在单个终端中拥有分屏视图。“terminator”将帮助您使用单个终端界面制作和嗅探数据包。现在，运行 <code>terminator</code> 命令并使用新的终端实例按照说明进行操作。</p><ul><li>首先，在终端 1 中运行给定的 TShark 命令以开始嗅探流量。</li><li>然后，在终端 2 中运行给定的 cURL 命令以创建网络噪声。</li><li>在 Terminal-1 中查看嗅探数据包的结果。</li></ul><p> “终结者”终端仿真器应用程序</p><p>Terminal-1</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">            user@ubuntu$ tshark -f "host 10.10.10.10"</span><br><span class="line">Capturing on 'ens5'</span><br><span class="line">    1 0.000000000 YOUR-IP → 10.10.10.10  TCP 74 36150 → 80 [SYN] Seq=0 Win=62727 Len=0 MSS=8961 SACK_PERM=1 TSval=2045205701 TSecr=0 WS=128</span><br><span class="line">    2 0.003452830  10.10.10.10 → YOUR-IP TCP 74 80 → 36150 [SYN, ACK] Seq=0 Ack=1 Win=62643 Len=0 MSS=8961 SACK_PERM=1 TSval=744450747 TSecr=2045205701 WS=64</span><br><span class="line">    3 0.003487830 YOUR-IP → 10.10.10.10  TCP 66 36150 → 80 [ACK] Seq=1 Ack=1 Win=62848 Len=0 TSval=2045205704 TSecr=744450747</span><br><span class="line">    4 0.003610800 YOUR-IP → 10.10.10.10  HTTP 141 GET / HTTP/1.1 </span><br></pre></td></tr></tbody></table></figure><p> Terminal-2    </p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">            user@ubuntu$ curl -v 10.10.10.10</span><br><span class="line">*   Trying 10.10.10.10:80...</span><br><span class="line">* TCP_NODELAY set</span><br><span class="line">* Connected to 10.10.10.10 (10.10.10.10) port 80 (#0)</span><br><span class="line">&gt; GET / HTTP/1.1</span><br><span class="line">&gt; Host: 10.10.10.10</span><br><span class="line">&gt; User-Agent: curl/7.68.0</span><br><span class="line">&gt; Accept: */*</span><br><span class="line">&gt; </span><br><span class="line">* Mark bundle as not supporting multiuse</span><br><span class="line">&lt; HTTP/1.1 200 OK</span><br><span class="line">&lt; Accept-Ranges: bytes</span><br><span class="line">&lt; Content-Length: 1220</span><br><span class="line">&lt; Content-Type: text/html; charset=utf-8</span><br></pre></td></tr></tbody></table></figure><p>熟悉命令行和 TShark 过滤器需要时间和练习。您可以使用下表来练习 TShark 捕获过滤器。</p><table><thead><tr><th><strong>捕获过滤器类别</strong></th><th><strong>详细信息</strong></th></tr></thead><tbody><tr><td><strong>主机过滤</strong></td><td>捕获往返于特定主机的流量。<strong>使用 cURL 生成流量。此命令将默认 HTTP 查询发送到指定地址。</strong><code>curl tryhackme.com</code><strong>主机的 TShark 捕获过滤器</strong><code>tshark -f "host tryhackme.com"</code></td></tr><tr><td><strong>IP 过滤</strong></td><td>捕获往返于特定端口的流量。我们将使用 Netcat 工具在特定端口上创建噪声。<strong>使用 Netcat 生成流量。此处指示 Netcat 提供详细信息（详细程度），并将超时设置为 5 秒。</strong><code>nc 10.10.10.10 4444 -vw 5</code><strong>特定 IP 地址的 TShark 捕获过滤器</strong><code>tshark -f "host 10.10.10.10"</code></td></tr><tr><td><strong>端口过滤</strong></td><td>捕获往返于特定端口的流量。我们将使用 Netcat 工具在特定端口上创建噪声。<strong>使用 Netcat 生成流量。此处指示 Netcat 提供详细信息（详细程度），并将超时设置为 5 秒。</strong><code>nc 10.10.10.10 4444 -vw 5</code><strong>端口 4444 的 TShark 捕获过滤器</strong><code>tshark -f "port 4444"</code></td></tr><tr><td><strong>协议过滤</strong></td><td>捕获往返于特定协议的流量。我们将使用 Netcat 工具在特定端口上创建噪声。<strong>使用 Netcat 生成流量。此处指示 Netcat 使用 UDP、提供详细信息（详细程度），并将超时设置为 5 秒。</strong><code>nc -u 10.10.10.10 4444 -vw 5</code><strong>TShark 捕获过滤器</strong><code>tshark -f "udp"</code></td></tr></tbody></table><h1 id="TShark-Fundamentals-V-Packet-Filtering-Options-Display-Filters"><a href="#TShark-Fundamentals-V-Packet-Filtering-Options-Display-Filters" class="headerlink" title="TShark Fundamentals V | Packet Filtering Options: Display Filters"></a>TShark Fundamentals V | Packet Filtering Options: Display Filters</h1><p>显示过滤器</p><p>这里使用Wireshark的显示过滤器语法。您可以使用官方的<a href="https://www.wireshark.org/docs/dfref/"><strong>显示过滤器参考</strong></a>查找过滤的协议细分。此外，您可以使用Wireshark内置的“显示过滤器表达式”菜单来细分过滤器的协议。请注意，布尔运算符也可以在两种类型的过滤器中使用。下表显示了常见的过滤选项。</p><p><strong>注意：</strong>建议对捕获过滤器使用单引号，以避免空格和bash扩展问题。再次，如果您想查看数据包过滤的原理，可以查看<a href="https://tryhackme.com/room/wiresharkpacketoperations"><strong>Wireshark：数据包操作</strong></a>房间（任务4和5）。</p><table><thead><tr><th><strong>显示过滤器类别</strong></th><th><strong>详细信息和可用选项</strong></th></tr></thead><tbody><tr><td><strong>协议：IP</strong></td><td>过滤一个 IP 而不指定方向。<code>tshark -Y 'ip.addr == 10.10.10.10'</code>过滤一个网络范围<code>tshark -Y 'ip.addr == 10.10.10.0/24'</code>过滤一个源 IP<code>tshark -Y 'ip.src == 10.10.10.10'</code>过滤一个目标 IP<code>tshark -Y 'ip.dst == 10.10.10.10'</code></td></tr><tr><td><strong>协议：TCP</strong></td><td>过滤 TCP 端口<code>tshark -Y 'tcp.port == 80'</code>过滤源 TCP 端口<code>tshark -Y 'tcp.srcport == 80'</code></td></tr><tr><td><strong>协议：HTTP</strong></td><td>过滤 HTTP 数据包 <code>tshark -Y 'http'</code>过滤响应代码为“200”的 HTTP 数据包<code>tshark -Y "http.response.code == 200"</code></td></tr><tr><td><strong>协议：DNS</strong></td><td>过滤 DNS 数据包 <code>tshark -Y 'dns'</code>过滤所有 DNS“A”数据包<code>tshark -Y 'dns.qry.type == 1'</code></td></tr></tbody></table><p>我们将使用“demo.pcapng”来测试显示过滤器。让我们看看过滤器的实际效果！</p><p> 示例过滤查询</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           user@ubuntu$ tshark -r demo.pcapng -Y 'ip.addr == 145.253.2.203'</span><br><span class="line">13 2.55 145.254.160.237 ? 145.253.2.203 DNS Standard query 0x0023 A ..</span><br><span class="line">17 2.91 145.253.2.203 ? 145.254.160.237 DNS Standard query response 0x0023 A ..</span><br></pre></td></tr></tbody></table></figure><p>上面的终端演示了如何使用“IP 过滤”选项。TShark 会过滤数据包并在我们的终端中提供输出。值得注意的是，TShark 不会计算“过滤数据包的总数”；它根据捕获时间为数据包分配编号，但只显示与我们的过滤器匹配的数据包。</p><p>看看上面的例子。有两个匹配的数据包，但关联的编号不是从零或一开始的；这些过滤的数据包被分配了“13”和“17”。如果您的过滤器检索到的数据包不止一把，那么跟踪这些数字并计算“过滤数据包的总数”可能会令人困惑。下面显示了另一个示例。</p><p> 示例过滤查询</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">          user@ubuntu$ tshark -r demo.pcapng -Y 'http'</span><br><span class="line"> 4   0.911 145.254.160.237 ? 65.208.228.223 HTTP GET /download.html HTTP/1.1  </span><br><span class="line">18   2.984 145.254.160.237 ? 216.239.59.99 HTTP GET /pagead/ads?client... </span><br><span class="line">27   3.955 216.239.59.99 ? 145.254.160.237 HTTP HTTP/1.1 200 OK  (text/html) </span><br><span class="line">38   4.846 65.208.228.223 ? 145.254.160.237 HTTP/XML HTTP/1.1 200 OK </span><br></pre></td></tr></tbody></table></figure><p>您可以使用 <code>nl</code> 命令获取输出的编号列表。因此，您可以轻松计算“已过滤数据包的总数”，而不会与“已分配的数据包编号”混淆。<code>nl</code> 命令的用法如下所示。</p><p> 示例过滤查询</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           user@ubuntu$ tshark -r demo.pcapng -Y 'http' | nl</span><br><span class="line">1    4  0.911 145.254.160.237 ? 65.208.228.223 HTTP GET /download.html HTTP/1.1  </span><br><span class="line">2   18  2.984 145.254.160.237 ? 216.239.59.99 HTTP GET /pagead/ads?client... </span><br><span class="line">3   27   3.955 216.239.59.99 ? 145.254.160.237 HTTP HTTP/1.1 200 OK (text/html) </span><br><span class="line">4   38   4.846 65.208.228.223 ? 145.254.160.237 HTTP/XML HTTP/1.1 200 OK </span><br></pre></td></tr></tbody></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> 网安 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 渗透测试 </tag>
+            
+            <tag> 溯源取证 </tag>
+            
+            <tag> 笔记 </tag>
+            
+            <tag> 流量分析 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>AdvancedSQLInjectionTHM</title>
       <link href="/2024/06/15/AdvancedSQLInjectionTHM/"/>
       <url>/2024/06/15/AdvancedSQLInjectionTHM/</url>
@@ -22,7 +53,7 @@
             
             <tag> 渗透测试 </tag>
             
-            <tag> SQL注入 </tag>
+            <tag> 溯源取证 </tag>
             
             <tag> 笔记 </tag>
             
@@ -173,9 +204,9 @@
             
             <tag> 渗透测试 </tag>
             
-            <tag> 打靶 </tag>
-            
             <tag> 溯源取证 </tag>
+            
+            <tag> 打靶 </tag>
             
         </tags>
       
@@ -1703,9 +1734,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -1916,9 +1947,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -2309,9 +2340,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -2340,9 +2371,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -2371,9 +2402,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -2402,9 +2433,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -2433,13 +2464,13 @@
       
         <tags>
             
+            <tag> 溯源取证 </tag>
+            
             <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
             <tag> linux </tag>
-            
-            <tag> 溯源取证 </tag>
             
         </tags>
       
@@ -2464,13 +2495,13 @@
       
         <tags>
             
+            <tag> 溯源取证 </tag>
+            
             <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
             <tag> linux </tag>
-            
-            <tag> 溯源取证 </tag>
             
         </tags>
       
@@ -2495,13 +2526,13 @@
       
         <tags>
             
+            <tag> 溯源取证 </tag>
+            
             <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
             <tag> linux </tag>
-            
-            <tag> 溯源取证 </tag>
             
         </tags>
       
@@ -2526,13 +2557,13 @@
       
         <tags>
             
+            <tag> 溯源取证 </tag>
+            
             <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
             <tag> linux </tag>
-            
-            <tag> 溯源取证 </tag>
             
         </tags>
       
@@ -2557,13 +2588,13 @@
       
         <tags>
             
+            <tag> 溯源取证 </tag>
+            
             <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
             <tag> linux </tag>
-            
-            <tag> 溯源取证 </tag>
             
         </tags>
       
@@ -2588,13 +2619,13 @@
       
         <tags>
             
+            <tag> 溯源取证 </tag>
+            
             <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
             <tag> linux </tag>
-            
-            <tag> 溯源取证 </tag>
             
         </tags>
       
@@ -2619,13 +2650,13 @@
       
         <tags>
             
+            <tag> 溯源取证 </tag>
+            
             <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
             <tag> linux </tag>
-            
-            <tag> 溯源取证 </tag>
             
         </tags>
       
@@ -2650,9 +2681,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -2681,9 +2712,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -2712,9 +2743,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -2743,9 +2774,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -2774,9 +2805,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -2832,9 +2863,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -2890,9 +2921,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -2921,9 +2952,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -2952,11 +2983,11 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 笔记 </tag>
+            
+            <tag> 网安 </tag>
             
         </tags>
       
@@ -2981,9 +3012,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -3012,9 +3043,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -3043,9 +3074,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -3109,9 +3140,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -3140,9 +3171,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -3171,9 +3202,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -3202,11 +3233,11 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 笔记 </tag>
+            
+            <tag> 网安 </tag>
             
         </tags>
       
@@ -3231,11 +3262,11 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 笔记 </tag>
+            
+            <tag> 网安 </tag>
             
         </tags>
       
@@ -3260,11 +3291,11 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 笔记 </tag>
+            
+            <tag> 网安 </tag>
             
         </tags>
       
@@ -3289,11 +3320,11 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 笔记 </tag>
+            
+            <tag> 网安 </tag>
             
         </tags>
       
@@ -3318,11 +3349,11 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 笔记 </tag>
+            
+            <tag> 网安 </tag>
             
         </tags>
       
@@ -3347,9 +3378,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -3378,11 +3409,11 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 笔记 </tag>
+            
+            <tag> 网安 </tag>
             
         </tags>
       
@@ -3434,11 +3465,11 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 笔记 </tag>
+            
+            <tag> 网安 </tag>
             
         </tags>
       
@@ -3463,11 +3494,11 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 笔记 </tag>
+            
+            <tag> 网安 </tag>
             
         </tags>
       
@@ -3492,11 +3523,11 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 笔记 </tag>
+            
+            <tag> 网安 </tag>
             
         </tags>
       
@@ -3521,11 +3552,11 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 笔记 </tag>
+            
+            <tag> 网安 </tag>
             
         </tags>
       
@@ -3550,11 +3581,11 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 笔记 </tag>
+            
+            <tag> 网安 </tag>
             
         </tags>
       
@@ -3579,9 +3610,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -3610,9 +3641,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> windows </tag>
             
@@ -3641,9 +3672,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> windows </tag>
             
@@ -3672,11 +3703,11 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
             
             <tag> 笔记 </tag>
+            
+            <tag> 网安 </tag>
             
         </tags>
       
@@ -3728,9 +3759,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -3786,9 +3817,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -3817,9 +3848,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -3848,9 +3879,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -3879,9 +3910,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -3939,9 +3970,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> windows </tag>
             
@@ -3970,9 +4001,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -4001,9 +4032,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> windows </tag>
             
@@ -4032,9 +4063,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> windows </tag>
             
@@ -4063,9 +4094,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -4094,9 +4125,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -4125,9 +4156,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -4156,9 +4187,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -4187,9 +4218,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -4218,9 +4249,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
         </tags>
       
@@ -4245,9 +4276,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -4276,9 +4307,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -4307,9 +4338,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -4338,9 +4369,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -4446,9 +4477,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -4477,9 +4508,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> windows </tag>
             
@@ -4508,9 +4539,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -4595,9 +4626,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> windows </tag>
             
@@ -4626,9 +4657,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> windows </tag>
             
@@ -4657,9 +4688,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -4688,9 +4719,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -4719,9 +4750,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -4750,9 +4781,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> windows </tag>
             
@@ -4808,9 +4839,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -4839,9 +4870,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -4870,9 +4901,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -4901,9 +4932,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -4932,9 +4963,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -4963,9 +4994,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -4994,9 +5025,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -5025,9 +5056,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -5056,9 +5087,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -5118,9 +5149,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -5149,9 +5180,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -5180,9 +5211,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -5211,9 +5242,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -5242,9 +5273,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -5273,15 +5304,15 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 溯源取证 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
             <tag> linux </tag>
-            
-            <tag> 溯源取证 </tag>
             
         </tags>
       
@@ -5306,9 +5337,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -5337,9 +5368,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> windows </tag>
             
@@ -5368,9 +5399,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -5399,9 +5430,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -5430,9 +5461,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -5488,9 +5519,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> windows </tag>
             
@@ -5519,9 +5550,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
             <tag> windows </tag>
             
@@ -5550,9 +5581,9 @@
       
         <tags>
             
-            <tag> 网安 </tag>
-            
             <tag> 渗透测试 </tag>
+            
+            <tag> 网安 </tag>
             
         </tags>
       
