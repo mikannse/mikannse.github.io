@@ -4,6 +4,35 @@
   
     
     <entry>
+      <title>HMVLabsTemperanceX11-20</title>
+      <link href="/2024/07/11/HMVLabsTemperanceX11-20/"/>
+      <url>/2024/07/11/HMVLabsTemperanceX11-20/</url>
+      
+        <content type="html"><![CDATA[<h1 id="x11"><a href="#x11" class="headerlink" title="x11"></a>x11</h1><p>摩斯电码解码，使用字典的方式,题目所给的分隔符是空格</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">data2=data2.decode().split()</span><br><span class="line">def morse(message):</span><br><span class="line">    MorseList = {</span><br><span class="line">".-": "A", "-...": "B", "-.-.": "C", "-..": "D", ".": "E", "..-.": "F", "--.": "G",</span><br><span class="line">"....": "H", "..": "I", ".---": "J", "-.-": "K", ".-..": "L", "--": "M", "-.": "N",</span><br><span class="line">"---": "O", ".--.": "P", "--.-": "Q", ".-.": "R", "...": "S", "-": "T",</span><br><span class="line">"..-": "U", "...-": "V", ".--": "W", "-..-": "X", "-.--": "Y", "--..": "Z",</span><br><span class="line"></span><br><span class="line">"-----": "0", ".----": "1", "..---": "2", "...--": "3", "....-": "4",</span><br><span class="line">".....": "5", "-....": "6", "--...": "7", "---..": "8", "----.": "9",</span><br><span class="line"></span><br><span class="line">".-.-.-": ".", "---...": ":", "--..--": ",", "-.-.-.": ";", "..--..": "?",</span><br><span class="line">"-...-": "=", ".----.": "'", "-..-.": "/", "-.-.--": "!", "-....-": "-",</span><br><span class="line">"..--.-": "_", ".-..-.": '"', "-.--.": "(", "-.--.-": ")", "...-..-": "$",</span><br><span class="line">"....": "&amp;", ".--.-.": "@", ".-.-.": "+",}</span><br><span class="line">    strings=''</span><br><span class="line">    for codes in message:</span><br><span class="line">        strings=strings+MorseList.get(codes)</span><br><span class="line">    return strings</span><br><span class="line">data3=morse(data2)</span><br><span class="line">print(data3)</span><br><span class="line">s.send(data3.encode())</span><br></pre></td></tr></tbody></table></figure><h1 id="x12"><a href="#x12" class="headerlink" title="x12"></a>x12</h1><p>一个字符串重复n次</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">string,num=data2.decode().split()</span><br><span class="line">num=int(num)</span><br><span class="line">data3=string*num</span><br><span class="line">s.send(data3.encode())</span><br></pre></td></tr></tbody></table></figure><h1 id="x13"><a href="#x13" class="headerlink" title="x13"></a>x13</h1><p>通过strip去除”[]”,再通过split分割成列表，使用sort进行排序</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">data2=data2.decode().strip('[]')</span><br><span class="line">lists=data2.split()</span><br><span class="line">lists.sort()</span><br><span class="line">data3=lists[-1]</span><br><span class="line">print(data3)</span><br><span class="line">s.send(data3.encode())</span><br></pre></td></tr></tbody></table></figure><h1 id="x14"><a href="#x14" class="headerlink" title="x14"></a>x14</h1><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">string1,string2=data2.decode().split()</span><br><span class="line">num=0</span><br><span class="line">for i in string1:</span><br><span class="line">    if i==string2:</span><br><span class="line">        num=num+1</span><br><span class="line">data3=str(num)</span><br><span class="line">print(data3)</span><br><span class="line">s.send(data3.encode())</span><br></pre></td></tr></tbody></table></figure><h1 id="x15"><a href="#x15" class="headerlink" title="x15"></a>x15</h1><p>通过观察是等差数列</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">lists=data2.decode().split()</span><br><span class="line">lists=list(map(int,lists))</span><br><span class="line">differ=lists[2]-lists[1]</span><br><span class="line">data3=str(lists[-1]+differ)</span><br><span class="line">s.send(data3.encode())</span><br></pre></td></tr></tbody></table></figure><h1 id="x16"><a href="#x16" class="headerlink" title="x16"></a>x16</h1><p>使用pillow库来处理图片</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">import base64</span><br><span class="line">from io import BytesIO</span><br><span class="line">from PIL import Image</span><br><span class="line"></span><br><span class="line">    Bimage=base64.b64decode(data2)</span><br><span class="line">    image=Image.open(BytesIO(Bimage))</span><br><span class="line">    width,height=image.size</span><br><span class="line">    data3=f'{width}x{height}'</span><br><span class="line">    s.send(data3.encode())</span><br></pre></td></tr></tbody></table></figure><h1 id="x17"><a href="#x17" class="headerlink" title="x17"></a>x17</h1><p>这题的意思是给了一个1个像素的经过base64编码的图片，需要返回这个像素rgba值的最后一位也就是a的值</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">import base64</span><br><span class="line">from io import BytesIO</span><br><span class="line">from PIL import Image</span><br><span class="line"></span><br><span class="line">image=Image.open(BytesIO(Bimage))</span><br><span class="line">    rgba=image.getdata()[0]</span><br><span class="line">    data3=str(rgba[-1])</span><br><span class="line">    s.send(data3.encode())</span><br></pre></td></tr></tbody></table></figure><h1 id="x18"><a href="#x18" class="headerlink" title="x18"></a>x18</h1><p>使用format，将字节格式化为8位二进制字符串然后拼接</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">data3 = ''.join(format(byte, '08b') for byte in data2)</span><br><span class="line">s.send(data3.encode())</span><br></pre></td></tr></tbody></table></figure><h1 id="x19"><a href="#x19" class="headerlink" title="x19"></a>x19</h1><p>使用zipfile库，base64解码之后对文件操作需要先转换成字节流的形式</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">import base64</span><br><span class="line">import zipfile</span><br><span class="line">import io</span><br><span class="line">    zip_data=base64.b64decode(data2)</span><br><span class="line">    zip_bytes=io.BytesIO(zip_data)</span><br><span class="line">    with zipfile.ZipFile(zip_bytes,'r') as zip_file:</span><br><span class="line">        txt_filename = zip_file.namelist()[0]</span><br><span class="line">        with zip_file.open(txt_filename) as txt_file:</span><br><span class="line">            content=txt_file.read().decode()</span><br><span class="line">    data3=content </span><br><span class="line">    s.send(data3.encode())</span><br></pre></td></tr></tbody></table></figure><h1 id="x20"><a href="#x20" class="headerlink" title="x20"></a>x20</h1><p>先选取前50的rockyou字典保存为txt,使用hashlib创建hash对象，使用hexdigest获取hash值，一个个碰撞过来</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">import hashlib</span><br><span class="line">    data2=data2.decode()</span><br><span class="line">    words=[]</span><br><span class="line">    with open('rockyou.txt','r',encoding='utf-8') as file:</span><br><span class="line">        for line in file:</span><br><span class="line">            word=line.strip()</span><br><span class="line">            if word:</span><br><span class="line">                words.append(word)</span><br><span class="line">    for word in words:</span><br><span class="line">        if hashlib.md5(word.encode()).hexdigest()==data2:</span><br><span class="line">            break</span><br><span class="line">    data3=word</span><br><span class="line">    print(data3)</span><br><span class="line">    s.send(data3.encode())</span><br></pre></td></tr></tbody></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> 网安 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 笔记 </tag>
+            
+            <tag> CTF </tag>
+            
+            <tag> 编程 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>HMVLabsTemperanceX00-10</title>
       <link href="/2024/07/11/HMVLabsTemperanceX00-10/"/>
       <url>/2024/07/11/HMVLabsTemperanceX00-10/</url>
@@ -1333,9 +1362,9 @@
       
         <tags>
             
-            <tag> 工具 </tag>
-            
             <tag> 笔记 </tag>
+            
+            <tag> 工具 </tag>
             
         </tags>
       
