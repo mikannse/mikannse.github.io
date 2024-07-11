@@ -4,6 +4,35 @@
   
     
     <entry>
+      <title>HMVLabsTemperanceX00-10</title>
+      <link href="/2024/07/11/HMVLabsTemperanceX00-10/"/>
+      <url>/2024/07/11/HMVLabsTemperanceX00-10/</url>
+      
+        <content type="html"><![CDATA[<h1 id="x00"><a href="#x00" class="headerlink" title="x00"></a>x00</h1><p>运行所给的代码,socket连接之后直接得到flag</p><h1 id="x01"><a href="#x01" class="headerlink" title="x01"></a>x01</h1><p>在第一关的基础上再额外发送一个字符串，添加</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">print('Receiving challenge.')</span><br><span class="line">data3 = s.recv(1024)</span><br><span class="line">print(data3)</span><br><span class="line"></span><br><span class="line">print('Envio reto')</span><br><span class="line">s.send(data3)</span><br></pre></td></tr></tbody></table></figure><p>运行即可</p><h1 id="x02"><a href="#x02" class="headerlink" title="x02"></a>x02</h1><p>需要全部大写</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">data3=data2.upper()</span><br><span class="line">s.send(data3)</span><br></pre></td></tr></tbody></table></figure><h1 id="x03"><a href="#x03" class="headerlink" title="x03"></a>x03</h1><p>运用base64库进行base64解码</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">data3=base64.b64decode(data2)</span><br><span class="line">s.send(data3)</span><br></pre></td></tr></tbody></table></figure><h1 id="x04"><a href="#x04" class="headerlink" title="x04"></a>x04</h1><p>字符串逆序</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">data3=data2[::-1]</span><br><span class="line">s.send(data3)</span><br></pre></td></tr></tbody></table></figure><h1 id="x05"><a href="#x05" class="headerlink" title="x05"></a>x05</h1><p>取倒数5个字符</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">data3=data2[-5:]</span><br><span class="line">s.send(data3)</span><br></pre></td></tr></tbody></table></figure><h1 id="x06"><a href="#x06" class="headerlink" title="x06"></a>x06</h1><p>len取到的是int，先str转成字符再encode成bytes来发送</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">data3= str(len(data2))</span><br><span class="line">print(data3)</span><br><span class="line">s.send(data3.encode())</span><br></pre></td></tr></tbody></table></figure><h1 id="x07"><a href="#x07" class="headerlink" title="x07"></a>x07</h1><p>先进行hex解码转换为字节，再转换成ascii字符</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">data3= bytes.fromhex(data2.decode())</span><br><span class="line">data4=data3.decode('ascii').encode()</span><br><span class="line">s.send(data4)</span><br></pre></td></tr></tbody></table></figure><h1 id="x08"><a href="#x08" class="headerlink" title="x08"></a>x08</h1><p>得到类似b’1 2’的输入，通过分割然后转成int进行计算</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">num1,num2=data2.split()</span><br><span class="line">num1=int(num1)</span><br><span class="line">num2=int(num2)</span><br><span class="line">data3=str(num1+num2)</span><br><span class="line">s.send(data3.encode())</span><br></pre></td></tr></tbody></table></figure><h1 id="x09"><a href="#x09" class="headerlink" title="x09"></a>x09</h1><p>ROT13 是一种简单的字母替换加密方法，它通过将每个字母替换为字母表中向后移动 13 位的字母来实现加密和解密。由于字母表中共有 26 个字母，应用两次 ROT13 会得到原始文本。因此，解密过程与加密过程相同</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">import codecs</span><br><span class="line">data3=codecs.decode(data2.decode(),'rot13')</span><br><span class="line">    s.send(data3.encode())</span><br></pre></td></tr></tbody></table></figure><p>这题似乎有些问题，有时候解密中会出现”@”字符,ROT13加解密是不会出现这玩意的吧???</p><h1 id="x10"><a href="#x10" class="headerlink" title="x10"></a>x10</h1><p>先将输入分割成列表，转换成整数。使用sort进行排序，再转换成字符串进行拼接</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">data2=data2.decode()</span><br><span class="line">def sort_numbers(input_string):</span><br><span class="line">    number_strings = input_string.split()</span><br><span class="line">    numbers = [int(num) for num in number_strings]</span><br><span class="line">    numbers.sort()</span><br><span class="line">    sorted_string = ''.join(map(str, numbers))</span><br><span class="line">    return sorted_string</span><br><span class="line">data3=sort_numbers(data2)</span><br><span class="line">s.send(data3.encode())</span><br></pre></td></tr></tbody></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> 网安 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 笔记 </tag>
+            
+            <tag> CTF </tag>
+            
+            <tag> 编程 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>24-６杂谈</title>
       <link href="/2024/07/05/24-%EF%BC%96%E6%9D%82%E8%B0%88/"/>
       <url>/2024/07/05/24-%EF%BC%96%E6%9D%82%E8%B0%88/</url>
@@ -1304,9 +1333,9 @@
       
         <tags>
             
-            <tag> 笔记 </tag>
-            
             <tag> 工具 </tag>
+            
+            <tag> 笔记 </tag>
             
         </tags>
       
@@ -1819,9 +1848,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -2032,9 +2061,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -2425,9 +2454,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -2456,9 +2485,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -2487,9 +2516,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -2518,9 +2547,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -2549,9 +2578,9 @@
       
         <tags>
             
-            <tag> 溯源取证 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 溯源取证 </tag>
             
             <tag> 打靶 </tag>
             
@@ -2580,9 +2609,9 @@
       
         <tags>
             
-            <tag> 溯源取证 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 溯源取证 </tag>
             
             <tag> 打靶 </tag>
             
@@ -2611,9 +2640,9 @@
       
         <tags>
             
-            <tag> 溯源取证 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 溯源取证 </tag>
             
             <tag> 打靶 </tag>
             
@@ -2642,9 +2671,9 @@
       
         <tags>
             
-            <tag> 溯源取证 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 溯源取证 </tag>
             
             <tag> 打靶 </tag>
             
@@ -2673,9 +2702,9 @@
       
         <tags>
             
-            <tag> 溯源取证 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 溯源取证 </tag>
             
             <tag> 打靶 </tag>
             
@@ -2704,9 +2733,9 @@
       
         <tags>
             
-            <tag> 溯源取证 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 溯源取证 </tag>
             
             <tag> 打靶 </tag>
             
@@ -2735,9 +2764,9 @@
       
         <tags>
             
-            <tag> 溯源取证 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 溯源取证 </tag>
             
             <tag> 打靶 </tag>
             
@@ -2766,9 +2795,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -2797,9 +2826,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -2828,9 +2857,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -2859,9 +2888,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -2890,9 +2919,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -2948,9 +2977,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -3006,9 +3035,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -3037,9 +3066,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -3068,11 +3097,11 @@
       
         <tags>
             
+            <tag> 网安 </tag>
+            
             <tag> 渗透测试 </tag>
             
             <tag> 笔记 </tag>
-            
-            <tag> 网安 </tag>
             
         </tags>
       
@@ -3097,9 +3126,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -3128,9 +3157,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -3159,9 +3188,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -3225,9 +3254,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -3256,9 +3285,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -3287,9 +3316,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -3318,11 +3347,11 @@
       
         <tags>
             
+            <tag> 网安 </tag>
+            
             <tag> 渗透测试 </tag>
             
             <tag> 笔记 </tag>
-            
-            <tag> 网安 </tag>
             
         </tags>
       
@@ -3347,11 +3376,11 @@
       
         <tags>
             
+            <tag> 网安 </tag>
+            
             <tag> 渗透测试 </tag>
             
             <tag> 笔记 </tag>
-            
-            <tag> 网安 </tag>
             
         </tags>
       
@@ -3376,11 +3405,11 @@
       
         <tags>
             
+            <tag> 网安 </tag>
+            
             <tag> 渗透测试 </tag>
             
             <tag> 笔记 </tag>
-            
-            <tag> 网安 </tag>
             
         </tags>
       
@@ -3405,11 +3434,11 @@
       
         <tags>
             
+            <tag> 网安 </tag>
+            
             <tag> 渗透测试 </tag>
             
             <tag> 笔记 </tag>
-            
-            <tag> 网安 </tag>
             
         </tags>
       
@@ -3434,11 +3463,11 @@
       
         <tags>
             
+            <tag> 网安 </tag>
+            
             <tag> 渗透测试 </tag>
             
             <tag> 笔记 </tag>
-            
-            <tag> 网安 </tag>
             
         </tags>
       
@@ -3463,9 +3492,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -3494,11 +3523,11 @@
       
         <tags>
             
+            <tag> 网安 </tag>
+            
             <tag> 渗透测试 </tag>
             
             <tag> 笔记 </tag>
-            
-            <tag> 网安 </tag>
             
         </tags>
       
@@ -3550,11 +3579,11 @@
       
         <tags>
             
+            <tag> 网安 </tag>
+            
             <tag> 渗透测试 </tag>
             
             <tag> 笔记 </tag>
-            
-            <tag> 网安 </tag>
             
         </tags>
       
@@ -3579,11 +3608,11 @@
       
         <tags>
             
+            <tag> 网安 </tag>
+            
             <tag> 渗透测试 </tag>
             
             <tag> 笔记 </tag>
-            
-            <tag> 网安 </tag>
             
         </tags>
       
@@ -3608,11 +3637,11 @@
       
         <tags>
             
+            <tag> 网安 </tag>
+            
             <tag> 渗透测试 </tag>
             
             <tag> 笔记 </tag>
-            
-            <tag> 网安 </tag>
             
         </tags>
       
@@ -3637,11 +3666,11 @@
       
         <tags>
             
+            <tag> 网安 </tag>
+            
             <tag> 渗透测试 </tag>
             
             <tag> 笔记 </tag>
-            
-            <tag> 网安 </tag>
             
         </tags>
       
@@ -3666,11 +3695,11 @@
       
         <tags>
             
+            <tag> 网安 </tag>
+            
             <tag> 渗透测试 </tag>
             
             <tag> 笔记 </tag>
-            
-            <tag> 网安 </tag>
             
         </tags>
       
@@ -3695,9 +3724,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -3726,9 +3755,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> windows </tag>
             
@@ -3757,9 +3786,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> windows </tag>
             
@@ -3788,11 +3817,11 @@
       
         <tags>
             
+            <tag> 网安 </tag>
+            
             <tag> 渗透测试 </tag>
             
             <tag> 笔记 </tag>
-            
-            <tag> 网安 </tag>
             
         </tags>
       
@@ -3844,9 +3873,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -3902,9 +3931,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -3933,9 +3962,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -3964,9 +3993,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -3995,9 +4024,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -4055,9 +4084,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> windows </tag>
             
@@ -4086,9 +4115,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -4117,9 +4146,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> windows </tag>
             
@@ -4148,9 +4177,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> windows </tag>
             
@@ -4179,9 +4208,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -4210,9 +4239,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -4241,9 +4270,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -4272,9 +4301,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -4303,9 +4332,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -4334,9 +4363,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
         </tags>
       
@@ -4361,9 +4390,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -4392,9 +4421,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -4423,9 +4452,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -4454,9 +4483,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -4562,9 +4591,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -4593,9 +4622,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> windows </tag>
             
@@ -4624,9 +4653,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -4711,9 +4740,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> windows </tag>
             
@@ -4742,9 +4771,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> windows </tag>
             
@@ -4773,9 +4802,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -4804,9 +4833,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -4835,9 +4864,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -4866,9 +4895,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> windows </tag>
             
@@ -4924,9 +4953,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -4955,9 +4984,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -4986,9 +5015,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -5017,9 +5046,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -5048,9 +5077,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -5079,9 +5108,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -5110,9 +5139,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -5141,9 +5170,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -5172,9 +5201,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -5234,9 +5263,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -5265,9 +5294,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -5296,9 +5325,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -5327,9 +5356,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -5358,9 +5387,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -5389,11 +5418,11 @@
       
         <tags>
             
+            <tag> 网安 </tag>
+            
             <tag> 渗透测试 </tag>
             
             <tag> 溯源取证 </tag>
-            
-            <tag> 网安 </tag>
             
             <tag> 打靶 </tag>
             
@@ -5422,9 +5451,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -5453,9 +5482,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> windows </tag>
             
@@ -5484,9 +5513,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -5515,9 +5544,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -5546,9 +5575,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> 打靶 </tag>
             
@@ -5604,9 +5633,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> windows </tag>
             
@@ -5635,9 +5664,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
             <tag> windows </tag>
             
@@ -5666,9 +5695,9 @@
       
         <tags>
             
-            <tag> 渗透测试 </tag>
-            
             <tag> 网安 </tag>
+            
+            <tag> 渗透测试 </tag>
             
         </tags>
       
