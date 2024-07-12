@@ -4,6 +4,35 @@
   
     
     <entry>
+      <title>HMVLabsTemperanceX21-32</title>
+      <link href="/2024/07/12/HMVLabsTemperanceX21-32/"/>
+      <url>/2024/07/12/HMVLabsTemperanceX21-32/</url>
+      
+        <content type="html"><![CDATA[<h1 id="x21"><a href="#x21" class="headerlink" title="x21"></a>x21</h1><p>将字节转换成千字节并保留两位小数，使用格式化字符串</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">data2=data2.decode()</span><br><span class="line">kb=int(data2)/1024</span><br><span class="line">data3=f"{kb:.2f}KB"</span><br><span class="line">print(data3)</span><br><span class="line">s.send(data3.encode())</span><br></pre></td></tr></tbody></table></figure><h1 id="x22"><a href="#x22" class="headerlink" title="x22"></a>x22</h1><p>chr来转成ascii码</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">data2=data2.decode()</span><br><span class="line">lists=data2.split()</span><br><span class="line">lists=map(int,lists)</span><br><span class="line">data3=''.join(chr(num)for num in lists)</span><br><span class="line">s.send(data3.encode())</span><br></pre></td></tr></tbody></table></figure><h1 id="x23"><a href="#x23" class="headerlink" title="x23"></a>x23</h1><p>和前几题一样，只不过变成了5个像素和多了转ascii码的步骤</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">import base64</span><br><span class="line">from io import BytesIO</span><br><span class="line">from PIL import Image </span><br><span class="line"></span><br><span class="line">    data2=base64.b64decode(data2)</span><br><span class="line">    Bimage=Image.open(BytesIO(data2))</span><br><span class="line">    data3=''.join(str(chr(Bimage.getdata()[i][-1]))for i in range(5))</span><br><span class="line">    print(data3)</span><br><span class="line">    s.send(data3.encode())</span><br></pre></td></tr></tbody></table></figure><h1 id="x24"><a href="#x24" class="headerlink" title="x24"></a>x24</h1><p>使用requests库来实现网页的访问,response是响应码，response.text能获取响应体</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">import requests</span><br><span class="line"></span><br><span class="line">data2=data2.decode()</span><br><span class="line">    response=requests.get(data2)</span><br><span class="line">    data3=response.text</span><br><span class="line">    s.send(data3.encode())</span><br></pre></td></tr></tbody></table></figure><h1 id="x25"><a href="#x25" class="headerlink" title="x25"></a>x25</h1><p>通过curl，能够得知所要得到的响应头的名字叫做Hmv-Code</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">import requests</span><br><span class="line"></span><br><span class="line">data2=data2.decode()</span><br><span class="line">    response=requests.get(data2)</span><br><span class="line">    data3=response.headers.get('Hmv-Code')</span><br><span class="line">    print(data3)</span><br><span class="line">    s.send(data3.encode())</span><br></pre></td></tr></tbody></table></figure><h1 id="x26"><a href="#x26" class="headerlink" title="x26"></a>x26</h1><p>这题需要读取图片中的数字，本人用的是Tesseract-OCR</p><p>安装教程: <a href="https://blog.csdn.net/weixin_42872122/article/details/123730558">https://blog.csdn.net/weixin_42872122/article/details/123730558</a></p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">import base64</span><br><span class="line">from io import BytesIO</span><br><span class="line">from PIL import Image</span><br><span class="line">import pytesseract</span><br><span class="line"></span><br><span class="line">    data2=base64.b64decode(data2)</span><br><span class="line">    Bimage=Image.open(BytesIO(data2))</span><br><span class="line">    data3=pytesseract.image_to_string(Bimage)</span><br><span class="line">    print(data3)</span><br><span class="line">    s.send(data3.encode())</span><br></pre></td></tr></tbody></table></figure><h1 id="x27"><a href="#x27" class="headerlink" title="x27"></a>x27</h1><p>提交proxy用户的UID,splitlines进行分行</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">import requests</span><br><span class="line">    data2=data2.decode()</span><br><span class="line">    response=requests.get(data2)</span><br><span class="line">    content=response.text</span><br><span class="line">    lines=content.splitlines()</span><br><span class="line">    for line in lines:</span><br><span class="line">        if 'proxy' in line:</span><br><span class="line">            content=line</span><br><span class="line">            break</span><br><span class="line">    data3=content.split(':')[2]</span><br><span class="line">    print(data3)</span><br><span class="line">    s.send(data3.encode())</span><br></pre></td></tr></tbody></table></figure><h1 id="x28"><a href="#x28" class="headerlink" title="x28"></a>x28</h1><p>使用默认的key和算法</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">import jwt</span><br><span class="line">    data2=data2.decode()</span><br><span class="line">    print(data2)</span><br><span class="line">    data3=jwt.decode(data2,key='secret', algorithms=['HS256'])</span><br><span class="line">    data3=data3.get("HMVKey")</span><br><span class="line">    s.send(data3.encode())</span><br></pre></td></tr></tbody></table></figure><h1 id="x29"><a href="#x29" class="headerlink" title="x29"></a>x29</h1><p>使用geopy库来计算两个经纬度之间的距离</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">from geopy.distance import geodesic</span><br><span class="line">    data2=data2.decode()</span><br><span class="line">    lists=data2.split()</span><br><span class="line">    lat1=lists[1]</span><br><span class="line">    lon1=lists[3]</span><br><span class="line">    lat2=lists[6]</span><br><span class="line">    lon2=lists[8]</span><br><span class="line">    data3 = str(geodesic((lat1,lon1), (lat2,lon2)).km)  </span><br><span class="line">    s.send(data3.encode())</span><br></pre></td></tr></tbody></table></figure><h1 id="x30"><a href="#x30" class="headerlink" title="x30"></a>x30</h1><p>给了一串16进制字符，需要与密钥’HMV’进行异或，需要扩展密钥至与所给的字符同长</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">key=b'HMV'</span><br><span class="line">key=(key * (len(data2) // len(key))) + key[:len(data2) % len(key)]</span><br><span class="line">data3=bytes(b ^ k for b, k in zip(data2, key))</span><br><span class="line">print(data3)</span><br><span class="line">s.send(data3)</span><br></pre></td></tr></tbody></table></figure><h1 id="x31"><a href="#x31" class="headerlink" title="x31"></a>x31</h1><p>使用Pyzbar库进行二维码的读取,获取qr_code对象的data数据进行发送</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">import base64</span><br><span class="line">from io import BytesIO</span><br><span class="line">from PIL import Image</span><br><span class="line">from pyzbar import pyzbar</span><br><span class="line"></span><br><span class="line">    Bimage=Image.open(BytesIO(base64.b64decode(data2)))</span><br><span class="line">    qr_code=pyzbar.decode(Bimage)</span><br><span class="line">    data3=(qr_code[0].data)</span><br><span class="line">    s.send(data3)</span><br></pre></td></tr></tbody></table></figure><h1 id="x32"><a href="#x32" class="headerlink" title="x32"></a>x32</h1><p>使用itertools的permutations来生成字符串的全排列，生成的是每种组合情况的列表，所以需要先进行join拼接</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">import hashlib</span><br><span class="line">import itertools</span><br><span class="line"></span><br><span class="line">    hash,string=data2.decode().split()</span><br><span class="line">    permutations=itertools.permutations(string)</span><br><span class="line">    for perm in permutations:</span><br><span class="line">        perm_str=''.join(perm)</span><br><span class="line">        string_md5=hashlib.md5(perm_str.encode()).hexdigest()</span><br><span class="line">        if string_md5==hash:</span><br><span class="line">            break</span><br><span class="line">    data3=perm_str</span><br><span class="line">    s.send(data3.encode())</span><br></pre></td></tr></tbody></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> 网安 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 笔记 </tag>
+            
+            <tag> CTF </tag>
+            
+            <tag> 编程 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>HMVLabsTemperanceX11-20</title>
       <link href="/2024/07/11/HMVLabsTemperanceX11-20/"/>
       <url>/2024/07/11/HMVLabsTemperanceX11-20/</url>
@@ -165,9 +194,9 @@
             
             <tag> 渗透测试 </tag>
             
-            <tag> 溯源取证 </tag>
-            
             <tag> 笔记 </tag>
+            
+            <tag> 溯源取证 </tag>
             
             <tag> 流量分析 </tag>
             
@@ -196,9 +225,9 @@
             
             <tag> 渗透测试 </tag>
             
-            <tag> 溯源取证 </tag>
-            
             <tag> 笔记 </tag>
+            
+            <tag> 溯源取证 </tag>
             
         </tags>
       
@@ -1362,9 +1391,9 @@
       
         <tags>
             
-            <tag> 笔记 </tag>
-            
             <tag> 工具 </tag>
+            
+            <tag> 笔记 </tag>
             
         </tags>
       
@@ -1478,9 +1507,9 @@
       
         <tags>
             
-            <tag> 笔记 </tag>
-            
             <tag> Docker </tag>
+            
+            <tag> 笔记 </tag>
             
             <tag> 运维 </tag>
             
@@ -1604,9 +1633,9 @@
             
             <tag> 渗透测试 </tag>
             
-            <tag> 笔记 </tag>
-            
             <tag> Docker </tag>
+            
+            <tag> 笔记 </tag>
             
         </tags>
       
