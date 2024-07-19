@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>HTML随手记</title>
+      <link href="/2024/07/19/HTML%E9%9A%8F%E6%89%8B%E8%AE%B0/"/>
+      <url>/2024/07/19/HTML%E9%9A%8F%E6%89%8B%E8%AE%B0/</url>
+      
+        <content type="html"><![CDATA[<h1 id="基础结构"><a href="#基础结构" class="headerlink" title="基础结构"></a>基础结构</h1><p>1 html文件的根标签</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">&lt;html&gt;&lt;/html&gt;</span><br></pre></td></tr></tbody></table></figure><p>所有的其他标签都要在这个标签中间<br>2 html根标签下有两个一级子标签</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">&lt;head&gt;&lt;/head&gt;</span><br></pre></td></tr></tbody></table></figure><p>头标签定义那些不直接展示在页面主体上，但是又很重要的内容</p><p>1 字符集&lt;metacharset=”utf-8”/&gt;告诉浏览器用什么字符集对文件解码</p><p>2 css引入</p><p>3 js引入</p><p>4 其他</p><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">&lt;bodY&gt;&lt;/bodY&gt;</span><br></pre></td></tr></tbody></table></figure><p>体标签</p><p>1 定义要展示到页面主体的标签</p><h1 id="专业词汇"><a href="#专业词汇" class="headerlink" title="专业词汇"></a>专业词汇</h1><p>标签</p><p>代码中的一个&lt;&gt;叫做一个标签，有些标签成对出现，称之为双标签，有些标签单独出现，称之为单标签<br>属性<br>一般在开始标签中，用于定义标签的一些特征</p><p>文本</p><p>双标签中间的文字，包含空格换行等结构<br>元素<br>经过浏览器解析后，每一个完整的标签（标签+属性+文本）可以称之为一个元素</p><h1 id="标签"><a href="#标签" class="headerlink" title="标签"></a>标签</h1><h2 id="列表"><a href="#列表" class="headerlink" title="列表"></a>列表</h2><p>有序列表 ol<br>无序列表 ul<br>列表项 li</p><h2 id="超链接"><a href="#超链接" class="headerlink" title="超链接"></a>超链接</h2><p>a</p><p>​href用于定义要跳转的目标资源的地址<br>​1 完整的url<br>​2 相对路径<br>​3 绝对路径<br>​target用于定义目标资源的打开方式<br>​_self 在当前窗口打开目标资源<br>​_blank 开启新窗[ll打开目标资源</p><h2 id="图片"><a href="#图片" class="headerlink" title="图片"></a>图片</h2><p>img</p><p>​src 定义图片的路径<br>​1url<br>​2相对路径<br>​3绝对路径<br>​title 定义鼠标悬停时提示的文字<br>​alt 定义图片加载失败时提示文字</p><h2 id="表格"><a href="#表格" class="headerlink" title="表格"></a>表格</h2><p>table整张表格<br>    thead表头<br>    tbody表体<br>    tft表尾<br>        tr 表格中的一行<br>            td 行中的一个单元格<br>            th 自带加粗居中效果的td</p><h2 id="表单"><a href="#表单" class="headerlink" title="表单"></a>表单</h2><p>form标签，表单标签，其内部用于定义可以让用户输入信息的表单项标签<br>    action,form标签的属性之一，用于定义信息提交的服务器的地址<br>    method，form标签的属性之一，用于定义信息的提交方式<br>        getget方式，数据会缀到url后，以?作为参数开始的标识，多个参数用&amp;隔开<br>        postpost方式，数据会通过请求体发送，不会在缀到url后<br>input标签，主要的表单项标签，可以用于定义表单项<br>    name,input标签的属羡之一用于定义提交的参数名<br>    type,input标签的属性之一，用于定义表单项类型<br>    text文本框<br>        password密码框<br>        submit提交按钮<br>        reset重置按钮</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 网安 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 笔记 </tag>
+            
+            <tag> 前端 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>打靶记录(一一九)之HMVDC02</title>
       <link href="/2024/07/19/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E4%B8%80%E4%B9%9D)%E4%B9%8BHMVDC02/"/>
       <url>/2024/07/19/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E4%B8%80%E4%B9%9D)%E4%B9%8BHMVDC02/</url>
