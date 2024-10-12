@@ -1,0 +1,619 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>THM免杀学习IntroductiontoAntivirus | MikannseのSekai</title><meta name="author" content="Mikannse"><meta name="copyright" content="Mikannse"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="Introduction欢迎来到 AV 简介 防病毒 (AV) 软件是基于主机的基本安全解决方案之一，可用于检测和防止最终用户计算机内的恶意软件攻击。 反病毒软件由不同的模块、功能和检测技术组成，这些将在本房间中讨论。 作为红队成员或渗透测试人员，熟悉并了解 AV 软件及其检测技术的工作原理至关重要。 一旦获得了这些知识，就可以更轻松地研究 AV 规避技术。 学习目标  什么是防病毒软件？ 防病毒">
+<meta property="og:type" content="article">
+<meta property="og:title" content="THM免杀学习IntroductiontoAntivirus">
+<meta property="og:url" content="http://mikannse.space/2024/04/08/THM%E5%85%8D%E6%9D%80%E5%AD%A6%E4%B9%A0IntroductiontoAntivirus/index.html">
+<meta property="og:site_name" content="MikannseのSekai">
+<meta property="og:description" content="Introduction欢迎来到 AV 简介 防病毒 (AV) 软件是基于主机的基本安全解决方案之一，可用于检测和防止最终用户计算机内的恶意软件攻击。 反病毒软件由不同的模块、功能和检测技术组成，这些将在本房间中讨论。 作为红队成员或渗透测试人员，熟悉并了解 AV 软件及其检测技术的工作原理至关重要。 一旦获得了这些知识，就可以更轻松地研究 AV 规避技术。 学习目标  什么是防病毒软件？ 防病毒">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg">
+<meta property="article:published_time" content="2024-04-08T06:12:37.000Z">
+<meta property="article:modified_time" content="2024-06-14T03:29:58.761Z">
+<meta property="article:author" content="Mikannse">
+<meta property="article:tag" content="笔记">
+<meta property="article:tag" content="渗透测试">
+<meta property="article:tag" content="免杀">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg"><link rel="shortcut icon" href="/img/icon.jpg"><link rel="canonical" href="http://mikannse.space/2024/04/08/THM%E5%85%8D%E6%9D%80%E5%AD%A6%E4%B9%A0IntroductiontoAntivirus/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Mikannse","link":"链接: ","source":"来源: MikannseのSekai","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'THM免杀学习IntroductiontoAntivirus',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: undefined,
+  isToc: true,
+  postUpdate: '2024-06-14 11:29:58'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">274</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="MikannseのSekai"><span class="site-name">MikannseのSekai</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">THM免杀学习IntroductiontoAntivirus</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-04-08T06:12:37.000Z" title="发表于 2024-04-08 14:12:37">2024-04-08</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-06-14T03:29:58.761Z" title="更新于 2024-06-14 11:29:58">2024-06-14</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BD%91%E5%AE%89/">网安</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">8.5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>28分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="THM免杀学习IntroductiontoAntivirus"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>欢迎来到 AV 简介 防病毒 (AV) 软件是基于主机的基本安全解决方案之一，可用于检测和防止最终用户计算机内的恶意软件攻击。 反病毒软件由不同的模块、功能和检测技术组成，这些将在本房间中讨论。 作为红队成员或渗透测试人员，熟悉并了解 AV 软件及其检测技术的工作原理至关重要。 一旦获得了这些知识，就可以更轻松地研究 AV 规避技术。</p>
+<p>学习目标</p>
+<ul>
+<li>什么是防病毒软件？</li>
+<li>防病毒检测方法</li>
+<li>枚举目标机器中安装的AV软件</li>
+<li>在模拟环境中进行测试</li>
+</ul>
+<p>房间先决条件</p>
+<ul>
+<li>基于主机的检测解决方案的一般知识； 查看 <a target="_blank" rel="noopener" href="https://tryhackme.com/room/thelayoftheland">The Lay of the Land</a> 房间了解更多信息。</li>
+<li>哈希加密的一般经验； 查看 <a target="_blank" rel="noopener" href="https://tryhackme.com/room/hashingcrypto101">Hashing - Crypto 101</a> 房间以获取更多信息。</li>
+<li>Yara规则的基础知识； 查看 THM <a target="_blank" rel="noopener" href="https://tryhackme.com/room/yara">Yara</a> 房间了解更多信息。</li>
+</ul>
+<h1 id="Antivirus-Software"><a href="#Antivirus-Software" class="headerlink" title="Antivirus Software"></a>Antivirus Software</h1><p>什么是AV软件？</p>
+<p>防病毒 (AV) 软件是额外的安全层，旨在检测并防止目标操作系统中恶意文件的执行和传播。</p>
+<p>它是一个基于主机的应用程序，实时（在后台）运行以监视和检查当前和新下载的文件。 反病毒软件使用不同的技术检查并确定文件是否是恶意的，本会议室稍后将介绍这些技术。</p>
+<p>有趣的是，第一个防病毒软件的设计目的只是为了检测和删除<a target="_blank" rel="noopener" href="https://malware-history.fandom.com/wiki/Virus">计算机病毒</a>。 如今，情况已经改变了； 现代防病毒应用程序可以检测并删除计算机病毒以及其他有害文件和威胁。</p>
+<p>AV 软件寻找什么？</p>
+<p>传统的反病毒软件会寻找具有预定义恶意模式或签名的<strong>恶意软件</strong>。 恶意软件是有害软件，其主要目标是对目标计算机造成损害，包括但不限于：</p>
+<ul>
+<li>获得对目标机器的完全访问权限。</li>
+<li>窃取密码等敏感信息。</li>
+<li>加密文件并导致文件损坏。</li>
+<li>注入其他恶意软件或不需要的广告。</li>
+<li>使用受感染的机器执行进一步的攻击，例如僵尸网络攻击。</li>
+</ul>
+<h2 id="AV-与其他安全产品"><a href="#AV-与其他安全产品" class="headerlink" title="AV 与其他安全产品"></a>AV 与其他安全产品</h2><p>除了 AV 软件之外，其他基于主机的安全解决方案也为端点设备提供实时保护。 端点检测和响应 (EDR) 是一种安全解决方案，可提供基于行为分析的实时保护。 防病毒应用程序执行扫描、检测和删除恶意文件。 另一方面，EDR监视目标机器中的各种安全检查，包括文件活动、内存、网络连接、Windows注册表、进程等。</p>
+<p>现代防病毒产品旨在将传统防病毒功能和其他高级功能（类似于 EDR 功能）集成到一款产品中，以提供针对数字威胁的全面保护。 有关基于主机的安全解决方案的更多信息，我们建议访问 THM 房间：<a target="_blank" rel="noopener" href="https://tryhackme.com/room/thelayoftheland">The Lay of the Land</a>。</p>
+<h2 id="AV软件的过去和现在"><a href="#AV软件的过去和现在" class="headerlink" title="AV软件的过去和现在"></a>AV软件的过去和现在</h2><p>McAfee Associates, Inc. 于 1987 年开始实施第一个 AV 软件。它被称为“VirusScan”，当时的主要目标是删除感染 John McAfee 计算机的名为“Brain”的病毒。 随后，其他公司也加入到与病毒的战斗中。 反病毒软件被称为扫描仪，它们是搜索文件中恶意模式的命令行软件。</p>
+<p>从那时起，事情发生了变化。 如今，反病毒软件使用图形用户界面 (GUI) 来执行恶意文件扫描和其他任务。 恶意软件程序的范围也扩大了，现在以 Windows 和其他操作系统上的受害者为目标。 现代 AV 软件支持大多数设备和平台，包括 Windows、Linux、macOS、Android 和 iOS。 现代反病毒软件已经得到改进，变得更加智能和复杂，因为它们包含了一系列多功能功能，包括防病毒、防漏洞利用、防火墙、加密工具等。</p>
+<p>我们将在下一个任务中讨论一些 AV 功能。</p>
+<h1 id="Antivirus-Features"><a href="#Antivirus-Features" class="headerlink" title="Antivirus Features"></a>Antivirus Features</h1><p>防病毒引擎</p>
+<p>AV 引擎负责查找并删除恶意代码和文件。 好的反病毒软件实现了有效且可靠的反病毒核心，可以准确、快速地分析恶意文件。 此外，它应该处理和支持各种文件类型，包括存档文件，它可以自解压和检查所有压缩文件。</p>
+<p>大多数AV产品具有相同的共同功能，但实现方式不同，包括但不限于：</p>
+<p>Scanner</p>
+<p>Detection techniques</p>
+<p>Compressors and Archives</p>
+<p>Unpackers</p>
+<p>Emulators</p>
+<p>扫描器</p>
+<p>大多数 AV 产品都包含扫描仪功能：AV 软件实时或按需运行和扫描。 此功能可在 GUI 中或通过命令提示符使用。 用户可以在需要检查文件或目录时使用它。 扫描功能必须支持最知名的恶意文件类型才能检测和消除威胁。 此外，根据反病毒软件的不同，它还可能支持其他类型的扫描，包括漏洞、电子邮件、Windows内存和Windows注册表。</p>
+<p>检测技术</p>
+<p>AV检测技术搜索并检测恶意文件； AV 引擎中可以使用不同的检测技术，包括：</p>
+<pre><code> 基于签名的检测是传统的反病毒技术，可在文件中查找预定义的恶意模式和签名。
+ 启发式检测是一种更先进的技术，包括分析可疑文件的各种行为方法。
+ 动态检测是一种包括监控系统调用和 API 以及在隔离环境中进行测试和分析的技术。
+</code></pre>
+<p>我们将在下一个任务中介绍这些技术。 良好的反病毒引擎能够准确、快速地检测恶意文件，并减少误报结果。 我们将展示几种提供不准确结果并对文件进行错误分类的 AV 产品。</p>
+<p>压缩机和档案</p>
+<p>“压缩器和档案”功能应该包含在任何 AV 软件中。 它必须支持并能够处理各种系统文件类型，包括压缩或存档文件：ZIP、TGZ、7z、XAR、RAR 等。恶意代码通常试图通过隐藏在压缩文件中来逃避基于主机的安全解决方案。 因此，在用户打开存档中的文件之前，反病毒软件必须解压缩并扫描所有文件。</p>
+<p>PE（可移植可执行文件）解析和解包程序</p>
+<p>恶意软件通过在有效负载中压缩和加密其恶意代码来隐藏和打包其恶意代码。 它在运行时自行解压缩和解密，使静态分析变得更加困难。 因此，反病毒软件必须能够在运行时进行静态分析之前检测并解压大多数已知的加壳程序（UPX、Armadillo、ASPack 等）。</p>
+<p>恶意软件开发人员使用各种技术（例如打包）来缩小恶意文件的大小并更改其结构。 打包会压缩原始可执行文件以使其更难以分析。 因此，反病毒软件必须具有解包功能，将受保护或压缩的可执行文件解包为原始代码。</p>
+<p>AV 软件必须具备的另一个功能是 Windows 可移植可执行文件 (PE) 标头解析器。 解析可执行文件的PE有助于区分恶意软件和合法软件（.exe文件）。 Windows（32 位和 64 位）中的 PE 文件格式包含各种信息和资源，例如目标代码、DLL、图标文件、字体文件和核心转储。</p>
+<p>模拟器</p>
+<p>模拟器是一种防病毒功能，可对可疑文件进行进一步分析。 一旦模拟器收到请求，模拟器就会在虚拟化和受控环境中运行可疑文件（exe、DLL、PDF 等）。 它监视可执行文件在执行过程中的行为，包括 Windows API 调用、注册表和其他 Windows 文件。 以下是模拟器可能收集的工件的示例：</p>
+<pre><code> API调用
+ 内存转储
+ 文件系统修改
+ 记录事件
+ 正在运行的进程
+ 网络请求
+</code></pre>
+<p>当收集到足够的工件来检测恶意软件时，模拟器会停止文件的执行。</p>
+<p>其他共同特征</p>
+<p>以下是 AV 产品的一些常见功能：</p>
+<pre><code> 自我保护驱动程序，可防止恶意软件攻击实际的反病毒软件。
+ 防火墙和网络检查功能。
+ 命令行和图形界面工具。
+ 守护进程或服务。
+ 管理控制台。
+</code></pre>
+<h1 id="AV-Static-Detection"><a href="#AV-Static-Detection" class="headerlink" title="AV Static  Detection"></a>AV Static  Detection</h1><p>一般来说，AV检测可以分为三种主要方法：</p>
+<ol>
+<li>静态检测</li>
+<li>动态检测</li>
+<li>启发式和行为检测</li>
+</ol>
+<p>静态检测</p>
+<p>静态检测技术是最简单的防病毒检测类型，它基于恶意文件的预定义签名。 简而言之，它在检测中使用模式匹配技术，例如查找唯一字符串、CRC（校验和）、字节码/十六进制值序列和加密哈希（MD5、SHA1 等）。</p>
+<p>然后，它在操作系统内的现有文件与签名数据库之间执行一组比较。 如果数据库中存在该签名，则认为该签名是恶意的。 此方法对静态恶意软件有效。</p>
+<p>在此任务中，我们将使用基于签名的检测方法来了解防病毒产品如何检测恶意文件。 值得注意的是，该技术仅适用于具有数据库中预先生成的签名的已知恶意文件。 因此，数据库需要不时更新。</p>
+<p>我们将使用 ClamAV 防病毒软件来演示基于签名的检测如何识别恶意文件。 ClamAV软件预装在提供的VM中，我们可以通过以下路径访问它：c:\Program Files\ClamAV\clamscan.exe。 我们还将扫描一些恶意软件样本，这些样本可以在桌面上找到。 恶意软件样本文件夹包含以下文件：</p>
+<ol>
+<li><strong>EICAR</strong> 是一个包含 ASCII 字符串的测试文件，用于测试 AV 软件的有效性，而不是可能损坏您机器的真正恶意软件。 如需了解更多信息，您可以访问 EICAR 官方网站，<a target="_blank" rel="noopener" href="https://www.eicar.org/?page_id=3950">此处</a>。</li>
+<li><strong>Backdoor 1</strong>是一个C#程序，它使用众所周知的技术来建立反向连接，包括创建进程和执行Metasploit Framework shellcode。</li>
+<li><strong>Backdoor 2</strong> 是一个 C# 程序，它使用进程注入和加密来建立反向连接，包括将 Metasploit shellcode 注入现有和正在运行的进程中。</li>
+<li><strong>AV-Check</strong> 是一个 C# 程序，用于枚举目标计算机中的 AV 软件。 请注意，该文件不是恶意的。 我们将在任务 6 中更详细地讨论该工具。</li>
+<li><strong>notes.txt</strong> 是一个包含命令行的文本文件。 请注意，该文件不是恶意的。</li>
+</ol>
+<p>ClamAV自带数据库，在安装过程中，我们需要下载最近更新的版本。 让我们尝试使用 clamscan.exe 二进制文件扫描恶意软件示例文件夹，并检查 ClamAV 对这些示例的执行情况。</p>
+<p>命令提示符</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">			c:\&gt;"c:\Program Files\ClamAV\clamscan.exe" c:\Users\thm\Desktop\Samples</span><br><span class="line">Loading:    22s, ETA:   0s [========================&gt;]    8.61M/8.61M sigs</span><br><span class="line">Compiling:   4s, ETA:   0s [========================&gt;]       41/41 tasks</span><br><span class="line"></span><br><span class="line">C:\Users\thm\Desktop\Samples\AV-Check.exe: OK</span><br><span class="line">C:\Users\thm\Desktop\Samples\backdoor1.exe: Win.Malware.Swrort-9872015-0 FOUND</span><br><span class="line">C:\Users\thm\Desktop\Samples\backdoor2.exe: OK</span><br><span class="line">C:\Users\thm\Desktop\Samples\eicar.com: Win.Test.EICAR_HDB-1 FOUND</span><br><span class="line">C:\Users\thm\Desktop\Samples\notes.txt: OK</span><br><span class="line">	    </span><br></pre></td></tr></tbody></table></figure>
+
+<p>aboe 输出显示 ClamAV 软件正确分析了我们测试的两个文件（EICAR、backdoor1、AV-Check 和notes.txt）并将其标记为恶意文件。 然而，它错误地将后门2识别为非恶意的。</p>
+<p>您可以运行 clamscan.exe –debug <file_to_scan>，您将看到扫描期间加载和使用的所有模块。 例如，它使用解包方法来分割文件并查找预定义的恶意字节码值序列，这就是它能够检测到C#后门1的方式。后门1中使用的Metasploit shellcode的字节码值之前是 识别并添加到 ClamAV 的数据库中。</file_to_scan></p>
+<p>然而，后门 2 对 Metasploit shellcode 使用加密技术 (XOR)，导致产生在 ClamAV 数据库中找不到的不同字节码值序列。</p>
+<p>虽然 ClamAV 能够使用基于 md5 签名的技术将 EICAR.COM 测试文件检测为恶意文件。 为了确认这一点，我们可以在调试模式（–debug）下再次重新扫描 EICAR.COM 测试文件。 在输出中的某个时刻，您将看到以下消息：</p>
+<figure class="highlight javascript"><table><tbody><tr><td class="code"><pre><span class="line"><span class="title class_">LibClamAV</span> <span class="attr">debug</span>: <span class="variable constant_">FP</span> <span class="attr">SIGNATURE</span>: 44<span class="attr">d88612fea8a8f36de82e1278abb02f</span>:<span class="number">68</span>:<span class="title class_">Win</span>.<span class="property">Test</span>.<span class="property">EICAR_HDB</span>-<span class="number">1</span>  # <span class="title class_">Name</span>: eicar.<span class="property">com</span>, <span class="title class_">Type</span>: <span class="variable constant_">CL_TYPE_TEXT_ASCII</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>现在，如果 EICAR.COM 的 md5 值与我们在输出中看到的上一条消息中看到的值相匹配，则生成该值。 我们将为此使用 sigtool：</p>
+<p>命令提示符</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">			c:\&gt;"c:\Program Files\ClamAV\sigtool.exe" --md5 c:\Users\thm\Desktop\Samples\eicar.com</span><br><span class="line">44d88612fea8a8f36de82e1278abb02f:68:eicar.com</span><br><span class="line">	    </span><br></pre></td></tr></tbody></table></figure>
+
+<p>如果仔细检查生成的 MD5 值 44d88612fea8a8f36de82e1278abb02f，它是匹配的。</p>
+<p>创建您自己的签名数据库</p>
+<p>ClamAV 的功能之一是创建您自己的数据库，允许您包含官方 ClamAV 数据库中未找到的项目。 让我们尝试为 ClamAV 已经错过的 Backdoor 2 创建签名，并将其添加到数据库中。 以下是所需的步骤：</p>
+<ol>
+<li>为文件生成MD5签名。</li>
+<li>将生成的签名添加到扩展名为“.hdb”的数据库中。</li>
+<li>使用我们的新数据库针对文件重新扫描 ClamAV。</li>
+</ol>
+<p>首先，我们将使用 ClamAV 套件中包含的 sigtool 工具，通过 –md5 参数生成 backdoor2.exe 的 MD5 哈希值。</p>
+<p>生成 MD5 哈希值</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">			C:\Users\thm\Desktop\Samples&gt;"c:\Program Files\ClamAV\sigtool.exe" --md5 backdoor2.exe</span><br><span class="line">75047189991b1d119fdb477fef333ceb:6144:backdoor2.exe </span><br></pre></td></tr></tbody></table></figure>
+
+<p>如输出所示，生成的哈希字符串包含以下结构：Hash:Size-in-byte:FileName。 请注意，ClamAV 在扫描期间的比较中使用生成的值。</p>
+<p>现在我们有了 MD5 哈希值，现在让我们创建自己的数据库。 我们将使用 sigtool 工具并使用 &gt; thm.hdb 将输出保存到文件中，如下所示，</p>
+<p>生成我们的新数据库</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\Users\thm\Desktop\Samples&gt;"c:\Program Files\ClamAV\sigtool.exe" --md5 backdoor2.exe &gt; thm.hdb</span><br></pre></td></tr></tbody></table></figure>
+
+<p>结果，将在执行该命令的当前目录中创建一个 thm.hdb 文件。</p>
+<p>我们已经知道ClamAV没有使用官方数据库检测到backdoor2.exe！ 现在，让我们使用我们创建的数据库 thm.hdb 重新扫描它，并查看结果！</p>
+<p>使用新数据库重新扫描backdoor2.exe！</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">			C:\Users\thm\Desktop\Samples&gt;"c:\Program Files\ClamAV\clamscan.exe" -d thm.hdb backdoor2.exe</span><br><span class="line">Loading:     0s, ETA:   0s [========================&gt;]        1/1 sigs</span><br><span class="line">Compiling:   0s, ETA:   0s [========================&gt;]       10/10 tasks</span><br><span class="line"></span><br><span class="line">C:\Users\thm\Desktop\Samples\backdoor2.exe: backdoor2.exe.UNOFFICIAL FOUND</span><br><span class="line">	    </span><br></pre></td></tr></tbody></table></figure>
+
+<p>正如我们预期的那样，ClamAV 工具根据我们提供的数据库将 backdoor2.exe 二进制文件标记为恶意文件。 作为实践，将 AV-Check.exe 的 MD5 签名添加到我们已创建的同一数据库中，然后检查 ClamAV 是否可以将 AV-Check.exe 标记为恶意。</p>
+<p>Yara 静态检测规则</p>
+<p>有助于静态检测的工具之一是 <a target="_blank" rel="noopener" href="http://virustotal.github.io/yara/">Yara</a>。 Yara 是一款允许恶意软件工程师分类和检测恶意软件的工具。 Yara 使用基于规则的检测，因此为了检测新的恶意软件，我们需要创建新规则。 ClamAV 还可以处理 Yara 规则来检测恶意文件。 该规则与上一节中我们的数据库中的规则相同。</p>
+<p>为了创建规则，我们需要检查和分析恶意软件； 根据调查结果，我们编写了一条规则。 我们以AV-Check.exe为例，为其编写一条规则。</p>
+<p>首先，让我们分析该文件并使用字符串工具列出二进制文件中所有人类可读的字符串。 结果，我们将看到所有函数、变量和无意义的字符串。 但是，如果您仔细观察，我们可以在将来使用规则中的一些唯一字符串来检测此文件。 AV-Check使用程序数据库（.pdb），其中包含程序在编译过程中的类型和符号调试信息。</p>
+<p>命令提示符</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">			C:\Users\thm\Desktop\Samples&gt;strings AV-Check.exe | findstr pdb</span><br><span class="line">C:\Users\thm\source\repos\AV-Check\AV-Check\obj\Debug\AV-Check.pdb</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们将使用上一个命令输出中的路径作为我们将创建的 Yara 规则中的唯一字符串示例。 签名可能是现实世界中的其他东西，例如注册表项、命令等。以下是我们将在检测中使用的 Yara 规则：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">rule thm_demo_rule {</span><br><span class="line">	meta:</span><br><span class="line">		author = "THM: Intro-to-AV-Room"</span><br><span class="line">		description = "Look at how the Yara rule works with ClamAV"</span><br><span class="line">	strings:</span><br><span class="line">		$a = "C:\\Users\\thm\\source\\repos\\AV-Check\\AV-Check\\obj\\Debug\\AV-Check.pdb"</span><br><span class="line">	condition:</span><br><span class="line">		$a</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>让我们进一步解释一下 Yara 规则。</p>
+<ul>
+<li>规则以规则 thm_demo_rule 开头，这是我们规则的名称。 如果规则匹配，ClamAV 将使用此名称。</li>
+<li>元数据部分是一般信息，包含用户可以填写的作者和描述。</li>
+<li>字符串部分包含我们正在查找的字符串或字节码。 在本例中，我们使用 C# 程序的数据库路径。 请注意，我们在该路径中添加了一个额外的 \ 来转义特殊字符，因此它不会违反规则。</li>
+<li>在条件部分，我们指定是否在字符串部分中找到定义的字符串，然后标记该文件。</li>
+</ul>
+<p>请注意，Yara 规则必须存储在 .yara 扩展名文件中，以便 ClamAV 进行处理。 让我们使用我们创建的 Yara 规则再次重新扫描 c:\Users\thm\Desktop\Samples 文件夹。 您可以在桌面上的 c:\Users\thm\Desktop\Files\thm-demo-1.yara 中找到 Yara 规则的副本。</p>
+<p>使用 Yara 规则扫描</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">			C:\Users\thm&gt;"c:\Program Files\ClamAV\clamscan.exe" -d Desktop\Files\thm-demo-1.yara Desktop\Samples</span><br><span class="line">Loading:     0s, ETA:   0s [========================&gt;]        1/1 sigs</span><br><span class="line">Compiling:   0s, ETA:   0s [========================&gt;]       40/40 tasks</span><br><span class="line"></span><br><span class="line">C:\Users\thm\Desktop\Samples\AV-Check.exe: YARA.thm_demo_rule.UNOFFICIAL FOUND</span><br><span class="line">C:\Users\thm\Desktop\Samples\backdoor1.exe: OK</span><br><span class="line">C:\Users\thm\Desktop\Samples\backdoor2.exe: OK</span><br><span class="line">C:\Users\thm\Desktop\Samples\eicar.com: OK</span><br><span class="line">C:\Users\thm\Desktop\Samples\notes.txt: YARA.thm_demo_rule.UNOFFICIAL FOUND</span><br><span class="line">	    </span><br></pre></td></tr></tbody></table></figure>
+
+<p>因此，ClamAV 可以根据我们提供的 Yara 规则将 AV-Check.exe 二进制文件检测为恶意文件。 然而，ClamAV 给出了误报结果，它将notes.txt 文件标记为恶意文件。 如果我们打开notes.txt文件，我们可以看到文本包含我们在规则中指定的相同路径。</p>
+<p>让我们改进 Yara 规则以减少误报结果。 我们将在规则中指定文件类型。 通常，可以使用幻数（二进制文件的前两个字节）来识别文件的类型。 例如，<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/DOS_MZ_executable">可执行文件</a> (.exe) 始终以 ASCII“MZ”值或十六进制的“4D 5A”开头。</p>
+<p>为了确认这一点，让我们使用 <a target="_blank" rel="noopener" href="https://mh-nexus.de/en/hxd/">HxD</a> 应用程序（一个免费的十六进制编辑器）来检查 AV-Check.exe 二进制文件并查看前两个字节 。 请注意，HxD 已在提供的 VM 中可用。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5d617515c8cd8348d0b4e68f/room-content/44dfc0fa904b0e4a9dfe983001d38a2e.png" alt="HxD Application"></p>
+<p>了解这一点将有助于改进检测，让我们将其包含在 Yara 规则中，以仅将包含我们签名字符串的 .exe 文件标记为恶意文件。 以下是改进后的Yara规则：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">rule thm_demo_rule {</span><br><span class="line">	meta:</span><br><span class="line">		author = "THM: Intro-to-AV-Room"</span><br><span class="line">		description = "Look at how the Yara rule works with ClamAV"</span><br><span class="line">	strings:</span><br><span class="line">		$a = "C:\\Users\\thm\\source\\repos\\AV-Check\\AV-Check\\obj\\Debug\\AV-Check.pdb"</span><br><span class="line">		$b = "MZ"</span><br><span class="line">	condition:</span><br><span class="line">		$b at 0 and $a</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>在新的 Yara 规则中，我们定义了一个等于 MZ 的唯一字符串 ($b) 作为 .exe 文件类型的标识符。 我们还更新了条件部分，现在包括以下条件：</p>
+<ol>
+<li>如果在 0 位置找到字符串“MZ”，则该文件位于文件开头。</li>
+<li>如果唯一字符串（路径）出现在二进制文件中。</li>
+<li>在条件部分，我们使用 AND 运算符查找 1 和 2 中的两个定义，然后我们就得到了匹配。</li>
+</ol>
+<p>您可以在 Desktop\Files\thm-demo-2.yara 中找到更新的规则。 现在我们已经更新了 Yara 规则，现在让我们再试一次。</p>
+<p>使用 Yara 规则扫描</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">			C:\Users\thm&gt;"c:\Program Files\ClamAV\clamscan.exe" -d Desktop\Files\thm-demo-2.yara Desktop\Samples</span><br><span class="line">Loading:     0s, ETA:   0s [========================&gt;]        1/1 sigs</span><br><span class="line">Compiling:   0s, ETA:   0s [========================&gt;]       40/40 tasks</span><br><span class="line"></span><br><span class="line">C:\Users\thm\Desktop\Samples\AV-Check.exe: YARA.thm_demo_rule.UNOFFICIAL FOUND</span><br><span class="line">C:\Users\thm\Desktop\Samples\backdoor1.exe: OK</span><br><span class="line">C:\Users\thm\Desktop\Samples\backdoor2.exe: OK</span><br><span class="line">C:\Users\thm\Desktop\Samples\eicar.com: OK</span><br><span class="line">C:\Users\thm\Desktop\Samples\notes.txt: OK</span><br><span class="line">	    </span><br></pre></td></tr></tbody></table></figure>
+
+<p>输出显示我们改进了 Yara 规则以减少误报结果。 这是反病毒软件如何工作的一个简单示例。 因此，反病毒软件供应商努力对抗恶意软件并改进其产品和数据库，以提高结果的性能和准确性。</p>
+<p>基于签名的检测的缺点是，如果二进制文件被修改，文件将具有不同的哈希值。 因此，如果有人知道反病毒软件寻找什么以及如何分析二进制文件，那么他们很容易绕过基于签名的检测技术，如后面的房间所示。</p>
+<h1 id="Other-Detection-Techniques"><a href="#Other-Detection-Techniques" class="headerlink" title="Other Detection Techniques"></a>Other Detection Techniques</h1><p>静态检测的概念相对简单。 在本节中，我们将讨论不同类型的检测技术。</p>
+<p>动态检测</p>
+<p>动态检测方法比静态检测更先进、更复杂。 动态检测更侧重于使用不同方法在运行时检查文件。 下图为动态检测扫描流程：</p>
+<p>第一种方法是通过监视 Windows API。 检测引擎使用 Windows <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/winmsg/about-hooks">Hooks</a> 检查 Windows 应用程序调用并监视 Windows API 调用。</p>
+<p>另一种动态检测方法是沙盒。 沙箱是一种虚拟化环境，用于运行与主机分离的恶意文件。 这通常是在隔离环境中完成的，主要目标是分析恶意软件在系统中的行为方式。 一旦恶意软件被确认，将根据二进制文件的特征创建唯一的签名和规则。 最后，新的更新将被推送到云数据库中以供将来使用。</p>
+<p>这种类型的检测也有缺点，因为它需要在虚拟环境中执行和运行恶意软件一段有限的时间以保护系统资源。 与其他检测技术一样，可以绕过动态检测。 恶意软件开发人员将其软件设置为不在虚拟或模拟环境中运行，以避免动态分析。 例如，他们在运行恶意活动之前检查系统是否生成执行软件的真实进程，或者让软件在执行前等待一段时间。</p>
+<p>有关沙盒规避的更多信息，建议查看 THM 房间：<a target="_blank" rel="noopener" href="https://tryhackme.com/room/sandboxevasion">Sandbox Evasion</a>！</p>
+<p>启发式和行为检测</p>
+<p>启发式和行为检测在当今的现代 AV 产品中已变得至关重要。 现代反病毒软件依靠这种类型的检测来检测恶意软件。 启发式分析使用各种技术，包括静态和动态启发式方法：</p>
+<ol>
+<li>静态启发式分析是反编译（如果可能）并提取恶意软件源代码的过程。 然后，将提取的源代码与其他众所周知的病毒源代码进行比较。 这些源代码是先前已知的并在启发式数据库中预定义。 如果匹配达到或超过阈值百分比，则该代码将被标记为恶意代码。</li>
+<li>动态启发式分析基于预定义的行为规则。 安全研究人员在隔离和安全的环境中分析可疑软件。 根据他们的发现，他们将该软件标记为恶意软件。 然后，创建行为规则以匹配目标计算机内软件的恶意活动。</li>
+</ol>
+<p>以下是行为规则的示例：</p>
+<ul>
+<li>如果进程尝试与包含用户 NTLM 哈希值、Kerberos 票证等的 LSASS.exe 进程交互</li>
+<li>如果进程打开侦听端口并等待接收来自命令和控制 (C2) 服务器的命令</li>
+</ul>
+<p>下图显示了启发式和行为检测扫描流程：</p>
+<p>检测方法总结</p>
+<p>让我们总结一下现代反病毒软件如何作为一个单元（包括所有组件）工作，并结合各种功能和检测技术来实现其反病毒引擎。 以下是防病毒引擎的组件示例：</p>
+<p>在图中，您可以看到可疑的 Foobar.zip 文件被传递到 AV 软件进行扫描。 AV 软件识别出这是一个压缩文件 (.zip)。 由于该软件支持 .zip 文件，因此它应用取消存档功能来提取文件 (Foobar.exe)。 接下来，它识别文件类型以了解要使用哪个模块，然后执行 PE 解析操作以提取二进制文件的信息和其他特征。 接下来，它检查文件是否被加壳； 如果是，它会解压代码。 最后，它将收集到的信息和二进制文件传递给反病毒引擎，在那里它尝试检测它是否是恶意的并给我们结果。</p>
+<h1 id="AV-Testing-and-Fingerprinting"><a href="#AV-Testing-and-Fingerprinting" class="headerlink" title="AV Testing and Fingerprinting"></a>AV Testing and Fingerprinting</h1><p>AV Vendors</p>
+<p>市场上许多反病毒供应商主要专注于为家庭或企业用户实施安全产品。 现代反病毒软件已得到改进，现在将防病毒功能与其他安全功能（如防火墙、加密、反垃圾邮件、EDR、漏洞扫描、VPN 等）相结合。</p>
+<p>需要注意的是，很难推荐哪种 AV 软件最好。 这一切都取决于用户的偏好和体验。 如今，AV 供应商除了关注最终用户安全外，还关注业务安全。 我们建议检查<a target="_blank" rel="noopener" href="https://www.av-comparatives.org/list-of-enterprise-av-vendors-pc/">AV比较网站</a>以了解有关企业AV供应商的更多详细信息。</p>
+<p>AV测试环境</p>
+<p>AV 测试环境是检查可疑或恶意文件的好地方。 您可以上传文件以针对各种反病毒软件供应商进行扫描。 此外，VirusTotal 等平台使用各种技术并在几秒钟内提供结果。 作为红队成员或渗透测试人员，我们必须针对最知名的反病毒应用程序测试有效负载，以检查旁路技术的有效性。</p>
+<p>VirusTotal </p>
+<p>VirusTotal 是一个著名的基于网络的扫描平台，用于检查可疑文件。 它允许用户上传要使用 70 多个防病毒检测引擎进行扫描的文件。 VirusTotal 将上传的文件传递给防病毒引擎进行检查，返回结果，并报告是否是恶意的。 应用了许多检查点，包括检查列入黑名单的 URL 或服务、签名、二进制分析、行为分析以及检查 API 调用。 此外，二进制文件将在模拟和隔离的环境中运行和检查，以获得更好的结果。 如需了解更多信息并检查其他功能，您可以访问 <a target="_blank" rel="noopener" href="https://www.virustotal.com/">VirusTotal </a> 网站。</p>
+<p>VirusTotal alternatives</p>
+<p><strong>重要提示：</strong> VirusTotal 是一个方便的扫描平台，具有强大的功能，但它有一个共享政策。 所有扫描结果都将传递并与防病毒供应商共享，以改进他们的产品并更新已知恶意软件的数据库。 作为红队队员，这会烧毁您在交战中使用的投掷器或有效载荷。 因此，可以使用替代解决方案来针对不同的安全产品供应商进行测试，最重要的优点是它们没有共享策略。 然而，还有其他限制。 您每天要扫描的文件数量有限； 否则，需要订阅才能进行无限制的测试。 出于这些原因，我们建议您仅在不共享信息的网站上测试您的恶意软件，例如：</p>
+<ul>
+<li><p><a target="_blank" rel="noopener" href="https://antiscan.me/">AntiscanMe</a>（每天 6 次免费扫描）</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://virusscan.jotti.org/">病毒扫描 Jotti 的恶意软件扫描</a></p>
+</li>
+</ul>
+<p>指纹AV软件</p>
+<p>作为红队成员，一旦我们获得了对目标机器的初始访问权限，我们就不知道有哪些反病毒软件。 因此，查找并识别安装了哪些基于主机的安全产品（包括 AV 软件）非常重要。 AV 指纹识别是确定存在哪个 AV 供应商的重要过程。 了解安装了哪些反病毒软件对于创建相同的环境来测试绕过技术也非常有帮助。</p>
+<p>本节介绍基于静态工件（包括服务名称、进程名称、域名、注册表项和文件系统）查看和识别防病毒软件的不同方法。</p>
+<p>下表列出了知名且常用的反病毒软件。</p>
+<table>
+<thead>
+<tr>
+<th><strong>Antivirus Name</strong></th>
+<th><strong>Service Name</strong></th>
+<th><strong>Process Name</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Microsoft Defender</td>
+<td>WinDefend</td>
+<td>MSMpEng.exe</td>
+</tr>
+<tr>
+<td>Trend Micro</td>
+<td>TMBMSRV</td>
+<td>TMBMSRV.exe</td>
+</tr>
+<tr>
+<td>Avira</td>
+<td>AntivirService, Avira.ServiceHost</td>
+<td>avguard.exe, Avira.ServiceHost.exe</td>
+</tr>
+<tr>
+<td>Bitdefender</td>
+<td>VSSERV</td>
+<td>bdagent.exe, vsserv.exe</td>
+</tr>
+<tr>
+<td>Kaspersky</td>
+<td>AVP&lt;Version #&gt;</td>
+<td>avp.exe, ksde.exe</td>
+</tr>
+<tr>
+<td>AVG</td>
+<td>AVG Antivirus</td>
+<td>AVGSvc.exe</td>
+</tr>
+<tr>
+<td>Norton</td>
+<td>Norton Security</td>
+<td>NortonSecurity.exe</td>
+</tr>
+<tr>
+<td>McAfee</td>
+<td>McAPExe, Mfemms</td>
+<td>MCAPExe.exe, mfemms.exe</td>
+</tr>
+<tr>
+<td>Panda</td>
+<td>PavPrSvr</td>
+<td>PavPrSvr.exe</td>
+</tr>
+<tr>
+<td>Avast</td>
+<td>Avast Antivirus</td>
+<td>afwServ.exe, AvastSvc.exe</td>
+</tr>
+</tbody></table>
+<p>SharpEDRChecker</p>
+<p>对 AV 进行指纹识别的一种方法是使用公共工具，例如 <a target="_blank" rel="noopener" href="https://github.com/PwnDexter/SharpEDRChecker">SharpEDRChecker</a>。 它用 C# 编写，在目标机器上执行各种检查，包括检查 AV 软件，如运行进程、文件元数据、加载的 DLL 文件、注册表项、服务</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5d617515c8cd8348d0b4e68f/room-content/9f2dc2083d2a8227b688cef623ac9bf8.png" alt="img"></p>
+<p>编译完成后，我们可以在输出部分找到编译版本的路径，如步骤 3 中突出显示的那样。我们还在 C:\Users\thm\Desktop\Files 目录中添加了编译版本的副本。 现在我们尝试运行一下，看看结果如下：</p>
+<table>
+<thead>
+<tr>
+<th>Command Prompt!<code>           C:\&gt; SharpEDRChecker.exe     </code></th>
+<th>➜</th>
+<th>SharpEDRChecker’s Summary<code>           [!] Directory Summary:   [-] C:\Program Files\Windows Defender : defender   [-] C:\Program Files\Windows Defender Advanced Threat Protection : defender, threat   [-] C:\Program Files (x86)\Windows Defender : defender [!] Service Summary:   [-] PsShutdownSvc : sysinternal   [-] Sense : defender, threat   [-] WdNisSvc : defender, nissrv   [-] WinDefend : antimalware, defender, malware, msmpeng   [-] wscsvc : antivirus</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>因此，Windows Defender 是根据文件夹和服务找到的。 请注意，该程序可能会被 AV 软件标记为恶意程序，因为它会执行各种检查和 API 调用。</p>
+<p>C# 指纹检查</p>
+<p>枚举 AV 软件的另一种方法是编写我们自己的程序。 我们在提供的Windows 10 Pro VM中准备了一个C#程序，因此我们可以做一些动手实验！ 您可以在桌面上找到该项目的图标 (AV-Check)，然后双击它以使用 Microsoft Visual Studio 2022 打开它。</p>
+<p>以下 C# 代码很简单，其主要目标是根据已知的 AV 应用程序的预定义列表确定是否安装了 AV 软件。</p>
+<figure class="highlight csharp"><table><tbody><tr><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Management;</span><br><span class="line"></span><br><span class="line"><span class="keyword">internal</span> <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">{</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="built_in">string</span>[] args</span>)</span></span><br><span class="line">    {</span><br><span class="line">        <span class="keyword">var</span> status = <span class="literal">false</span>;</span><br><span class="line">        Console.WriteLine(<span class="string">"[+] Antivirus check is running .. "</span>);</span><br><span class="line">        <span class="built_in">string</span>[] AV_Check = { </span><br><span class="line">            <span class="string">"MsMpEng.exe"</span>, <span class="string">"AdAwareService.exe"</span>, <span class="string">"afwServ.exe"</span>, <span class="string">"avguard.exe"</span>, <span class="string">"AVGSvc.exe"</span>, </span><br><span class="line">            <span class="string">"bdagent.exe"</span>, <span class="string">"BullGuardCore.exe"</span>, <span class="string">"ekrn.exe"</span>, <span class="string">"fshoster32.exe"</span>, <span class="string">"GDScan.exe"</span>, </span><br><span class="line">            <span class="string">"avp.exe"</span>, <span class="string">"K7CrvSvc.exe"</span>, <span class="string">"McAPExe.exe"</span>, <span class="string">"NortonSecurity.exe"</span>, <span class="string">"PavFnSvr.exe"</span>, </span><br><span class="line">            <span class="string">"SavService.exe"</span>, <span class="string">"EnterpriseService.exe"</span>, <span class="string">"WRSA.exe"</span>, <span class="string">"ZAPrivacyService.exe"</span> </span><br><span class="line">        };</span><br><span class="line">        <span class="keyword">var</span> searcher = <span class="keyword">new</span> ManagementObjectSearcher(<span class="string">"select * from win32_process"</span>);</span><br><span class="line">        <span class="keyword">var</span> processList = searcher.Get();</span><br><span class="line">        <span class="built_in">int</span> i = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">foreach</span> (<span class="keyword">var</span> process <span class="keyword">in</span> processList)</span><br><span class="line">        {</span><br><span class="line">            <span class="built_in">int</span> _index = Array.IndexOf(AV_Check, process[<span class="string">"Name"</span>].ToString());</span><br><span class="line">            <span class="keyword">if</span> (_index &gt; <span class="number">-1</span>)</span><br><span class="line">            {</span><br><span class="line">                Console.WriteLine(<span class="string">"--AV Found: {0}"</span>, process[<span class="string">"Name"</span>].ToString());</span><br><span class="line">                status = <span class="literal">true</span>;</span><br><span class="line">            }</span><br><span class="line">            i++;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">if</span> (!status) { Console.WriteLine(<span class="string">"--AV software is not found!"</span>);  }</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>让我们进一步解释一下代码。 我们在代码中的 AV_Check 数组中预定义了一个众所周知的 AV 应用程序列表，该列表取自上一节，我们讨论了指纹识别 AV 软件（上表）。 然后，我们使用 Windows Management Instrumentation 命令行 (WMIC) 查询（select * from win32_process）列出目标计算机中当前正在运行的所有进程，并将它们存储在 processList 变量中。 接下来，我们检查当前正在运行的进程并比较它们是否存在于预定义数组中。 如果找到匹配项，那么我们就安装了 AV 软件。</p>
+<p>C# 程序利用 WMIC 对象列出当前正在运行的进程，这些进程可由 AV 软件监控。 如果 AV 软件在监控 WMIC 查询或 Windows API 方面实施不当，则可能会在扫描我们的 C# 程序时导致误报结果。</p>
+<p>让我们编译一个 x86 版本的 C# 程序，将其上传到 VirusTotal 网站，然后检查结果！ 要在 Microsoft Visual Studio 2022 中编译 C# 程序，请从栏菜单中选择“<strong>构建</strong>”，然后选择“<strong>构建解决方案</strong>”选项。 然后，如果编译正确，您可以在输出部分找到编译版本的路径，如下面屏幕截图中步骤 3 中突出显示的那样。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5d617515c8cd8348d0b4e68f/room-content/4abf4090797989e9457af9a2cb18a35b.png" alt="Compiling the C# project"></p>
+<p>如果我们将AV-Check程序上传到<a target="_blank" rel="noopener" href="https://www.virustotal.com/gui/home/upload">VirusTotal网站</a>并检查结果，令人惊讶的是，VirusTotal显示有两个AV供应商（MaxSecure和SecureAge APEX） 将我们的程序标记为恶意！ 因此，这是一个误报结果，它错误地将文件识别为恶意文件，而实际上并非恶意文件。 可能的原因之一是这些反病毒供应商的软件使用了机器学习分类器或基于规则的检测方法，但实施效果不佳。 有关实际提交报告的更多详细信息，请参阅<a target="_blank" rel="noopener" href="https://www.virustotal.com/gui/file/5f7d3e6cf58596a0186d89c20004c76805769f9ef93dc39e346e7331eee9e7ff?nocache=1">此处</a>。 有四个主要部分：检测、详细信息、行为和社区。 如果我们检查“行为”部分，我们可以看到 Windows API、注册表项、模块和 WMIC 查询的所有调用。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5d617515c8cd8348d0b4e68f/room-content/87289129012d58c2d77c1791131333c3.png" alt="VirusTotal check"></p>
+<p>在“检测”部分，有 Sigma 规则，如果执行期间的系统事件匹配（在沙箱环境中），则认为该文件是恶意的。 这个结果很可能是基于规则的； VirusTotal由于<a target="_blank" rel="noopener" href="https://pentestlaboratories.com/2021/12/08/process-ghosting/">进程重影技术</a> 标记了我们的程序，如以下屏幕截图所示。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5d617515c8cd8348d0b4e68f/room-content/c4de9def10a394bc77b0b05580cae8e5.png" alt="VirusTotal check"></p>
+<p>现在，让我们使用 x64 CPU 重新编译 C# 程序，并检查检查引擎的行为是否有所不同。 在我们这次提交尝试中，三个AV供应商的软件（Cyren AV 已添加到列表中）将该文件标记为恶意文件。 有关实际提交报告的更多详细信息，请查看<a target="_blank" rel="noopener" href="https://www.virustotal.com/gui/file/b092173827888ed62adea0c2bf4f451175898d158608cf7090e668952314e308?nocache=1">此处</a>。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5d617515c8cd8348d0b4e68f/room-content/6992f821933117c890b129f63cbbcebf.png" alt="VirusTotal check"></p>
+<p><strong>注意：</strong> 如果您尝试向 VirusTotal 网站提交文件，可能会得到不同的结果。 请记住，VirusTotal 与防病毒供应商共享提交报告，以改进他们的 AV 检测引擎，包括误报结果。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://mikannse.space">Mikannse</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://mikannse.space/2024/04/08/THM%E5%85%8D%E6%9D%80%E5%AD%A6%E4%B9%A0IntroductiontoAntivirus/">http://mikannse.space/2024/04/08/THM免杀学习IntroductiontoAntivirus/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://mikannse.space" target="_blank">MikannseのSekai</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a><a class="post-meta__tags" href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">渗透测试</a><a class="post-meta__tags" href="/tags/%E5%85%8D%E6%9D%80/">免杀</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/04/08/THM%E5%85%8D%E6%9D%80%E5%AD%A6%E4%B9%A0AVEvasionShellcode/" title="THM免杀学习AVEvasionShellcode"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">THM免杀学习AVEvasionShellcode</div></div></a></div><div class="next-post pull-right"><a href="/2024/04/06/CVE-2019-11043PHP-FPM%E8%BF%9C%E7%A8%8BRCE%E5%A4%8D%E7%8E%B0/" title="CVE-2019-11043PHP-FPM远程RCE复现"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">CVE-2019-11043PHP-FPM远程RCE复现</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/08/11/THM%E5%85%8D%E6%9D%80%E5%AD%A6%E4%B9%A0EvadingLoggingandMonitoring/" title="THM免杀学习EvadingLoggingandMonitoring"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-08-11</div><div class="title">THM免杀学习EvadingLoggingandMonitoring</div></div></a></div><div><a href="/2024/04/08/THM%E5%85%8D%E6%9D%80%E5%AD%A6%E4%B9%A0AVEvasionShellcode/" title="THM免杀学习AVEvasionShellcode"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-08</div><div class="title">THM免杀学习AVEvasionShellcode</div></div></a></div><div><a href="/2024/04/09/THM%E5%85%8D%E6%9D%80%E5%AD%A6%E4%B9%A0SignatureEvasion/" title="THM免杀学习SignatureEvasion"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-09</div><div class="title">THM免杀学习SignatureEvasion</div></div></a></div><div><a href="/2024/08/11/THM%E5%85%8D%E6%9D%80%E5%AD%A6%E4%B9%A0RuntimeDetectionEvasion/" title="THM免杀学习RuntimeDetectionEvasion"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-08-11</div><div class="title">THM免杀学习RuntimeDetectionEvasion</div></div></a></div><div><a href="/2024/04/08/THM%E5%85%8D%E6%9D%80%E5%AD%A6%E4%B9%A0ObfuscationPrinciples/" title="THM免杀学习ObfuscationPrinciples"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-08</div><div class="title">THM免杀学习ObfuscationPrinciples</div></div></a></div><div><a href="/2024/06/15/AdvancedSQLInjectionTHM/" title="AdvancedSQLInjectionTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-06-15</div><div class="title">AdvancedSQLInjectionTHM</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Mikannse</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">274</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mikannse/mikannse.github.io"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">暂时没有公告QAQ</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Introduction"><span class="toc-number">1.</span> <span class="toc-text">Introduction</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Antivirus-Software"><span class="toc-number">2.</span> <span class="toc-text">Antivirus Software</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#AV-%E4%B8%8E%E5%85%B6%E4%BB%96%E5%AE%89%E5%85%A8%E4%BA%A7%E5%93%81"><span class="toc-number">2.1.</span> <span class="toc-text">AV 与其他安全产品</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AV%E8%BD%AF%E4%BB%B6%E7%9A%84%E8%BF%87%E5%8E%BB%E5%92%8C%E7%8E%B0%E5%9C%A8"><span class="toc-number">2.2.</span> <span class="toc-text">AV软件的过去和现在</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Antivirus-Features"><span class="toc-number">3.</span> <span class="toc-text">Antivirus Features</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#AV-Static-Detection"><span class="toc-number">4.</span> <span class="toc-text">AV Static  Detection</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Other-Detection-Techniques"><span class="toc-number">5.</span> <span class="toc-text">Other Detection Techniques</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#AV-Testing-and-Fingerprinting"><span class="toc-number">6.</span> <span class="toc-text">AV Testing and Fingerprinting</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/11/pwncollegeAssembly30/" title="pwncollegeAssembly30">pwncollegeAssembly30</a><time datetime="2024-10-10T17:05:42.000Z" title="发表于 2024-10-11 01:05:42">2024-10-11</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/09/pwncollege%E6%B1%87%E7%BC%96%E5%85%A5%E9%97%A8/" title="pwncollege汇编入门">pwncollege汇编入门</a><time datetime="2024-10-09T14:39:52.000Z" title="发表于 2024-10-09 22:39:52">2024-10-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/05/Git%E9%80%9F%E6%88%90/" title="Git速成">Git速成</a><time datetime="2024-10-05T04:57:08.000Z" title="发表于 2024-10-05 12:57:08">2024-10-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/03/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%BA%8C)%E4%B9%8BVulnHubCorrosion2/" title="打靶记录(一六二)之VulnHubCorrosion2">打靶记录(一六二)之VulnHubCorrosion2</a><time datetime="2024-10-03T09:24:11.000Z" title="发表于 2024-10-03 17:24:11">2024-10-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/02/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%B8%80)%E4%B9%8BVulnHubDrippingBlues1/" title="打靶记录(一六一)之VulnHubDrippingBlues1">打靶记录(一六一)之VulnHubDrippingBlues1</a><time datetime="2024-10-02T05:16:28.000Z" title="发表于 2024-10-02 13:16:28">2024-10-02</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2024 By Mikannse</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function loadDisqus () {
+  const disqus_config = function () {
+    this.page.url = 'http://mikannse.space/2024/04/08/THM%E5%85%8D%E6%9D%80%E5%AD%A6%E4%B9%A0IntroductiontoAntivirus/'
+    this.page.identifier = '/2024/04/08/THM%E5%85%8D%E6%9D%80%E5%AD%A6%E4%B9%A0IntroductiontoAntivirus/'
+    this.page.title = 'THM免杀学习IntroductiontoAntivirus'
+  }
+
+  const disqusReset = () => {
+    DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addModeChange('disqus', disqusReset)
+
+  if (window.DISQUS) disqusReset()
+  else {
+    (function() { 
+      var d = document, s = d.createElement('script');
+      s.src = 'https://.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  }
+}
+
+if ('Valine' === 'Disqus' || !true) {
+  if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+  else loadDisqus()
+} else {
+  function loadOtherComment () {
+    loadDisqus()
+  }
+}
+</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

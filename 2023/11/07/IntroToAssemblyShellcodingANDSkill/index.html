@@ -1,0 +1,599 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>IntroToAssemblyShellcodingANDSkillHTB | MikannseのSekai</title><meta name="author" content="Mikannse"><meta name="copyright" content="Mikannse"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="ShellcodingShellcodes通过本模块所学的知识，我们应该对计算机和处理器架构以及程序如何与此底层架构进行交互有很好的理解。我们还应该能够反汇编和调试二进制文件，并很好地理解它们正在执行什么机器指令以及它们的通用目的是什么。现在我们将学习shellcodes，这是渗透测试人员的基本概念。 What is a Shellcode我们知道，每个可执行的二进制文件都是由汇编语言编写的机器指">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IntroToAssemblyShellcodingANDSkillHTB">
+<meta property="og:url" content="http://mikannse.space/2023/11/07/IntroToAssemblyShellcodingANDSkill/index.html">
+<meta property="og:site_name" content="MikannseのSekai">
+<meta property="og:description" content="ShellcodingShellcodes通过本模块所学的知识，我们应该对计算机和处理器架构以及程序如何与此底层架构进行交互有很好的理解。我们还应该能够反汇编和调试二进制文件，并很好地理解它们正在执行什么机器指令以及它们的通用目的是什么。现在我们将学习shellcodes，这是渗透测试人员的基本概念。 What is a Shellcode我们知道，每个可执行的二进制文件都是由汇编语言编写的机器指">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg">
+<meta property="article:published_time" content="2023-11-07T14:47:43.000Z">
+<meta property="article:modified_time" content="2024-01-27T13:20:39.375Z">
+<meta property="article:author" content="Mikannse">
+<meta property="article:tag" content="网安">
+<meta property="article:tag" content="笔记">
+<meta property="article:tag" content="渗透测试">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg"><link rel="shortcut icon" href="/img/icon.jpg"><link rel="canonical" href="http://mikannse.space/2023/11/07/IntroToAssemblyShellcodingANDSkill/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Mikannse","link":"链接: ","source":"来源: MikannseのSekai","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'IntroToAssemblyShellcodingANDSkillHTB',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: undefined,
+  isToc: true,
+  postUpdate: '2024-01-27 21:20:39'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">274</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="MikannseのSekai"><span class="site-name">MikannseのSekai</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">IntroToAssemblyShellcodingANDSkillHTB</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-11-07T14:47:43.000Z" title="发表于 2023-11-07 22:47:43">2023-11-07</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-01-27T13:20:39.375Z" title="更新于 2024-01-27 21:20:39">2024-01-27</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BD%91%E5%AE%89/">网安</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">7.3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>26分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="IntroToAssemblyShellcodingANDSkillHTB"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Shellcoding"><a href="#Shellcoding" class="headerlink" title="Shellcoding"></a>Shellcoding</h1><h2 id="Shellcodes"><a href="#Shellcodes" class="headerlink" title="Shellcodes"></a>Shellcodes</h2><p>通过本模块所学的知识，我们应该对计算机和处理器架构以及程序如何与此底层架构进行交互有很好的理解。我们还应该能够反汇编和调试二进制文件，并很好地理解它们正在执行什么机器指令以及它们的通用目的是什么。现在我们将学习<code>shellcodes</code>，这是渗透测试人员的基本概念。</p>
+<h3 id="What-is-a-Shellcode"><a href="#What-is-a-Shellcode" class="headerlink" title="What is a Shellcode"></a>What is a Shellcode</h3><p>我们知道，每个可执行的二进制文件都是由汇编语言编写的机器指令组成的，然后汇编成机器代码。<code>shellcode</code>是二进制可执行机器码的十六进制表示。例如，让我们以我们的<code>Hello World</code>程序为例，它执行以下指令：</p>
+<p>Code: </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">global _start</span><br><span class="line"></span><br><span class="line">section .data</span><br><span class="line">    message db "Hello HTB Academy!"</span><br><span class="line"></span><br><span class="line">section .text</span><br><span class="line">_start:</span><br><span class="line">    mov rsi, message</span><br><span class="line">    mov rdi, 1</span><br><span class="line">    mov rdx, 18</span><br><span class="line">    mov rax, 1</span><br><span class="line">    syscall</span><br><span class="line"></span><br><span class="line">    mov rax, 60</span><br><span class="line">    mov rdi, 0</span><br><span class="line">    syscall</span><br></pre></td></tr></tbody></table></figure>
+
+<p>正如我们在第一节中看到的，这个<code>Hello World</code>程序汇编了以下shellcode：</p>
+<p>Code: </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">48be0020400000000000bf01000000ba12000000b8010000000f05b83c000000bf000000000f05</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这个shellcode应该正确地表示机器指令，如果传递给处理器内存，它应该理解它并正确地执行它。</p>
+<h3 id="Use-in-Pentesting"><a href="#Use-in-Pentesting" class="headerlink" title="Use in Pentesting"></a>Use in Pentesting</h3><p>能够将shellcode直接传递到处理器内存并执行它在<code>Binary Exploitation</code>中起着重要作用。例如，利用缓冲区溢出漏洞，我们可以传递一个<code>reverse shell</code> shellcode，让它执行，并接收一个反向shell。</p>
+<p>现代的<code>x86_64</code>系统可能有防止将shellcode加载到内存中的保护。这就是为什么<code>x86_64</code>二进制利用通常依赖于<code>Return Oriented Programming (ROP)</code>，这也需要很好地理解本模块中涵盖的汇编语言和计算机体系结构。</p>
+<p>此外，一些攻击技术依赖于用shellcode感染现有的可执行文件（如<code>elf</code>或<code>.exe</code>）或库（如<code>.so</code>或<code>.dll</code>），使得这些shellcode被加载到内存中并在这些文件运行时执行。在渗透测试中使用shellcode的另一个优点是能够直接在内存中执行代码，而无需将任何内容写入磁盘，这对于减少我们在远程服务器上的可见性和占用空间非常重要。</p>
+<h3 id="Assembly-to-Machine-Code"><a href="#Assembly-to-Machine-Code" class="headerlink" title="Assembly to Machine Code"></a>Assembly to Machine Code</h3><p>要理解shellcode是如何生成的，我们必须首先理解每条指令是如何转换成机器码的。每个<code>x86</code>指令和每个寄存器都有自己的<code>binary</code>机器码（通常用<code>hex</code>表示），它代表直接传递给处理器的二进制代码，告诉它执行什么指令（通过指令周期）。</p>
+<p>此外，指令和寄存器的常见组合也有自己的机器码。例如，<code>push rax</code>指令有机器码<code>50</code>，而<code>push rbx</code>有机器码<code>53</code>，等等。当我们用<code>nasm</code>汇编代码时，它会将我们的汇编指令转换为各自的机器码，以便处理器能够理解它们。</p>
+<p>请记住：汇编语言是为人类可读性而设计的，处理器不转换成机器代码就无法理解它。我们将使用<code>pwntools</code>来组装和反汇编我们的机器代码，因为它是二进制开发的重要工具，这是一个很好的机会开始学习它。首先，我们可以使用以下命令安装<code>pwntools</code>（它应该已经安装在PwnBox中）：                                                    </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ sudo pip3 install pwntools</span><br></pre></td></tr></tbody></table></figure>
+
+<p>现在，我们可以使用<code>pwn asm</code>将任何汇编代码组装到其shellcode中，如下所示：                            </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ pwn asm 'push rax'  -c 'amd64'</span><br><span class="line">   0:    50                       push   eax</span><br></pre></td></tr></tbody></table></figure>
+
+<p>注意：我们使用<code>-c 'amd64'</code>标志来确保工具正确解释<code>x86_64</code>的汇编代码</p>
+<p>正如我们所看到的，我们得到了<code>50</code>，这与<code>push rax</code>的机器码相同。同样，我们可以将十六进制机器码或shellcode转换为相应的汇编代码，如下所示：                                                  </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ pwn disasm '50' -c 'amd64'</span><br><span class="line">   0:    50                       push   eax</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们可以<a target="_blank" rel="noopener" href="https://docs.pwntools.com/en/stable/asm.html">在这里</a>阅读更多关于<code>pwntools</code>汇编和反汇编功能<a target="_blank" rel="noopener" href="https://docs.pwntools.com/en/stable/commandline.html">的信息</a>，以及关于<code>pwntools</code>命令行工具的信息。</p>
+<h3 id="Extract-Shellcode"><a href="#Extract-Shellcode" class="headerlink" title="Extract Shellcode"></a>Extract Shellcode</h3><p>现在我们理解了每个汇编指令是如何转换成机器码的（反之亦然），让我们看看如何从任何二进制文件中提取shellcode。</p>
+<p>二进制文件的shellcode仅表示其可执行文件<code>.text</code>部分，因为shellcode意味着可直接执行。要使用<code>.text</code>提取<code>pwntools</code>部分，我们可以使用<code>ELF</code>库加载<code>elf</code>二进制文件，这将允许我们在其上运行各种函数。因此，让我们运行<code>python3</code>解释器以更好地理解如何使用它。首先，我们必须导入<code>pwntools</code>，然后我们可以读取<code>elf</code>二进制文件，如下所示：                                                 </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ python3</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; from pwn import *</span><br><span class="line">&gt;&gt;&gt; file = ELF('helloworld')</span><br></pre></td></tr></tbody></table></figure>
+
+<p>现在，我们可以在上面运行各种<code>pwntools</code>函数，我们可以<a target="_blank" rel="noopener" href="https://docs.pwntools.com/en/stable/elf/elf.html">在这里</a>阅读更多内容。我们需要从可执行文件<code>.text</code>部分转储机器码，我们可以使用<code>section()</code>函数来完成，如下所示：                                                          </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; file.section(".text").hex()</span><br><span class="line">'48be0020400000000000bf01000000ba12000000b8010000000f05b83c000000bf000000000f05'</span><br></pre></td></tr></tbody></table></figure>
+
+<p>注意：我们添加了’<code>hex()</code>‘来以十六进制编码shellcode，而不是以原始字节打印。</p>
+<p>我们可以很容易地提取出二进制文件的shellcode。让我们将其转换为Python脚本，以便我们可以快速使用它来提取任何二进制文件的shellcode：</p>
+<p>Code: </p>
+<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python3</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">context(os=<span class="string">"linux"</span>, arch=<span class="string">"amd64"</span>, log_level=<span class="string">"error"</span>)</span><br><span class="line"></span><br><span class="line">file = ELF(sys.argv[<span class="number">1</span>])</span><br><span class="line">shellcode = file.section(<span class="string">".text"</span>)</span><br><span class="line"><span class="built_in">print</span>(shellcode.<span class="built_in">hex</span>())</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们可以将上面的脚本复制到<code>shellcoder.py</code>，然后将任何二进制文件的名称作为参数传递给它，它将提取它的shellcode：                                                        </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ python3 shellcoder.py helloworld</span><br><span class="line"></span><br><span class="line">48be0020400000000000bf01000000ba12000000b8010000000f05b83c000000bf000000000f05</span><br></pre></td></tr></tbody></table></figure>
+
+<p>另一种提取shellcode的方法（不太可靠）是通过<code>objdump</code>，我们在前一节中使用过。我们可以将下面的<code>bash</code>脚本写入<code>shellcoder.sh</code>，如果不能使用第一个脚本，可以使用它来提取shellcode：</p>
+<p>Code: </p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> $(objdump -d <span class="variable">$1</span> |grep <span class="string">"^ "</span> |<span class="built_in">cut</span> -f2); <span class="keyword">do</span> <span class="built_in">echo</span> -n <span class="variable">$i</span>; <span class="keyword">done</span>; <span class="built_in">echo</span>;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>同样，我们可以尝试在<code>helloworld</code>上运行它以获取其shellcode，如下所示：                                                                    </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ ./shellcoder.sh helloworld</span><br><span class="line"></span><br><span class="line">48be0020400000000000bf01000000ba12000000b8010000000f05b83c000000bf000000000f05</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="Loading-Shellcode"><a href="#Loading-Shellcode" class="headerlink" title="Loading Shellcode"></a>Loading Shellcode</h3><p>现在我们有了一个shellcode，让我们试着运行它，让我们在二进制利用中使用它之前测试我们准备的任何shellcode。我们上面提取的shellcode不符合我们将在下一节讨论的<code>Shellcoding Requirements</code>，所以它不会运行。为了演示如何运行shellcode，我们将使用下面的（<code>fixed</code>）shellcode，它满足所有<code>Shellcoding Requirements</code>：</p>
+<p>Code: </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">4831db66bb79215348bb422041636164656d5348bb48656c6c6f204854534889e64831c0b0014831ff40b7014831d2b2120f054831c0043c4030ff0f05</span><br></pre></td></tr></tbody></table></figure>
+
+<p>要使用<code>pwntools</code>运行我们的shellcode，我们可以使用<code>run_shellcode</code>函数并将我们的shellcode传递给它，如下所示：                                           </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ python3</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; from pwn import *</span><br><span class="line">&gt;&gt;&gt; context(os="linux", arch="amd64", log_level="error")</span><br><span class="line">&gt;&gt;&gt; run_shellcode(unhex('4831db66bb79215348bb422041636164656d5348bb48656c6c6f204854534889e64831c0b0014831ff40b7014831d2b2120f054831c0043c4030ff0f05')).interactive()</span><br><span class="line"></span><br><span class="line">Hello HTB Academy!</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们在shellcode上使用<code>unhex()</code>将其转换回二进制。</p>
+<p>正如我们所看到的，我们的shellcode成功运行并打印了字符串<code>Hello HTB Academy!</code>。相反，如果我们运行前面的shellcode（不满足<code>Shellcoding Requirements</code>），它将不会运行：                         </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; run_shellcode(unhex('b801000000bf0100000048be0020400000000000ba120000000f05b83c000000bf000000000f05')).interactive()</span><br></pre></td></tr></tbody></table></figure>
+
+<p>同样，为了使我们的shellcode运行起来更容易，让我们将上面的代码转换为Python脚本：</p>
+<p>Code:</p>
+<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python3</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">context(os=<span class="string">"linux"</span>, arch=<span class="string">"amd64"</span>, log_level=<span class="string">"error"</span>)</span><br><span class="line"></span><br><span class="line">run_shellcode(unhex(sys.argv[<span class="number">1</span>])).interactive()</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们可以将上面的脚本复制到<code>loader.py</code>，将我们的shellcode作为参数传递，然后运行它来执行我们的shellcode：                                                                   </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ python3 loader.py '4831db66bb79215348bb422041636164656d5348bb48656c6c6f204854534889e64831c0b0014831ff40b7014831d2b2120f054831c0043c4030ff0f05'</span><br><span class="line"></span><br><span class="line">Hello HTB Academy!</span><br></pre></td></tr></tbody></table></figure>
+
+<p>正如我们所看到的，我们能够成功地加载和运行我们的shellcode。</p>
+<h3 id="Debugging-Shellcode"><a href="#Debugging-Shellcode" class="headerlink" title="Debugging Shellcode"></a>Debugging Shellcode</h3><p>最后，让我们看看如何使用<code>gdb</code>调试shellcode。如果我们将机器码直接加载到内存中，那么如何使用<code>gdb</code>运行它？有很多方法可以做到这一点，我们将在这里介绍其中的一些。</p>
+<p>我们总是可以使用<code>loader.py</code>运行shellcode，然后使用<code>gdb</code>将其进程附加到<code>gdb -p PID</code>。然而，这只在我们的进程在我们附加到它之前没有退出的情况下才有效。所以，我们将把shellcode构建为一个<code>elf</code>二进制文件，然后像我们在整个模块中所做的那样使用这个二进制文件和<code>gdb</code>。</p>
+<h4 id="Pwntools"><a href="#Pwntools" class="headerlink" title="Pwntools"></a>Pwntools</h4><p>我们可以使用<code>pwntools</code>从shellcode中使用<code>elf</code>库构建<code>ELF</code>二进制文件，然后使用<code>save</code>函数将其保存到文件中：</p>
+<p>Code: </p>
+<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line">ELF.from_bytes(unhex(<span class="string">'4831db66bb79215348bb422041636164656d5348bb48656c6c6f204854534889e64831c0b0014831ff40b7014831d2b2120f054831c0043c4030ff0f05'</span>)).save(<span class="string">'helloworld'</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>为了更容易使用，我们可以将上面的代码转换为脚本，并将其写入<code>assembler.py</code>：</p>
+<p>Code: </p>
+<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python3</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> sys, os, stat</span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">context(os=<span class="string">"linux"</span>, arch=<span class="string">"amd64"</span>, log_level=<span class="string">"error"</span>)</span><br><span class="line"></span><br><span class="line">ELF.from_bytes(unhex(sys.argv[<span class="number">1</span>])).save(sys.argv[<span class="number">2</span>])</span><br><span class="line">os.chmod(sys.argv[<span class="number">2</span>], stat.S_IEXEC)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们现在可以运行<code>assembler.py</code>，将shellcode作为第一个参数传递，将文件名作为第二个参数传递，它会将shellcode组装成一个可执行文件：</p>
+<p>Pwntools                </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ python assembler.py '4831db66bb79215348bb422041636164656d5348bb48656c6c6f204854534889e64831c0b0014831ff40b7014831d2b2120f054831c0043c4030ff0f05' 'helloworld'</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Pwntools                </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ ./helloworld</span><br><span class="line"></span><br><span class="line">Hello HTB Academy!</span><br></pre></td></tr></tbody></table></figure>
+
+<p>正如我们所看到的，它用我们指定的文件名构建了<code>helloworld</code>二进制文件。我们现在可以使用<code>gdb</code>运行它，并使用<code>b *0x401000</code>在默认的二进制入口点中断：</p>
+<p>gdb</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">$ gdb -q helloworld</span><br><span class="line">gef➤  b *0x401000</span><br><span class="line">gef➤  r</span><br><span class="line">Breakpoint 1, 0x0000000000401000 in ?? ()</span><br><span class="line">...SNIP...</span><br><span class="line">─────────────────────────────────────────────────────────────────────────────────────── code:x86:64 ────</span><br><span class="line">●→   0x401000                  xor    rbx, rbx</span><br><span class="line">     0x401003                  mov    bx, 0x2179</span><br><span class="line">     0x401007                  push   rbx</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="GCC"><a href="#GCC" class="headerlink" title="GCC"></a>GCC</h4><p>还有其他方法可以将shellcode构建为<code>elf</code>可执行文件。我们可以将shellcode添加到下面的<code>C</code>代码中，将其写入<code>helloworld.c</code>，然后使用<code>gcc</code>构建它（十六进制字节必须使用<code>\x</code>进行转义）：</p>
+<p>Code: </p>
+<figure class="highlight c"><table><tbody><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">{</span><br><span class="line">    <span class="type">int</span> (*ret)() = (<span class="type">int</span> (*)()) <span class="string">"\x48\x31\xdb\x66\xbb\...SNIP...\x3c\x40\x30\xff\x0f\x05"</span>;</span><br><span class="line">    ret();</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后，我们可以用<code>C</code>编译我们的<code>gcc</code>代码，并用<code>gdb</code>运行它：</p>
+<p>GCC                </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ gcc helloworld.c -o helloworld</span><br><span class="line">mikannse7@htb[/htb]$ gdb -q helloworld</span><br></pre></td></tr></tbody></table></figure>
+
+<p>但是，由于一些原因，这种方法并不可靠。首先，它将整个二进制文件包装在<code>C</code>代码中，因此二进制文件将不包含我们的shellcode，但将包含各种其他<code>C</code>函数和库。这个方法也可能不总是编译，这取决于现有的内存保护，所以我们可能必须添加标志来绕过内存保护，如下所示：</p>
+<p>GCC                </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ gcc helloworld.c -o helloworld -fno-stack-protector -z execstack -Wl,--omagic -g --static</span><br><span class="line">mikannse7@htb[/htb]$ ./helloworld</span><br><span class="line"></span><br><span class="line">Hello HTB Academy!</span><br></pre></td></tr></tbody></table></figure>
+
+<p>有了这个，我们应该对shellcode的基础知识有一个很好的理解。现在我们可以为下一步创建自己的shellcode了。</p>
+<h2 id="Shellcoding-Techniques"><a href="#Shellcoding-Techniques" class="headerlink" title="Shellcoding Techniques"></a>Shellcoding Techniques</h2><p>正如我们在上一节中看到的，我们的<code>Hello World</code>汇编代码必须被修改以产生一个工作的shellcode。因此，在本节中，我们将介绍一些可以用来解决汇编代码中发现的任何问题的技术和技巧。</p>
+<h3 id="Shellcoding-Requirements"><a href="#Shellcoding-Requirements" class="headerlink" title="Shellcoding Requirements"></a>Shellcoding Requirements</h3><p>正如我们在上一节中简要提到的，并不是所有的二进制文件给予可以直接加载到内存并运行的工作shellcode。这是因为shellcode必须满足特定的要求。否则，它将无法在运行时正确地反汇编成正确的汇编指令。</p>
+<p>为了更好地理解这一点，让我们尝试反汇编我们在前一节中从<code>Hello World</code>程序中提取的shellcode，使用我们之前使用的相同的<code>pwn disasm</code>工具：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">$ pwn disasm '48be0020400000000000bf01000000ba12000000b8010000000f05b83c000000bf000000000f05' -c 'amd64'</span><br><span class="line">   0:    48 be 00 20 40 00 00     movabs rsi,  0x402000</span><br><span class="line">   7:    00 00 00</span><br><span class="line">   a:    bf 01 00 00 00           mov    edi,  0x1</span><br><span class="line">   f:    ba 12 00 00 00           mov    edx,  0x12</span><br><span class="line">  14:    b8 01 00 00 00           mov    eax,  0x1</span><br><span class="line">  19:    0f 05                    syscall</span><br><span class="line">  1b:    b8 3c 00 00 00           mov    eax,  0x3c</span><br><span class="line">  20:    bf 00 00 00 00           mov    edi,  0x0</span><br><span class="line">  25:    0f 05                    syscall</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们可以看到这些指令与我们之前的<code>Hello World</code>汇编代码相对相似，但它们并不完全相同。我们看到有一个空的指令行，这可能会破坏代码。此外，我们的<code>Hello World</code>字符串无处可见。我们也看到许多红色的<code>00</code>，我们将在一点。</p>
+<p>如果我们的汇编代码不是<code>shellcode compliant</code>，也不符合<code>Shellcoding Requirements</code>，就会发生这种情况。为了能够产生一个工作的shellcode，我们的汇编代码必须满足三个主要的<code>Shellcoding Requirements</code>：</p>
+<ol>
+<li>Does not contain variables</li>
+<li>Does not refer to direct memory addresses</li>
+<li>Does not contain any NULL bytes <code>00</code></li>
+</ol>
+<p>因此，让我们从上一节中看到的<code>Hello World</code>程序开始，并通过上述每一点并修复它们：</p>
+<p>Code: </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">global _start</span><br><span class="line"></span><br><span class="line">section .data</span><br><span class="line">    message db "Hello HTB Academy!"</span><br><span class="line"></span><br><span class="line">section .text</span><br><span class="line">_start:</span><br><span class="line">    mov rsi, message</span><br><span class="line">    mov rdi, 1</span><br><span class="line">    mov rdx, 18</span><br><span class="line">    mov rax, 1</span><br><span class="line">    syscall</span><br><span class="line"></span><br><span class="line">    mov rax, 60</span><br><span class="line">    mov rdi, 0</span><br><span class="line">    syscall</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="Remove-Variables"><a href="#Remove-Variables" class="headerlink" title="Remove Variables"></a>Remove Variables</h3><p>shellcode一旦加载到内存中，就可以直接执行，而不需要从其他内存段加载数据，比如<code>.data</code>或<code>.bss</code>。这是因为<code>text</code>内存段不是<code>writable</code>，所以我们不能写任何变量。相反，<code>data</code>段是不可执行的，所以我们不能编写可执行代码。</p>
+<p>因此，要执行我们的shellcode，我们必须将其加载到<code>text</code>内存段中，并失去写入任何变量的能力。<code>Hence, our entire shellcode must be under '.text' in the assembly code.</code></p>
+<p>注意事项：一些旧的shellcoding技术（如jmp-call-pop技术）不再适用于现代内存保护，因为它们中的许多依赖于将变量写入<code>text</code>内存段，正如我们刚刚讨论的，这不再可能。</p>
+<p>我们可以使用许多技术来避免使用变量，例如：</p>
+<ol>
+<li>将立即字符串移动到寄存器</li>
+<li>将字符串推入堆栈，然后使用它们</li>
+</ol>
+<p>在上面的代码中，我们可以将字符串移动到<code>rsi</code>，如下所示：</p>
+<p>Code: </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mov rsi, 'Academy!'</span><br></pre></td></tr></tbody></table></figure>
+
+<p>但是，64位寄存器只能保存8个字节，这对于更大的字符串可能不够。所以，我们的另一个选择是依赖于堆栈，一次推送16个字节（以相反的顺序），然后使用<code>rsp</code>作为我们的字符串指针，如下所示：</p>
+<p>Code:</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">push 'y!'</span><br><span class="line">push 'B Academ'</span><br><span class="line">push 'Hello HT'</span><br><span class="line">mov rsi, rsp</span><br></pre></td></tr></tbody></table></figure>
+
+<p>然而，这将超过立即字符串<code>push</code>的允许界限，即一次是<code>dword</code>（4字节）。所以，我们将把字符串移到<code>rbx</code>，然后把<code>rbx</code>推到堆栈，如下所示：</p>
+<p>Code: </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mov rbx, 'y!'</span><br><span class="line">push rbx</span><br><span class="line">mov rbx, 'B Academ'</span><br><span class="line">push rbx</span><br><span class="line">mov rbx, 'Hello HT'</span><br><span class="line">push rbx</span><br><span class="line">mov rsi, rsp</span><br></pre></td></tr></tbody></table></figure>
+
+<p>注意：每当我们将一个字符串压入堆栈时，我们必须在它之前压入一个<code>00</code>来终止字符串。但是，在这种情况下我们不必担心，因为我们可以为<code>write</code>系统调用指定打印长度。</p>
+<p>我们现在可以将这些更改应用到代码中，组装并运行它，看看它是否有效：                                                  </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ ./assembler.sh helloworld.s</span><br><span class="line"></span><br><span class="line">Hello HTB Academy!</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们可以看到它按预期工作，不需要使用任何变量。我们可以使用<code>gdb</code>检查它，看看它在断点处的外观：</p>
+<p>gdb</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">$ gdb -q ./helloworld</span><br><span class="line">─────────────────────────────────────────────────────────────────────────────────────── registers ────</span><br><span class="line">$rax   : 0x1               </span><br><span class="line">$rbx   : 0x5448206f6c6c6548 ("Hello HT"?)</span><br><span class="line">$rcx   : 0x0               </span><br><span class="line">$rdx   : 0x12              </span><br><span class="line">$rsp   : 0x00007fffffffe3b8  →  "Hello HTB Academy!"</span><br><span class="line">$rbp   : 0x0               </span><br><span class="line">$rsi   : 0x00007fffffffe3b8  →  "Hello HTB Academy!"</span><br><span class="line">$rdi   : 0x1               </span><br><span class="line">─────────────────────────────────────────────────────────────────────────────────────────── stack ────</span><br><span class="line">0x00007fffffffe3b8│+0x0000: "Hello HTB Academy!"	 ← $rsp, $rsi</span><br><span class="line">0x00007fffffffe3c0│+0x0008: "B Academy!"</span><br><span class="line">0x00007fffffffe3c8│+0x0010: 0x0000000000002179 ("y!"?)</span><br><span class="line">───────────────────────────────────────────────────────────────────────────────────── code:x86:64 ────</span><br><span class="line">→   0x40102e &lt;_start+46&gt;      syscall </span><br><span class="line">──────────────────────────────────────────────────────────────────────────────────────────────────────</span><br></pre></td></tr></tbody></table></figure>
+
+<p>正如我们所注意到的，字符串是在堆栈中逐渐建立的，当我们将<code>rsp</code>移动到<code>rsi</code>时，它包含了我们的整个字符串。</p>
+<h3 id="Remove-Addresses"><a href="#Remove-Addresses" class="headerlink" title="Remove Addresses"></a>Remove Addresses</h3><p>我们现在在上面的代码中没有使用任何地址，因为我们在删除唯一的变量时删除了唯一的地址引用。然而，我们可能会在许多情况下看到引用，特别是<code>calls</code>或<code>loops</code>等。因此，我们必须确保我们的shellcode知道如何在它运行的任何环境中进行调用。</p>
+<p>为了能够这样做，我们不能引用直接存储器地址（即<code>call 0xffffffffaa8a25ff</code>），而是仅调用标签（即<code>call loopFib</code>）或相对存储器地址（即，<code>call 0x401020</code>）。我们在第4节中讨论了RIP相对寻址。</p>
+<p>幸运的是，在整个模块中，我们只做了<code>calls</code> to标签，以确保我们学习如何编写易于shellcoded的代码。如果我们对一个标签做一个<code>call</code>，<code>nasm</code>会自动将这个标签变成一个相对地址，这应该可以和shellcode一起使用。</p>
+<p>如果我们曾经有过任何对直接内存地址的调用或引用，我们可以通过以下方式修复：</p>
+<ol>
+<li>替换为对标签或RIP相关地址的调用（对于<code>calls</code>和<code>loops</code>）</li>
+<li>推送到堆栈并使用<code>rsp</code>作为地址（用于<code>mov</code>和其他汇编指令）</li>
+</ol>
+<p>如果我们在编写汇编代码时效率很高，我们可能不必修复这些类型的问题。</p>
+<h3 id="Remove-NULL"><a href="#Remove-NULL" class="headerlink" title="Remove NULL"></a>Remove NULL</h3><p>NULL字符（或<code>0x00</code>）在汇编和机器代码中用作字符串终止符，因此如果遇到它们，它们将导致问题，并可能导致程序提前终止。因此，我们必须确保我们的shellcode不包含任何NULL字节<code>00</code>。如果我们回到我们的<code>Hello World</code> shellcode disassumption，我们注意到其中有许多红色的<code>00</code>：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">$ pwn disasm '48be0020400000000000bf01000000ba12000000b8010000000f05b83c000000bf000000000f05' -c 'amd64'</span><br><span class="line">   0:    48 be 00 20 40 00 00     movabs rsi,  0x402000</span><br><span class="line">   7:    00 00 00</span><br><span class="line">   a:    bf 01 00 00 00           mov    edi,  0x1</span><br><span class="line">   f:    ba 12 00 00 00           mov    edx,  0x12</span><br><span class="line">  14:    b8 01 00 00 00           mov    eax,  0x1</span><br><span class="line">  19:    0f 05                    syscall</span><br><span class="line">  1b:    b8 3c 00 00 00           mov    eax,  0x3c</span><br><span class="line">  20:    bf 00 00 00 00           mov    edi,  0x0</span><br><span class="line">  25:    0f 05                    syscall</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这通常发生在将一个小整数移动到一个大寄存器中时，因此整数会被额外的<code>00</code>填充以适应较大寄存器的大小。</p>
+<p>例如，在上面的代码中，当我们使用<code>mov rax, 1</code>时，它将把<code>00 00 00 01</code>移动到<code>rax</code>中，这样数字大小将匹配寄存器大小。我们可以在汇编上面的指令时看到这一点：                                                    </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ pwn asm 'mov rax, 1' -c 'amd64'</span><br><span class="line"></span><br><span class="line">48c7c001000000</span><br></pre></td></tr></tbody></table></figure>
+
+<p>为了避免这些空字节，<code>we must use registers that match our data size.</code>对于前面的例子，我们可以使用更有效的指令<code>mov al, 1</code>，正如我们在整个模块中所学习的那样。然而，在我们这样做之前，我们必须首先用<code>rax</code>将<code>xor rax, rax</code>寄存器清零，以确保我们的数据不会与旧数据混合。让我们看看这两条指令的shellcode：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ pwn asm 'xor rax, rax' -c 'amd64'</span><br><span class="line"></span><br><span class="line">4831c0</span><br><span class="line">$ pwn asm 'mov al, 1' -c 'amd64'</span><br><span class="line"></span><br><span class="line">b001</span><br></pre></td></tr></tbody></table></figure>
+
+<p>正如我们所看到的，我们的新shellcode不仅不包含任何NULL字节，而且它也更短，这是shellcode中非常需要的东西。</p>
+<p>我们可以从前面添加的新指令<code>mov rbx, 'y!'</code>开始。我们看到，该指令将2个字节移动到8个字节的寄存器中。因此，为了修复它，我们将首先将<code>rbx</code>清零，然后使用2字节（即16位）寄存器<code>bx</code>，如下所示：</p>
+<p>Code: </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">xor rbx, rbx</span><br><span class="line">mov bx, 'y!'</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这些新指令在其shellcode中不应包含任何NULL字节。让我们将相同的方法应用于代码的其余部分，如下所示：</p>
+<p>Code: </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">xor rax, rax</span><br><span class="line">mov al, 1</span><br><span class="line">xor rdi, rdi</span><br><span class="line">mov dil, 1</span><br><span class="line">xor rdx, rdx</span><br><span class="line">mov dl, 18</span><br><span class="line">syscall</span><br><span class="line"></span><br><span class="line">xor rax, rax</span><br><span class="line">add al, 60</span><br><span class="line">xor dil, dil</span><br><span class="line">syscall</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们可以看到，我们在三个地方应用了这种技术，每个地方都使用了8位寄存器。</p>
+<p>提示：如果我们需要将<code>0</code>移动到寄存器中，我们可以将该寄存器清零，就像我们上面对<code>rdi</code>所做的那样。同样，如果我们甚至需要<code>push 0</code>到堆栈（例如，对于String Termination），我们可以将任何寄存器清零，然后将该寄存器推入堆栈。</p>
+<p>如果我们应用以上所有方法，我们应该有以下汇编代码：</p>
+<p>Code: </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">global _start</span><br><span class="line"></span><br><span class="line">section .text</span><br><span class="line">_start:</span><br><span class="line">    xor rbx, rbx</span><br><span class="line">    mov bx, 'y!'</span><br><span class="line">    push rbx</span><br><span class="line">    mov rbx, 'B Academ'</span><br><span class="line">    push rbx</span><br><span class="line">    mov rbx, 'Hello HT'</span><br><span class="line">    push rbx</span><br><span class="line">    mov rsi, rsp</span><br><span class="line">    xor rax, rax</span><br><span class="line">    mov al, 1</span><br><span class="line">    xor rdi, rdi</span><br><span class="line">    mov dil, 1</span><br><span class="line">    xor rdx, rdx</span><br><span class="line">    mov dl, 18</span><br><span class="line">    syscall</span><br><span class="line"></span><br><span class="line">    xor rax, rax</span><br><span class="line">    add al, 60</span><br><span class="line">    xor dil, dil</span><br><span class="line">    syscall</span><br></pre></td></tr></tbody></table></figure>
+
+<p>最后，我们可以汇编代码并运行它：                                                           </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ ./assembler.sh helloworld.s</span><br><span class="line"></span><br><span class="line">Hello HTB Academy!</span><br></pre></td></tr></tbody></table></figure>
+
+<p>正如我们所看到的，我们的代码按预期工作。</p>
+<h3 id="Shellcoding-1"><a href="#Shellcoding-1" class="headerlink" title="Shellcoding"></a>Shellcoding</h3><p>我们现在可以尝试使用之前的<code>helloworld</code>脚本提取新的<code>shellcoder.py</code>程序的shellcode：                     </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ python3 shellcoder.py helloworld</span><br><span class="line"></span><br><span class="line">4831db66bb79215348bb422041636164656d5348bb48656c6c6f204854534889e64831c0b0014831ff40b7014831d2b2120f054831c0043c4030ff0f05</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这个shellcode看起来好多了。但它是否包含任何NULL字节？很难说。因此，让我们在<code>shellcoder.py</code>的末尾添加以下行，这将告诉我们我们的代码是否包含任何NULL字节，并告诉我们shellcode的大小：</p>
+<p>Code: </p>
+<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="string">"%d bytes - Found NULL byte"</span> % <span class="built_in">len</span>(shellcode)) <span class="keyword">if</span> [i <span class="keyword">for</span> i <span class="keyword">in</span> shellcode <span class="keyword">if</span> i == <span class="number">0</span>] <span class="keyword">else</span> <span class="built_in">print</span>(<span class="string">"%d bytes - No NULL bytes"</span> % <span class="built_in">len</span>(shellcode))</span><br></pre></td></tr></tbody></table></figure>
+
+<p>让我们运行更新后的脚本，看看我们的shellcode是否包含任何NULL字节：                                                        </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ python3 shellcoder.py helloworld</span><br><span class="line"></span><br><span class="line">4831db66bb79215348bb422041636164656d5348bb48656c6c6f204854534889e64831c0b0014831ff40b7014831d2b2120f054831c0043c4030ff0f05</span><br><span class="line">61 bytes - No NULL bytes</span><br></pre></td></tr></tbody></table></figure>
+
+<p>正如我们所看到的，<code>No NULL bytes</code>告诉我们shellcode是<code>NULL-byte free</code>。</p>
+<p>尝试在前面的<code>Hello World</code>程序上运行脚本，看看它是否包含任何NULL字节。最后，我们到达了关键时刻，并尝试使用我们的<code>loader.py</code>脚本运行我们的shellcode，看看它是否成功运行：                                                                  </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ python3 loader.py '4831db66bb79215348bb422041636164656d5348bb48656c6c6f204854534889e64831c0b0014831ff40b7014831d2b2120f054831c0043c4030ff0f05'</span><br><span class="line"></span><br><span class="line">Hello HTB Academy!</span><br></pre></td></tr></tbody></table></figure>
+
+<p>正如我们所看到的，我们已经成功地为我们的<code>Hello World</code>程序创建了一个工作shellcode。</p>
+<h2 id="Shellcoding-Tools"><a href="#Shellcoding-Tools" class="headerlink" title="Shellcoding Tools"></a>Shellcoding Tools</h2><p>我们现在应该能够修改我们的代码并使其兼容<code>shellcode</code>，这样它就可以满足所有<code>Shellcoding Requirements</code>。这种理解对于制作我们自己的shellcode和最小化它们的大小至关重要，这在处理二进制利用时可能会变得非常方便，特别是当我们没有太多空间容纳大型shellcode时。</p>
+<p>在某些其他情况下，我们可能不需要每次都编写自己的shellcode，因为类似的shellcode可能已经存在，或者我们可以使用工具生成shellcode，所以我们不必重新发明轮子。</p>
+<p>通过二进制开发，我们会遇到许多常见的shellcode，比如<code>Reverse Shell</code> shellcode或<code>/bin/sh</code> shellcode。我们可以找到许多执行这些功能的shellcode，我们可以使用最小的修改或不修改。我们也可以使用工具来生成这两个shellcode。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">For either of these, we must be sure to use a shellcode that matches our target Operating System and Processor Architecture.</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="Shell-Shellcode"><a href="#Shell-Shellcode" class="headerlink" title="Shell Shellcode"></a>Shell Shellcode</h3><p>在我们继续使用工具和在线资源之前，让我们尝试创建我们自己的<code>/bin/sh</code> shellcode。要做到这一点，我们可以使用<code>execve</code>系统调用和<code>59</code>系统调用，这允许我们执行一个系统应用程序：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ man -s 2 execve</span><br><span class="line"></span><br><span class="line">int execve(const char *pathname, char *const argv[], char *const envp[]);</span><br></pre></td></tr></tbody></table></figure>
+
+<p>正如我们所看到的，<code>execve</code>系统调用接受3个参数。我们需要执行<code>/bin/sh /bin/sh</code>，这将使我们进入<code>sh</code>shell。所以，我们最终的函数是：</p>
+<p>Code: </p>
+<figure class="highlight c"><table><tbody><tr><td class="code"><pre><span class="line">execve(<span class="string">"/bin//sh"</span>, [<span class="string">"/bin//sh"</span>], <span class="literal">NULL</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>所以，我们将参数设置为：</p>
+<ol>
+<li><code>rax</code> -&gt; <code>59</code> (<code>execve</code> syscall number)</li>
+<li><code>rdi</code> -&gt; <code>['/bin//sh']</code> (pointer to program to execute)</li>
+<li><code>rsi</code> -&gt; <code>['/bin//sh']</code> (list of pointers for arguments)</li>
+<li><code>rdx</code> -&gt; <code>NULL</code> (no environment variables)</li>
+</ol>
+<p>注意事项：我们在’<code>/</code>‘中添加了一个额外的<code>/bin//sh</code>，因此总字符数为8，这将填满一个64位寄存器，因此我们不必担心提前清除寄存器或处理任何剩余字符。在Linux中，任何额外的斜杠都被忽略，因此这是一个在需要时平衡总字符数的方便技巧，并且在二进制开发中使用了很多。</p>
+<p>使用我们在调用系统调用时学到的相同概念，下面的汇编代码应该执行我们需要的系统调用：</p>
+<p>Code: </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">global _start</span><br><span class="line"></span><br><span class="line">section .text</span><br><span class="line">_start:</span><br><span class="line">    mov rax, 59         ; execve syscall number</span><br><span class="line">    push 0              ; push NULL string terminator</span><br><span class="line">    mov rdi, '/bin//sh' ; first arg to /bin/sh</span><br><span class="line">    push rdi            ; push to stack </span><br><span class="line">    mov rdi, rsp        ; move pointer to ['/bin//sh']</span><br><span class="line">    push 0              ; push NULL string terminator</span><br><span class="line">    push rdi            ; push second arg to ['/bin//sh']</span><br><span class="line">    mov rsi, rsp        ; pointer to args</span><br><span class="line">    mov rdx, 0          ; set env to NULL</span><br><span class="line">    syscall</span><br></pre></td></tr></tbody></table></figure>
+
+<p>正如我们所看到的，我们推送了两个（以NULL结尾的）<code>'/bin//sh'</code>字符串，然后将它们的指针移动到<code>rdi</code>和<code>rsi</code>。我们现在应该知道，上面的汇编代码不会产生一个工作的shellcode，因为它包含NULL字节。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">Try to remove all NULL bytes from the above assembly code to produce a working shellcode.</span><br></pre></td></tr></tbody></table></figure>
+
+<p>一旦我们修复了代码，我们就可以在它上面运行<code>shellcoder.py</code>，并得到一个没有NULL字节的shellcode：                                                                        </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ python3 shellcoder.py sh</span><br><span class="line"></span><br><span class="line">b03b4831d25248bf2f62696e2f2f7368574889e752574889e60f05</span><br><span class="line">27 bytes - No NULL bytes</span><br></pre></td></tr></tbody></table></figure>
+
+<p>尝试运行上面的shellcode与<code>loader.py</code>，看看它是否工作，并把我们放在一个shell。现在让我们尝试使用shellcode生成工具获取<code>/bin/sh</code>的另一个shellcode。</p>
+<h3 id="Shellcraft"><a href="#Shellcraft" class="headerlink" title="Shellcraft"></a>Shellcraft</h3><p>让我们从我们常用的工具<code>pwntools</code>开始，并使用它的<code>shellcraft</code>库，该库为各种<code>syscalls</code>生成shellcode。我们可以列出<code>syscalls</code>工具接受如下：                                           </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ pwn shellcraft -l 'amd64.linux'</span><br><span class="line"></span><br><span class="line">...SNIP...</span><br><span class="line">amd64.linux.sh</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们看到了<code>amd64.linux.sh</code>系统调用，它会将我们放入一个shell，就像上面的shell代码一样。我们可以如下生成它的shellcode：                                                               </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ pwn shellcraft amd64.linux.sh</span><br><span class="line"></span><br><span class="line">6a6848b82f62696e2f2f2f73504889e768726901018134240101010131f6566a085e4801e6564889e631d26a3b580f05</span><br></pre></td></tr></tbody></table></figure>
+
+<p>请注意，这个shellcode并不像我们的shellcode那样优化和简短。我们可以通过添加<code>-r</code>标志来运行shellcode：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ pwn shellcraft amd64.linux.sh -r</span><br><span class="line"></span><br><span class="line">$ whoami</span><br><span class="line"></span><br><span class="line">root</span><br></pre></td></tr></tbody></table></figure>
+
+<p>而且它的工作原理和预期的一样。此外，我们可以使用<code>Python3</code>解释器完全解锁<code>shellcraft</code>，并使用带参数的高级系统调用。首先，我们可以使用<code>dir(shellcraft)</code>列出所有可用的系统调用，如下所示：                                            </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ python3</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; from pwn import *</span><br><span class="line">&gt;&gt;&gt; context(os="linux", arch="amd64", log_level="error")</span><br><span class="line">&gt;&gt;&gt; dir(shellcraft)</span><br><span class="line"></span><br><span class="line">[...SNIP... 'execve', 'exit', 'exit_group', ... SNIP...]</span><br></pre></td></tr></tbody></table></figure>
+
+<p>让我们像上面一样使用<code>execve</code>系统调用来放入一个shell，如下所示：                                                                </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; syscall = shellcraft.execve(path='/bin/sh',argv=['/bin/sh']) # syscall and args</span><br><span class="line">&gt;&gt;&gt; asm(syscall).hex() # print shellcode</span><br><span class="line"></span><br><span class="line">'48b801010101010101015048b82e63686f2e726901483104244889e748b801010101010101015048b82e63686f2e7269014831042431f6566a085e4801e6564889e631d26a3b580f05'</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们可以在<a target="_blank" rel="noopener" href="https://docs.pwntools.com/en/stable/shellcraft/amd64.html">这个链接</a>上找到<code>x86_64</code>接受的系统调用及其参数的完整列表。我们现在可以尝试使用<code>loader.py</code>运行这个shellcode：                                                                </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ python3 loader.py '48b801010101010101015048b82e63686f2e726901483104244889e748b801010101010101015048b82e63686f2e7269014831042431f6566a085e4801e6564889e631d26a3b580f05'</span><br><span class="line"></span><br><span class="line">$ whoami</span><br><span class="line"></span><br><span class="line">root</span><br></pre></td></tr></tbody></table></figure>
+
+<p>而且它的工作原理和预期的一样。</p>
+<h3 id="Msfvenom"><a href="#Msfvenom" class="headerlink" title="Msfvenom"></a>Msfvenom</h3><p>让我们试试<code>msfvenom</code>，这是我们可以用来生成shellcode的另一个常用工具。同样，我们可以列出<code>Linux</code>和<code>x86_64</code>的各种可用有效负载：                                                             </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ msfvenom -l payloads | grep 'linux/x64'</span><br><span class="line"></span><br><span class="line">linux/x64/exec                                      Execute an arbitrary command</span><br><span class="line">...SNIP...</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>exec</code> payload允许我们执行指定的命令。让我们将’<code>/bin/sh/</code>‘传递给<code>CMD</code>，并测试我们得到的shellcode：                                                           </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ msfvenom -p 'linux/x64/exec' CMD='sh' -a 'x64' --platform 'linux' -f 'hex'</span><br><span class="line"></span><br><span class="line">No encoder specified, outputting raw payload</span><br><span class="line">Payload size: 48 bytes</span><br><span class="line">Final size of hex file: 96 bytes</span><br><span class="line">6a3b589948bb2f62696e2f736800534889e7682d6300004889e652e80300000073680056574889e60f05</span><br></pre></td></tr></tbody></table></figure>
+
+<p>注意，这个shellcode也没有我们的shellcode那么优化和简短。让我们试着用我们的<code>loader.py</code>脚本运行这个shellcode：                                                                                    </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ python3 loader.py '6a3b589948bb2f62696e2f736800534889e7682d6300004889e652e80300000073680056574889e60f05'</span><br><span class="line"></span><br><span class="line">$ whoami</span><br><span class="line"></span><br><span class="line">root</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这个shellcode也可以工作。尝试在<code>shellcraft</code>和<code>msfvenom</code>中测试其他类型的系统调用和有效负载</p>
+<h3 id="Shellcode-Encoding"><a href="#Shellcode-Encoding" class="headerlink" title="Shellcode Encoding"></a>Shellcode Encoding</h3><p>使用这些工具的另一个好处是编码我们的shellcode，而无需手动编写编码器。对shellcode进行编码可以成为具有防病毒或某些安全保护的系统的一个方便功能。然而，必须注意的是，用普通编码器编码的外壳代码可能容易检测。</p>
+<p>我们也可以使用<code>msfvenom</code>来编码我们的shellcode。我们可以首先列出可用的编码器：                                                     </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ msfvenom -l encoders</span><br><span class="line"></span><br><span class="line">Framework Encoders [--encoder &lt;value&gt;]</span><br><span class="line">======================================</span><br><span class="line">    Name                          Rank       Description</span><br><span class="line">    ----                          ----       -----------</span><br><span class="line">    cmd/brace                     low        Bash Brace Expansion Command Encoder</span><br><span class="line">    cmd/echo                      good       Echo Command Encoder</span><br><span class="line"></span><br><span class="line">&lt;SNIP&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后我们可以为<code>x64</code>选择一个，比如<code>x64/xor</code>，并将其与<code>-e</code>标志一起使用，如下所示：                                                            </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ msfvenom -p 'linux/x64/exec' CMD='sh' -a 'x64' --platform 'linux' -f 'hex' -e 'x64/xor'</span><br><span class="line"></span><br><span class="line">Found 1 compatible encoders</span><br><span class="line">Attempting to encode payload with 1 iterations of x64/xor</span><br><span class="line">x64/xor succeeded with size 87 (iteration=0)</span><br><span class="line">x64/xor chosen with final size 87</span><br><span class="line">Payload size: 87 bytes</span><br><span class="line">Final size of hex file: 174 bytes</span><br><span class="line">4831c94881e9faffffff488d05efffffff48bbf377c2ea294e325c48315827482df8ffffffe2f4994c9a7361f51d3e9a19ed99414e61147a90aac74a4e32147a9190022a4e325c801fc2bc7e06bbbafc72c2ea294e325c</span><br></pre></td></tr></tbody></table></figure>
+
+<p>让我们尝试运行编码的shellcode，看看它是否运行：                                                                        </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ python3 loader.py </span><br><span class="line">'4831c94881e9faffffff488d05efffffff48bbf377c2ea294e325c48315827482df8ffffffe2f4994c9a7361f51d3e9a19ed99414e61147a90aac74a4e32147a9190022a4e325c801fc2bc7e06bbbafc72c2ea294e325c'</span><br><span class="line"></span><br><span class="line">$ whoami</span><br><span class="line"></span><br><span class="line">root</span><br></pre></td></tr></tbody></table></figure>
+
+<p>正如我们所看到的，编码后的shellcode也可以正常工作，但不太容易被安全监控工具检测到。</p>
+<p>提示：我们可以使用<code>-i COUNT</code>标志多次编码shellcode，并指定我们想要的迭代次数。</p>
+<p>我们看到，编码的shellcode总是比未编码的shellcode大得多，因为编码shellcode添加了一个内置的解码器用于运行时解码。它还可以对每个字节进行多次编码，这会在每次迭代时增加其大小。</p>
+<p>如果我们有一个自定义的shellcode，我们也可以使用<code>msfvenom</code>来编码它，通过将其字节写入文件，然后使用<code>msfvenom</code>将其传递给<code>-p -</code>，如下所示：                                                            </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ python3 -c "import sys; sys.stdout.buffer.write(bytes.fromhex('b03b4831d25248bf2f62696e2f2f7368574889e752574889e60f05'))" &gt; shell.bin</span><br><span class="line">mikannse7@htb[/htb]$ msfvenom -p - -a 'x64' --platform 'linux' -f 'hex' -e 'x64/xor' &lt; shell.bin</span><br><span class="line"></span><br><span class="line">Attempting to read payload from STDIN...</span><br><span class="line">Found 1 compatible encoders</span><br><span class="line">Attempting to encode payload with 1 iterations of x64/xor</span><br><span class="line">x64/xor succeeded with size 71 (iteration=0)</span><br><span class="line">x64/xor chosen with final size 71</span><br><span class="line">Payload size: 71 bytes</span><br><span class="line">Final size of hex file: 142 bytes</span><br><span class="line">4831c94881e9fcffffff488d05efffffff48bb5a63e4e17d0bac1348315827482df8ffffffe2f4ea58acd0af59e4ac75018d8f5224df7b0d2b6d062f5ce49abc6ce1e17d0bac13</span><br></pre></td></tr></tbody></table></figure>
+
+<p>正如我们所看到的，我们的有效载荷被编码，并且变得更大。</p>
+<h3 id="Shellcode-Resources"><a href="#Shellcode-Resources" class="headerlink" title="Shellcode Resources"></a>Shellcode Resources</h3><p>最后，我们总是可以搜索在线资源，如<a target="_blank" rel="noopener" href="http://shell-storm.org/shellcode/">Shell-Storm</a>或<a target="_blank" rel="noopener" href="https://www.exploit-db.com/shellcodes">Exploit DB，</a>以获得现有的shellcode。</p>
+<p>例如，如果我们在<a target="_blank" rel="noopener" href="http://shell-storm.org/shellcode/">Shell-Storm中</a>搜索<code>/bin/sh</code>上的<code>Linux/x86_64</code> shellcode，我们会发现几个大小不同的示例，比如这个<a target="_blank" rel="noopener" href="http://shell-storm.org/shellcode/files/shellcode-806.php">27字节的shellcode</a>。我们可以在<a target="_blank" rel="noopener" href="https://www.exploit-db.com/shellcodes">Exploit DB中</a>搜索相同的内容，我们找到了一个更优化<a target="_blank" rel="noopener" href="https://www.exploit-db.com/shellcodes/47008">的22字节shellcode</a>，如果我们的Binary Exploitation只有大约22字节的溢出空间，这可能会有所帮助。我们还可以搜索编码的shellcode，它们一定会更大。</p>
+<p>我们上面写的shellcode也是27字节长，所以它看起来是一个非常优化的shellcode。有了所有这些，我们应该能够轻松地编写、生成和使用shellcode。</p>
+<h1 id="Skills-Assessment"><a href="#Skills-Assessment" class="headerlink" title="Skills Assessment"></a>Skills Assessment</h1><p>Task1</p>
+<p>Task2</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">msfvenom -p 'linux/x64/exec' CMD='cat ./flg.txt' -a 'x64' --platform 'linux' -f 'hex'</span><br></pre></td></tr></tbody></table></figure>
+
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://mikannse.space">Mikannse</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://mikannse.space/2023/11/07/IntroToAssemblyShellcodingANDSkill/">http://mikannse.space/2023/11/07/IntroToAssemblyShellcodingANDSkill/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://mikannse.space" target="_blank">MikannseのSekai</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%BD%91%E5%AE%89/">网安</a><a class="post-meta__tags" href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a><a class="post-meta__tags" href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">渗透测试</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/11/09/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%BA%94%E4%BA%94)%E4%B9%8BTHMAnonymousPlayground/" title="打靶记录(五五)之THMAnonymousPlayground"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">打靶记录(五五)之THMAnonymousPlayground</div></div></a></div><div class="next-post pull-right"><a href="/2023/11/05/23-10%E6%9D%82%E8%B0%88/" title="23-10杂谈"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">23-10杂谈</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2023/11/17/Cross-Site%20Scripting%20(XSS)HTB/" title="Cross-Site Scripting (XSS)HTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-17</div><div class="title">Cross-Site Scripting (XSS)HTB</div></div></a></div><div><a href="/2023/10/24/HackingWordPressHTB/" title="HackingWordPressHTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-10-24</div><div class="title">HackingWordPressHTB</div></div></a></div><div><a href="/2023/11/15/Information%20Gathering%20-%20Web%20EditionHTB/" title="Information Gathering - Web EditionHTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-15</div><div class="title">Information Gathering - Web EditionHTB</div></div></a></div><div><a href="/2023/11/04/IntroToAssemblyArchANDAssembDebugger/" title="IntroToAssemblyArchANDAssembDebuggerHTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-04</div><div class="title">IntroToAssemblyArchANDAssembDebuggerHTB</div></div></a></div><div><a href="/2023/10/28/IntroductiontoBashScriptingHTB/" title="IntroductiontoBashScriptingHTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-10-28</div><div class="title">IntroductiontoBashScriptingHTB</div></div></a></div><div><a href="/2023/11/05/IntroToAssemblyBasicInstructionsANDFunctions/" title="IntroToAssemblyBasicInstructionsANDFunctionsHTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-05</div><div class="title">IntroToAssemblyBasicInstructionsANDFunctionsHTB</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Mikannse</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">274</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mikannse/mikannse.github.io"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">暂时没有公告QAQ</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Shellcoding"><span class="toc-number">1.</span> <span class="toc-text">Shellcoding</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Shellcodes"><span class="toc-number">1.1.</span> <span class="toc-text">Shellcodes</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#What-is-a-Shellcode"><span class="toc-number">1.1.1.</span> <span class="toc-text">What is a Shellcode</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Use-in-Pentesting"><span class="toc-number">1.1.2.</span> <span class="toc-text">Use in Pentesting</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Assembly-to-Machine-Code"><span class="toc-number">1.1.3.</span> <span class="toc-text">Assembly to Machine Code</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Extract-Shellcode"><span class="toc-number">1.1.4.</span> <span class="toc-text">Extract Shellcode</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Loading-Shellcode"><span class="toc-number">1.1.5.</span> <span class="toc-text">Loading Shellcode</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Debugging-Shellcode"><span class="toc-number">1.1.6.</span> <span class="toc-text">Debugging Shellcode</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Pwntools"><span class="toc-number">1.1.6.1.</span> <span class="toc-text">Pwntools</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#GCC"><span class="toc-number">1.1.6.2.</span> <span class="toc-text">GCC</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Shellcoding-Techniques"><span class="toc-number">1.2.</span> <span class="toc-text">Shellcoding Techniques</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Shellcoding-Requirements"><span class="toc-number">1.2.1.</span> <span class="toc-text">Shellcoding Requirements</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Remove-Variables"><span class="toc-number">1.2.2.</span> <span class="toc-text">Remove Variables</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Remove-Addresses"><span class="toc-number">1.2.3.</span> <span class="toc-text">Remove Addresses</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Remove-NULL"><span class="toc-number">1.2.4.</span> <span class="toc-text">Remove NULL</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Shellcoding-1"><span class="toc-number">1.2.5.</span> <span class="toc-text">Shellcoding</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Shellcoding-Tools"><span class="toc-number">1.3.</span> <span class="toc-text">Shellcoding Tools</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Shell-Shellcode"><span class="toc-number">1.3.1.</span> <span class="toc-text">Shell Shellcode</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Shellcraft"><span class="toc-number">1.3.2.</span> <span class="toc-text">Shellcraft</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Msfvenom"><span class="toc-number">1.3.3.</span> <span class="toc-text">Msfvenom</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Shellcode-Encoding"><span class="toc-number">1.3.4.</span> <span class="toc-text">Shellcode Encoding</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Shellcode-Resources"><span class="toc-number">1.3.5.</span> <span class="toc-text">Shellcode Resources</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Skills-Assessment"><span class="toc-number">2.</span> <span class="toc-text">Skills Assessment</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/11/pwncollegeAssembly30/" title="pwncollegeAssembly30">pwncollegeAssembly30</a><time datetime="2024-10-10T17:05:42.000Z" title="发表于 2024-10-11 01:05:42">2024-10-11</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/09/pwncollege%E6%B1%87%E7%BC%96%E5%85%A5%E9%97%A8/" title="pwncollege汇编入门">pwncollege汇编入门</a><time datetime="2024-10-09T14:39:52.000Z" title="发表于 2024-10-09 22:39:52">2024-10-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/05/Git%E9%80%9F%E6%88%90/" title="Git速成">Git速成</a><time datetime="2024-10-05T04:57:08.000Z" title="发表于 2024-10-05 12:57:08">2024-10-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/03/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%BA%8C)%E4%B9%8BVulnHubCorrosion2/" title="打靶记录(一六二)之VulnHubCorrosion2">打靶记录(一六二)之VulnHubCorrosion2</a><time datetime="2024-10-03T09:24:11.000Z" title="发表于 2024-10-03 17:24:11">2024-10-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/02/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%B8%80)%E4%B9%8BVulnHubDrippingBlues1/" title="打靶记录(一六一)之VulnHubDrippingBlues1">打靶记录(一六一)之VulnHubDrippingBlues1</a><time datetime="2024-10-02T05:16:28.000Z" title="发表于 2024-10-02 13:16:28">2024-10-02</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2024 By Mikannse</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function loadDisqus () {
+  const disqus_config = function () {
+    this.page.url = 'http://mikannse.space/2023/11/07/IntroToAssemblyShellcodingANDSkill/'
+    this.page.identifier = '/2023/11/07/IntroToAssemblyShellcodingANDSkill/'
+    this.page.title = 'IntroToAssemblyShellcodingANDSkillHTB'
+  }
+
+  const disqusReset = () => {
+    DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addModeChange('disqus', disqusReset)
+
+  if (window.DISQUS) disqusReset()
+  else {
+    (function() { 
+      var d = document, s = d.createElement('script');
+      s.src = 'https://.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  }
+}
+
+if ('Valine' === 'Disqus' || !true) {
+  if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+  else loadDisqus()
+} else {
+  function loadOtherComment () {
+    loadDisqus()
+  }
+}
+</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

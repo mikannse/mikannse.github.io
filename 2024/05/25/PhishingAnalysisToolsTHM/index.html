@@ -1,0 +1,476 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>PhishingAnalysisToolsTHM | MikannseのSekai</title><meta name="author" content="Mikannse"><meta name="copyright" content="Mikannse"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="Introduction在这个房间中，我们将了解有助于我们分析网络钓鱼电子邮件的各种工具。我们将：  查看可以帮助我们检查电子邮件标头信息的工具。 涵盖获取电子邮件中超链接的技术，以及在 URL 缩短时展开 URL。 研究一些工具，可以为我们提供有关潜在恶意链接的信息，而无需直接与恶意链接交互。 涵盖从网络钓鱼电子邮件中获取恶意附件的技术，并使用恶意软件沙箱引爆附件，以进一步了解附件的用途。 警告">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PhishingAnalysisToolsTHM">
+<meta property="og:url" content="http://mikannse.space/2024/05/25/PhishingAnalysisToolsTHM/index.html">
+<meta property="og:site_name" content="MikannseのSekai">
+<meta property="og:description" content="Introduction在这个房间中，我们将了解有助于我们分析网络钓鱼电子邮件的各种工具。我们将：  查看可以帮助我们检查电子邮件标头信息的工具。 涵盖获取电子邮件中超链接的技术，以及在 URL 缩短时展开 URL。 研究一些工具，可以为我们提供有关潜在恶意链接的信息，而无需直接与恶意链接交互。 涵盖从网络钓鱼电子邮件中获取恶意附件的技术，并使用恶意软件沙箱引爆附件，以进一步了解附件的用途。 警告">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg">
+<meta property="article:published_time" content="2024-05-25T15:59:41.000Z">
+<meta property="article:modified_time" content="2024-06-14T03:26:16.695Z">
+<meta property="article:author" content="Mikannse">
+<meta property="article:tag" content="笔记">
+<meta property="article:tag" content="渗透测试">
+<meta property="article:tag" content="Phishing">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg"><link rel="shortcut icon" href="/img/icon.jpg"><link rel="canonical" href="http://mikannse.space/2024/05/25/PhishingAnalysisToolsTHM/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Mikannse","link":"链接: ","source":"来源: MikannseのSekai","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'PhishingAnalysisToolsTHM',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: undefined,
+  isToc: true,
+  postUpdate: '2024-06-14 11:26:16'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">274</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="MikannseのSekai"><span class="site-name">MikannseのSekai</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">PhishingAnalysisToolsTHM</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-05-25T15:59:41.000Z" title="发表于 2024-05-25 23:59:41">2024-05-25</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-06-14T03:26:16.695Z" title="更新于 2024-06-14 11:26:16">2024-06-14</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BD%91%E5%AE%89/">网安</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">3.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>10分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="PhishingAnalysisToolsTHM"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>在这个房间中，我们将了解有助于我们分析网络钓鱼电子邮件的各种工具。我们将：</p>
+<p> 查看可以帮助我们检查电子邮件标头信息的工具。<br> 涵盖获取电子邮件中超链接的技术，以及在 URL 缩短时展开 URL。<br> 研究一些工具，可以为我们提供有关潜在恶意链接的信息，而无需直接与恶意链接交互。<br> 涵盖从网络钓鱼电子邮件中获取恶意附件的技术，并使用恶意软件沙箱引爆附件，以进一步了解附件的用途。</p>
+<p>警告：整个房间的样本包含来自实际垃圾邮件和/或网络钓鱼电子邮件的信息。如果您尝试与任何 IP、域、附件等进行交互，请务必小心。</p>
+<h1 id="What-information-should-we-collect"><a href="#What-information-should-we-collect" class="headerlink" title="What information should we collect?"></a>What information should we collect?</h1><p>在此任务中，我们将概述分析可疑或恶意电子邮件时执行的步骤。</p>
+<p>以下是分析师（您）从电子邮件标题中收集的相关信息的清单：</p>
+<p> 发件人电子邮件地址<br> 发件人IP地址<br> 反向查找发件人IP地址<br> 电子邮件主题行<br> 收件人电子邮件地址（此信息可能位于抄送/密件抄送字段中）<br> 回复电子邮件地址（如果有）<br>日期/时间</p>
+<p>之后，我们请注意电子邮件正文和附件（如果有）。</p>
+<p>以下是分析师（您）需要从电子邮件正文收集的工件清单：</p>
+<p> 任何 URL 链接（如果使用了 URL 缩短服务，那么我们需要获取真实的 URL 链接）<br> 附件名称<br> 附件的哈希值（哈希类型MD5或SHA256，最好是后者）</p>
+<p>警告：请小心不要意外点击电子邮件中的任何链接或附件。</p>
+<h1 id="Email-header-analysis"><a href="#Email-header-analysis" class="headerlink" title="Email header analysis"></a>Email header analysis</h1><p>我们需要收集的一些相关信息可以从电子邮件客户端或网络客户端（例如 Gmail、Yahoo! 等）直观地获取。但有些信息，例如发件人的IP地址和回复信息，只能通过电子邮件标头获取。</p>
+<p>在<a target="_blank" rel="noopener" href="https://tryhackme.com/room/phishingemails1tryoe">网络钓鱼电子邮件 1</a> 中，我们了解了如何通过筛选电子邮件的源代码来手动获取此信息。</p>
+<p>下面我们将了解一些可以帮助我们检索此信息的工具。</p>
+<p>首先要介绍的是 Google 的一个工具，它可以帮助我们分析 Google 管理工具箱中名为 <strong>Messageheader</strong> 的电子邮件标头。</p>
+<p>根据<a target="_blank" rel="noopener" href="https://toolbox.googleapps.com/apps/main/">网站</a>，“<em>Messageheader 分析 SMTP 邮件标头，这有助于确定递送延迟的根本原因。您可以检测配置错误的服务器和邮件路由问题</em>”。</p>
+<p><strong>用法</strong>：复制并粘贴整个电子邮件标题并运行分析工具。</p>
+<ul>
+<li><strong>Messageheader</strong>: <a target="_blank" rel="noopener" href="https://toolbox.googleapps.com/apps/messageheader/analyzeheader">https://toolbox.googleapps.com/apps/messageheader/analyzeheader</a></li>
+</ul>
+<p><img src="https://assets.tryhackme.com/additional/phishing2/messageheader.png" alt="img"></p>
+<p>另一个工具称为<strong>消息标头分析器</strong>。</p>
+<ul>
+<li><strong>Message Header Analyzer</strong>: <a target="_blank" rel="noopener" href="https://mha.azurewebsites.net/">https://mha.azurewebsites.net/</a></li>
+</ul>
+<p><img src="https://assets.tryhackme.com/additional/phishing2/mha.png" alt="img"></p>
+<p>最后，您还可以使用<a target="_blank" rel="noopener" href="https://mailheader.org/">mailheader.org</a>。</p>
+<p><img src="https://assets.tryhackme.com/additional/phishing2/mailheader.png" alt="img"></p>
+<p>尽管之前的网络钓鱼室中没有介绍，但消息传输代理 (MTA) 是在发件人和收件人之间传输电子邮件的软件。了解有关 MTA 的更多信息 <a target="_blank" rel="noopener" href="https://csrc.nist.gov/glossary/term/mail_transfer_agent">此处</a>。既然我们正在讨论这个主题，请阅读有关 MUA（邮件用户代理）的信息 <a target="_blank" rel="noopener" href="https://csrc.nist.gov/glossary/term/mail_user_agent">此处</a>。</p>
+<p><strong>注意</strong>：使用哪种工具的选择最终取决于您。最好有多个资源可供参考，因为每个工具可能会揭示另一个工具可能无法揭示的信息。</p>
+<p>以下工具可以帮助您分析有关发件人 IP 地址的信息：</p>
+<ul>
+<li>IPinfo.io：<a target="_blank" rel="noopener" href="https://ipinfo.io/">https://ipinfo.io/</a></li>
+</ul>
+<p>根据<a target="_blank" rel="noopener" href="https://ipinfo.io/">网站</a>，“<em>借助 IPinfo，您可以精确定位用户的位置、定制他们的体验、防止欺诈、确保合规性等等</em>”。</p>
+<p><img src="https://assets.tryhackme.com/additional/phishing2/ipinfo.png" alt="img"></p>
+<ul>
+<li>URLScan.io: <a target="_blank" rel="noopener" href="https://urlscan.io/">https://urlscan.io/</a></li>
+</ul>
+<p>根据<a target="_blank" rel="noopener" href="https://urlscan.io/about/">网站</a>，“<em>urlscan.io 是一项扫描和分析网站的免费服务。当 URL 提交到 urlscan.io 时，自动流程将浏览到像普通用户一样记录此页面导航创建的活动，这包括联系的域和 IP、从这些域请求的资源（JavaScript、CSS 等）以及有关页面本身的其他信息。将会截取页面的屏幕截图，记录 DOM 内容、JavaScript 全局变量、页面创建的 cookie 以及大量其他观察结果 如果该网站的目标用户是 urlscan.io 跟踪的 400 多个品牌之一，它将在扫描结果中突出显示为潜在恶意</em>”。</p>
+<p><img src="https://assets.tryhackme.com/additional/phishing2/urlscan.png" alt="img"></p>
+<p>请注意，urlscan.io 提供了 URL 的屏幕截图。提供了此屏幕截图，因此您不必明确导航到有问题的 URL。</p>
+<p>您可以使用提供相同功能及更多功能的其他工具，例如 <a target="_blank" rel="noopener" href="https://www.url2png.com/">URL2PNG</a> 和 <a target="_blank" rel="noopener" href="https://www.wannabrowser.net/">Wannabrowser</a>。</p>
+<ul>
+<li>Talos Reputation Center: <a target="_blank" rel="noopener" href="https://talosintelligence.com/reputation">https://talosintelligence.com/reputation</a></li>
+</ul>
+<p><img src="https://assets.tryhackme.com/additional/phishing2/talos.png" alt="img"></p>
+<h1 id="Email-body-analysis"><a href="#Email-body-analysis" class="headerlink" title="Email body analysis"></a>Email body analysis</h1><p>现在是时候将您的注意力转移到电子邮件正文了。这是恶意有效负载可以作为链接或附件传递给接收者的地方。</p>
+<p>可以直接从 HTML 格式的电子邮件中手动提取链接，也可以通过筛选原始电子邮件标头来手动提取链接。</p>
+<p>以下是通过右键单击链接并选择“<strong>复制链接位置</strong>”从电子邮件手动获取链接的示例。</p>
+<p><img src="https://assets.tryhackme.com/additional/phishing2/copy-link.png" alt="img"></p>
+<p>借助工具也可以完成同样的任务。 URL Extractor 是可以帮助我们完成此任务的一个工具。</p>
+<ul>
+<li>URL 提取器：<a target="_blank" rel="noopener" href="https://www.convertcsv.com/url-extractor.htm">https://www.convertcsv.com/url-extractor.htm</a></li>
+</ul>
+<p>您可以将原始标题复制并粘贴到<strong>第 1 步：选择您的输入</strong>的文本框中。</p>
+<p><img src="https://assets.tryhackme.com/additional/phishing2/url-extractor.png" alt="img"></p>
+<p>提取的 URL 在<strong>步骤 3</strong> 中可见。</p>
+<p><img src="https://assets.tryhackme.com/additional/phishing2/url-extractor-2.png" alt="img"></p>
+<p>您还可以使用 <a target="_blank" rel="noopener" href="https://gchq.github.io/CyberChef/">CyberChef</a> 通过提取 URL 配方来提取 URL。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5de58e2bfac4a912bcc7a3e9/room-content/a31606afb772b8f87eebf0ff59f00fce.png" alt="img"></p>
+<p><strong>提示</strong>：记下提取的 URL 的根域非常重要。您还需要对根域执行分析。</p>
+<p>提取 URL 后，下一步是检查 URL 和根域的信誉。您可以使用上一个任务中提到的任何工具来帮助您完成此任务。</p>
+<p>如果电子邮件包含附件，您需要安全地获取附件。在 Thunderbird 中使用“保存”按钮可以轻松完成此操作。</p>
+<p><img src="https://assets.tryhackme.com/additional/phishing2/save-attachment.png" alt="img"></p>
+<p>获取附件后，您可以获取其哈希值。您可以使用哈希值检查文件的信誉，看看它是否是已知的恶意文档。</p>
+<p> 获取文件的SHA256哈希值</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           user@machine$ sha256sum Double\ Jackpot\ Slots\ Las\ Vegas.dot</span><br><span class="line">c650f397a9193db6a2e1a273577d8d84c5668d03c06ba99b17e4f6617af4ee83  Double Jackpot Slots Las Vegas.dot</span><br><span class="line">        </span><br></pre></td></tr></tbody></table></figure>
+
+<p>有许多工具可以帮助我们完成此任务，但我们将主要关注其中两个；下面列出了它们：</p>
+<ul>
+<li>Talos 文件信誉：<a target="_blank" rel="noopener" href="https://talosintelligence.com/talos_file_reputation">https://talosintelligence.com/talos_file_reputation</a></li>
+</ul>
+<p>根据<a target="_blank" rel="noopener" href="https://talosintelligence.com/talos_file_reputation">站点</a>，“<em>思科 Talos Intelligence Group 对数十亿个文件进行信誉处置。此信誉系统被馈送到 AMP、FirePower、ClamAV 和开源软件中Snort 产品系列。下面的工具允许您对 Talos 文件信誉系统进行随意查找，该系统限制您一次只能进行一次查找，并且仅限于哈希匹配。此查找不能反映高级功能的全部功能。恶意软件防护 (AMP) 系统</em>”。</p>
+<p><img src="https://assets.tryhackme.com/additional/phishing2/talos-file-rep.png" alt="img"></p>
+<p><img src="https://assets.tryhackme.com/additional/phishing2/talos-file-rep-2.png" alt="img"></p>
+<ul>
+<li>VirusTotal：<a target="_blank" rel="noopener" href="https://www.virustotal.com/gui/">https://www.virustotal.com/gui/</a></li>
+</ul>
+<p>根据<a target="_blank" rel="noopener" href="https://www.virustotal.com/gui/">网站</a>，“分析可疑文件和 URL 以检测恶意软件类型，并自动与安全社区共享它们。”</p>
+<p><img src="https://assets.tryhackme.com/additional/phishing2/virustotal.png" alt="img"></p>
+<p><img src="https://assets.tryhackme.com/additional/phishing2/virustotal-2.png" alt="img"></p>
+<p>另一个值得一提的工具/公司是<a target="_blank" rel="noopener" href="https://www.reversinglabs.com/">Reversing Labs</a>，它也有<a target="_blank" rel="noopener" href="https://register.reversinglabs.com/file_reputation">文件信誉服务</a>。</p>
+<h1 id="Malware-Sandbox"><a href="#Malware-Sandbox" class="headerlink" title="Malware Sandbox"></a>Malware Sandbox</h1><p>幸运的是，作为防御者，我们不需要具备恶意软件分析技能来剖析和逆向工程恶意附件以更好地了解恶意软件。</p>
+<p>有一些在线工具和服务可以上传和分析恶意文件，以更好地了解恶意软件的编程目的。这些服务被称为恶意软件沙箱。</p>
+<p>例如，我们可以上传从潜在恶意电子邮件中获取的附件，并查看它尝试与哪些 URL 进行通信、将哪些额外负载下载到端点、持久性机制、妥协指标 (IOC) 等。</p>
+<p>下面列出了其中一些在线恶意软件沙箱。</p>
+<ul>
+<li>Any.Run：<a target="_blank" rel="noopener" href="https://app.any.run/">https://app.any.run/</a></li>
+</ul>
+<p>根据<a target="_blank" rel="noopener" href="https://app.any.run/">站点</a>，“<em>分析网络、文件、模块和注册表活动。直接从浏览器与操作系统交互。立即查看您的操作的反馈</em> ”。</p>
+<p><img src="https://assets.tryhackme.com/additional/phishing2/any-run.png" alt="img"></p>
+<ul>
+<li>混合分析：<a target="_blank" rel="noopener" href="https://www.hybrid-analysis.com/">https://www.hybrid-analysis.com/</a></li>
+</ul>
+<p>根据该网站，<em>“这是为社区提供的免费恶意软件分析服务，使用独特的混合分析技术检测和分析未知威胁</em>。”</p>
+<p><img src="https://assets.tryhackme.com/additional/phishing2/hybrid-analysis.png" alt="img"></p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.joesecurity.org/">https://www.joesecurity.org/</a></li>
+</ul>
+<p>根据该网站，“<em>Joe Sandbox 为分析师提供了广泛的产品功能。其中：实时交互、URL 分析和基于人工智能的网络钓鱼检测、Yara 和 Sigma 规则支持、MITRE ATT&amp;CK 矩阵、基于人工智能的恶意软件检测、邮件监控、威胁搜寻和情报、自动化用户行为、动态 VBA/JS/JAR 工具、执行图、本地化互联网匿名化等等</em>”。</p>
+<p><img src="https://assets.tryhackme.com/additional/phishing2/joe-security.png" alt="img"></p>
+<p>我们将在即将到来的网络钓鱼案例中与这些服务进行交互。</p>
+<h1 id="PhishTool"><a href="#PhishTool" class="headerlink" title="PhishTool"></a>PhishTool</h1><p><a target="_blank" rel="noopener" href="https://www.phishtool.com/">PhishTool</a> 是一个有助于自动进行网络钓鱼分析的工具。</p>
+<p>是的，我把这个留到最后了！什么是网络钓鱼工具？</p>
+<p>根据该网站，“<em>无论您是调查新网络钓鱼工具包的安全研究人员、响应用户报告的网络钓鱼的 SOC 分析师、收集网络钓鱼 IoC 的威胁情报分析师还是处理电子邮件欺诈的调查员。</em></p>
+<p><em>PhishTool 将威胁情报、OSINT、电子邮件元数据和经过实战测试的自动分析路径整合到一个强大的网络钓鱼响应平台中。让您和您的组织成为强大的对手 - 免受网络钓鱼活动的影响，那些电子邮件安全能力较差的人会成为受害者。</em></p>
+<p><strong>注意</strong>：您可以下载和使用免费的社区版本。 :)</p>
+<p>我将恶意电子邮件上传到 PhishTool，并使用我的社区版 API 密钥将 VirusTotal 连接到我的帐户。</p>
+<p>以下是恶意电子邮件和 PhishTool 界面的一些屏幕截图。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5de58e2bfac4a912bcc7a3e9/room-content/0dcc25c992ddfdfc60532f6fb9416a70.png" alt="img"></p>
+<p>从上图中，您可以看到 PhishTool 方便地获取我们需要的有关电子邮件的所有相关信息。</p>
+<ul>
+<li>电子邮件发件人</li>
+<li>电子邮件收件人（在本例中为抄送电子邮件地址的长列表）</li>
+<li>时间戳</li>
+<li>原始IP和反向DNS查找</li>
+</ul>
+<p>我们可以获得有关 SMTP 中继的信息、特定的 X 标头信息和 IP 信息信息。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5de58e2bfac4a912bcc7a3e9/room-content/9665b8957923a892e721a0e02e42ea9f.png" alt="img"></p>
+<p>下面是第 1 跳（共 6 跳）（SMTP 中继）的片段。</p>
+<p><img src="https://assets.tryhackme.com/additional/phishing2/phish-smtp.png" alt="img"></p>
+<p>请注意，该工具通知我们“<strong>Reply-To no present</strong>”，尽管它提供了替代标头信息 <strong>Return-Path</strong>。</p>
+<p>在 PhishTool 仪表板的右侧，我们可以看到电子邮件正文。顶部有两个选项卡，我们可以切换它们以查看文本格式的电子邮件或其 HTML 源代码。</p>
+<p>文本视图：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5de58e2bfac4a912bcc7a3e9/room-content/94366a297a0abb9b7f680e006c421b45.png" alt="img"></p>
+<p>HTML 视图：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5de58e2bfac4a912bcc7a3e9/room-content/e5eb24859d263b8d233f52c1502aaed4.png" alt="img"></p>
+<p>底部的两个窗格将显示有关附件和 URL 的信息。</p>
+<p>右侧窗格将显示电子邮件中是否找到任何 URL。在这种情况下，没有找到电子邮件。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5de58e2bfac4a912bcc7a3e9/room-content/a737376ca1243a926f7a41a765cb7a1e.png" alt="img"></p>
+<p>左侧窗格将显示有关附件的信息。这封特定的恶意电子邮件有一个 zip 文件。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5de58e2bfac4a912bcc7a3e9/room-content/685f9bb5291973038d55aca7c09ffd1e.png" alt="img"></p>
+<p>由于我们的社区版 API 密钥已连接，我们可以自动从 VirusTotal 获取反馈。</p>
+<p>在这里，我们可以获取 zip 文件名及其哈希值，而无需手动与恶意电子邮件交互。</p>
+<p> 上图最右侧有一个省略号。如果单击该按钮，我们将获得可以对附件执行的其他操作。</p>
+<p>下面是附加选项子菜单的屏幕截图。</p>
+<p><img src="https://assets.tryhackme.com/additional/phishing2/phish-options.png" alt="img"></p>
+<p>让我们看一下字符串输出。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5de58e2bfac4a912bcc7a3e9/room-content/e1f11b62dbd9ed415177bdbc44a13d2d.png" alt="img"></p>
+<p>接下来我们看一下来自VirusTotal的信息。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5de58e2bfac4a912bcc7a3e9/room-content/5c0556b15a803638a2d289915edc8946.png" alt="img"></p>
+<p>由于 VirusTotal API 密钥是免费社区版本，因此分析人员可以手动导航到 VirusTotal 并执行文件哈希搜索以查看有关此附件的更多信息。</p>
+<p>最后，您上传到 PhishTool 的任何提交内容都可以标记为恶意并通过注释进行解决。与您作为 SOC 分析师时的做法类似。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5de58e2bfac4a912bcc7a3e9/room-content/31728d39e79f36340ab8bcdd740940d6.png" alt="img"></p>
+<p>附件文件名和文件哈希将被标记为恶意。接下来，单击“<strong>解决</strong>”。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5de58e2bfac4a912bcc7a3e9/room-content/64c5e32e65919e17e352161594fbb627.png" alt="img"></p>
+<p>在下一个屏幕中，分析师可以根据下拉选项标记电子邮件。请参阅下面的 GIF。</p>
+<p><img src="https://assets.tryhackme.com/additional/phishing2/resolve-case.gif" alt="img"></p>
+<p><strong>注意</strong>：我没有对域名或IP地址进行进一步的分析。我也没有对电子邮件源自的根域进行任何研究。可以通过将附件上传到恶意软件沙箱来进一步分析它，以查看它到底在做什么，但我没有这样做。因此，这就是为什么没有为此恶意电子邮件选择其他标记工件和分类代码的原因。 :)</p>
+<p>简单地扩展一下分类代码，并非所有网络钓鱼电子邮件都可以归类为相同的类别。分类代码允许我们使用特定代码标记案例，例如捕鲸（高价值目标）。并非所有网络钓鱼电子邮件都会针对高价值目标，例如首席财务官 (CFO)。</p>
+<h1 id="Case"><a href="#Case" class="headerlink" title="Case"></a>Case</h1><p>参考</p>
+<p><a target="_blank" rel="noopener" href="https://medium.com/@mikmrc/tryhackme-phishing-analysis-tools-4164ce6a59bd">https://medium.com/@mikmrc/tryhackme-phishing-analysis-tools-4164ce6a59bd</a></p>
+<h1 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h1><p>本会议室介绍的工具只是一些可以帮助您分析网络钓鱼电子邮件的工具。</p>
+<p>作为防御者，您将提出自己喜欢的工具和技术来执行手动和自动分析。</p>
+<p>以下是我们尚未在本会议室详细介绍的一些其他工具，值得一提：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://mxtoolbox.com/">https://mxtoolbox.com/</a></li>
+<li><a target="_blank" rel="noopener" href="https://phishtank.com/">https://phishtank.com/</a>?</li>
+<li><a target="_blank" rel="noopener" href="https://www.spamhaus.org/">https://www.spamhaus.org/</a></li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://mikannse.space">Mikannse</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://mikannse.space/2024/05/25/PhishingAnalysisToolsTHM/">http://mikannse.space/2024/05/25/PhishingAnalysisToolsTHM/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://mikannse.space" target="_blank">MikannseのSekai</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a><a class="post-meta__tags" href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">渗透测试</a><a class="post-meta__tags" href="/tags/Phishing/">Phishing</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/05/26/PhishingPreventionTHM/" title="PhishingPreventionTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">PhishingPreventionTHM</div></div></a></div><div class="next-post pull-right"><a href="/2024/05/24/PhishingEmailsinActionTHM/" title="PhishingEmailsinActionTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">PhishingEmailsinActionTHM</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/05/24/PhishingAnalysisFundamentalsTHM/" title="PhishingAnalysisFundamentalsTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-24</div><div class="title">PhishingAnalysisFundamentalsTHM</div></div></a></div><div><a href="/2024/05/24/PhishingEmailsinActionTHM/" title="PhishingEmailsinActionTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-24</div><div class="title">PhishingEmailsinActionTHM</div></div></a></div><div><a href="/2024/05/26/PhishingPreventionTHM/" title="PhishingPreventionTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-26</div><div class="title">PhishingPreventionTHM</div></div></a></div><div><a href="/2024/06/15/AdvancedSQLInjectionTHM/" title="AdvancedSQLInjectionTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-06-15</div><div class="title">AdvancedSQLInjectionTHM</div></div></a></div><div><a href="/2024/03/14/ContainerVulnerabilitiesTHM/" title="ContainerVulnerabilitiesTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-03-14</div><div class="title">ContainerVulnerabilitiesTHM</div></div></a></div><div><a href="/2023/11/17/Cross-Site%20Scripting%20(XSS)HTB/" title="Cross-Site Scripting (XSS)HTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-17</div><div class="title">Cross-Site Scripting (XSS)HTB</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Mikannse</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">274</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mikannse/mikannse.github.io"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">暂时没有公告QAQ</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Introduction"><span class="toc-number">1.</span> <span class="toc-text">Introduction</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#What-information-should-we-collect"><span class="toc-number">2.</span> <span class="toc-text">What information should we collect?</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Email-header-analysis"><span class="toc-number">3.</span> <span class="toc-text">Email header analysis</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Email-body-analysis"><span class="toc-number">4.</span> <span class="toc-text">Email body analysis</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Malware-Sandbox"><span class="toc-number">5.</span> <span class="toc-text">Malware Sandbox</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#PhishTool"><span class="toc-number">6.</span> <span class="toc-text">PhishTool</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Case"><span class="toc-number">7.</span> <span class="toc-text">Case</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Conclusion"><span class="toc-number">8.</span> <span class="toc-text">Conclusion</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/11/pwncollegeAssembly30/" title="pwncollegeAssembly30">pwncollegeAssembly30</a><time datetime="2024-10-10T17:05:42.000Z" title="发表于 2024-10-11 01:05:42">2024-10-11</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/09/pwncollege%E6%B1%87%E7%BC%96%E5%85%A5%E9%97%A8/" title="pwncollege汇编入门">pwncollege汇编入门</a><time datetime="2024-10-09T14:39:52.000Z" title="发表于 2024-10-09 22:39:52">2024-10-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/05/Git%E9%80%9F%E6%88%90/" title="Git速成">Git速成</a><time datetime="2024-10-05T04:57:08.000Z" title="发表于 2024-10-05 12:57:08">2024-10-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/03/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%BA%8C)%E4%B9%8BVulnHubCorrosion2/" title="打靶记录(一六二)之VulnHubCorrosion2">打靶记录(一六二)之VulnHubCorrosion2</a><time datetime="2024-10-03T09:24:11.000Z" title="发表于 2024-10-03 17:24:11">2024-10-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/02/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%B8%80)%E4%B9%8BVulnHubDrippingBlues1/" title="打靶记录(一六一)之VulnHubDrippingBlues1">打靶记录(一六一)之VulnHubDrippingBlues1</a><time datetime="2024-10-02T05:16:28.000Z" title="发表于 2024-10-02 13:16:28">2024-10-02</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2024 By Mikannse</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function loadDisqus () {
+  const disqus_config = function () {
+    this.page.url = 'http://mikannse.space/2024/05/25/PhishingAnalysisToolsTHM/'
+    this.page.identifier = '/2024/05/25/PhishingAnalysisToolsTHM/'
+    this.page.title = 'PhishingAnalysisToolsTHM'
+  }
+
+  const disqusReset = () => {
+    DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addModeChange('disqus', disqusReset)
+
+  if (window.DISQUS) disqusReset()
+  else {
+    (function() { 
+      var d = document, s = d.createElement('script');
+      s.src = 'https://.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  }
+}
+
+if ('Valine' === 'Disqus' || !true) {
+  if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+  else loadDisqus()
+} else {
+  function loadOtherComment () {
+    loadDisqus()
+  }
+}
+</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

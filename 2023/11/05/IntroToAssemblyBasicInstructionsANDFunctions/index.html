@@ -1,0 +1,1250 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>IntroToAssemblyBasicInstructionsANDFunctionsHTB | MikannseのSekai</title><meta name="author" content="Mikannse"><meta name="copyright" content="Mikannse"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="Module Project到目前为止，我们已经学习了计算机和CPU架构的基础知识以及汇编语言和调试的基础知识。我们现在开始学习各种x86汇编指令。我们很可能在渗透测试和逆向工程练习中遇到这些类型的指令，因此了解它们的工作方式使我们能够解释它们在做什么，并了解程序在做什么。 我们将从学习如何在寄存器和内存地址之间移动数据和值开始。然后，我们将学习使用一个操作数的指令（Unary Operation">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IntroToAssemblyBasicInstructionsANDFunctionsHTB">
+<meta property="og:url" content="http://mikannse.space/2023/11/05/IntroToAssemblyBasicInstructionsANDFunctions/index.html">
+<meta property="og:site_name" content="MikannseのSekai">
+<meta property="og:description" content="Module Project到目前为止，我们已经学习了计算机和CPU架构的基础知识以及汇编语言和调试的基础知识。我们现在开始学习各种x86汇编指令。我们很可能在渗透测试和逆向工程练习中遇到这些类型的指令，因此了解它们的工作方式使我们能够解释它们在做什么，并了解程序在做什么。 我们将从学习如何在寄存器和内存地址之间移动数据和值开始。然后，我们将学习使用一个操作数的指令（Unary Operation">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg">
+<meta property="article:published_time" content="2023-11-05T15:28:40.000Z">
+<meta property="article:modified_time" content="2024-01-27T13:14:28.540Z">
+<meta property="article:author" content="Mikannse">
+<meta property="article:tag" content="网安">
+<meta property="article:tag" content="笔记">
+<meta property="article:tag" content="渗透测试">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg"><link rel="shortcut icon" href="/img/icon.jpg"><link rel="canonical" href="http://mikannse.space/2023/11/05/IntroToAssemblyBasicInstructionsANDFunctions/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Mikannse","link":"链接: ","source":"来源: MikannseのSekai","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'IntroToAssemblyBasicInstructionsANDFunctionsHTB',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: undefined,
+  isToc: true,
+  postUpdate: '2024-01-27 21:14:28'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">274</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="MikannseのSekai"><span class="site-name">MikannseのSekai</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">IntroToAssemblyBasicInstructionsANDFunctionsHTB</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-11-05T15:28:40.000Z" title="发表于 2023-11-05 23:28:40">2023-11-05</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-01-27T13:14:28.540Z" title="更新于 2024-01-27 21:14:28">2024-01-27</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BD%91%E5%AE%89/">网安</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">18.6k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>69分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="IntroToAssemblyBasicInstructionsANDFunctionsHTB"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Module-Project"><a href="#Module-Project" class="headerlink" title="Module Project"></a>Module Project</h1><p>到目前为止，我们已经学习了计算机和CPU架构的基础知识以及汇编语言和调试的基础知识。我们现在开始学习各种x86汇编指令。我们很可能在渗透测试和逆向工程练习中遇到这些类型的指令，因此了解它们的工作方式使我们能够解释它们在做什么，并了解程序在做什么。</p>
+<p>我们将从学习如何在寄存器和内存地址之间移动数据和值开始。然后，我们将学习使用一个操作数的指令（<code>Unary Operations</code>）和使用两个操作数的指令（<code>Binary Instructions</code>）。稍后，我们将学习汇编控制指令和shellcoding。</p>
+<h2 id="斐波那契数列"><a href="#斐波那契数列" class="headerlink" title="斐波那契数列"></a>斐波那契数列</h2><p>然而，在我们开始之前，让我们讨论一下我们将在本模块中使用我们将学习的各种指令开发的程序。<br> <code>We will be developing a basic Fibonacci sequence calculator using x86 assembly language.</code></p>
+<p><img src="https://academy.hackthebox.com/storage/modules/85/fibonacci_sequence.png" alt="fibonacci"></p>
+<p>在最简单的术语中，斐波那契数是序列中它前面的两个数字的总和（即<code>Fn = Fn-1 + Fn-2</code>）。例如，如果我们从<code>F0=0</code>和<code>F1=1</code>开始，那么F2是<code>F1 + F0</code>，也就是<code>F2 = 1 + 0 -&gt; 1</code>。<br> 根据同样的公式，F3是<code>F3=1+1=2</code>，F4是<code>F4 = 2 + 1 -&gt; 3</code>，依此类推。</p>
+<p>如果我们继续到F10，这是我们的序列：<code>0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55</code>。正如我们所看到的，每个数字都等于它前面两个数字的总和。</p>
+<h2 id="黄金比例"><a href="#黄金比例" class="headerlink" title="黄金比例"></a>黄金比例</h2><p>斐波那契数列在许多领域都很方便，如艺术、数学、物理、计算机科学，甚至经济和金融。例如，斐波那契数列是黄金比例（<code>or phi Φ</code>）的一个很好的代表，它被历史上许多艺术家和建筑师使用，在自然界中随处可见：</p>
+<p><img src="https://academy.hackthebox.com/storage/modules/85/golden_ratio_examples_1.jpg" alt="golden_ratio_examples"></p>
+<p>此外，许多现代设计师在他们的设计中使用黄金比例，最着名的是一些知名品牌的标志：</p>
+<p><img src="https://academy.hackthebox.com/storage/modules/85/golden_ratio_logos.jpg" alt="golden_ratio_logos"></p>
+<p>如果您有兴趣了解更多关于黄金分割的信息，您可以观看<a target="_blank" rel="noopener" href="https://youtu.be/4TF6mMUe3FY">此视频</a>。</p>
+<h2 id="Final-Program"><a href="#Final-Program" class="headerlink" title="Final Program"></a>Final Program</h2><p>我们将为这个模块开发一个斐波那契序列计算器，它允许我们在学习各种汇编指令时练习它们，并在我们完成时构建程序，直到我们最终拥有完整的计算器程序。</p>
+<p>该程序将首先询问您要计算的最大Fibonacci，然后打印所有Fibonacci数字。下面的例子向我们展示了它的外观：                                                                     </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ ./fib </span><br><span class="line"></span><br><span class="line">Please input max Fn</span><br><span class="line">100</span><br><span class="line">1</span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">5</span><br><span class="line">8</span><br><span class="line">13</span><br><span class="line">21</span><br><span class="line">34</span><br><span class="line">55</span><br><span class="line">89</span><br></pre></td></tr></tbody></table></figure>
+
+<p>在本模块结束时，您将只使用汇编指令开发上述程序。我们可以从<a target="_blank" rel="noopener" href="https://academy.hackthebox.com/storage/modules/85/fib.zip">这个链接</a>下载最终的程序并运行它来查看最终的项目结果。</p>
+<h1 id="Basic-Instructions"><a href="#Basic-Instructions" class="headerlink" title="Basic Instructions"></a>Basic Instructions</h1><h2 id="Data-Movement"><a href="#Data-Movement" class="headerlink" title="Data Movement"></a>Data Movement</h2><p>让我们从数据移动指令开始，这是任何汇编程序中最基本的指令之一。我们将经常使用数据移动指令来在地址之间移动数据，在寄存器和内存地址之间移动数据，以及将立即数据加载到寄存器或内存地址中。主要的<code>Data Movement</code>指令是：</p>
+<table>
+<thead>
+<tr>
+<th>Instruction</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>mov</code></td>
+<td>移动数据或加载即时数据</td>
+<td><code>mov rax, 1</code> -&gt; <code>rax = 1</code> #1—&gt;#2</td>
+</tr>
+<tr>
+<td><code>lea</code></td>
+<td>加载指向值的地址</td>
+<td><code>lea rax, [rsp+5]</code> -&gt; <code>rax = rsp+5 </code> #1—&gt;#2</td>
+</tr>
+<tr>
+<td><code>xchg</code></td>
+<td>在两个寄存器或地址之间交换数据</td>
+<td><code>xchg rax, rbx</code> -&gt; <code>rax = rbx, rbx = rax</code> #1—&gt;#2</td>
+</tr>
+</tbody></table>
+<h3 id="Moving-Data-移动数据"><a href="#Moving-Data-移动数据" class="headerlink" title="Moving Data 移动数据"></a>Moving Data 移动数据</h3><p>让我们使用<code>mov</code>指令作为模块项目<code>fibonacci</code>中的第一条指令。我们需要将初始值（<code>F0=0</code>和<code>F1=1</code>）加载到<code>rax</code>和<code>rbx</code>，这样<code>rax = 0</code>和<code>rbx = 1</code>。将下面的代码复制到<code>fib.s</code>文件中：</p>
+<p>Code: </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">global  _start</span><br><span class="line"></span><br><span class="line">section .text</span><br><span class="line">_start:</span><br><span class="line">    mov rax, 0</span><br><span class="line">    mov rbx, 1</span><br></pre></td></tr></tbody></table></figure>
+
+<p>现在，让我们汇编这段代码，并使用<code>gdb</code>运行它，看看<code>mov</code>指令是如何工作的：</p>
+<p>gdb</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">$ ./assembler.sh fib.s -g</span><br><span class="line">gef➤  b _start</span><br><span class="line">Breakpoint 1 at 0x401000</span><br><span class="line">gef➤  r</span><br><span class="line">─────────────────────────────────────────────────────────────────────────────────── code:x86:64 ────</span><br><span class="line"> →   0x401000 &lt;_start+0&gt;       mov    eax, 0x0</span><br><span class="line">     0x401005 &lt;_start+5&gt;       mov    ebx, 0x1</span><br><span class="line">───────────────────────────────────────────────────────────────────────────────────── registers ────</span><br><span class="line">$rax   : 0x0</span><br><span class="line">$rbx   : 0x0</span><br><span class="line"></span><br><span class="line">...SNIP...</span><br><span class="line"></span><br><span class="line">─────────────────────────────────────────────────────────────────────────────────── code:x86:64 ────</span><br><span class="line">     0x401000 &lt;_start+0&gt;       mov    eax, 0x0</span><br><span class="line"> →   0x401005 &lt;_start+5&gt;       mov    ebx, 0x1</span><br><span class="line">───────────────────────────────────────────────────────────────────────────────────── registers ────</span><br><span class="line">$rax   : 0x0</span><br><span class="line">$rbx   : 0x1</span><br></pre></td></tr></tbody></table></figure>
+
+<p>像这样，我们已经将初始值加载到寄存器中，以便稍后对它们执行其他操作和指令。</p>
+<p>注意：在汇编中，移动数据不影响源操作数.因此，我们可以将<code>mov</code>视为<code>copy</code>函数，而不是实际的移动。</p>
+<h3 id="Loading-Data"><a href="#Loading-Data" class="headerlink" title="Loading Data"></a>Loading Data</h3><p>我们可以使用<code>mov</code>指令加载立即数据。例如，我们可以使用<code>1</code>指令将<code>rax</code>的值加载到<code>mov rax, 1</code>寄存器中。在这里，我们要记住#5。例如，在上面的<code>the size of the loaded data depends on the size of the destination register</code>指令中，由于我们使用了64位寄存器<code>mov rax, 1</code>，因此它将移动数字<code>rax</code>的64位表示（即<code>1</code>），这不是很有效。</p>
+<p>到与上述示例相同的结果，因为我们将1字节（<code>0x01</code>）移动到1字节寄存器（<code>al</code>）中，这要高效得多。当我们看一下<code>objdump</code>中两条指令的反汇编时，这一点很明显。</p>
+<p>让我们拿下面的基本汇编代码来比较一下这两条指令的反汇编：</p>
+<p>Code: </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">global  _start</span><br><span class="line"></span><br><span class="line">section .text</span><br><span class="line">_start:</span><br><span class="line">    mov rax, 0</span><br><span class="line">	mov rbx, 1</span><br><span class="line">    mov bl, 1</span><br></pre></td></tr></tbody></table></figure>
+
+<p>现在让我们组装它并使用<code>objdump</code>查看它的shellcode：                                            </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ nasm -f elf64 fib.s &amp;&amp; objdump -M intel -d fib.o</span><br><span class="line">...SNIP...</span><br><span class="line">0000000000000000 &lt;_start&gt;:</span><br><span class="line">   0:	b8 00 00 00 00       	mov    eax,0x0</span><br><span class="line">   5:	bb 01 00 00 00       	mov    ebx,0x1</span><br><span class="line">   a:	b3 01                	mov    bl,0x1</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们可以看到第一条指令的shellcode是最后一条指令的两倍多。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">This understanding will become very handy when writing shellcodes.</span><br></pre></td></tr></tbody></table></figure>
+
+<p>让我们修改我们的代码，使用子寄存器来使其更有效：</p>
+<p>Code: </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">global  _start</span><br><span class="line"></span><br><span class="line">section .text</span><br><span class="line">_start:</span><br><span class="line">    mov al, 0</span><br><span class="line">    mov bl, 1</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>xchg</code>指令将在两个寄存器之间交换数据。尝试将<code>xchg rax, rbx</code>添加到代码的末尾，组装它，然后通过<code>gdb</code>运行它，看看它是如何工作的。</p>
+<h3 id="Address-Pointers"><a href="#Address-Pointers" class="headerlink" title="Address Pointers"></a>Address Pointers</h3><p>另一个需要理解的关键概念是使用指针。在许多情况下，我们会看到我们正在使用的寄存器或地址并不直接包含最终值，而是包含指向最终值的另一个地址。指针寄存器（如<code>rsp</code>、<code>rbp</code>和<code>rip</code>）总是如此，但也用于任何其他寄存器或内存地址。</p>
+<p>例如，让我们在我们组装的<code>gdb</code>二进制文件上组装并运行<code>fib</code>，并检查<code>rsp</code>和<code>rip</code>寄存器：</p>
+<p>gdb</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">gdb -q ./fib</span><br><span class="line">gef➤  b _start</span><br><span class="line">Breakpoint 1 at 0x401000</span><br><span class="line">gef➤  r</span><br><span class="line">...SNIP...</span><br><span class="line">$rsp   : 0x00007fffffffe490  →  0x0000000000000001</span><br><span class="line">$rip   : 0x0000000000401000  →  &lt;_start+0&gt; mov eax, 0x0</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们看到两个寄存器都包含指向其他位置的指针地址。<code>GEF</code>在向我们展示最终目标值方面做得很好。</p>
+<h4 id="Moving-Pointer-Values"><a href="#Moving-Pointer-Values" class="headerlink" title="Moving Pointer Values"></a>Moving Pointer Values</h4><p>我们可以看到，<code>rsp</code>寄存器保存<code>0x1</code>的最终值，其立即值是指向<code>0x1</code>的指针地址。因此，如果我们使用<code>mov rax, rsp</code>，我们不会将值<code>0x1</code>移动到<code>rax</code>，但我们会将指针地址<code>0x00007fffffffe490</code>移动到<code>rax</code>。</p>
+<p>要移动实际值，我们必须使用方括号<code>[]</code>，在<code>x86_64</code>汇编和<code>Intel</code>语法中表示<code>load value at address</code>。因此，在上面的例子中，如果我们想移动<code>rsp</code>指向的最终值，我们可以将<code>rsp</code>放在方括号中，就像<code>mov rax, [rsp]</code>一样，这个<code>mov</code>指令将移动最终值而不是立即值（这是最终值的地址）。</p>
+<p>我们可以使用方括号来计算相对于寄存器或另一个地址的地址偏移。例如，我们可以做<code>mov rax, [rsp+10]</code>来将存储的值从<code>rsp</code>中移走。</p>
+<p>为了正确地演示这一点，让我们采用以下示例代码：</p>
+<p>Code: </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">global  _start</span><br><span class="line"></span><br><span class="line">section .text</span><br><span class="line">_start:</span><br><span class="line">    mov rax, rsp</span><br><span class="line">    mov rax, [rsp]</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这只是一个简单的程序来演示这一点，看看这两个指令之间的区别。</p>
+<p>现在，让我们汇编代码并使用gdb运行程序：</p>
+<p>gdb</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">$ ./assembler.sh rsp.s -g</span><br><span class="line">gef➤  b _start</span><br><span class="line">Breakpoint 1 at 0x401000</span><br><span class="line">gef➤  r</span><br><span class="line">...SNIP...</span><br><span class="line">─────────────────────────────────────────────────────────────────────────────────── code:x86:64 ────</span><br><span class="line"> →   0x401000 &lt;_start+0&gt;       mov    rax, rsp</span><br><span class="line">───────────────────────────────────────────────────────────────────────────────────── registers ────</span><br><span class="line">$rax   : 0x00007fffffffe490  →  0x0000000000000001</span><br><span class="line">$rsp   : 0x00007fffffffe490  →  0x0000000000000001</span><br></pre></td></tr></tbody></table></figure>
+
+<p>正如我们所看到的，<code>mov rax, rsp</code>将存储在<code>rsp</code>的立即值（这是指向<code>rsp</code>的指针地址）移动到<code>rax</code>寄存器。现在让我们按下<code>si</code>并检查第二条指令后<code>rax</code>的外观：</p>
+<p>gdb</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">$ ./assembler.sh rsp.s -g</span><br><span class="line">gef➤  b _start</span><br><span class="line">Breakpoint 1 at 0x401000</span><br><span class="line">gef➤  r</span><br><span class="line">...SNIP...</span><br><span class="line">─────────────────────────────────────────────────────────────────────────────────── code:x86:64 ────</span><br><span class="line"> →   0x401003 &lt;_start+3&gt;       mov    rax, QWORD PTR [rsp]</span><br><span class="line">───────────────────────────────────────────────────────────────────────────────────── registers ────</span><br><span class="line">$rax   : 0x1               </span><br><span class="line">$rsp   : 0x00007fffffffe490  →  0x0000000000000001</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们可以看到，这一次，<code>0x1</code>的最终值被移到了<code>rax</code>寄存器中。</p>
+<p>注意：当使用<code>[]</code>时，我们可能需要在方括号前设置数据大小，如<code>byte</code>或<code>qword</code>。然而，在大多数情况下，<code>nasm</code>会自动为我们做这件事。我们可以从上面看到，最后一条指令实际上是<code>mov rax, QWORD PTR [rsp]</code>。我们还看到<code>nasm</code>还添加了<code>PTR</code>来指定从指针移动值。</p>
+<h4 id="Loading-Value-Pointers"><a href="#Loading-Value-Pointers" class="headerlink" title="Loading Value Pointers"></a>Loading Value Pointers</h4><p>最后，我们需要理解如何使用<code>lea</code>（或<code>Load Effective Address</code>）指令加载指向指定值的指针地址，如<code>lea rax, [rsp]</code>。这与我们刚刚学到的相反（即，将指针加载到值与从指针移动值）。</p>
+<p>在某些情况下，我们需要将值的地址加载到某个寄存器中，而不是直接将值加载到该寄存器中。这通常是在数据很大并且不适合一个寄存器时完成的，因此数据被放置在堆栈或堆中，并且指向其位置的指针被存储在寄存器中。</p>
+<p>例如，我们在<code>write</code>程序中使用的<code>HelloWorld</code>系统调用需要一个指向要打印的文本的指针，而不是直接提供文本，因为寄存器只有64位或8个字节，所以文本可能无法全部放入寄存器中。</p>
+<p>首先，如果我们想加载一个指向变量或标签的直接指针，我们仍然可以使用<code>mov</code>指令。由于变量名是指向它在内存中的位置的指针，<code>mov</code>将存储指向目标地址的指针。例如，<code>mov rax, rsp</code>和<code>lea rax, [rsp]</code>都将做同样的事情，将指向<code>message</code>的指针存储在<code>rax</code>。</p>
+<p>然而，如果我们想加载一个带有偏移量的指针（即，距离一个变量或一个地址几个地址），我们应该使用<code>lea</code>。这就是为什么在<code>lea</code>中，源操作数通常是一个变量、一个标签或一个用方括号括起来的地址，就像在<code>lea rax, [rsp+10]</code>中一样。这使得能够使用偏移（即，<code>[rsp+10]</code>）。</p>
+<p>请注意，如果我们使用<code>mov rax, [rsp+10]</code>，它实际上会将<code>[rsp+10]</code>的值移动到<code>rax</code>，如前所述。我们不能使用<code>mov</code>移动带有偏移量的指针。</p>
+<p>让我们以下面的例子来演示<code>lea</code>是如何工作的，以及它与<code>mov</code>有何不同：</p>
+<p>Code: </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">global  _start</span><br><span class="line"></span><br><span class="line">section .text</span><br><span class="line">_start:</span><br><span class="line">    lea rax, [rsp+10]</span><br><span class="line">    mov rax, [rsp+10]</span><br></pre></td></tr></tbody></table></figure>
+
+<p>现在让我们组装它并使用<code>gdb</code>运行它：</p>
+<p>gdb</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">$ ./assembler.sh lea.s -g</span><br><span class="line">gef➤  b _start</span><br><span class="line">Breakpoint 1 at 0x401000</span><br><span class="line">gef➤  r</span><br><span class="line">...SNIP...</span><br><span class="line">─────────────────────────────────────────────────────────────────────────────────── code:x86:64 ────</span><br><span class="line"> →   0x401003 &lt;_start+0&gt;       lea    rax, [rsp+0xa]</span><br><span class="line">───────────────────────────────────────────────────────────────────────────────────── registers ────</span><br><span class="line">$rax   : 0x00007fffffffe49a  →  0x000000007fffffff</span><br><span class="line">$rsp   : 0x00007fffffffe490  →  0x0000000000000001</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们看到<code>lea rax, [rsp+10]</code>加载了距离<code>rsp</code>10个地址的地址（换句话说，距离堆栈顶部10个地址）。现在让我们看看<code>si</code>会做什么：</p>
+<p>gdb</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">─────────────────────────────────────────────────────────────────────────────────── code:x86:64 ────</span><br><span class="line"> →   0x401008 &lt;_start+8&gt;       mov    rax, QWORD PTR [rsp+0xa]</span><br><span class="line">───────────────────────────────────────────────────────────────────────────────────── registers ────</span><br><span class="line">$rax   : 0x7fffffff        </span><br><span class="line">$rsp   : 0x00007fffffffe490  →  0x0000000000000001</span><br></pre></td></tr></tbody></table></figure>
+
+<p>正如预期的那样，我们看到<code>mov rax, [rsp+10]</code>将存储在那里的值移动到<code>rax</code>。</p>
+<h2 id="Arithmetic-Instructions"><a href="#Arithmetic-Instructions" class="headerlink" title="Arithmetic Instructions"></a>Arithmetic Instructions</h2><p>第二类基本指令是算术指令。使用算术指令，我们可以对存储在寄存器和内存地址中的数据执行各种数学计算。这些指令通常由CPU中的ALU处理。我们将算术指令分为两种类型：只接受一个操作数的指令（<code>Unary</code>），接受两个操作数的指令（<code>Binary</code>）。</p>
+<h3 id="Unary-Instructions"><a href="#Unary-Instructions" class="headerlink" title="Unary Instructions"></a>Unary Instructions</h3><p>以下是主要的一元算术指令（我们假设每个指令的<code>rax</code>都是从<code>1</code>开始的）：</p>
+<table>
+<thead>
+<tr>
+<th>Instruction</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>inc</code></td>
+<td>递增1</td>
+<td><code>inc rax</code> -&gt; <code>rax++</code> or <code>rax += 1</code> -&gt; <code>rax = 2</code></td>
+</tr>
+<tr>
+<td><code>dec</code></td>
+<td>减1</td>
+<td><code>dec rax</code> -&gt; <code>rax--</code> or <code>rax -= 1</code> -&gt; <code>rax = 0</code></td>
+</tr>
+</tbody></table>
+<p>让我们回到我们的<code>fib.s</code>代码来练习这些指令。到目前为止，我们已经用初始值<code>rax</code>和<code>rbx</code>初始化了<code>0</code>和<code>1</code>，并使用<code>mov</code>指令。与其将<code>1</code>的立即值移动到<code>bl</code>，不如将<code>0</code>移动到它，然后使用<code>inc</code>使其成为<code>1</code>：</p>
+<p>Code: </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">global  _start</span><br><span class="line">section .text</span><br><span class="line">_start:</span><br><span class="line">    mov al, 0</span><br><span class="line">    mov bl, 0</span><br><span class="line">    inc bl</span><br></pre></td></tr></tbody></table></figure>
+
+<p>请记住，我们使用<code>al</code>而不是<code>rax</code>来提高效率。现在，让我们组装代码，并使用<code>gdb</code>运行它：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">$ ./assembler.sh fib.s -g</span><br><span class="line">...SNIP...</span><br><span class="line"></span><br><span class="line">─────────────────────────────────────────────────────────────────────────────────── code:x86:64 ────</span><br><span class="line"> →   0x401005 &lt;_start+5&gt;      mov    al, 0x0</span><br><span class="line">───────────────────────────────────────────────────────────────────────────────────── registers ────</span><br><span class="line">$rbx   : 0x0</span><br><span class="line"></span><br><span class="line">...SNIP...</span><br><span class="line"></span><br><span class="line">─────────────────────────────────────────────────────────────────────────────────── code:x86:64 ────</span><br><span class="line"> →   0x40100a &lt;_start+10&gt;      inc    bl</span><br><span class="line">───────────────────────────────────────────────────────────────────────────────────── registers ────</span><br><span class="line">$rbx   : 0x1</span><br></pre></td></tr></tbody></table></figure>
+
+<p>正如我们所看到的，<code>rbx</code>以值<code>0</code>开始，而在<code>inc rbx</code>中，它被递增到<code>1</code>。<code>dec</code>指令类似于<code>inc</code>，但递减<code>1</code>而不是递增。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">This knowledge will become very handy later on.</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="Binary-Instructions"><a href="#Binary-Instructions" class="headerlink" title="Binary Instructions"></a>Binary Instructions</h3><p>接下来，我们有二进制算术指令，主要的是： 我们假设对于每个指令，<code>rax</code>和<code>rbx</code>都以<code>1</code>开始。</p>
+<table>
+<thead>
+<tr>
+<th>Instruction</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>add</code></td>
+<td>将两个操作数相加</td>
+<td><code>add rax, rbx</code> -&gt; <code>rax = 1 + 1</code> -&gt; <code>2</code></td>
+</tr>
+<tr>
+<td><code>sub</code></td>
+<td>从目标中减去源（即<code>rax = rax - rbx</code>）</td>
+<td><code>sub rax, rbx</code> -&gt; <code>rax = 1 - 1</code> -&gt; <code>0</code></td>
+</tr>
+<tr>
+<td><code>imul</code></td>
+<td>将两个操作数相乘</td>
+<td><code>imul rax, rbx</code> -&gt; <code>rax = 1 * 1</code> -&gt; <code>1</code></td>
+</tr>
+</tbody></table>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">Note that in all of the above instructions, the result is  always stored in the destination operand, while the source operand is  not affected.</span><br></pre></td></tr></tbody></table></figure>
+
+<p>让我们从讨论<code>add</code>指令开始。将两个数字相加是计算斐波那契数列的核心步骤，因为当前的斐波那契数（<code>Fn</code>）是前两个数字（<code>Fn = Fn-1 + Fn-2</code>）的和。</p>
+<p>所以，让我们将<code>add rax, rbx</code>添加到<code>fib.s</code>代码的末尾：</p>
+<p>Code: </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">global  _start</span><br><span class="line"></span><br><span class="line">section .text</span><br><span class="line">_start:</span><br><span class="line">   mov al, 0</span><br><span class="line">   mov bl, 0</span><br><span class="line">   inc bl</span><br><span class="line">   add rax, rbx</span><br></pre></td></tr></tbody></table></figure>
+
+<p>现在，让我们组装代码，并使用<code>gdb</code>运行它：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">$ ./assembler.sh fib.s -g</span><br><span class="line">gef➤  b _start</span><br><span class="line">Breakpoint 1 at 0x401000</span><br><span class="line">gef➤  r</span><br><span class="line">...SNIP...</span><br><span class="line"></span><br><span class="line">─────────────────────────────────────────────────────────────────────────────────── code:x86:64 ────</span><br><span class="line">     0x401004 &lt;_start+4&gt;       inc    bl</span><br><span class="line"> →   0x401006 &lt;_start+6&gt;       add    rax, rbx</span><br><span class="line">───────────────────────────────────────────────────────────────────────────────────── registers ────</span><br><span class="line">$rax   : 0x1</span><br><span class="line">$rbx   : 0x1</span><br></pre></td></tr></tbody></table></figure>
+
+<p>正如我们所看到的，在指令被处理之后，<code>rax</code>等于<code>0x1 + 0x0</code>，也就是<code>0x1</code>。使用相同的原理，如果我们在<code>rax</code>和<code>rbx</code>中有其他Fibonacci数，我们将使用add得到新的Fibonacci数。</p>
+<p><code>sub</code>和<code>imul</code>都类似于<code>add</code>，如前表中的示例所示。尝试将<code>sub</code>和<code>imult</code>添加到上述代码中，组装它，然后运行<code>gdb</code>以查看它们是如何工作的。</p>
+<h3 id="按位指令"><a href="#按位指令" class="headerlink" title="按位指令"></a>按位指令</h3><p>现在，让我们转向位指令，这是在位级别上工作的指令（我们假设每个指令都有<code>rax = 1</code>和<code>rbx = 2</code>）：</p>
+<table>
+<thead>
+<tr>
+<th>Instruction</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>not</code></td>
+<td>按位非（反转所有位，0-&gt;1和1-&gt;0）</td>
+<td><code>not rax</code> -&gt; <code>NOT 00000001</code> -&gt; <code>11111110</code></td>
+</tr>
+<tr>
+<td><code>and</code></td>
+<td>按位AND（如果两位都是1 -&gt; 1，如果位不同-&gt; 0）</td>
+<td><code>and rax, rbx</code> -&gt; <code>00000001 AND 00000010</code> -&gt; <code>00000000</code></td>
+</tr>
+<tr>
+<td><code>or</code></td>
+<td>按位或（如果任一位为1 -&gt; 1，如果两者均为0 -&gt; 0）</td>
+<td><code>or rax, rbx</code> -&gt; <code>00000001 OR 00000010</code> -&gt; <code>00000011</code></td>
+</tr>
+<tr>
+<td><code>xor</code></td>
+<td>按位XOR（如果位相同-&gt; 0，如果位不同-&gt; 1）</td>
+<td><code>xor rax, rbx</code> -&gt; <code>00000001 XOR 00000010</code> -&gt; <code>00000011</code></td>
+</tr>
+</tbody></table>
+<p>这些指令乍看起来可能令人困惑，但一旦我们理解它们，它们就很简单。这些指令中的每一个都对值的每一位执行指定的指令。例如，<code>not</code>将转到每个位并将其反转，将<code>0</code>转换为<code>1</code>，将<code>1</code>转换为<code>0</code>。尝试将<code>not rax</code>添加到我们前面的代码的末尾，组装它，然后使用<code>gdb</code>运行它，看看它是如何工作的。</p>
+<p>同样，<code>and</code>/<code>or</code>指令都对每个位工作，并对每个位执行<code>AND</code>/<code>OR</code>门，如上面的示例所示。这些指令中的每一个都在程序集中有其用例。</p>
+<p>但是，我们使用最多的指令是<code>xor</code>。<code>xor</code>指令有各种用例，但由于它将类似的位置零，我们可以使用它通过<code>xor</code>ing一个值来将任何值变为0。我们需要把</p>
+<p>例如，如果我们想将<code>rax</code>寄存器转换为<code>0</code>，最有效的方法是<code>xor rax, rax</code>，这将使<code>rax = 0</code>。这仅仅是因为<code>rax</code>的所有位都是相似的，所以<code>xor</code>将把它们全部转换为<code>0</code>。回到我们之前的<code>fib.s</code>代码，而不是将<code>0</code>移动到<code>rax</code>和<code>rbx</code>，我们可以在它们每个上使用<code>xor</code>，如下所示：</p>
+<p>Code: </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">global  _start</span><br><span class="line"></span><br><span class="line">section .text</span><br><span class="line">_start:</span><br><span class="line">    xor rax, rax</span><br><span class="line">    xor rbx, rbx</span><br><span class="line">    inc rbx</span><br><span class="line">    add rax, rbx</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这段代码应该执行完全相同的操作，但现在以更有效的方式。让我们组装代码，并使用<code>gdb</code>运行它：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">$ ./assembler.sh fib.s -g</span><br><span class="line">gef➤  b _start</span><br><span class="line">Breakpoint 1 at 0x401000</span><br><span class="line">gef➤  r</span><br><span class="line">...SNIP...</span><br><span class="line"></span><br><span class="line">─────────────────────────────────────────────────────────────────────────────────── code:x86:64 ────</span><br><span class="line"> →   0x401001 &lt;_start+1&gt;       xor    eax, eax</span><br><span class="line">     0x401003 &lt;_start+3&gt;       xor    ebx, ebx</span><br><span class="line">───────────────────────────────────────────────────────────────────────────────────── registers ────</span><br><span class="line">$rax   : 0x0</span><br><span class="line">$rbx   : 0x0</span><br><span class="line"></span><br><span class="line">...SNIP...</span><br><span class="line"></span><br><span class="line">─────────────────────────────────────────────────────────────────────────────────── code:x86:64 ────</span><br><span class="line"> →   0x40100c                  add    BYTE PTR [rax], al</span><br><span class="line">───────────────────────────────────────────────────────────────────────────────────── registers ────</span><br><span class="line">$rax   : 0x1</span><br><span class="line">$rbx   : 0x1</span><br></pre></td></tr></tbody></table></figure>
+
+<p>正如我们所看到的，<code>xor</code>ing我们的寄存器将它们中的每一个都变成了<code>0</code>的寄存器，其余的代码执行与前面相同的操作，所以我们最终得到了<code>rax</code>和<code>rbx</code>的相同的最终值。</p>
+<h1 id="Control-Instructions"><a href="#Control-Instructions" class="headerlink" title="Control Instructions"></a>Control Instructions</h1><h2 id="Loops"><a href="#Loops" class="headerlink" title="Loops"></a>Loops</h2><p>现在我们已经介绍了基本的说明，我们可以开始学习<code>Program Control Instructions</code>。正如我们已经知道的，汇编代码是基于行的，所以它总是会查看下面的行来处理指令。然而，正如我们所预料的那样，大多数程序并不遵循一组简单的顺序步骤，而是通常具有更复杂的结构。</p>
+<p>这就是<code>Control</code>指令进来的地方。这样的指令允许我们改变程序的流程并将其引导到另一行。有许多例子可以说明如何做到这一点。我们已经讨论过<code>Directives</code>，它告诉程序将执行定向到特定的标签。</p>
+<p>其他类型的<code>Control Instructions</code>包括：</p>
+<table>
+<thead>
+<tr>
+<th><code>Loops</code></th>
+<th><code>Branching</code></th>
+<th><code>Function Calls</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="Loop-Structure-环结构"><a href="#Loop-Structure-环结构" class="headerlink" title="Loop Structure 环结构"></a>Loop Structure 环结构</h3><p>让我们从#1开始讨论。汇编中的循环是一组重复<code>Loops</code>次的指令。让我们来看看下面的例子：</p>
+<p>Code: </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">exampleLoop:</span><br><span class="line">    instruction 1</span><br><span class="line">    instruction 2</span><br><span class="line">    instruction 3</span><br><span class="line">    instruction 4</span><br><span class="line">    instruction 5</span><br><span class="line">    loop exampleLoop</span><br></pre></td></tr></tbody></table></figure>
+
+<p>一旦汇编代码到达<code>exampleLoop</code>，它将开始执行它下面的指令。我们应该在<code>rcx</code>寄存器中设置我们希望循环通过的迭代次数。每次循环到达<code>loop</code>指令时，它将<code>rcx</code>减少<code>1</code>（即，<code>dec rcx</code>）并跳回到指定的标签，在本例中为<code>exampleLoop</code>。因此，在我们进入任何循环之前，我们应该将<code>mov</code>循环迭代次数存入<code>rcx</code>寄存器。</p>
+<table>
+<thead>
+<tr>
+<th><strong>Instruction</strong></th>
+<th><strong>Description</strong></th>
+<th><strong>Example</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>mov rcx, x</code></td>
+<td>将循环（<code>rcx</code>）计数器设置为<code>x</code></td>
+<td><code>mov rcx, 3</code></td>
+</tr>
+<tr>
+<td><code>loop</code></td>
+<td>跳回到<code>loop</code>的开头，直到计数器到达<code>0</code></td>
+<td><code>loop exampleLoop</code></td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="loopFib"><a href="#loopFib" class="headerlink" title="loopFib"></a>loopFib</h3><p>为了证明这一点，让我们回到我们的<code>fib.s</code>代码：</p>
+<p>Code: </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">global  _start</span><br><span class="line"></span><br><span class="line">section .text</span><br><span class="line">_start:</span><br><span class="line">    xor rax, rax</span><br><span class="line">    xor rbx, rbx</span><br><span class="line">    inc rbx</span><br><span class="line">    add rax, rbx</span><br></pre></td></tr></tbody></table></figure>
+
+<p>由于任何当前Fibonacci数都是它前面两个数字的总和，因此我们可以使用循环来自动执行此操作。假设当前的数字存储在<code>rax</code>中，所以它是<code>Fn</code>，下一个数字存储在<code>rbx</code>中，所以它是<code>Fn+1</code>。</p>
+<p>从最后一个数字<code>0</code>和当前数字<code>1</code>开始，我们可以有如下循环：</p>
+<ol>
+<li>使用<code>0 + 1 = 1</code>获取下一个号码</li>
+<li>将当前号码移动到最后一个号码（<code>1 in place of 0</code>）</li>
+<li>将下一个数字移动到当前数字（<code>1 in place of 1</code>）</li>
+<li>Loop</li>
+</ol>
+<p>如果我们这样做，我们最终将<code>1</code>作为最后一个数字，<code>1</code>作为当前数字。如果我们再次循环，我们将得到<code>1</code>作为最后一个数字，<code>2</code>作为当前数字。所以，让我们把它实现为汇编指令。由于我们可以在加法中使用最后一个数字<code>0</code>后丢弃它，让我们将结果存储在它的位置：</p>
+<ul>
+<li><code>add rax, rbx</code></li>
+</ul>
+<p>我们需要将当前数字移动到最后一个数字的位置，并将后面的数字移动到当前数字。然而，我们在<code>rax</code>中有以下数字，而在<code>rbx</code>中有现在的旧数字，所以它们被交换了。你能想到任何指令来交换它们吗？</p>
+<p>让我们使用<code>xchg</code>指令来交换这两个数字：</p>
+<ul>
+<li><code>xchg rax, rbx</code></li>
+</ul>
+<p>现在我们可以简单地<code>loop</code>。然而，在我们进入循环之前，我们应该将<code>rcx</code>设置为我们想要的迭代次数。让我们从<code>10</code>迭代开始，并在初始化<code>rax</code>和<code>rbx</code>到<code>0</code>和<code>1</code>之后添加它：</p>
+<p>Code: </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">_start:</span><br><span class="line">    xor rax, rax    ; initialize rax to 0</span><br><span class="line">    xor rbx, rbx    ; initialize rbx to 0</span><br><span class="line">    inc rbx         ; increment rbx to 1</span><br><span class="line">    mov rcx, 10</span><br></pre></td></tr></tbody></table></figure>
+
+<p>现在我们可以定义我们的循环，如上所述：</p>
+<p>Code: </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">loopFib:</span><br><span class="line">    add rax, rbx    ; get the next number</span><br><span class="line">    xchg rax, rbx   ; swap values</span><br><span class="line">    loop loopFib</span><br></pre></td></tr></tbody></table></figure>
+
+<p>所以，我们的最终代码是：</p>
+<p>Code: </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">global  _start</span><br><span class="line"></span><br><span class="line">section .text</span><br><span class="line">_start:</span><br><span class="line">    xor rax, rax    ; initialize rax to 0</span><br><span class="line">    xor rbx, rbx    ; initialize rbx to 0</span><br><span class="line">    inc rbx         ; increment rbx to 1</span><br><span class="line">    mov rcx, 10</span><br><span class="line">loopFib:</span><br><span class="line">    add rax, rbx    ; get the next number</span><br><span class="line">    xchg rax, rbx   ; swap values</span><br><span class="line">    loop loopFib</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="Loop-loopFib"><a href="#Loop-loopFib" class="headerlink" title="Loop loopFib"></a>Loop loopFib</h3><p>让我们组装代码，并使用<code>gdb</code>运行它。我们将在<code>b loopFib</code>处中断，这样我们就可以在循环的每次迭代中检查代码。在第一次迭代之前，我们看到以下寄存器值：</p>
+<p>gdb</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">$ ./assembler.sh fib.s -g</span><br><span class="line">gef➤  b loopFib</span><br><span class="line">Breakpoint 1 at 0x40100e</span><br><span class="line">gef➤  r</span><br><span class="line">───────────────────────────────────────────────────────────────────────────────────── registers ────</span><br><span class="line">$rax   : 0x0</span><br><span class="line">$rbx   : 0x1</span><br><span class="line">$rcx   : 0xa</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们从<code>rax = 0</code>和<code>rbx = 1</code>开始。让我们按下<code>c</code>继续下一次迭代：</p>
+<p>gdb</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">───────────────────────────────────────────────────────────────────────────────────── registers ────</span><br><span class="line">$rax   : 0x1</span><br><span class="line">$rbx   : 0x1</span><br><span class="line">$rcx   : 0x9</span><br></pre></td></tr></tbody></table></figure>
+
+<p>现在我们有了<code>1</code>和<code>1</code>，正如预期的那样，还有<code>9</code>次迭代。让我们<code>c</code>continue再次：</p>
+<p>gdb</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">───────────────────────────────────────────────────────────────────────────────────── registers ────</span><br><span class="line">$rax   : 0x1</span><br><span class="line">$rbx   : 0x2</span><br><span class="line">$rcx   : 0x8</span><br></pre></td></tr></tbody></table></figure>
+
+<p>现在我们在<code>1</code>和<code>2</code>。让我们检查接下来的三个迭代：</p>
+<p>gdb</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">───────────────────────────────────────────────────────────────────────────────────── registers ────</span><br><span class="line">$rax   : 0x2</span><br><span class="line">$rbx   : 0x3</span><br><span class="line">$rcx   : 0x7</span><br><span class="line">───────────────────────────────────────────────────────────────────────────────────── registers ────</span><br><span class="line">$rax   : 0x3</span><br><span class="line">$rbx   : 0x5</span><br><span class="line">$rcx   : 0x6</span><br><span class="line">───────────────────────────────────────────────────────────────────────────────────── registers ────</span><br><span class="line">$rax   : 0x5</span><br><span class="line">$rbx   : 0x8</span><br><span class="line">$rcx   : 0x5</span><br></pre></td></tr></tbody></table></figure>
+
+<p>正如我们所看到的，该脚本成功地计算出斐波那契数列为<code>0, 1, 1, 2, 3, 5, 8</code>。让我们继续最后一次迭代，其中<code>rbx</code>应该是<code>55</code>：</p>
+<p>gdb</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">───────────────────────────────────────────────────────────────────────────────────── registers ────</span><br><span class="line">$rax   : 0x22</span><br><span class="line">$rbx   : 0x37</span><br><span class="line">$rcx   : 0x1</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们看到<code>rbx</code>是<code>0x37</code>，在十进制中等于<code>55</code>。我们可以使用<code>p/d $rax</code>命令来确认：                                                                       </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">gef➤  p/d $rbx</span><br><span class="line"></span><br><span class="line">$3 = 55</span><br></pre></td></tr></tbody></table></figure>
+
+<p>正如我们所看到的，我们已经成功地使用循环来自动计算斐波那契数列。试着增加<code>rcx</code>，看看斐波那契数列中的下一个数字是什么。</p>
+<h2 id="Unconditional-Branching"><a href="#Unconditional-Branching" class="headerlink" title="Unconditional Branching"></a>Unconditional Branching</h2><p>第二种类型的<code>Control Instructions</code>是<code>Branching Instructions</code>，这是一种通用指令，允许我们在满足特定条件的情况下将<code>jump</code>转移到程序中的任何一点。让我们首先讨论最基本的分支指令：<code>jmp</code>，它总是无条件地跳转到一个位置。</p>
+<h2 id="JMP-loopFib"><a href="#JMP-loopFib" class="headerlink" title="JMP loopFib"></a>JMP loopFib</h2><p><code>jmp</code>指令将程序跳转到其操作数中的标签或指定位置，以便程序的执行在那里继续。一旦程序的执行被定向到另一个位置，它将继续处理来自该位置的指令。如果我们想暂时跳转到一个点，然后返回到原始调用点，我们将使用函数，我们将在下一节讨论。</p>
+<p>基本的<code>jmp</code>指令是无条件的，这意味着它将总是跳转到指定的位置，而不管条件如何。这与仅在满足特定条件时才跳转的<code>Conditional Branching</code>指令形成对比，我们将在下面讨论。</p>
+<table>
+<thead>
+<tr>
+<th><strong>Instruction</strong></th>
+<th><strong>Description</strong></th>
+<th><strong>Example</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>jmp</code></td>
+<td>跳转到指定的标签、地址或位置</td>
+<td><code>jmp loop</code></td>
+</tr>
+</tbody></table>
+<p>让我们尝试在我们的<code>jmp</code>程序中使用<code>fib.s</code>，看看它会如何改变执行流。而不是循环回<code>loopFib</code>，让我们<code>jmp</code>代替： 所以，我们的最终代码是：</p>
+<p>Code: </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">global  _start</span><br><span class="line"></span><br><span class="line">section .text</span><br><span class="line">_start:</span><br><span class="line">    xor rax, rax    ; initialize rax to 0</span><br><span class="line">    xor rbx, rbx    ; initialize rbx to 0</span><br><span class="line">    inc rbx         ; increment rbx to 1</span><br><span class="line">    mov rcx, 10</span><br><span class="line">loopFib:</span><br><span class="line">    add rax, rbx    ; get the next number</span><br><span class="line">    xchg rax, rbx   ; swap values</span><br><span class="line">    jmp loopFib</span><br></pre></td></tr></tbody></table></figure>
+
+<p>现在，让我们组装代码，并使用<code>gdb</code>运行它。我们将再次<code>b loopFib</code>，看看它是如何变化的：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">$ ./assembler.sh fib.s -g</span><br><span class="line">gef➤  b loopFib</span><br><span class="line">Breakpoint 1 at 0x40100e</span><br><span class="line">gef➤  r</span><br><span class="line">───────────────────────────────────────────────────────────────────────────────────── registers ────</span><br><span class="line">$rbx   : 0x1               </span><br><span class="line">$rcx   : 0xa               </span><br><span class="line">$rcx   : 0xa               </span><br><span class="line">───────────────────────────────────────────────────────────────────────────────────── registers ────</span><br><span class="line">$rax   : 0x1               </span><br><span class="line">$rbx   : 0x1               </span><br><span class="line">$rcx   : 0xa               </span><br><span class="line">───────────────────────────────────────────────────────────────────────────────────── registers ────</span><br><span class="line">$rax   : 0x1               </span><br><span class="line">$rbx   : 0x2               </span><br><span class="line">$rcx   : 0xa               </span><br><span class="line">───────────────────────────────────────────────────────────────────────────────────── registers ────</span><br><span class="line">$rax   : 0x2               </span><br><span class="line">$rbx   : 0x3               </span><br><span class="line">$rcx   : 0xa               </span><br><span class="line">───────────────────────────────────────────────────────────────────────────────────── registers ────</span><br><span class="line">$rax   : 0x3               </span><br><span class="line">$rbx   : 0x5               </span><br><span class="line">$rcx   : 0xa               </span><br><span class="line">───────────────────────────────────────────────────────────────────────────────────── registers ────</span><br><span class="line">$rax   : 0x5               </span><br><span class="line">$rbx   : 0x8               </span><br><span class="line">$rcx   : 0xa               </span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们按几次<code>c</code>，让程序多次跳转到<code>loopFib</code>。正如我们所看到的，程序仍然在执行相同的功能，仍然正确地计算斐波那契序列。然而，<code>the main difference from the loop is that 'rcx' is not decrementing.</code>这是因为<code>jmp</code>指令不将<code>rcx</code>视为计数器（如<code>loop</code>），因此它不会自动递减它。</p>
+<p>让我们用<code>del 1</code>删除断点，然后按下<code>c</code>看看程序会运行到哪一步：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">gef➤  info break</span><br><span class="line">Num     Type           Disp Enb Address            What</span><br><span class="line">1       breakpoint     keep y   0x000000000040100e &lt;loopFib&gt;</span><br><span class="line">	breakpoint already hit 6 times</span><br><span class="line">gef➤  del 1</span><br><span class="line">gef➤  c</span><br><span class="line">Continuing.</span><br><span class="line"></span><br><span class="line">Program received signal SIGINT, Interrupt.</span><br><span class="line">0x000000000040100e in loopFib ()</span><br><span class="line">───────────────────────────────────────────────────────────────────────────────────── registers ────</span><br><span class="line">$rax   : 0x2e02a93188557fa9</span><br><span class="line">$rbx   : 0x903b4b15ce8cedf0</span><br><span class="line">$rcx   : 0xa               </span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们注意到，程序一直在运行，直到我们在几秒钟后按下<code>ctrl+c</code>杀死它，这时斐波那契数已经达到<code>0x903b4b15ce8cedf0</code>（这是一个巨大的数字）。这是因为无条件的<code>jmp</code>指令，它会一直跳回到<code>loopFib</code>，因为特定的条件不会限制它。这类似于<code>(while true)</code>循环。</p>
+<p>这就是为什么无条件分支通常用于总是需要跳转的情况，它不适合循环，因为它将永远循环。为了在满足特定条件时停止跳转，我们将在接下来的步骤中使用<code>Conditional Branching</code>。</p>
+<h2 id="Conditional-Branching"><a href="#Conditional-Branching" class="headerlink" title="Conditional Branching"></a>Conditional Branching</h2><p>与无条件分支指令不同，<code>Conditional Branching</code>指令仅在满足特定条件时才根据目标和源操作数进行处理。条件跳转指令有多个变体，如<code>Jcc</code>，其中<code>cc</code>表示条件代码。以下是一些主要的条件代码：</p>
+<table>
+<thead>
+<tr>
+<th><strong>Instruction</strong></th>
+<th><strong>Condition</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>jz</code></td>
+<td><code>D = 0</code></td>
+<td>Destination <code>equal to Zero</code></td>
+</tr>
+<tr>
+<td><code>jnz</code></td>
+<td><code>D != 0</code></td>
+<td>Destination <code>Not equal to Zero</code></td>
+</tr>
+<tr>
+<td><code>js</code></td>
+<td><code>D &lt; 0</code></td>
+<td>Destination <code>is Negative</code></td>
+</tr>
+<tr>
+<td><code>jns</code></td>
+<td><code>D &gt;= 0</code></td>
+<td>Destination <code>is Not Negative</code> (i.e. 0 or positive)</td>
+</tr>
+<tr>
+<td><code>jg</code></td>
+<td><code>D &gt; S</code></td>
+<td>Destination <code>Greater than</code> Source</td>
+</tr>
+<tr>
+<td><code>jge</code></td>
+<td><code>D &gt;= S</code></td>
+<td>Destination <code>Greater than or Equal</code> Source</td>
+</tr>
+<tr>
+<td><code>jl</code></td>
+<td><code>D &lt; S</code></td>
+<td>Destination <code>Less than</code> Source</td>
+</tr>
+<tr>
+<td><code>jle</code></td>
+<td><code>D &lt;= S</code></td>
+<td>Destination <code>Less than or Equal</code> Source</td>
+</tr>
+</tbody></table>
+<p>还有许多其他类似的条件，我们也可以利用。有关条件的完整列表，我们可以参考最新的Intel<a target="_blank" rel="noopener" href="https://www.intel.com/content/dam/www/public/us/en/documents/manuals/64-ia-32-architectures-software-developer-instruction-set-reference-manual-325383.pdf#page=585">x86_64手册的</a> <code>Jcc-Jump if Condition Is Met</code>部分。条件指令不仅限于<code>jmp</code>指令，还可以与其他汇编指令一起用于条件使用，如<code>CMOVcc</code>和<code>SETcc</code>指令。</p>
+<p>例如，如果我们想执行<code>mov rax, rbx</code>指令，但条件是<code>= 0</code>，那么我们可以使用<code>CMOVcc</code>或<code>conditional mov</code>指令，例如<code>cmovz rax, rbx</code>指令。类似地，如果我们想在条件是<code>&lt;</code>的情况下移动，那么我们可以使用<code>cmovl rax, rbx</code>指令，对于其他条件依此类推。这同样适用于<code>set</code>指令，如果满足条件，则将操作数的字节设置为<code>1</code>，否则设置为<code>0</code>。这是一个例子。</p>
+<h3 id="RFLAGS-Register"><a href="#RFLAGS-Register" class="headerlink" title="RFLAGS Register"></a>RFLAGS Register</h3><p>我们一直在谈论满足某些条件，但我们尚未讨论如何满足这些条件或将其存储在何处。这就是我们使用<code>RFLAGS</code>寄存器的地方，我们在寄存器一节中简要提到过。</p>
+<p>与其他寄存器一样，<code>RFLAGS</code>寄存器由64位组成。但是，该寄存器不保存值，而是保存标志位。每个位或位组根据最后一条指令的值变为<code>1</code>或<code>0</code>。</p>
+<p><code>Arithmetic instructions set the necessary 'RFLAG' bits depending on their outcome.</code>例如，如果<code>dec</code>指令导致<code>0</code>，则位<code>#6</code>，即零标志<code>ZF</code>，变为<code>1</code>。同样地，每当比特<code>#6</code>为<code>0</code>时，这意味着零标志关闭。类似地，如果除法指令导致浮点数，则进位标志<code>CF</code>位被打开，或者如果<code>sub</code>指令导致负值，则符号标志<code>SF</code>被打开，等等。</p>
+<p>注：当<code>ZF</code>打开时（即<code>1</code>），它被称为零<code>ZR</code>，当它关闭时（即<code>0</code>），它被称为非零<code>NZ</code>。这个命名可以匹配指令中使用的条件代码，比如<code>jnz</code>与<code>NZ</code>一起跳转。但为了避免任何混淆，让我们简单地关注旗帜名称。</p>
+<p>在汇编程序中有许多标志，每个标志在<code>RFLAGS</code>寄存器中都有自己的位。下表显示了<code>RFLAGS</code>寄存器中的不同标志：</p>
+<table>
+<thead>
+<tr>
+<th>Bit(s)</th>
+<th>0</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+<th>5</th>
+<th>6</th>
+<th>7</th>
+<th>8</th>
+<th>9</th>
+<th>10</th>
+<th>11</th>
+<th>12-13</th>
+<th>14</th>
+<th>15</th>
+<th>16</th>
+<th>17</th>
+<th>18</th>
+<th>19</th>
+<th>20</th>
+<th>21</th>
+<th>22-63</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Label</strong> (<code>1</code>/<code>0</code>)</td>
+<td><code>CF</code> (<code>CY</code>/<code>NC</code>) <code>CF</code>（<code>CY</code>/<code>NC</code>）</td>
+<td><code>1</code> <code>D &gt; S</code></td>
+<td><code>PF</code> (<code>PE</code>/<code>PO</code>) <code>PF</code>（<code>PE</code>/<code>PO</code>）</td>
+<td><code>0</code> <code>D &gt; S</code></td>
+<td><code>AF</code> (<code>AC</code>/<code>NA</code>) <code>AF</code>（<code>AC</code>/<code>NA</code>）</td>
+<td><code>0</code> <code>D &gt; S</code></td>
+<td><code>ZF</code> (<code>ZR</code>/<code>NZ</code>) <code>ZF</code>（<code>ZR</code>/<code>NZ</code>）</td>
+<td><code>SF</code> (<code>NC</code>/<code>PL</code>) <code>SF</code>（<code>NC</code>/<code>PL</code>）</td>
+<td><code>TF</code> <code>D &gt; S</code></td>
+<td><code>IF</code> (<code>EL</code>/<code>DI</code>) <code>IF</code>（<code>EL</code>/<code>DI</code>）</td>
+<td><code>DF</code> (<code>DN</code>/<code>UP</code>) <code>DF</code>（<code>DN</code>/<code>UP</code>）</td>
+<td><code>OF</code> (<code>OV</code>/<code>NV</code>) <code>OF</code>（<code>OV</code>/<code>NV</code>）</td>
+<td><code>IOPL</code> <code>D &gt; S</code></td>
+<td><code>NT</code> <code>D &gt; S</code></td>
+<td><code>0</code> <code>D &gt; S</code></td>
+<td><code>RF</code> <code>D &gt; S</code></td>
+<td><code>VM</code> <code>D &gt; S</code></td>
+<td><code>AC</code> <code>D &gt; S</code></td>
+<td><code>VIF</code> <code>D &gt; S</code></td>
+<td><code>VIP</code> <code>D &gt; S</code></td>
+<td><code>ID</code> <code>D &gt; S</code></td>
+<td><code>0</code> <code>D &gt; S</code></td>
+</tr>
+<tr>
+<td><strong>Description</strong></td>
+<td>Carry Flag</td>
+<td><em>Reserved</em></td>
+<td>Parity Flag</td>
+<td><em>Reserved</em></td>
+<td>Auxiliary Carry Flag</td>
+<td><em>Reserved</em></td>
+<td>Zero Flag</td>
+<td>Sign Flag</td>
+<td>陷阱标志</td>
+<td>中断标志</td>
+<td>方向标志</td>
+<td>溢出标志</td>
+<td>缓冲级别</td>
+<td>嵌套任务</td>
+<td>保留</td>
+<td>重新开始标志</td>
+<td>虚拟-x86模式</td>
+<td>对齐检查/访问控制</td>
+<td>虚拟机标志</td>
+<td>虚拟主机挂起</td>
+<td>识别旗标</td>
+<td>保留</td>
+</tr>
+</tbody></table>
+<p>与其他寄存器一样，64位<code>RFLAGS</code>寄存器有一个32位子寄存器（称为<code>EFLAGS</code>）和一个16位子寄存器（称为<code>FLAGS</code>），它们保存我们可能遇到的最重要的标志。<br> 我们最感兴趣的旗帜是：</p>
+<ul>
+<li>进位标志<code>CF</code>：表示我们是否有浮点数。</li>
+<li>奇偶校验标志<code>PF</code>：表示一个数字是奇数还是偶数。</li>
+<li>Zero Flag <code>ZF</code>：表示一个数字是否为零。</li>
+<li>符号标志<code>SF</code>：表示寄存器是否为负。</li>
+</ul>
+<p>上述所有标志都位于<code>FLAGS</code>子寄存器的前几位。我们将只在模块项目中使用<code>jnz</code>指令，只要<code>ZF</code>标志等于<code>0</code>（即，非零<code>NZ</code>）。那么，让我们看看如何做到这一点。</p>
+<h3 id="JNZ-loopFib"><a href="#JNZ-loopFib" class="headerlink" title="JNZ loopFib"></a>JNZ loopFib</h3><p>我们在上一节中使用的<code>loop loopFib</code>指令实际上是两个指令的组合：<code>dec rcx</code>和<code>jnz loopFib</code>，但由于循环是一个非常常见的功能，因此创建<code>loop</code>指令是为了减少代码大小并提高效率，而不是每次都使用这两个指令。然而，条件跳转指令比<code>loop</code>通用得多，因为它们允许我们在任何我们需要的条件下跳转到程序中的任何地方。</p>
+<p>虽然使用<code>loop</code>更有效，但为了演示<code>jnz</code>的使用，让我们回到我们的代码，尝试使用<code>jnz</code>指令而不是<code>loop</code>：</p>
+<p>Code:</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">global  _start</span><br><span class="line"></span><br><span class="line">section .text</span><br><span class="line">_start:</span><br><span class="line">    xor rax, rax    ; initialize rax to 0</span><br><span class="line">    xor rbx, rbx    ; initialize rbx to 0</span><br><span class="line">    inc rbx         ; increment rbx to 1</span><br><span class="line">    mov rcx, 10</span><br><span class="line">loopFib:</span><br><span class="line">    add rax, rbx    ; get the next number</span><br><span class="line">    xchg rax, rbx   ; swap values</span><br><span class="line">    dec rcx			; decrement rcx counter</span><br><span class="line">    jnz loopFib		; jump to loopFib until rcx is 0</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们看到我们用<code>loop loopFib</code>和<code>dec rcx</code>替换了<code>jnz loopFib</code>，这样每次循环结束时，rcx计数器将减1，如果没有设置<code>loopFib</code>，程序将跳回到<code>ZF</code>。一旦<code>rcx</code>到达<code>0</code>，零标志<code>ZF</code>将被打开到<code>1</code>，因此<code>jnz</code>将不再跳转（因为它是<code>NZ</code>），我们将退出循环。让我们组装代码，并使用<code>gdb</code>运行它，看看效果如何：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">$ ./assembler.sh fib.s -g</span><br><span class="line">gef➤  b loopFib</span><br><span class="line">Breakpoint 1 at 0x40100e</span><br><span class="line">gef➤  r</span><br><span class="line">───────────────────────────────────────────────────────────────────────────────────── registers ────</span><br><span class="line">$rax   : 0x0               </span><br><span class="line">$rbx   : 0x1               </span><br><span class="line">$rcx   : 0xa               </span><br><span class="line">$eflags: [zero carry parity adjust sign trap INTERRUPT direction overflow resume virtualx86 identification]</span><br><span class="line">───────────────────────────────────────────────────────────────────────────────────── registers ────</span><br><span class="line">$rax   : 0x1               </span><br><span class="line">$rbx   : 0x1               </span><br><span class="line">$rcx   : 0x9               </span><br><span class="line">$eflags: [zero carry PARITY adjust sign trap INTERRUPT direction overflow resume virtualx86 identification]</span><br><span class="line">───────────────────────────────────────────────────────────────────────────────────── registers ────</span><br><span class="line">$rax   : 0x1               </span><br><span class="line">$rbx   : 0x2               </span><br><span class="line">$rcx   : 0x8               </span><br><span class="line">$eflags: [zero carry parity adjust sign trap INTERRUPT direction overflow resume virtualx86 identification]</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们可以看到，我们仍然正确地计算斐波那契序列。在循环的每次迭代中，我们减少<code>rcx</code>，并且<code>zero</code>标志关闭，而当<code>parity</code>是奇数时，<code>rcx</code>标志打开。此时RFLAGS的值是在<code>dec rcx</code>指令之后设置的，因为这是我们中断之前的最后一条算术指令。所以，旗国是<code>rcx</code>。</p>
+<p>注：<code>GEF</code>显示了<code>RFLAGS</code>寄存器中标志的状态。以粗体大写字母书写的标志处于打开状态。</p>
+<p>让我们<code>c</code>继续跳出循环，看看<code>rcx</code>到达<code>0</code>后寄存器和RFLAGS的状态：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">gef➤  </span><br><span class="line">Continuing.</span><br><span class="line">───────────────────────────────────────────────────────────────────────────────────── registers ────</span><br><span class="line">$rax   : 0x37              </span><br><span class="line">$rbx   : 0x59              </span><br><span class="line">$rcx   : 0x0               </span><br><span class="line">$eflags: [ZERO carry PARITY adjust sign trap INTERRUPT direction overflow RESUME virtualx86 identification]</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们看到，一旦<code>rcx</code>到达<code>0</code>，<code>zero</code>标志就被设置为on <code>1</code>，而<code>jnz</code>不再跳回到<code>loopFib</code>，因此程序停止执行。</p>
+<h3 id="CMP"><a href="#CMP" class="headerlink" title="CMP"></a>CMP</h3><p>在其他情况下，我们可能希望在模块项目中使用条件跳转指令。例如，我们可能希望在斐波那契数大于<code>10</code>时停止程序执行。我们可以通过使用<code>js loopFib</code>指令来实现这一点，只要最后一条算术指令的结果是正数，它就会跳回到<code>loopFib</code>。</p>
+<p>在这种情况下，我们将不使用<code>jnz</code>指令或<code>rcx</code>寄存器，而是在计算当前Fibonacci数后直接使用<code>js</code>。但是我们如何测试当前的斐波那契数（即，<code>rbx</code>）小于<code>10</code>？这就是我们来到比较指令<code>cmp</code>。</p>
+<p>比较指令<code>cmp</code>通过从第一操作数中减去第二操作数（即<code>D1</code> - <code>S2</code>）来简单地比较两个操作数，然后在<code>RFLAGS</code>寄存器中设置必要的标志。例如，如果我们使用<code>cmp rbx, 10</code>，那么比较指令将执行“<code>rbx - 10</code>”，并根据结果设置标志。</p>
+<table>
+<thead>
+<tr>
+<th><strong>Instruction</strong></th>
+<th><strong>Description</strong></th>
+<th><strong>Example</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>cmp</code> <code>D &gt; S</code></td>
+<td>通过从第一个操作数中减去第二个操作数来设置<code>RFLAGS</code>（即第一-第二）</td>
+<td><code>cmp rax, rbx</code> -&gt; <code>rax - rbx</code></td>
+</tr>
+</tbody></table>
+<p>因此，在计算第一个斐波那契数之后，它将执行’<code>1 - 10</code>‘，结果将是<code>-9</code>，因此它将跳转，因为它是负数<code>&lt;0</code>。一旦我们到达第一个大于<code>10</code>的斐波那契数，即<code>13</code>或<code>0xd</code>，它将执行“<code>13 - 10</code>”，结果将是“<code>3</code>”，在这种情况下<code>js</code>将不再跳跃，因为结果是正数<code>&gt;=0</code>。</p>
+<p>我们可以使用<code>sub</code>指令来执行相同的减法，并根据需要设置标志。然而，这并不有效，因为我们将更改其中一个寄存器的值，而<code>cmp</code>只进行比较，并不将结果存储在任何地方。<code>The main advantage of 'cmp' is that it does not affect the operands.</code></p>
+<p>注意：在<code>cmp</code>指令中，第一个操作数（即目的地）必须是寄存器，而另一个可以是寄存器，变量或立即值。</p>
+<p>因此，让我们将代码更改为使用<code>cmp</code>和<code>js</code>，如下所示：</p>
+<p>Code: </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">global  _start</span><br><span class="line"></span><br><span class="line">section .text</span><br><span class="line">_start:</span><br><span class="line">    xor rax, rax    ; initialize rax to 0</span><br><span class="line">    xor rbx, rbx    ; initialize rbx to 0</span><br><span class="line">    inc rbx         ; increment rbx to 1</span><br><span class="line">loopFib:</span><br><span class="line">    add rax, rbx    ; get the next number</span><br><span class="line">    xchg rax, rbx   ; swap values</span><br><span class="line">    cmp rbx, 10		; do rbx - 10</span><br><span class="line">    js loopFib		; jump if result is &lt;0</span><br></pre></td></tr></tbody></table></figure>
+
+<p>请注意，我们删除了<code>mov rcx, 10</code>指令，因为我们不再使用<code>rcx</code>循环。我们可以在<code>cmp</code>中使用它而不是<code>10</code>，但是通过直接使用<code>10</code>，我们少用了一条指令，使我们的代码更短，更高效。</p>
+<p>现在，让我们组装代码，并使用<code>gdb</code>运行它，看看这是如何工作的。我们将在<code>loopFib</code>处中断，然后执行<code>si</code>，直到到达<code>js loopFib</code>指令：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">$ ./assembler.sh fib.s -g</span><br><span class="line">gef➤  b loopFib</span><br><span class="line">Breakpoint 1 at 0x401009</span><br><span class="line">gef➤  r</span><br><span class="line">───────────────────────────────────────────────────────────────────────────────────── registers ────</span><br><span class="line">$rax   : 0x1               </span><br><span class="line">$rbx   : 0x1               </span><br><span class="line">$eflags: [zero CARRY parity ADJUST SIGN trap INTERRUPT direction overflow resume virtualx86 identification]</span><br><span class="line">─────────────────────────────────────────────────────────────────────────────────── code:x86:64 ────</span><br><span class="line">     0x401009 &lt;loopFib+0&gt;      add    rax, rbx</span><br><span class="line">     0x40100c &lt;loopFib+3&gt;      xchg   rbx, rax</span><br><span class="line">     0x40100e &lt;loopFib+5&gt;      cmp    rbx, 0xa</span><br><span class="line"> →   0x401012 &lt;loopFib+9&gt;      js     0x401009 &lt;loopFib&gt;	TAKEN [Reason: S]</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们看到，在<code>loopFib</code>的第一次迭代中，一旦我们到达<code>js loopFib</code>，<code>SIGN</code>标志就像预期的那样被设置为<code>1</code>，因为<code>1 - 10</code>的结果是负数。我们还注意到<code>GEF</code>告诉我们<code>TAKEN [Reason: S]</code>，这很方便地告诉我们将进行此条件跳转，并给出原因为<code>S</code>，这意味着设置了<code>SIGN</code>标志。</p>
+<p>现在，让我们<code>c</code>继续，直到<code>rbx</code>大于<code>10</code>，在这一点上<code>js</code>应该不再跳。与其手动多次按下<code>c</code>，不如借此机会学习如何在<code>gdb</code>中设置条件断点。</p>
+<p>让我们先用<code>del 1</code>删除当前断点，然后设置条件断点。语法与设置常规断点<code>b loopFib</code>非常相似，但我们在它后面添加了一个<code>if</code>条件，例如’<code>b loopFib if $rbx &gt; 10</code>‘。此外，与其在<code>loopFib</code>处中断然后使用<code>si</code>到达<code>js</code>，不如直接在<code>js</code>处中断，使用<code>*</code>来引用其位置’<code>b *loopFib+9 if $rbx &gt; 10</code>‘或’<code>b *0x401012 if $rbx &gt; 10</code>‘。<br> 记住：我们可以通过<code>disas loopFib</code>找到指令的位置。</p>
+<p>我们看到以下情况：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">gef➤  del 1</span><br><span class="line">gef➤  disas loopFib</span><br><span class="line">Dump of assembler code for function loopFib:</span><br><span class="line">..SNIP...</span><br><span class="line">0x0000000000401012 &lt;+9&gt;:	js     0x401009  </span><br><span class="line">gef➤  b *loopFib+9 if $rbx &gt; 10</span><br><span class="line">Breakpoint 2 at 0x401012</span><br><span class="line">gef➤  c</span><br><span class="line">───────────────────────────────────────────────────────────────────────────────────── registers ────</span><br><span class="line">$rax   : 0x8               </span><br><span class="line">$rbx   : 0xd               </span><br><span class="line">$eflags: [zero carry PARITY adjust sign trap INTERRUPT direction overflow resume virtualx86 identification]</span><br><span class="line">─────────────────────────────────────────────────────────────────────────────────── code:x86:64 ────</span><br><span class="line">     0x401009 &lt;loopFib+0&gt;      add    rax, rbx</span><br><span class="line">     0x40100c &lt;loopFib+3&gt;      xchg   rbx, rax</span><br><span class="line">     0x40100e &lt;loopFib+5&gt;      cmp    rbx, 0xa</span><br><span class="line"> →   0x401012 &lt;loopFib+9&gt;      js     0x401009 &lt;loopFib&gt;	NOT taken [Reason: !(S)]</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们现在看到，最后一个算术指令’<code>13 - 10</code>‘的结果是一个正数，<code>sign</code>标志不再被设置，所以<code>GEF</code>告诉我们，这个跳转是<code>NOT TAKEN</code>，原因是<code>!(S)</code>，这意味着<code>sign</code>标志没有被设置。</p>
+<p>正如我们所看到的，使用条件分支非常强大，使我们能够根据指定的条件执行更高级的指令。我们可以使用<code>cmp</code>指令来测试各种条件。例如，我们可以使用<code>jl</code>而不是<code>jns</code>，只要目标小于源，它就会跳转。因此，对于<code>cmp rbx, 10</code>，<code>rbx</code>将开始小于<code>10</code>，并且一旦<code>rbx</code>大于<code>10</code>，则<code>rbx</code>（即，目的地）将大于<code>10</code>，在该点<code>jl</code>将不跳转。</p>
+<p>注意：我们可能会看到使用JMP Equal <code>je</code>或JMP Not Equal <code>jne</code>的指令。这只是<code>jz</code>和<code>jnz</code>的别名，因为如果两个操作数相等，则在所有情况下<code>cmp rax, rax</code>的结果都将是<code>0</code>，这设置了零标志。这同样适用于<code>jge</code>和<code>jnl</code>，因为<code>&gt;=</code>与<code>!</code>相同，并且也适用于其他类似的条件。</p>
+<p>现在我们已经介绍了所有基本的控制指令，您认为哪种方法更有效？</p>
+<ol>
+<li>使用<code>mov rcx, 10</code>和<code>loop loopFib</code> =循环10次</li>
+<li>使用<code>mov rcx, 10</code>、<code>dec rcx</code>和<code>jnz loopFib</code> =跳转10次</li>
+<li>使用<code>cmp rbx, 10</code>和<code>js loopFib</code> = jump while rbx 10</li>
+</ol>
+<p>修改你的代码，使用你认为最好的方法。</p>
+<h1 id="Functions"><a href="#Functions" class="headerlink" title="Functions"></a>Functions</h1><h2 id="Using-the-Stack"><a href="#Using-the-Stack" class="headerlink" title="Using the Stack"></a>Using the Stack</h2><p>到目前为止，我们已经学习了两种类型的控制指令：<code>Loops</code>和<code>Branching</code>。在我们讨论<code>Functions</code>之前，我们需要了解如何使用内存<code>Stack</code>。在第5节中，我们讨论了如何将RAM划分为四个不同的段，并为每个应用程序分配其虚拟内存及其段。我们还讨论了用于加载应用程序的汇编指令以供CPU访问的<code>Computer Architecture</code>段，以及用于保存应用程序变量的<code>text</code>段。所以，现在让我们开始讨论<code>data</code>。</p>
+<h3 id="The-Stack"><a href="#The-Stack" class="headerlink" title="The Stack"></a>The Stack</h3><p>堆栈是分配给程序存储数据的内存段，通常用于存储数据，然后临时取回数据。堆栈的顶部由顶部堆栈指针<code>rsp</code>引用，而底部由底部堆栈指针<code>rbp</code>引用。</p>
+<p>我们可以将<code>push</code>数据放入堆栈，它将位于堆栈的顶部（即<code>rsp</code>），然后我们可以将<code>pop</code>数据从堆栈中取出，放入寄存器或内存地址，它将从堆栈顶部移除。</p>
+<table>
+<thead>
+<tr>
+<th><strong>Instruction</strong></th>
+<th><strong>Description</strong></th>
+<th><strong>Example</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>push</code></td>
+<td>Copies the specified register/address to the top of the stack</td>
+<td><code>push rax</code></td>
+</tr>
+<tr>
+<td><code>pop</code></td>
+<td>Moves the item at the top of the stack to the specified register/address将堆栈顶部的项移动到指定的寄存器/地址</td>
+<td><code>pop rax</code></td>
+</tr>
+</tbody></table>
+<p>堆栈有一个<code>Last-in First-out</code>（<code>LIFO</code>）设计，这意味着我们只能<code>pop</code>出最后一个元素<code>push</code>ed到堆栈。例如，如果我们将<code>push rax</code>放入堆栈，那么堆栈的顶部现在将是我们刚刚推入的<code>rax</code>的值。如果我们<code>push</code>在它上面的任何东西，我们将不得不<code>pop</code>它们从堆栈中出来，直到<code>rax</code>的值到达堆栈的顶部，然后我们可以<code>pop</code>该值返回到<code>rax</code>。</p>
+<h3 id="Usage-With-Functions-x2F-Syscalls"><a href="#Usage-With-Functions-x2F-Syscalls" class="headerlink" title="Usage With Functions/Syscalls"></a>Usage With Functions/Syscalls</h3><p>在调用<code>function</code>或<code>syscall</code>之前，我们将主要将数据从寄存器推入堆栈，然后在函数和系统调用之后恢复它们。这是因为<code>functions</code>和<code>syscalls</code>通常使用寄存器进行处理，因此如果存储在寄存器中的值在函数调用或系统调用后发生更改，我们将丢失它们。</p>
+<p>例如，如果我们想调用一个系统调用来将<code>Hello World</code>打印到屏幕上，并保留存储在<code>rax</code>中的当前值，我们将<code>push rax</code>放入堆栈。然后我们可以执行syscall，然后<code>pop</code>将值返回到<code>rax</code>。所以，这样，我们就可以执行syscall并保留<code>rax</code>的值。</p>
+<h3 id="PUSH-x2F-POP"><a href="#PUSH-x2F-POP" class="headerlink" title="PUSH/POP"></a>PUSH/POP</h3><p>我们的代码目前看起来如下：</p>
+<p>Code:</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">global  _start</span><br><span class="line"></span><br><span class="line">section .text</span><br><span class="line">_start:</span><br><span class="line">    xor rax, rax    ; initialize rax to 0</span><br><span class="line">    xor rbx, rbx    ; initialize rbx to 0</span><br><span class="line">    inc rbx         ; increment rbx to 1</span><br><span class="line">loopFib:</span><br><span class="line">    add rax, rbx    ; get the next number</span><br><span class="line">    xchg rax, rbx   ; swap values</span><br><span class="line">    cmp rbx, 10		; do rbx - 10</span><br><span class="line">    js loopFib		; jump if result is &lt;0</span><br></pre></td></tr></tbody></table></figure>
+
+<p>让我们假设我们想在进入循环之前调用<code>function</code>或<code>syscall</code>。为了保留我们的寄存器，我们将需要<code>push</code>到堆栈中所有我们正在使用的寄存器，然后在<code>syscall</code>之后将它们弹出。</p>
+<p>要将<code>push</code>值放入栈中，我们可以使用其名称作为操作数，如<code>push rax</code>中所示，而该值将<code>copied</code>放入栈顶。当我们想要检索该值时，我们首先需要确保它位于堆栈顶部，然后我们可以指定存储位置作为操作数，如<code>pop rax</code>，之后值将是<code>moved</code>到<code>rax</code>，并且将是堆栈顶部的<code>removed</code>。它下面的值现在将位于堆栈的顶部（如上面的附加工作所示）。</p>
+<p>由于堆栈具有<strong>LIFO</strong>设计，当我们恢复寄存器时，我们必须以<strong>相反的顺序</strong>进行。例如，如果我们<strong>先推rax</strong>，然后<strong>推rbx</strong>，当我们恢复时，我们必须先<strong>弹出rbx</strong>，然后再<strong>弹出rax</strong>。</p>
+<p>因此，为了在进入循环之前保存寄存器，让我们将它们推到寄存器。幸运的是，我们只使用了<code>rax</code>和<code>rbx</code>，所以我们只需要将这两个寄存器添加到堆栈中，然后在系统调用之后添加到堆栈中，如下所示：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">global  _start</span><br><span class="line"></span><br><span class="line">section .text</span><br><span class="line">_start:</span><br><span class="line">    xor rax, rax    ; initialize rax to 0</span><br><span class="line">    xor rbx, rbx    ; initialize rbx to 0</span><br><span class="line">    inc rbx         ; increment rbx to 1</span><br><span class="line">    push rax        ; push registers to stack</span><br><span class="line">    push rbx</span><br><span class="line">    ; call function</span><br><span class="line">    pop rbx         ; restore registers from stack</span><br><span class="line">    pop rax</span><br><span class="line">...SNIP...</span><br></pre></td></tr></tbody></table></figure>
+
+<p>请注意，使用<code>pop</code>恢复寄存器的顺序是相反的。</p>
+<p>现在，让我们组装我们的代码并使用<code>gdb</code>进行测试：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">$ ./assembler.sh fib.s -g</span><br><span class="line">gef➤  b _start</span><br><span class="line">gef➤  r</span><br><span class="line">...SNIP...</span><br><span class="line">gef➤  si</span><br><span class="line">gef➤  si</span><br><span class="line">gef➤  si</span><br><span class="line">───────────────────────────────────────────────────────────────────────────────────── registers ────</span><br><span class="line">$rax   : 0x0               </span><br><span class="line">$rbx   : 0x1               </span><br><span class="line">───────────────────────────────────────────────────────────────────────────────────────── stack ────</span><br><span class="line">0x00007fffffffe410│+0x0000: 0x0000000000000001	 ← $rsp</span><br><span class="line">0x00007fffffffe418│+0x0008: 0x0000000000000000</span><br><span class="line">0x00007fffffffe420│+0x0010: 0x0000000000000000</span><br><span class="line">0x00007fffffffe428│+0x0018: 0x0000000000000000</span><br><span class="line">0x00007fffffffe430│+0x0020: 0x0000000000000000</span><br><span class="line">0x00007fffffffe438│+0x0028: 0x0000000000000000</span><br><span class="line">0x00007fffffffe440│+0x0030: 0x0000000000000000</span><br><span class="line">0x00007fffffffe448│+0x0038: 0x0000000000000000</span><br><span class="line">─────────────────────────────────────────────────────────────────────────────────── code:x86:64 ────</span><br><span class="line"> →   0x40100e &lt;_start+9&gt;      push   rax</span><br><span class="line">     0x40100f &lt;_start+10&gt;      push   rbx</span><br><span class="line">     0x401010 &lt;_start+11&gt;      pop    rbx</span><br><span class="line">     0x401011 &lt;_start+12&gt;      pop    rax</span><br><span class="line">────────────────────────────────────────────────────────────────────────────────────────────────────</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们看到，在执行<code>push rax</code>之前，我们有<code>rax = 0x0</code>和<code>rbx = 0x1</code>。现在让我们<code>push``rax</code>和<code>rbx</code>，看看堆栈和寄存器是如何变化的：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">───────────────────────────────────────────────────────────────────────────────────── registers ────</span><br><span class="line">$rax   : 0x0               </span><br><span class="line">$rbx   : 0x1               </span><br><span class="line">───────────────────────────────────────────────────────────────────────────────────────── stack ────</span><br><span class="line">0x00007fffffffe408│+0x0000: 0x0000000000000000	 ← $rsp</span><br><span class="line">0x00007fffffffe410│+0x0008: 0x0000000000000001</span><br><span class="line">0x00007fffffffe418│+0x0010: 0x0000000000000000</span><br><span class="line">0x00007fffffffe420│+0x0018: 0x0000000000000000</span><br><span class="line">0x00007fffffffe428│+0x0020: 0x0000000000000000</span><br><span class="line">0x00007fffffffe430│+0x0028: 0x0000000000000000</span><br><span class="line">0x00007fffffffe438│+0x0030: 0x0000000000000000</span><br><span class="line">0x00007fffffffe440│+0x0038: 0x0000000000000000</span><br><span class="line">─────────────────────────────────────────────────────────────────────────────────── code:x86:64 ────</span><br><span class="line">     0x40100e &lt;loopFib+9&gt;      push   rax</span><br><span class="line"> →   0x40100f &lt;_start+10&gt;      push   rbx</span><br><span class="line">     0x401010 &lt;_start+11&gt;      pop    rbx</span><br><span class="line">     0x401011 &lt;_start+12&gt;      pop    rax</span><br><span class="line">────────────────────────────────────────────────────────────────────────────────────────────────────</span><br><span class="line">...SNIP...</span><br><span class="line">───────────────────────────────────────────────────────────────────────────────────── registers ────</span><br><span class="line">$rax   : 0x0               </span><br><span class="line">$rbx   : 0x1               </span><br><span class="line">───────────────────────────────────────────────────────────────────────────────────────── stack ────</span><br><span class="line">0x00007fffffffe400│+0x0000: 0x0000000000000001	 ← $rsp</span><br><span class="line">0x00007fffffffe408│+0x0008: 0x0000000000000000</span><br><span class="line">0x00007fffffffe410│+0x0010: 0x0000000000000001</span><br><span class="line">0x00007fffffffe418│+0x0018: 0x0000000000000000</span><br><span class="line">0x00007fffffffe420│+0x0020: 0x0000000000000000</span><br><span class="line">0x00007fffffffe428│+0x0028: 0x0000000000000000</span><br><span class="line">0x00007fffffffe430│+0x0030: 0x0000000000000000</span><br><span class="line">0x00007fffffffe438│+0x0038: 0x0000000000000000</span><br><span class="line">─────────────────────────────────────────────────────────────────────────────────── code:x86:64 ────</span><br><span class="line">     0x40100e &lt;_start+9&gt;      push   rax</span><br><span class="line">     0x40100f &lt;_start+10&gt;      push   rbx</span><br><span class="line"> →   0x401010 &lt;_start+11&gt;      pop    rbx</span><br><span class="line">     0x401011 &lt;_start+12&gt;      pop    rax</span><br><span class="line">────────────────────────────────────────────────────────────────────────────────────────────────────</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们看到，在我们对<code>push</code>和<code>rax</code>都进行了<code>rbx</code>ed之后，我们在堆栈顶部有以下值：                                                                  </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">0x00007fffffffe408│+0x0000: 0x0000000000000001	 ← $rsp</span><br><span class="line">0x00007fffffffe410│+0x0008: 0x0000000000000000</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们可以看到，在堆栈的顶部，我们有我们推送的最后一个值，即<code>rbx = 0x1</code>，就在它下面，我们有我们推送的值<code>rax = 0x0</code>。这和我们预期的一样，与上面的堆栈练习类似。我们还注意到，在我们推送我们的值之后，它们仍然留在寄存器中，<code>meaning a push is, in fact, a copy to stack</code>。</p>
+<p>现在假设我们完成了一个<code>print</code>函数的执行，并且想要取回我们的值，所以我们继续执行<code>pop</code>指令：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">───────────────────────────────────────────────────────────────────────────────────── registers ────</span><br><span class="line">$rax   : 0x0               </span><br><span class="line">$rbx   : 0x1               </span><br><span class="line">───────────────────────────────────────────────────────────────────────────────────────── stack ────</span><br><span class="line">0x00007fffffffe408│+0x0000: 0x0000000000000000	 ← $rsp</span><br><span class="line">0x00007fffffffe410│+0x0008: 0x0000000000000001</span><br><span class="line">0x00007fffffffe418│+0x0010: 0x0000000000000000</span><br><span class="line">0x00007fffffffe420│+0x0018: 0x0000000000000000</span><br><span class="line">0x00007fffffffe428│+0x0020: 0x0000000000000000</span><br><span class="line">0x00007fffffffe430│+0x0028: 0x0000000000000000</span><br><span class="line">0x00007fffffffe438│+0x0030: 0x0000000000000000</span><br><span class="line">0x00007fffffffe440│+0x0038: 0x0000000000000000</span><br><span class="line">─────────────────────────────────────────────────────────────────────────────────── code:x86:64 ────</span><br><span class="line">     0x40100e &lt;_start+9&gt;      push   rax</span><br><span class="line">     0x40100f &lt;_start+10&gt;      push   rbx</span><br><span class="line">     0x401010 &lt;_start+11&gt;      pop    rbx</span><br><span class="line"> →   0x401011 &lt;_start+12&gt;      pop    rax</span><br><span class="line">────────────────────────────────────────────────────────────────────────────────────────────────────</span><br><span class="line">...SNIP...</span><br><span class="line">───────────────────────────────────────────────────────────────────────────────────── registers ────</span><br><span class="line">$rax   : 0x0               </span><br><span class="line">$rbx   : 0x1               </span><br><span class="line">───────────────────────────────────────────────────────────────────────────────────────── stack ────</span><br><span class="line">0x00007fffffffe410│+0x0000: 0x0000000000000001	 ← $rsp</span><br><span class="line">0x00007fffffffe418│+0x0008: 0x0000000000000000</span><br><span class="line">0x00007fffffffe420│+0x0010: 0x0000000000000000</span><br><span class="line">0x00007fffffffe428│+0x0018: 0x0000000000000000</span><br><span class="line">0x00007fffffffe430│+0x0020: 0x0000000000000000</span><br><span class="line">0x00007fffffffe438│+0x0028: 0x0000000000000000</span><br><span class="line">0x00007fffffffe440│+0x0030: 0x0000000000000000</span><br><span class="line">0x00007fffffffe448│+0x0038: 0x0000000000000000</span><br><span class="line">─────────────────────────────────────────────────────────────────────────────────── code:x86:64 ────</span><br><span class="line">     0x40100f &lt;_start+9&gt;      push   rax</span><br><span class="line">     0x40100f &lt;_start+10&gt;      push   rbx</span><br><span class="line">     0x401010 &lt;_start+11&gt;      pop    rbx</span><br><span class="line">     0x401011 &lt;_start+12&gt;      pop    rax</span><br><span class="line"> →   0x401011 &lt;loopFib+0&gt;      add rax, rbx</span><br><span class="line">────────────────────────────────────────────────────────────────────────────────────────────────────</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们看到，在从堆栈顶部<code>pop</code>ing两个值之后，它们被从堆栈中删除，现在堆栈看起来和我们第一次开始时完全一样。这两个值都被放回<code>rbx</code>和<code>rax</code>。我们可能没有看到任何差异，因为在这种情况下，它们在登记册中没有改变。</p>
+<p>使用堆栈非常简单。我们应该记住的唯一一件事是我们推送寄存器的顺序和堆栈的状态，以安全地恢复我们的数据，并且当不同的值位于堆栈顶部时，不会在<code>pop</code>之前恢复不同的值。</p>
+<p>我们现在可以从代码中删除<code>push</code>和<code>pop</code>指令，我们将在进入函数调用时使用它们。这样，我们就可以使用<code>syscall</code>和<code>function</code>调用了。接下来让我们讨论<code>syscalls</code>。</p>
+<h2 id="Syscalls"><a href="#Syscalls" class="headerlink" title="Syscalls"></a>Syscalls</h2><p>即使我们在汇编中通过机器指令直接与CPU对话，我们也不必只使用基本的机器指令来调用每一种类型的命令。程序通常使用多种操作。操作系统可以通过系统调用帮助我们不必每次手动执行这些操作。</p>
+<p>例如，假设我们需要在屏幕上写一些东西，而不使用系统调用。在这种情况下，我们需要与视频内存和视频I/O对话，解决任何需要的编码，发送要打印的输入，并等待确认它已被打印。正如预期的那样，如果我们不得不做所有这些来打印一个字符，这将使汇编代码更长。</p>
+<h3 id="Linux-Syscall"><a href="#Linux-Syscall" class="headerlink" title="Linux Syscall"></a>Linux Syscall</h3><p><code>syscall</code>就像是用<code>C</code>编写的一个全局可用的函数，由操作系统内核提供。系统调用在寄存器中获取所需的参数，并使用提供的参数执行函数。例如，如果我们想在屏幕上写一些东西，我们可以使用<code>write</code>系统调用，提供要打印的字符串和其他必需的参数，然后调用系统调用来发出打印。</p>
+<p>Linux内核提供了许多可用的系统调用，我们可以通过阅读<code>syscall number</code>系统文件找到它们的列表和每个系统调用的<code>unistd_64.h</code>：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ cat /usr/include/x86_64-linux-gnu/asm/unistd_64.h</span><br><span class="line">#ifndef _ASM_X86_UNISTD_64_H</span><br><span class="line">#define _ASM_X86_UNISTD_64_H 1</span><br><span class="line"></span><br><span class="line">#define __NR_read 0</span><br><span class="line">#define __NR_write 1</span><br><span class="line">#define __NR_open 2</span><br><span class="line">#define __NR_close 3</span><br><span class="line">#define __NR_stat 4</span><br><span class="line">#define __NR_fstat 5</span><br></pre></td></tr></tbody></table></figure>
+
+<p>上面的文件为每个系统调用设置系统调用编号，以使用此编号引用该系统调用。</p>
+<p>注：对于<code>32-bit</code> x86处理器，系统调用编号位于<code>unistd_32.h</code>文件中。</p>
+<p>让我们通过打印到屏幕的<code>write</code>系统调用来练习使用系统调用。我们还不会打印斐波那契数，而是在程序开始时打印一条介绍消息<code>Fibonacci Sequence</code>。</p>
+<h3 id="Syscall-Function-Arguments"><a href="#Syscall-Function-Arguments" class="headerlink" title="Syscall Function Arguments"></a>Syscall Function Arguments</h3><p>要使用<code>write</code>系统调用，我们必须首先知道它接受什么参数。要查找系统调用接受的参数，我们可以使用上面列表中的带有系统调用名称的<code>man -s 2</code>命令：                                                       </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ man -s 2 write</span><br><span class="line">...SNIP...</span><br><span class="line">       ssize_t write(int fd, const void *buf, size_t count);</span><br></pre></td></tr></tbody></table></figure>
+
+<p>从上面的输出中我们可以看到，<code>write</code>函数的语法如下：</p>
+<p>Code: </p>
+<figure class="highlight c"><table><tbody><tr><td class="code"><pre><span class="line"><span class="type">ssize_t</span> <span class="title function_">write</span><span class="params">(<span class="type">int</span> fd, <span class="type">const</span> <span class="type">void</span> *buf, <span class="type">size_t</span> count)</span>;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们看到syscall函数需要<code>3</code>个参数：</p>
+<ol>
+<li>要打印到的文件描述符<code>fd</code>（通常为<code>1</code>的<code>stdout</code>）</li>
+<li>指向要打印的字符串的地址指针</li>
+<li>我们要打印的长度</li>
+</ol>
+<p>一旦我们提供了这些参数，我们就可以使用syscall指令来执行函数并打印到屏幕。除了这些手动定位系统调用和函数参数的方法外，我们还可以使用在线资源来快速查找系统调用、它们的编号以及它们所期望的参数，如<a target="_blank" rel="noopener" href="https://filippo.io/linux-syscall-table/">此表</a>。此外，我们可以随时参考<a target="_blank" rel="noopener" href="https://github.com/torvalds/linux/blob/master/arch/x86/entry/syscalls/syscall_64.tbl">Github</a>上的<code>Linux</code>源代码。</p>
+<p>提示：<code>-s 2</code>标志指定<code>syscall</code>手册页。我们可以检查<code>man man</code>以查看每个手册页的各个部分。</p>
+<h3 id="Syscall-Calling-Convention"><a href="#Syscall-Calling-Convention" class="headerlink" title="Syscall Calling Convention"></a>Syscall Calling Convention</h3><p>现在我们已经了解了如何定位各种系统调用及其参数，让我们开始学习如何调用它们。要调用系统调用，我们必须：</p>
+<ol>
+<li>将寄存器保存到堆栈</li>
+<li>在<code>rax</code>中设置其系统调用编号</li>
+<li>在寄存器中设置其参数</li>
+<li>使用syscall汇编指令调用它</li>
+</ol>
+<p><code>We usually should save any registers we use to the stack before any function call or syscall.</code>然而，由于我们在使用任何寄存器之前在程序开始时运行此系统调用，因此寄存器中没有任何值，因此我们不应该担心保存它们。<br> 我们将讨论保存寄存器到堆栈中，当我们到达<code>Function Calls</code>。</p>
+<h4 id="Syscall-Number"><a href="#Syscall-Number" class="headerlink" title="Syscall Number"></a>Syscall Number</h4><p>让我们从将系统调用号移动到<code>rax</code>寄存器开始。正如我们前面看到的，<code>write</code>系统调用有一个编号<code>1</code>，所以我们可以从以下命令开始：</p>
+<p>Code: </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mov rax, 1</span><br></pre></td></tr></tbody></table></figure>
+
+<p>现在，如果我们到达syscall指令，内核将知道我们正在调用哪个syscall。</p>
+<h4 id="Syscall-Arguments"><a href="#Syscall-Arguments" class="headerlink" title="Syscall Arguments"></a>Syscall Arguments</h4><p>接下来，我们应该把每个函数的参数放在相应的寄存器中。<code>x86_64</code>架构的调用约定指定每个参数应该放在哪个寄存器中（例如，第一个arg应该在<code>rdi</code>中）。所有函数和系统调用都应该遵循这个标准，并从相应的寄存器中获取参数。我们在第3节中讨论了下表：</p>
+<table>
+<thead>
+<tr>
+<th>Description</th>
+<th>64-bit Register</th>
+<th>8-bit Register</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Syscall Number/Return value</td>
+<td><code>rax</code></td>
+<td><code>al</code></td>
+</tr>
+<tr>
+<td>Callee Saved</td>
+<td><code>rbx</code></td>
+<td><code>bl</code></td>
+</tr>
+<tr>
+<td>1st arg</td>
+<td><code>rdi</code></td>
+<td><code>dil</code></td>
+</tr>
+<tr>
+<td>2nd arg</td>
+<td><code>rsi</code></td>
+<td><code>sil</code></td>
+</tr>
+<tr>
+<td>3rd arg</td>
+<td><code>rdx</code></td>
+<td><code>cl</code></td>
+</tr>
+<tr>
+<td>4th arg</td>
+<td><code>rcx</code></td>
+<td><code>bpl</code></td>
+</tr>
+<tr>
+<td>5th arg</td>
+<td><code>r8</code></td>
+<td><code>r8b</code></td>
+</tr>
+<tr>
+<td>6th arg</td>
+<td><code>r9</code></td>
+<td><code>r9b</code></td>
+</tr>
+</tbody></table>
+<p>正如我们所看到的，我们为每个前<code>6</code>参数都有一个寄存器。任何额外的参数都可以存储在堆栈中（尽管没有多少系统调用使用超过<code>6</code>的参数）。</p>
+<p>注意：<code>rax</code>也用于存储系统调用或函数的<code>return value</code>。所以，如果我们期望从syscall/函数中获取一个值，它将在<code>rax</code>中。</p>
+<p>这样，我们就应该知道我们的论点，以及我们应该把它们存储在哪个寄存器中。回到<code>write</code> syscall函数，我们应该传递：<code>fd</code>，<code>pointer</code>和<code>length</code>。我们可以这样做：</p>
+<ol>
+<li><code>rdi</code> -<code>1</code>（用于标准输出）</li>
+<li><code>rsi</code> -<code>'Fibonacci Sequence:\n'</code>（指向我们的字符串的指针）</li>
+<li><code>rdx</code> -<code>20</code>（字符串的长度）</li>
+</ol>
+<p>我们可以使用<code>mov rcx, string</code>。然而，我们只能在寄存器中存储最多16个字符（即，64位），所以我们的介绍字符串不适合。相反，让我们用我们的字符串创建一个变量（正如我们在<code>mov rcx, 'string'</code>部分中所学到的那样），类似于我们对<code>Assembly File Structure</code>程序所做的：</p>
+<p>Code: </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">global  _start</span><br><span class="line"></span><br><span class="line">section .data</span><br><span class="line">    message db "Fibonacci Sequence:", 0x0a</span><br></pre></td></tr></tbody></table></figure>
+
+<p>注意我们是如何在字符串后面添加<code>0x0a</code>来添加一个新的行字符的。</p>
+<p><code>message</code>标签是一个指针，指向我们的字符串将存储在内存中的位置。我们可以把它作为第二个论据。因此，我们的最终syscall代码应该如下所示：</p>
+<p>Code: </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mov rax, 1       ; rax: syscall number 1</span><br><span class="line">mov rdi, 1      ; rdi: fd 1 for stdout</span><br><span class="line">mov rsi,message ; rsi: pointer to message</span><br><span class="line">mov rdx, 20      ; rdx: print length of 20 bytes</span><br></pre></td></tr></tbody></table></figure>
+
+<p>提示：如果我们需要创建一个指向寄存器中存储的值的指针，我们可以简单地将其推送到堆栈，然后使用<code>rsp</code>指针指向它。</p>
+<p>我们也可以通过使用<code>length</code>来使用动态计算的<code>equ</code>变量，类似于我们对<code>Hello World</code>程序所做的。</p>
+<h3 id="Calling-Syscall"><a href="#Calling-Syscall" class="headerlink" title="Calling Syscall"></a>Calling Syscall</h3><p>现在我们已经有了syscall编号和参数，剩下的唯一事情就是执行syscall指令。因此，让我们添加一个syscall指令，并将这些指令添加到我们的<code>fib.s</code>代码的开头，它应该看起来如下所示：</p>
+<p>Code: </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">global  _start</span><br><span class="line"></span><br><span class="line">section .data</span><br><span class="line">    message db "Fibonacci Sequence:", 0x0a</span><br><span class="line"></span><br><span class="line">section .text</span><br><span class="line">_start:</span><br><span class="line">    mov rax, 1       ; rax: syscall number 1</span><br><span class="line">    mov rdi, 1      ; rdi: fd 1 for stdout</span><br><span class="line">    mov rsi,message ; rsi: pointer to message</span><br><span class="line">    mov rdx, 20      ; rdx: print length of 20 bytes</span><br><span class="line">    syscall         ; call write syscall to the intro message</span><br><span class="line">    xor rax, rax    ; initialize rax to 0</span><br><span class="line">    xor rbx, rbx    ; initialize rbx to 0</span><br><span class="line">    inc rbx         ; increment rbx to 1</span><br><span class="line">loopFib:</span><br><span class="line">    add rax, rbx    ; get the next number</span><br><span class="line">    xchg rax, rbx   ; swap values</span><br><span class="line">    cmp rbx, 10		; do rbx - 10</span><br><span class="line">    js loopFib		; jump if result is &lt;0</span><br></pre></td></tr></tbody></table></figure>
+
+<p>现在让我们组装代码并运行它，看看我们的介绍消息是否被打印出来：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ ./assembler.sh fib.s</span><br><span class="line"></span><br><span class="line">Fibonacci Sequence:</span><br><span class="line">[1]    107348 segmentation fault  ./fib</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们看到字符串确实被打印到了屏幕上。让我们通过<code>gdb</code>运行它，并在syscall处中断，以查看在调用syscall之前如何设置所有参数，如下所示：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">$ gdb -q ./fib</span><br><span class="line">gef➤  disas _start</span><br><span class="line">Dump of assembler code for function _start:</span><br><span class="line">..SNIP...</span><br><span class="line">0x0000000000401011 &lt;+17&gt;:	syscall </span><br><span class="line">gef➤  b *_start+17</span><br><span class="line">Breakpoint 1 at 0x401011</span><br><span class="line">gef➤  r</span><br><span class="line">───────────────────────────────────────────────────────────────────────────────────── registers ────</span><br><span class="line">$rax   : 0x1               </span><br><span class="line">$rbx   : 0x0               </span><br><span class="line">$rcx   : 0x0               </span><br><span class="line">$rdx   : 0x14              </span><br><span class="line">$rsp   : 0x00007fffffffe410  →  0x0000000000000001</span><br><span class="line">$rbp   : 0x0               </span><br><span class="line">$rsi   : 0x0000000000402000  →  "Fibonacci Sequence:\n"</span><br><span class="line">$rdi   : 0x1 </span><br><span class="line">              </span><br><span class="line">gef➤  si</span><br><span class="line">              </span><br><span class="line">Fibonacci Sequence:</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们看到了一些我们预期的事情：</p>
+<ol>
+<li>我们的参数在每次系统调用之前都在相应的寄存器中正确设置。</li>
+<li>指向我们的消息的指针加载在<code>rsi</code>中。</li>
+</ol>
+<p>现在，我们已经成功地使用了<code>write</code>系统调用来打印我们的介绍消息。</p>
+<h3 id="退出系统调用"><a href="#退出系统调用" class="headerlink" title="退出系统调用"></a>退出系统调用</h3><p>最后，既然我们已经了解了系统调用的工作原理，让我们来看看程序中使用的另一个基本系统调用：<code>Exit syscall</code>。我们可能已经注意到，到目前为止，每当我们的程序完成执行时，它都会以<code>segmentation fault</code>退出，正如我们刚刚在运行<code>./fib</code>时看到的那样。这是因为我们突然结束了我们的程序，而没有通过调用<code>exit syscall</code>并传递退出代码来退出Linux中的程序。</p>
+<p>所以，让我们把它添加到代码的末尾。首先，我们需要找到<code>exit syscall</code>号，如下所示：  </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ grep exit /usr/include/x86_64-linux-gnu/asm/unistd_64.h</span><br><span class="line"></span><br><span class="line">#define __NR_exit 60</span><br><span class="line">#define __NR_exit_group 231</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们需要使用第一个，使用syscall编号<code>60</code>。接下来，让我们看看<code>exit syscall</code>是否需要任何参数：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ man -s 2 exit</span><br><span class="line"></span><br><span class="line">...SNIP...</span><br><span class="line">void _exit(int status);</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们看到它只需要一个整数参数，<code>status</code>，它被解释为退出代码。在Linux中，每当程序退出而没有任何错误时，它都会传递退出代码<code>0</code>。否则，退出代码是不同的数字，通常是<code>1</code>。在我们的例子中，由于一切都按预期进行，我们将传递退出代码<code>0</code>。我们的<code>exit syscall</code>代码应该如下所示：</p>
+<p>Code: </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mov rax, 60</span><br><span class="line">mov rdi, 0</span><br><span class="line">syscall</span><br></pre></td></tr></tbody></table></figure>
+
+<p>现在，让我们将它添加到代码的末尾：</p>
+<p>Code: </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">global  _start</span><br><span class="line"></span><br><span class="line">section .data</span><br><span class="line">    message db "Fibonacci Sequence:", 0x0a</span><br><span class="line"></span><br><span class="line">section .text</span><br><span class="line">_start:</span><br><span class="line">    mov rax, 1       ; rax: syscall number 1</span><br><span class="line">    mov rdi, 1      ; rdi: fd 1 for stdout</span><br><span class="line">    mov rsi,message ; rsi: pointer to message</span><br><span class="line">    mov rdx, 20      ; rdx: print length of 20 bytes</span><br><span class="line">    syscall         ; call write syscall to the intro message</span><br><span class="line">    xor rax, rax    ; initialize rax to 0</span><br><span class="line">    xor rbx, rbx    ; initialize rbx to 0</span><br><span class="line">    inc rbx         ; increment rbx to 1</span><br><span class="line">loopFib:</span><br><span class="line">    add rax, rbx    ; get the next number</span><br><span class="line">    xchg rax, rbx   ; swap values</span><br><span class="line">    cmp rbx, 10		; do rbx - 10</span><br><span class="line">    js loopFib		; jump if result is &lt;0</span><br><span class="line">    mov rax, 60</span><br><span class="line">    mov rdi, 0</span><br><span class="line">    syscall</span><br></pre></td></tr></tbody></table></figure>
+
+<p>现在我们可以汇编代码并重新编译：     </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ ./assembler.sh fib.s</span><br><span class="line"></span><br><span class="line">Fibonacci Sequence:</span><br></pre></td></tr></tbody></table></figure>
+
+<p>好极了！我们看到，这次我们的程序正确退出，没有使用<code>segmentation fault</code>。我们可以检查传递的退出代码如下：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ echo $?</span><br><span class="line"></span><br><span class="line">0</span><br></pre></td></tr></tbody></table></figure>
+
+<p>正如我们在系统调用中指定的那样，退出代码是<code>0</code>。</p>
+<p>练习：要完全掌握系统调用的工作原理，请尝试实现<code>write</code>系统调用来打印Fibonacci数，并将其放在’<code>xchg rax, rbx</code>‘之后。</p>
+<p>Spoiler：它不会工作。尝试找出原因，并尝试修复它以打印<code>10</code>以下的前几个斐波那契数字（提示：使用<code>ASCII</code>）。</p>
+<h2 id="Procedures"><a href="#Procedures" class="headerlink" title="Procedures"></a>Procedures</h2><p>随着代码复杂性的增加，我们需要开始重构代码，以更有效地使用指令，并使其更容易阅读和理解。一种常见的方法是使用<code>functions</code>和<code>procedures</code>。虽然函数需要一个调用过程来调用它们并传递它们的参数（我们将在下一节中讨论），但<code>procedures</code>通常更直接，主要用于代码重构。</p>
+<p><code>procedure</code>（有时称为<code>subroutine</code>）通常是我们希望在程序中的特定点执行的一组指令。因此，我们不是重用相同的代码，而是将其定义在过程标签下，并在需要使用它时使用它。这样，我们只需要编写一次代码，但可以多次使用它。此外，我们可以使用过程将更大更复杂的代码分割成更小更简单的部分。</p>
+<p>让我们回到我们的代码：</p>
+<p>Code: </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">global  _start</span><br><span class="line"></span><br><span class="line">section .data</span><br><span class="line">    message db "Fibonacci Sequence:", 0x0a</span><br><span class="line"></span><br><span class="line">section .text</span><br><span class="line">_start:</span><br><span class="line">    mov rax, 1       ; rax: syscall number 1</span><br><span class="line">    mov rdi, 1      ; rdi: fd 1 for stdout</span><br><span class="line">    mov rsi,message ; rsi: pointer to message</span><br><span class="line">    mov rdx, 20      ; rdx: print length of 20 bytes</span><br><span class="line">    syscall         ; call write syscall to the intro message</span><br><span class="line">    xor rax, rax    ; initialize rax to 0</span><br><span class="line">    xor rbx, rbx    ; initialize rbx to 0</span><br><span class="line">    inc rbx         ; increment rbx to 1</span><br><span class="line"></span><br><span class="line">loopFib:</span><br><span class="line">    add rax, rbx    ; get the next number</span><br><span class="line">    xchg rax, rbx   ; swap values</span><br><span class="line">    cmp rbx, 10		; do rbx - 10</span><br><span class="line">    js loopFib		; jump if result is &lt;0</span><br><span class="line">    mov rax, 60</span><br><span class="line">    mov rdi, 0</span><br><span class="line">    syscall</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们看到我们现在在一大块代码中做了很多事情：</p>
+<ol>
+<li>打印介绍消息</li>
+<li>将初始Fibonacci值设置为<code>0</code>和<code>1</code></li>
+<li>使用循环计算以下斐波那契数</li>
+<li>退出程序</li>
+</ol>
+<p>我们的循环已经定义在标签下，所以我们可以在需要的时候调用它。然而，代码的其他三部分可以重构为过程，以便在需要的时候调用它们，从而提高代码效率。</p>
+<h3 id="Defining-Procedures"><a href="#Defining-Procedures" class="headerlink" title="Defining Procedures"></a>Defining Procedures</h3><p>作为一个起点，让我们在我们想要转换为过程的代码的三个部分中的每一个上面添加一个标签：</p>
+<p>Code: </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">global  _start</span><br><span class="line"></span><br><span class="line">section .data</span><br><span class="line">    message db "Fibonacci Sequence:", 0x0a</span><br><span class="line"></span><br><span class="line">section .text</span><br><span class="line">_start:</span><br><span class="line"></span><br><span class="line">printMessage:</span><br><span class="line">    mov rax, 1       ; rax: syscall number 1</span><br><span class="line">    mov rdi, 1      ; rdi: fd 1 for stdout</span><br><span class="line">    mov rsi,message ; rsi: pointer to message</span><br><span class="line">    mov rdx, 20      ; rdx: print length of 20 bytes</span><br><span class="line">    syscall         ; call write syscall to the intro message</span><br><span class="line"></span><br><span class="line">initFib:</span><br><span class="line">    xor rax, rax    ; initialize rax to 0</span><br><span class="line">    xor rbx, rbx    ; initialize rbx to 0</span><br><span class="line">    inc rbx         ; increment rbx to 1</span><br><span class="line"></span><br><span class="line">loopFib:</span><br><span class="line">    add rax, rbx    ; get the next number</span><br><span class="line">    xchg rax, rbx   ; swap values</span><br><span class="line">    cmp rbx, 10		; do rbx - 10</span><br><span class="line">    js loopFib		; jump if result is &lt;0</span><br><span class="line"></span><br><span class="line">Exit:</span><br><span class="line">    mov rax, 60</span><br><span class="line">    mov rdi, 0</span><br><span class="line">    syscall</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们看到我们的代码已经看起来更好了。然而，这并没有比以前更有效，因为我们可以通过使用注释来实现同样的效果。因此，我们的下一步是使用<code>calls</code>将程序定向到我们的每个过程。</p>
+<h3 id="CALL-x2F-RET"><a href="#CALL-x2F-RET" class="headerlink" title="CALL/RET"></a>CALL/RET</h3><p>当我们想开始执行一个过程时，我们可以<code>call</code>它，它将通过它的指令。<code>call</code>指令推送（即，保存）下一个指令指针<code>rip</code>到堆栈，然后跳转到指定的过程。</p>
+<p>一旦过程被执行，我们应该用一个<code>ret</code>指令结束它，以返回到跳到过程之前的位置。<code>ret</code>指令<code>pops</code>将堆栈顶部的地址转换为<code>rip</code>，因此程序的下一条指令将恢复到跳转到该过程之前的状态。</p>
+<p><code>ret</code>指令在<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Return-oriented_programming">面向返回的编程（ROP）</a>中起着至关重要的作用，ROP是一种通常与二进制开发一起使用的开发技术。</p>
+<table>
+<thead>
+<tr>
+<th>Instruction</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>call</code></td>
+<td>将下一个指令指针<code>rip</code>压入堆栈，然后跳转到指定的过程</td>
+<td><code>call printMessage</code></td>
+</tr>
+<tr>
+<td><code>ret</code></td>
+<td>将<code>rsp</code>的地址弹出到<code>rip</code>，然后跳转到它</td>
+<td><code>ret</code></td>
+</tr>
+</tbody></table>
+<p>因此，我们可以在代码的开头设置调用，以定义我们想要的执行流：</p>
+<p>Code: </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">global  _start</span><br><span class="line"></span><br><span class="line">section .data</span><br><span class="line">    message db "Fibonacci Sequence:", 0x0a</span><br><span class="line"></span><br><span class="line">section .text</span><br><span class="line">_start:</span><br><span class="line">    call printMessage   ; print intro message</span><br><span class="line">    call initFib        ; set initial Fib values</span><br><span class="line">    call loopFib        ; calculate Fib numbers</span><br><span class="line">    call Exit           ; Exit the program</span><br><span class="line"></span><br><span class="line">printMessage:</span><br><span class="line">    mov rax, 1      ; rax: syscall number 1</span><br><span class="line">    mov rdi, 1      ; rdi: fd 1 for stdout</span><br><span class="line">    mov rsi,message ; rsi: pointer to message</span><br><span class="line">    mov rdx, 20     ; rdx: print length of 20 bytes</span><br><span class="line">    syscall         ; call write syscall to the intro message</span><br><span class="line">    ret</span><br><span class="line"></span><br><span class="line">initFib:</span><br><span class="line">    xor rax, rax    ; initialize rax to 0</span><br><span class="line">    xor rbx, rbx    ; initialize rbx to 0</span><br><span class="line">    inc rbx         ; increment rbx to 1</span><br><span class="line">    ret</span><br><span class="line"></span><br><span class="line">loopFib:</span><br><span class="line">    add rax, rbx    ; get the next number</span><br><span class="line">    xchg rax, rbx   ; swap values</span><br><span class="line">    cmp rbx, 10		; do rbx - 10</span><br><span class="line">    js loopFib		; jump if result is &lt;0</span><br><span class="line">    ret</span><br><span class="line"></span><br><span class="line">Exit:</span><br><span class="line">    mov rax, 60</span><br><span class="line">    mov rdi, 0</span><br><span class="line">    syscall</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这样，我们的代码应该像以前一样执行相同的指令，同时让我们的代码更干净，更高效。从现在开始，如果我们需要编辑一个特定的过程，我们将不必显示整个代码，而只需显示该过程。我们还可以看到，我们没有在我们的<code>ret</code>过程中使用<code>Exit</code>，因为我们不想回到我们原来的位置。我们想退出代码。我们几乎总是使用<code>ret</code>，而<code>Exit</code>函数是少数例外之一。</p>
+<p>注意：理解装配的基于行的执行流很重要。如果我们在一个过程的末尾不使用<code>ret</code>，它将简单地执行下一行。同样，如果我们在<code>Exit</code>函数的末尾返回，我们将简单地返回并执行下一行，这将是<code>printMessage</code>的第一行。</p>
+<p>最后，我们还应该提到<code>enter</code>和<code>leave</code>指令，它们有时与过程一起使用，以保存和恢复<code>rsp</code>和<code>rbp</code>的地址，并分配特定的堆栈空间供过程使用。但是，我们不需要在本模块中使用它们。</p>
+<h2 id="Functions-1"><a href="#Functions-1" class="headerlink" title="Functions"></a>Functions</h2><p>我们现在应该理解用于控制程序执行流的不同分支和控制指令。我们还应该正确掌握过程和调用，以及如何将它们用于分支。所以，现在让我们专注于调用函数。</p>
+<h3 id="Functions-Calling-Convention"><a href="#Functions-Calling-Convention" class="headerlink" title="Functions Calling Convention"></a>Functions Calling Convention</h3><p>函数是<code>procedures</code>的一种形式。然而，函数往往更复杂，应该完全使用堆栈和所有寄存器。因此，我们不能像调用过程那样简单地调用函数。相反，函数在被调用之前有一个<code>Calling Convention</code>来正确设置。</p>
+<p>在调用一个函数之前，我们需要考虑四个主要的事情：</p>
+<ol>
+<li><code>Save Registers</code>在堆栈上（<code>Caller Saved</code>）</li>
+<li>通过<code>Function Arguments</code>（如系统调用）</li>
+<li>修复<code>Stack Alignment</code></li>
+<li>获取函数的<code>Return Value</code>（在<code>rax</code>中）</li>
+</ol>
+<p>这与调用syscall相对类似，与syscall的唯一区别是我们必须将syscall编号存储在<code>rax</code>中，而我们可以直接使用<code>call function</code>调用函数。此外，使用syscall我们不必担心<code>Stack Alignment</code>。</p>
+<h4 id="Writing-Functions"><a href="#Writing-Functions" class="headerlink" title="Writing Functions"></a>Writing Functions</h4><p>上面所有的观点都是从<code>caller</code>的角度来看的，因为我们称之为函数。当涉及到编写函数时，有不同的点需要考虑，它们是：</p>
+<ol>
+<li>保存<code>Callee Saved</code>寄存器（<code>rbx</code>和<code>rbp</code>）</li>
+<li>从寄存器获取参数</li>
+<li>Align the Stack对齐堆栈</li>
+<li>返回<code>rax</code>中的值</li>
+</ol>
+<p>正如我们所看到的，这些点与<code>caller</code>点相对相似。<code>caller</code>是设置的东西，然后<code>callee</code>（即，接收器）应该检索这些东西并使用它们。这些点通常在函数的开始和结束处，称为函数的<code>prologue</code>和<code>epilogue</code>。它们允许调用函数而不用担心堆栈或寄存器的当前状态。</p>
+<p><code>In this module, we will only be calling other functions,</code>所以我们只需要专注于设置函数调用，而不会去写函数。</p>
+<h3 id="Using-External-Functions"><a href="#Using-External-Functions" class="headerlink" title="Using External Functions"></a>Using External Functions</h3><p>我们希望在<code>loopFib</code>循环的每次迭代中打印当前Fibonacci数。以前，我们不能使用<code>write</code>系统调用，因为它只接受<code>ASCII</code>字符。我们必须将斐波那契数转换为<code>ASCII</code>，这有点复杂。</p>
+<p>幸运的是，我们可以使用外部函数来打印当前数字，而无需转换它。用于<code>libc</code>程序的<code>C</code>函数库提供了许多功能，我们可以使用这些功能，而无需从头开始重写所有内容。<code>printf</code>中的<code>libc</code>函数接受打印格式，因此我们可以将当前Fibonacci数传递给它，并告诉它将其打印为整数，它将自动进行转换。在使用<code>libc</code>中的函数之前，我们必须先导入它，然后在将代码与<code>libc</code>链接时指定<code>ld</code>库进行动态链接。</p>
+<h3 id="Importing-libc"><a href="#Importing-libc" class="headerlink" title="Importing libc"></a>Importing libc</h3><p>首先，要导入外部<code>libc</code>函数，我们可以在代码的开头使用<code>extern</code>指令，如下所示：</p>
+<p>Code: </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">global  _start</span><br><span class="line">extern  printf</span><br></pre></td></tr></tbody></table></figure>
+
+<p>完成后，我们应该能够调用<code>printf</code>函数。所以，我们可以继续前面讨论的#2。</p>
+<h3 id="Saving-Registers"><a href="#Saving-Registers" class="headerlink" title="Saving Registers"></a>Saving Registers</h3><p>让我们定义一个新的过程<code>printFib</code>来保存我们的函数调用指令。第一步是保存我们正在使用的任何寄存器，即<code>rax</code>和<code>rbx</code>，如下所示：</p>
+<p>Code: </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">printFib:</span><br><span class="line">    push rax        ; push registers to stack</span><br><span class="line">    push rbx</span><br><span class="line">    ; function call</span><br><span class="line">    pop rbx         ; restore registers from stack</span><br><span class="line">    pop rax</span><br><span class="line">    ret</span><br></pre></td></tr></tbody></table></figure>
+
+<p>因此，我们可以继续第二点，并将所需的参数传递给<code>printf</code>。</p>
+<h3 id="Function-Arguments"><a href="#Function-Arguments" class="headerlink" title="Function Arguments"></a>Function Arguments</h3><p>我们已经在系统调用一节中讨论了如何传递函数参数。同样的过程也适用于函数参数。</p>
+<p>首先，我们需要通过对<code>printf</code>使用<code>man -s 3</code>来找出<code>library functions manual</code>函数接受哪些参数（正如我们在<code>man man</code>中看到的那样）：        </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ man -s 3 printf</span><br><span class="line"></span><br><span class="line">...SNIP...</span><br><span class="line">       int printf(const char *format, ...);</span><br></pre></td></tr></tbody></table></figure>
+
+<p>正如我们所看到的，该函数接受一个指向打印格式的指针（用<code>*</code>表示），然后是要打印的字符串。</p>
+<p>首先，我们可以创建一个包含输出格式的变量，将其作为第一个参数传递。1#手册页还详细介绍了各种打印格式。我们想打印一个整数，所以我们可以使用<code>printf</code>格式，如下所示：</p>
+<p>Code:</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">global  _start</span><br><span class="line">extern  printf</span><br><span class="line"></span><br><span class="line">section .data</span><br><span class="line">    message db "Fibonacci Sequence:", 0x0a</span><br><span class="line">    outFormat db  "%d", 0x0a, 0x00</span><br></pre></td></tr></tbody></table></figure>
+
+<p>注意：我们以空字符<code>0x00</code>结束格式，因为这是<code>printf</code>中的字符串终止符，我们必须用它来终止任何字符串。</p>
+<p>这可以是我们的第一个参数，<code>rbx</code>作为我们的第二个参数，<code>printf</code>将放置为<code>%d</code>。因此，让我们将两个参数移动到它们各自的寄存器，如下所示：</p>
+<p>Code: </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">printFib:</span><br><span class="line">    push rax            ; push registers to stack</span><br><span class="line">    push rbx</span><br><span class="line">    mov rdi, outFormat  ; set 1st argument (Print Format)</span><br><span class="line">    mov rsi, rbx        ; set 2nd argument (Fib Number)</span><br><span class="line">    pop rbx             ; restore registers from stack</span><br><span class="line">    pop rax</span><br><span class="line">    ret</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="Stack-Alignment"><a href="#Stack-Alignment" class="headerlink" title="Stack Alignment"></a>Stack Alignment</h3><p>每当我们想对一个函数做一个<code>call</code>时，我们必须确保<code>Top Stack Pointer (rsp)</code>与<code>16-byte</code>函数堆栈中的<code>_start</code>边界对齐。</p>
+<p>这意味着我们必须在调用之前将至少16个字节（或16个字节的倍数）压入堆栈，以确保函数有足够的堆栈空间来正确执行。这一要求主要是为了处理器的性能效率。有些函数（如<code>libc</code>中）被编程为在边界不固定时崩溃，以确保性能效率。如果我们组装代码，并在第二个<code>push</code>之后立即中断，这就是我们将看到的：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">───────────────────────────────────────────────────────────────────────────────────────── stack ────</span><br><span class="line">0x00007fffffffe3a0│+0x0000: 0x0000000000000001	 ← $rsp</span><br><span class="line">0x00007fffffffe3a8│+0x0008: 0x0000000000000000</span><br><span class="line">0x00007fffffffe3b0│+0x0010: 0x00000000004010ad  →  &lt;loopFib+5&gt; add rax, rbx</span><br><span class="line">0x00007fffffffe3b8│+0x0018: 0x0000000000401044  →  &lt;_start+20&gt; call 0x4010bd &lt;Exit&gt;</span><br><span class="line">0x00007fffffffe3c0│+0x0020: 0x0000000000000001	 ← $r13</span><br><span class="line">─────────────────────────────────────────────────────────────────────────────────── code:x86:64 ────</span><br><span class="line">     0x401090 &lt;initFib+9&gt;      ret    </span><br><span class="line">     0x401091 &lt;printFib+0&gt;     push   rax</span><br><span class="line">     0x401092 &lt;printFib+1&gt;     push   rbx</span><br><span class="line"> →   0x40100e &lt;printFib+2&gt;     movabs rdi, 0x403039</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们看到有4个8字节的数据被压入堆栈，总共有32字节。这是由于两件事：</p>
+<ol>
+<li>每个过程<code>call</code>向堆栈添加一个8字节的地址，然后用<code>ret</code>删除该地址</li>
+<li>每个<code>push</code>也向堆栈添加8个字节</li>
+</ol>
+<p>因此，我们在<code>printFib</code>和<code>loopFib</code>中，并且已经推送了<code>rax</code>和<code>rbx</code>，总共有32字节的边界。由于边界是16的倍数，因此<code>our stack is already aligned, and we don't have to fix anything.</code></p>
+<p>如果我们想要将边界增加到16，我们可以从<code>rsp</code>中减去字节，如下所示：</p>
+<p>Code: </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">sub rsp, 16</span><br><span class="line">call function</span><br><span class="line">add rsp, 16</span><br></pre></td></tr></tbody></table></figure>
+
+<p>通过这种方式，我们将额外的16个字节添加到堆栈顶部，然后在调用后删除它们。如果我们有8个字节被压入，我们可以通过从<code>rsp</code>中减去8来将边界提高到16。</p>
+<p>这可能有点令人困惑，但要记住的关键是<code>we should have 16-bytes (or a multiple of 16) on top of the stack before making a call.</code>我们可以计算（un<code>pop</code>ed）<code>push</code>指令和（un<code>ret</code>urned）<code>call</code>指令的数量，我们将得到有多少个8字节被推入堆栈。</p>
+<h3 id="Function-Call"><a href="#Function-Call" class="headerlink" title="Function Call"></a>Function Call</h3><p>最后，我们可以发出<code>call printf</code>，它应该以我们指定的格式打印当前Fibonacci数，如下所示：</p>
+<p>Code: </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">printFib:</span><br><span class="line">    push rax            ; push registers to stack</span><br><span class="line">    push rbx</span><br><span class="line">    mov rdi, outFormat  ; set 1st argument (Print Format)</span><br><span class="line">    mov rsi, rbx        ; set 2nd argument (Fib Number)</span><br><span class="line">    call printf         ; printf(outFormat, rbx)</span><br><span class="line">    pop rbx             ; restore registers from stack</span><br><span class="line">    pop rax</span><br><span class="line">    ret</span><br></pre></td></tr></tbody></table></figure>
+
+<p>现在我们应该准备好我们的<code>printFib</code>程序了。因此，我们可以将它添加到<code>loopFib</code>的开头，这样它就可以在每个循环的开头打印当前的斐波那契数：</p>
+<p>Code: </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">loopFib:</span><br><span class="line">    call printFib   ; print current Fib number</span><br><span class="line">    add rax, rbx    ; get the next number</span><br><span class="line">    xchg rax, rbx   ; swap values</span><br><span class="line">    cmp rbx, 10		; do rbx - 10</span><br><span class="line">    js loopFib		; jump if result is &lt;0</span><br><span class="line">    ret</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们的最终<code>fib.s</code>代码应该如下所示：</p>
+<p>Code:</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">global  _start</span><br><span class="line">extern  printf</span><br><span class="line"></span><br><span class="line">section .data</span><br><span class="line">    message db "Fibonacci Sequence:", 0x0a</span><br><span class="line">    outFormat db  "%d", 0x0a, 0x00</span><br><span class="line"></span><br><span class="line">section .text</span><br><span class="line">_start:</span><br><span class="line">    call printMessage   ; print intro message</span><br><span class="line">    call initFib        ; set initial Fib values</span><br><span class="line">    call loopFib        ; calculate Fib numbers</span><br><span class="line">    call Exit           ; Exit the program</span><br><span class="line"></span><br><span class="line">printMessage:</span><br><span class="line">    mov rax, 1           ; rax: syscall number 1</span><br><span class="line">    mov rdi, 1          ; rdi: fd 1 for stdout</span><br><span class="line">    mov rsi, message    ; rsi: pointer to message</span><br><span class="line">    mov rdx, 20          ; rdx: print length of 20 bytes</span><br><span class="line">    syscall             ; call write syscall to the intro message</span><br><span class="line">    ret</span><br><span class="line"></span><br><span class="line">initFib:</span><br><span class="line">    xor rax, rax        ; initialize rax to 0</span><br><span class="line">    xor rbx, rbx        ; initialize rbx to 0</span><br><span class="line">    inc rbx             ; increment rbx to 1</span><br><span class="line">    ret</span><br><span class="line"></span><br><span class="line">printFib:</span><br><span class="line">    push rax            ; push registers to stack</span><br><span class="line">    push rbx</span><br><span class="line">    mov rdi, outFormat  ; set 1st argument (Print Format)</span><br><span class="line">    mov rsi, rbx        ; set 2nd argument (Fib Number)</span><br><span class="line">    call printf         ; printf(outFormat, rbx)</span><br><span class="line">    pop rbx             ; restore registers from stack</span><br><span class="line">    pop rax</span><br><span class="line">    ret</span><br><span class="line"></span><br><span class="line">loopFib:</span><br><span class="line">    call printFib       ; print current Fib number</span><br><span class="line">    add rax, rbx        ; get the next number</span><br><span class="line">    xchg rax, rbx       ; swap values</span><br><span class="line">    cmp rbx, 10		    ; do rbx - 10</span><br><span class="line">    js loopFib		    ; jump if result is &lt;0</span><br><span class="line">    ret</span><br><span class="line"></span><br><span class="line">Exit:</span><br><span class="line">    mov rax, 60</span><br><span class="line">    mov rdi, 0</span><br><span class="line">    syscall</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="Dynamic-Linker"><a href="#Dynamic-Linker" class="headerlink" title="Dynamic Linker"></a>Dynamic Linker</h3><p>我们现在可以用<code>nasm</code>来组装代码。当我们使用<code>ld</code>链接代码时，我们应该告诉它使用<code>libc</code>库进行动态链接。否则，它将不知道如何获取导入的<code>printf</code>函数。我们可以使用<code>-lc --dynamic-linker /lib64/ld-linux-x86-64.so.2</code>标志来实现，如下所示：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ nasm -f elf64 fib.s &amp;&amp;  ld fib.o -o fib -lc --dynamic-linker /lib64/ld-linux-x86-64.so.2 &amp;&amp; ./fib</span><br><span class="line"></span><br><span class="line">1</span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">5</span><br><span class="line">8</span><br></pre></td></tr></tbody></table></figure>
+
+<p>正如我们所看到的，<code>printf</code>使得打印Fibonacci数变得非常容易，而不必担心将其转换为正确的格式，就像我们必须使用<code>write</code>系统调用一样。接下来，我们需要通过另一个使用外部<code>libc</code>函数的例子来理解如何正确调用外部函数。</p>
+<h2 id="Libc-Functions"><a href="#Libc-Functions" class="headerlink" title="Libc Functions"></a>Libc Functions</h2><p>到目前为止，我们只打印了小于<code>10</code>的Fibonacci数。但这样，我们的程序是静态的，每次都打印相同的输出。为了使它更动态，我们可以要求用户输入他们想要打印的最大Fibonacci数，然后使用<code>cmp</code>。在我们开始之前，让我们回顾一下函数调用约定：</p>
+<ol>
+<li><code>Save Registers</code> on the Stack（<code>Caller Saved</code>）</li>
+<li>通过<code>Function Arguments</code>（如系统调用）</li>
+<li>修复<code>Stack Alignment</code></li>
+<li>获取函数的<code>Return Value</code>（在<code>rax</code>中）</li>
+</ol>
+<p>所以，让我们导入我们的函数，并从调用约定步骤开始。</p>
+<h3 id="Importing-libc-Functions"><a href="#Importing-libc-Functions" class="headerlink" title="Importing libc Functions"></a>Importing libc Functions</h3><p>为此，我们可以使用<code>scanf</code>中的<code>libc</code>函数来获取用户输入，并将其正确转换为整数，稍后我们将使用<code>cmp</code>。首先，我们必须导入<code>scanf</code>，如下所示：</p>
+<p>Code: </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">global  _start</span><br><span class="line">extern  printf, scanf</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们现在可以开始编写一个新的过程<code>getInput</code>，这样我们就可以在需要的时候调用它：</p>
+<p>Code: </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">getInput:</span><br><span class="line">    ; call scanf</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="Saving-Registers-1"><a href="#Saving-Registers-1" class="headerlink" title="Saving Registers"></a>Saving Registers</h3><p>由于我们正处于程序的开始阶段，还没有使用任何寄存器，所以我们不必担心将寄存器保存到堆栈中。因此，我们可以继续第二点，并将所需的参数传递给<code>scanf</code>。</p>
+<h3 id="Function-Arguments-1"><a href="#Function-Arguments-1" class="headerlink" title="Function Arguments"></a>Function Arguments</h3><p>接下来，我们需要知道<code>scanf</code>接受哪些参数，如下所示：                                                               </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ man -s 3 scanf</span><br><span class="line"></span><br><span class="line">...SNIP...</span><br><span class="line">int scanf(const char *format, ...);</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们看到，与<code>printf</code>类似，<code>scanf</code>接受一个输入格式和我们希望保存用户输入的缓冲区。所以，让我们首先添加<code>inFormat</code>变量：</p>
+<p>Code: </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">section .data</span><br><span class="line">    message db "Please input max Fn", 0x0a</span><br><span class="line">    outFormat db  "%d", 0x0a, 0x00</span><br><span class="line">    inFormat db  "%d", 0x00</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们还将介绍消息从<code>Fibonacci Sequence:</code>更改为<code>Please input max Fn</code>，以告诉用户期望他们输入什么。</p>
+<p>接下来，我们必须为输入存储器设置一个缓冲空间。正如我们在<code>Processor Architecture</code>部分中提到的，未初始化的缓冲区空间必须存储在<code>.bss</code>内存段中。因此，在我们的汇编代码开始时，我们必须将其添加到<code>.bss</code>标签下，并使用<code>resb 1</code>告诉<code>nasm</code>保留1字节的缓冲区空间，如下所示：</p>
+<p>Code: </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">section .bss</span><br><span class="line">    userInput resb 1</span><br></pre></td></tr></tbody></table></figure>
+
+<p>现在我们可以在<code>getInput</code>过程下设置函数参数：</p>
+<p>Code:</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">getInput:</span><br><span class="line">    mov rdi, inFormat   ; set 1st parameter (inFormat)</span><br><span class="line">    mov rsi, userInput  ; set 2nd parameter (userInput)</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="Stack-Alignment-1"><a href="#Stack-Alignment-1" class="headerlink" title="Stack Alignment"></a>Stack Alignment</h3><p>接下来，我们必须确保16字节的边界对齐我们的堆栈。我们目前在<code>getInput</code>过程中，所以我们有1个<code>call</code>指令，没有<code>push</code>指令，所以我们有一个<code>8-byte</code>边界。因此，我们可以使用<code>sub</code>来修复<code>rsp</code>，如下所示：</p>
+<p>Code: </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">getInput:</span><br><span class="line">    sub rsp, 8</span><br><span class="line">    ; call scanf</span><br><span class="line">    add rsp, 8</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们可以<code>push rax</code>代替，这也会正确对齐堆栈。这样，我们的堆栈应该与16字节的边界完美对齐。</p>
+<h3 id="Function-Call-1"><a href="#Function-Call-1" class="headerlink" title="Function Call"></a>Function Call</h3><p>现在，我们设置函数参数和<code>call scanf</code>，如下所示：</p>
+<p>Code: </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">getInput:</span><br><span class="line">    sub rsp, 8          ; align stack to 16-bytes</span><br><span class="line">    mov rdi, inFormat   ; set 1st parameter (inFormat)</span><br><span class="line">    mov rsi, userInput  ; set 2nd parameter (userInput)</span><br><span class="line">    call scanf          ; scanf(inFormat, userInput)</span><br><span class="line">    add rsp, 8          ; restore stack alignment</span><br><span class="line">    ret</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们还将在<code>call getInput</code>处添加<code>_start</code>，以便在打印介绍消息后立即执行此过程，如下所示：</p>
+<p>Code: </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">section .text</span><br><span class="line">_start:</span><br><span class="line">    call printMessage   ; print intro message</span><br><span class="line">    call getInput       ; get max number</span><br><span class="line">    call initFib        ; set initial Fib values</span><br><span class="line">    call loopFib        ; calculate Fib numbers</span><br><span class="line">    call Exit           ; Exit the program</span><br></pre></td></tr></tbody></table></figure>
+
+<p>最后，我们必须利用用户输入。为此，在<code>10</code>中进行比较时，我们将其更改为<code>cmp rbx, 10</code>，而不是使用静态<code>cmp rbx, [userInput]</code>，如下所示：</p>
+<p>Code: </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">loopFib:</span><br><span class="line">    ...SNIP...</span><br><span class="line">    cmp rbx,[userInput] ; do rbx - userInput</span><br><span class="line">    js loopFib		    ; jump if result is &lt;0</span><br><span class="line">    ret</span><br></pre></td></tr></tbody></table></figure>
+
+<p>注意：我们使用<code>[userInput]</code>而不是<code>userInput</code>，因为我们想与最终值进行比较，而不是与指针地址进行比较。</p>
+<p>完成所有这些之后，我们最终的完整代码应该如下所示：</p>
+<p>Code: </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">global  _start</span><br><span class="line">extern  printf, scanf</span><br><span class="line"></span><br><span class="line">section .data</span><br><span class="line">    message db "Please input max Fn", 0x0a</span><br><span class="line">    outFormat db  "%d", 0x0a, 0x00</span><br><span class="line">    inFormat db  "%d", 0x00</span><br><span class="line"></span><br><span class="line">section .bss</span><br><span class="line">    userInput resb 1</span><br><span class="line"></span><br><span class="line">section .text</span><br><span class="line">_start:</span><br><span class="line">    call printMessage   ; print intro message</span><br><span class="line">    call getInput       ; get max number</span><br><span class="line">    call initFib        ; set initial Fib values</span><br><span class="line">    call loopFib        ; calculate Fib numbers</span><br><span class="line">    call Exit           ; Exit the program</span><br><span class="line"></span><br><span class="line">printMessage:</span><br><span class="line">    ...SNIP...</span><br><span class="line"></span><br><span class="line">getInput:</span><br><span class="line">    sub rsp, 8          ; align stack to 16-bytes</span><br><span class="line">    mov rdi, inFormat   ; set 1st parameter (inFormat)</span><br><span class="line">    mov rsi, userInput  ; set 2nd parameter (userInput)</span><br><span class="line">    call scanf          ; scanf(inFormat, userInput)</span><br><span class="line">    add rsp, 8          ; restore stack alignment</span><br><span class="line">    ret</span><br><span class="line"></span><br><span class="line">initFib:</span><br><span class="line">    ...SNIP...</span><br><span class="line"></span><br><span class="line">printFib:</span><br><span class="line">    ...SNIP...</span><br><span class="line"></span><br><span class="line">loopFib:</span><br><span class="line">    ...SNIP...</span><br><span class="line">    cmp rbx,[userInput] ; do rbx - userInput</span><br><span class="line">    js loopFib		    ; jump if result is &lt;0</span><br><span class="line">    ret</span><br><span class="line"></span><br><span class="line">Exit:</span><br><span class="line">    ...SNIP...</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="Dynamic-Linker-1"><a href="#Dynamic-Linker-1" class="headerlink" title="Dynamic Linker"></a>Dynamic Linker</h3><p>让我们组装代码，链接它，并尝试打印Fibonacci数直到<code>100</code>：                                                          </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ nasm -f elf64 fib.s &amp;&amp;  ld fib.o -o fib -lc --dynamic-linker /lib64/ld-linux-x86-64.so.2 &amp;&amp; ./fib</span><br><span class="line"></span><br><span class="line">Please input max Fn:</span><br><span class="line">100</span><br><span class="line">1</span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">5</span><br><span class="line">8</span><br><span class="line">13</span><br><span class="line">21</span><br><span class="line">34</span><br><span class="line">55</span><br><span class="line">89</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们看到我们的代码如预期的那样工作，并且打印的Fibonacci数小于我们指定的数字。有了这个，我们就可以完成我们的模块项目，并创建一个程序，根据我们提供的输入计算和打印斐波那契数，只使用汇编。</p>
+<p>此外，我们需要学习如何将汇编代码转换为机器外壳代码，然后我们可以直接在二进制开发中的有效负载中使用。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://mikannse.space">Mikannse</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://mikannse.space/2023/11/05/IntroToAssemblyBasicInstructionsANDFunctions/">http://mikannse.space/2023/11/05/IntroToAssemblyBasicInstructionsANDFunctions/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://mikannse.space" target="_blank">MikannseのSekai</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%BD%91%E5%AE%89/">网安</a><a class="post-meta__tags" href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a><a class="post-meta__tags" href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">渗透测试</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/11/05/23-10%E6%9D%82%E8%B0%88/" title="23-10杂谈"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">23-10杂谈</div></div></a></div><div class="next-post pull-right"><a href="/2023/11/04/IntroToAssemblyArchANDAssembDebugger/" title="IntroToAssemblyArchANDAssembDebuggerHTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">IntroToAssemblyArchANDAssembDebuggerHTB</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2023/11/17/Cross-Site%20Scripting%20(XSS)HTB/" title="Cross-Site Scripting (XSS)HTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-17</div><div class="title">Cross-Site Scripting (XSS)HTB</div></div></a></div><div><a href="/2023/10/24/HackingWordPressHTB/" title="HackingWordPressHTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-10-24</div><div class="title">HackingWordPressHTB</div></div></a></div><div><a href="/2023/11/15/Information%20Gathering%20-%20Web%20EditionHTB/" title="Information Gathering - Web EditionHTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-15</div><div class="title">Information Gathering - Web EditionHTB</div></div></a></div><div><a href="/2023/11/07/IntroToAssemblyShellcodingANDSkill/" title="IntroToAssemblyShellcodingANDSkillHTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-07</div><div class="title">IntroToAssemblyShellcodingANDSkillHTB</div></div></a></div><div><a href="/2023/11/04/IntroToAssemblyArchANDAssembDebugger/" title="IntroToAssemblyArchANDAssembDebuggerHTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-04</div><div class="title">IntroToAssemblyArchANDAssembDebuggerHTB</div></div></a></div><div><a href="/2023/10/28/IntroductiontoBashScriptingHTB/" title="IntroductiontoBashScriptingHTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-10-28</div><div class="title">IntroductiontoBashScriptingHTB</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Mikannse</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">274</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mikannse/mikannse.github.io"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">暂时没有公告QAQ</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Module-Project"><span class="toc-number">1.</span> <span class="toc-text">Module Project</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%90%E6%B3%A2%E9%82%A3%E5%A5%91%E6%95%B0%E5%88%97"><span class="toc-number">1.1.</span> <span class="toc-text">斐波那契数列</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%BB%84%E9%87%91%E6%AF%94%E4%BE%8B"><span class="toc-number">1.2.</span> <span class="toc-text">黄金比例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Final-Program"><span class="toc-number">1.3.</span> <span class="toc-text">Final Program</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Basic-Instructions"><span class="toc-number">2.</span> <span class="toc-text">Basic Instructions</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Data-Movement"><span class="toc-number">2.1.</span> <span class="toc-text">Data Movement</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Moving-Data-%E7%A7%BB%E5%8A%A8%E6%95%B0%E6%8D%AE"><span class="toc-number">2.1.1.</span> <span class="toc-text">Moving Data 移动数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Loading-Data"><span class="toc-number">2.1.2.</span> <span class="toc-text">Loading Data</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Address-Pointers"><span class="toc-number">2.1.3.</span> <span class="toc-text">Address Pointers</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Moving-Pointer-Values"><span class="toc-number">2.1.3.1.</span> <span class="toc-text">Moving Pointer Values</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Loading-Value-Pointers"><span class="toc-number">2.1.3.2.</span> <span class="toc-text">Loading Value Pointers</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Arithmetic-Instructions"><span class="toc-number">2.2.</span> <span class="toc-text">Arithmetic Instructions</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Unary-Instructions"><span class="toc-number">2.2.1.</span> <span class="toc-text">Unary Instructions</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Binary-Instructions"><span class="toc-number">2.2.2.</span> <span class="toc-text">Binary Instructions</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%89%E4%BD%8D%E6%8C%87%E4%BB%A4"><span class="toc-number">2.2.3.</span> <span class="toc-text">按位指令</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Control-Instructions"><span class="toc-number">3.</span> <span class="toc-text">Control Instructions</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Loops"><span class="toc-number">3.1.</span> <span class="toc-text">Loops</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Loop-Structure-%E7%8E%AF%E7%BB%93%E6%9E%84"><span class="toc-number">3.1.1.</span> <span class="toc-text">Loop Structure 环结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#loopFib"><span class="toc-number">3.1.2.</span> <span class="toc-text">loopFib</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Loop-loopFib"><span class="toc-number">3.1.3.</span> <span class="toc-text">Loop loopFib</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Unconditional-Branching"><span class="toc-number">3.2.</span> <span class="toc-text">Unconditional Branching</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JMP-loopFib"><span class="toc-number">3.3.</span> <span class="toc-text">JMP loopFib</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Conditional-Branching"><span class="toc-number">3.4.</span> <span class="toc-text">Conditional Branching</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#RFLAGS-Register"><span class="toc-number">3.4.1.</span> <span class="toc-text">RFLAGS Register</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#JNZ-loopFib"><span class="toc-number">3.4.2.</span> <span class="toc-text">JNZ loopFib</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CMP"><span class="toc-number">3.4.3.</span> <span class="toc-text">CMP</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Functions"><span class="toc-number">4.</span> <span class="toc-text">Functions</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Using-the-Stack"><span class="toc-number">4.1.</span> <span class="toc-text">Using the Stack</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#The-Stack"><span class="toc-number">4.1.1.</span> <span class="toc-text">The Stack</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Usage-With-Functions-x2F-Syscalls"><span class="toc-number">4.1.2.</span> <span class="toc-text">Usage With Functions&#x2F;Syscalls</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PUSH-x2F-POP"><span class="toc-number">4.1.3.</span> <span class="toc-text">PUSH&#x2F;POP</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Syscalls"><span class="toc-number">4.2.</span> <span class="toc-text">Syscalls</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux-Syscall"><span class="toc-number">4.2.1.</span> <span class="toc-text">Linux Syscall</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Syscall-Function-Arguments"><span class="toc-number">4.2.2.</span> <span class="toc-text">Syscall Function Arguments</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Syscall-Calling-Convention"><span class="toc-number">4.2.3.</span> <span class="toc-text">Syscall Calling Convention</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Syscall-Number"><span class="toc-number">4.2.3.1.</span> <span class="toc-text">Syscall Number</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Syscall-Arguments"><span class="toc-number">4.2.3.2.</span> <span class="toc-text">Syscall Arguments</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Calling-Syscall"><span class="toc-number">4.2.4.</span> <span class="toc-text">Calling Syscall</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%80%E5%87%BA%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="toc-number">4.2.5.</span> <span class="toc-text">退出系统调用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Procedures"><span class="toc-number">4.3.</span> <span class="toc-text">Procedures</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Defining-Procedures"><span class="toc-number">4.3.1.</span> <span class="toc-text">Defining Procedures</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CALL-x2F-RET"><span class="toc-number">4.3.2.</span> <span class="toc-text">CALL&#x2F;RET</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Functions-1"><span class="toc-number">4.4.</span> <span class="toc-text">Functions</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Functions-Calling-Convention"><span class="toc-number">4.4.1.</span> <span class="toc-text">Functions Calling Convention</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Writing-Functions"><span class="toc-number">4.4.1.1.</span> <span class="toc-text">Writing Functions</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Using-External-Functions"><span class="toc-number">4.4.2.</span> <span class="toc-text">Using External Functions</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Importing-libc"><span class="toc-number">4.4.3.</span> <span class="toc-text">Importing libc</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Saving-Registers"><span class="toc-number">4.4.4.</span> <span class="toc-text">Saving Registers</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Function-Arguments"><span class="toc-number">4.4.5.</span> <span class="toc-text">Function Arguments</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Stack-Alignment"><span class="toc-number">4.4.6.</span> <span class="toc-text">Stack Alignment</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Function-Call"><span class="toc-number">4.4.7.</span> <span class="toc-text">Function Call</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Dynamic-Linker"><span class="toc-number">4.4.8.</span> <span class="toc-text">Dynamic Linker</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Libc-Functions"><span class="toc-number">4.5.</span> <span class="toc-text">Libc Functions</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Importing-libc-Functions"><span class="toc-number">4.5.1.</span> <span class="toc-text">Importing libc Functions</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Saving-Registers-1"><span class="toc-number">4.5.2.</span> <span class="toc-text">Saving Registers</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Function-Arguments-1"><span class="toc-number">4.5.3.</span> <span class="toc-text">Function Arguments</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Stack-Alignment-1"><span class="toc-number">4.5.4.</span> <span class="toc-text">Stack Alignment</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Function-Call-1"><span class="toc-number">4.5.5.</span> <span class="toc-text">Function Call</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Dynamic-Linker-1"><span class="toc-number">4.5.6.</span> <span class="toc-text">Dynamic Linker</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/11/pwncollegeAssembly30/" title="pwncollegeAssembly30">pwncollegeAssembly30</a><time datetime="2024-10-10T17:05:42.000Z" title="发表于 2024-10-11 01:05:42">2024-10-11</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/09/pwncollege%E6%B1%87%E7%BC%96%E5%85%A5%E9%97%A8/" title="pwncollege汇编入门">pwncollege汇编入门</a><time datetime="2024-10-09T14:39:52.000Z" title="发表于 2024-10-09 22:39:52">2024-10-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/05/Git%E9%80%9F%E6%88%90/" title="Git速成">Git速成</a><time datetime="2024-10-05T04:57:08.000Z" title="发表于 2024-10-05 12:57:08">2024-10-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/03/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%BA%8C)%E4%B9%8BVulnHubCorrosion2/" title="打靶记录(一六二)之VulnHubCorrosion2">打靶记录(一六二)之VulnHubCorrosion2</a><time datetime="2024-10-03T09:24:11.000Z" title="发表于 2024-10-03 17:24:11">2024-10-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/02/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%B8%80)%E4%B9%8BVulnHubDrippingBlues1/" title="打靶记录(一六一)之VulnHubDrippingBlues1">打靶记录(一六一)之VulnHubDrippingBlues1</a><time datetime="2024-10-02T05:16:28.000Z" title="发表于 2024-10-02 13:16:28">2024-10-02</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2024 By Mikannse</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function loadDisqus () {
+  const disqus_config = function () {
+    this.page.url = 'http://mikannse.space/2023/11/05/IntroToAssemblyBasicInstructionsANDFunctions/'
+    this.page.identifier = '/2023/11/05/IntroToAssemblyBasicInstructionsANDFunctions/'
+    this.page.title = 'IntroToAssemblyBasicInstructionsANDFunctionsHTB'
+  }
+
+  const disqusReset = () => {
+    DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addModeChange('disqus', disqusReset)
+
+  if (window.DISQUS) disqusReset()
+  else {
+    (function() { 
+      var d = document, s = d.createElement('script');
+      s.src = 'https://.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  }
+}
+
+if ('Valine' === 'Disqus' || !true) {
+  if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+  else loadDisqus()
+} else {
+  function loadOtherComment () {
+    loadDisqus()
+  }
+}
+</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

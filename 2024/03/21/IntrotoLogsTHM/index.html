@@ -1,0 +1,602 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>IntrotoLogsTHM | MikannseのSekai</title><meta name="author" content="Mikannse"><meta name="copyright" content="Mikannse"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="Expanding Perspectives: Logs as Evidence of Historical Activity在数据的核心： 就像一棵实体树的年轮揭示了它的生命历程一样–厚的年轮表示好的年份，薄的年轮表示有挑战性的年份–数字日志提供了系统活动的历史记录。 日志是系统内事件的记录。 这些记录提供了系统一直在执行的操作的详细说明，捕获各种事件，例如用户登录、文件访问、系统错误、网络连接">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IntrotoLogsTHM">
+<meta property="og:url" content="http://mikannse.space/2024/03/21/IntrotoLogsTHM/index.html">
+<meta property="og:site_name" content="MikannseのSekai">
+<meta property="og:description" content="Expanding Perspectives: Logs as Evidence of Historical Activity在数据的核心： 就像一棵实体树的年轮揭示了它的生命历程一样–厚的年轮表示好的年份，薄的年轮表示有挑战性的年份–数字日志提供了系统活动的历史记录。 日志是系统内事件的记录。 这些记录提供了系统一直在执行的操作的详细说明，捕获各种事件，例如用户登录、文件访问、系统错误、网络连接">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg">
+<meta property="article:published_time" content="2024-03-21T15:18:31.000Z">
+<meta property="article:modified_time" content="2024-06-14T03:33:32.000Z">
+<meta property="article:author" content="Mikannse">
+<meta property="article:tag" content="笔记">
+<meta property="article:tag" content="运维">
+<meta property="article:tag" content="Log">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg"><link rel="shortcut icon" href="/img/icon.jpg"><link rel="canonical" href="http://mikannse.space/2024/03/21/IntrotoLogsTHM/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Mikannse","link":"链接: ","source":"来源: MikannseのSekai","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'IntrotoLogsTHM',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: undefined,
+  isToc: true,
+  postUpdate: '2024-06-14 11:33:32'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">274</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="MikannseのSekai"><span class="site-name">MikannseのSekai</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">IntrotoLogsTHM</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-03-21T15:18:31.000Z" title="发表于 2024-03-21 23:18:31">2024-03-21</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-06-14T03:33:32.000Z" title="更新于 2024-06-14 11:33:32">2024-06-14</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BD%91%E5%AE%89/">网安</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>23分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="IntrotoLogsTHM"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Expanding-Perspectives-Logs-as-Evidence-of-Historical-Activity"><a href="#Expanding-Perspectives-Logs-as-Evidence-of-Historical-Activity" class="headerlink" title="Expanding Perspectives: Logs as Evidence of Historical Activity"></a>Expanding Perspectives: Logs as Evidence of Historical Activity</h1><p>在数据的核心：</p>
+<p>就像一棵实体树的年轮揭示了它的生命历程一样–厚的年轮表示好的年份，薄的年轮表示有挑战性的年份–数字日志提供了系统活动的历史记录。</p>
+<p>日志是系统内事件的记录。 这些记录提供了系统一直在执行的操作的详细说明，捕获各种事件，例如用户登录、文件访问、系统错误、网络连接以及数据或系统配置的更改。</p>
+<p>虽然具体细节可能因日志类型而异，但日志条目通常包含以下信息：</p>
+<pre><code> 记录事件的时间戳
+ 生成日志条目的系统或应用程序的名称
+ 发生的事件类型
+ 有关事件的其他详细信息，例如发起事件的用户或生成事件的设备的 IP 地址
+</code></pre>
+<p>此信息通常存储在日志文件中，其中包含系统上任何给定时间发生的事件的聚合条目。</p>
+<p>然而，由于数字交互是连续且快节奏的，日志文件的大小可能会根据系统上记录的活动呈指数级增长。</p>
+<p>阅读的真正力量：语境相关性</p>
+<p> 单个日志条目本身可能看起来微不足道。但是，当日志数据被汇总、分析并与其他信息源交叉引用时，它就成为了一种强有力的调查工具。客户可以回答有关事件的关键问题，例如：</p>
+<ul>
+<li><strong>What</strong> happened?</li>
+<li><strong>When</strong> did it happen?</li>
+<li><strong>Where</strong> did it happen?</li>
+<li><strong>Who</strong> is responsible?</li>
+<li><strong>Were</strong> their actions <strong>successful</strong>?</li>
+<li><strong>What</strong> was the result of their action?</li>
+</ul>
+<p>下面的假设场景可以说明这一方面。假设一名学生据称访问了大学网络上的不适当内容。通过查看日志，系统管理员可以回答以下问题：</p>
+<table>
+<thead>
+<tr>
+<th><strong>Question</strong></th>
+<th><strong>Answer</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>What</strong> happened?</td>
+<td>一个对手被证实已经访问了SwiftSpend Financial的GitLab实例。</td>
+</tr>
+<tr>
+<td><strong>When</strong> did it happen?             发生了吗</td>
+<td>访问于2023年9月8日星期三22：10开始。</td>
+</tr>
+<tr>
+<td><strong>Where</strong> did it happen?</td>
+<td>该事件源自VPN用户网段（10.10.133.0/24）内IP地址为10.10.133.168的设备。</td>
+</tr>
+<tr>
+<td><strong>Who</strong> is responsible?</td>
+<td>在检查网络日志时，观察到由用户代理“Mozilla/5.0（X11; Ubuntu; Linux x86_64; rv：109.0）Gecko/20100101 Firefox/115.0”标识的设备被分配了IP地址10.10.133.168。</td>
+</tr>
+<tr>
+<td><strong>Were</strong> they successful?</td>
+<td>是的，因为发现GitLab实例上公开了一个APIKey。此外，网络代理日志确认对手设备到达并通过其上传的网络外壳保持访问。</td>
+</tr>
+<tr>
+<td><strong>What</strong> is the result of their action?</td>
+<td>攻击者在<em>gitlab.swiftspend.finance</em>上实现了远程代码执行，并执行了攻击后活动。</td>
+</tr>
+</tbody></table>
+<p>面的例子强调了日志如何有助于拼凑事件的全貌，从而增强我们的理解和有效应对的能力。</p>
+<h1 id="Types-Formats-and-Standards"><a href="#Types-Formats-and-Standards" class="headerlink" title="Types, Formats, and Standards"></a>Types, Formats, and Standards</h1><p>日志类型</p>
+<p>特定的日志类型可以提供有关系统操作、性能和安全性的独特视角。虽然有各种各样的日志类型，但我们将重点介绍最常见的类型，它们涵盖了大约80%的典型用例。</p>
+<p>下面是一些最常见的日志类型的列表：</p>
+<p><strong>应用程序日志：</strong>关于特定应用程序的消息，包括状态、错误、警告等。</p>
+<p><strong>审计程序：</strong>与对合规性至关重要的运营程序相关的活动。</p>
+<p><strong>安全事件：</strong>安全事件，如登录、权限更改、防火墙活动等。</p>
+<p><strong>服务器日志：</strong>服务器生成的各种日志，包括系统、事件、错误和访问日志。</p>
+<p><strong>系统错误：</strong>内核活动、系统错误、靴子序列和硬件状态。</p>
+<p><strong>网络流量：</strong>网络流量、连接和其他网络相关事件。</p>
+<p><strong>数据库查询：</strong>数据库系统中的活动，如查询和更新。</p>
+<p><strong>Web服务器请求：</strong>由Web服务器处理的请求，包括URL、响应代码等。                                                                                        </p>
+<p>了解各种日志类型、格式和标准对于实际日志分析至关重要。它使分析师能够有效地解析、解释日志数据并从中获得见解，从而促进故障排除、性能优化、事件响应和威胁搜索。</p>
+<p>​    Log Formats</p>
+<p>日志格式定义了日志文件中数据的结构和组织。它指定数据的编码方式、每个条目的分隔方式以及每行中包含哪些字段。这些格式可以有很大的不同，可以分为三个主要类别：半结构化，结构化和非结构化。我们将探索这些类别并通过示例说明它们的用法。</p>
+<ul>
+<li><p><strong>半结构化日志：</strong>这些日志可能包含结构化和非结构化数据，其中可预测的组件可容纳自由格式的文本。示例包括：            </p>
+<ul>
+<li><p><strong>系统日志消息格式：</strong>一种广泛采用的系统和网络日志记录协议。                    </p>
+<p>使用Syslog格式的日志文件示例                            </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">                        damianhall@WEBSRV-02:~/logs$ cat syslog.txt</span><br><span class="line">May 31 12:34:56 WEBSRV-02 CRON[2342593]: (root) CMD ([ -x /etc/init.d/anacron ] &amp;&amp; if [ ! -d /run/systemd/system ]; then /usr/sbin/invoke-rc.d anacron start &gt;/dev/null; fi)</span><br><span class="line">                            </span><br></pre></td></tr></tbody></table></figure>
+</li>
+<li><p><strong>Windows事件日志（EVTX）格式：</strong>Windows系统的专有Microsoft日志。                    </p>
+<p>使用Windows事件日志（EVTX）格式的日志文件示例                            </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">                        PS C:\WINDOWS\system32&gt; Get-WinEvent -Path "C:\Windows\System32\winevt\Logs\Application.evtx"</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">   ProviderName: Microsoft-Windows-Security-SPP</span><br><span class="line"></span><br><span class="line">TimeCreated                      Id LevelDisplayName Message</span><br><span class="line">-----------                      -- ---------------- -------</span><br><span class="line">31/05/2023 17:18:24           16384 Information      Successfully scheduled Software Protection service for re-start</span><br><span class="line">31/05/2023 17:17:53           16394 Information      Offline downlevel migration succeeded.</span><br><span class="line">                            </span><br></pre></td></tr></tbody></table></figure></li>
+</ul>
+</li>
+<li><p><strong>结构化日志：</strong>遵循严格和标准化的格式，这些日志有助于解析和分析。典型的结构化日志格式包括：            </p>
+<ul>
+<li><p><strong>字段分隔符：</strong>逗号分隔值（CSV）和制表符分隔值（TSV）是表格数据常用的格式。                    </p>
+<p>使用CSV格式的日志文件示例                            </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">                        damianhall@WEBSRV-02:~/logs$ cat log.csv</span><br><span class="line">"time","user","action","status","ip","uri"</span><br><span class="line">"2023-05-31T12:34:56Z","adversary","GET",200,"34.253.159.159","http://gitlab.swiftspend.finance:80/"</span><br><span class="line">                            </span><br></pre></td></tr></tbody></table></figure>
+</li>
+<li><p><strong>JavaScript Object Notation（JSON）：</strong>以其可读性和与现代编程语言的兼容性而闻名。                    </p>
+<p>使用JSON格式的日志文件示例                            </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">                        damianhall@WEBSRV-02:~/logs$ cat log.json</span><br><span class="line">{"time": "2023-05-31T12:34:56Z", "user": "adversary", "action": "GET", "status": 200, "ip": "34.253.159.159", "uri": "http://gitlab.swiftspend.finance:80/"}</span><br><span class="line">                            </span><br></pre></td></tr></tbody></table></figure>
+</li>
+<li><p><strong>W3C扩展日志格式（ELF）：</strong>由万维网联盟（W3C）定义，可定制用于Web服务器日志记录。它通常由Microsoft Internet信息服务（IIS）Web服务器使用。</p>
+<p>使用W3C扩展日志格式（ELF）的日志文件示例</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">                        damianhall@WEBSRV-02:~/logs$ cat elf.log</span><br><span class="line">#Version: 1.0</span><br><span class="line">#Fields: date time c-ip c-username s-ip s-port cs-method cs-uri-stem sc-status</span><br><span class="line">31-May-2023 13:55:36 34.253.159.159 adversary 34.253.127.157 80 GET /explore 200</span><br></pre></td></tr></tbody></table></figure>
+</li>
+<li><p><strong>可扩展标记语言（XML）：</strong>灵活且可定制，用于创建标准化的日志格式。                    </p>
+<p>使用XML格式的日志文件示例</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">                        damianhall@WEBSRV-02:~/logs$ cat log.xml</span><br><span class="line">&lt;log&gt;&lt;time&gt;2023-05-31T12:34:56Z&lt;/time&gt;&lt;user&gt;adversary&lt;/user&gt;&lt;action&gt;GET&lt;/action&gt;&lt;status&gt;200&lt;/status&gt;&lt;ip&gt;34.253.159.159&lt;/ip&gt;&lt;url&gt;https://gitlab.swiftspend.finance/&lt;/url&gt;&lt;/log&gt;</span><br><span class="line">                            </span><br></pre></td></tr></tbody></table></figure></li>
+</ul>
+</li>
+<li><p><strong>非结构化日志：</strong>由自由格式的文本组成，这些日志可能具有丰富的上下文，但可能会在系统解析方面带来挑战。示例包括：            </p>
+<ul>
+<li><p>*NCSA Common Log Format（CLF）：**用于客户端请求的标准化Web服务器日志格式。默认情况下，它通常由ApacheHTTP服务器使用。</p>
+<p>使用NCSA通用日志格式（CLF）的日志文件示例                            </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">                        damianhall@WEBSRV-02:~/logs$ cat clf.log</span><br><span class="line">34.253.159.159 - adversary [31/May/2023:13:55:36 +0000] "GET /explore HTTP/1.1" 200 4886</span><br></pre></td></tr></tbody></table></figure>
+</li>
+<li><p><strong>NCSA组合日志格式（组合）：</strong>CLF的扩展，添加了诸如用户代理和用户代理等字段。默认情况下，它通常由NginxHTTPServer使用。</p>
+<p>使用NCSA组合日志格式（组合）的日志文件示例                            </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">                        damianhall@WEBSRV-02:~/logs$ cat combined.log</span><br><span class="line">34.253.159.159 - adversary [31/May/2023:13:55:36 +0000] "GET /explore HTTP/1.1" 200 4886 "http://gitlab.swiftspend.finance/" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0"</span><br></pre></td></tr></tbody></table></figure></li>
+</ul>
+</li>
+</ul>
+<p><strong>重要提示：</strong>可以定制自定义格式以满足特定应用程序或用例。这些格式提供了灵活性，但可能需要专门的解析工具进行有效的解释和分析。</p>
+<p>日志标准</p>
+<p>日志标准是一组指南或规范，定义了如何生成、传输和存储日志。日志标准可能会指定使用特定的日志格式，但它们也涵盖了日志记录的其他方面，例如应该记录哪些事件，如何安全地传输日志，以及日志应该保留多长时间。日志标准的示例包括：</p>
+<p> 通用事件表达式（CEE）：该标准由 MITRE 开发，为日志数据提供通用结构，使日志的生成、传输、存储和分析变得更加容易。<br> OWASP Logging Cheat Sheet：为开发人员构建应用程序日志记录机制（特别是与安全日志记录相关）的指南。<br> Syslog 协议：Syslog 是消息记录的标准，允许将生成消息的软件与存储消息的系统以及报告和分析消息的软件分开。<br> NIST 特别出版物 800-92：该出版物指导计算机安全日志管理。<br> Azure Monitor 日志：Microsoft Azure 上的日志监控指南。<br> Google Cloud Logging：Google Cloud Platform (GCP) 登录指南。<br> Oracle 云基础设施日志记录：Oracle 云基础设施 (OCI) 日志记录指南。<br> 弗吉尼亚理工大学 - 信息技术日志记录标准：示例日志审查和合规性指南。</p>
+<h1 id="Collection-Management-and-Centralisation"><a href="#Collection-Management-and-Centralisation" class="headerlink" title="Collection, Management, and Centralisation"></a>Collection, Management, and Centralisation</h1><p>​    日志收集是日志分析的一个重要组成部分，涉及到从不同来源（如服务器、网络设备、软件和数据库）收集日志。</p>
+<p>​	为了使日志有效地表示事件的时间顺序，在日志记录期间保持系统的时间准确性至关重要。利用<strong>网络时间协议（NTP）</strong>是一种实现此同步并确保日志中存储的时间轴完整性的方法。</p>
+<p>​	由于这是确保安全分析师有一个全面的数据集进行审查的基础步骤，因此以下是实现这一目标的简单分步过程，同时请记住需要根据重要信息对收集进行优先级排序：</p>
+<ul>
+<li><strong>标识源：</strong>列出所有潜在的日志源，如服务器、数据库、应用程序和网络设备。    </li>
+<li><strong>选择日志收集器：</strong>选择适合您的基础架构的日志收集器工具或软件。    </li>
+<li><strong>配置收集参数：</strong>确保通过NTP启用时间同步以保持准确的时间线，调整设置以确定以什么间隔记录哪些事件，并根据重要性确定优先级。    </li>
+<li><strong>测试收集：</strong>配置后，运行测试以确保从所有源正确收集日志。</li>
+</ul>
+<p><strong>重要提示：</strong>请注意，基于NTP的时间同步可能无法与VM复制，因为它没有互联网连接。但是，在实践中执行此操作时，最好使用<strong>pool.ntp.org</strong>查找NTP服务器。时间同步可以在基于Linux的系统上自动执行，也可以通过执行手动启动。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">ntpdate pool.ntp.org</span><br></pre></td></tr></tbody></table></figure>
+
+<p>在基于Linux的系统上使用NTP进行时间同步的示例        </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">                        root@WEBSRV-02:~# ntpdate pool.ntp.org</span><br><span class="line">12 Aug 21:03:44 ntpdate[2399365]: adjust time server 85.91.1.180 offset 0.000060 sec</span><br><span class="line">root@WEBSRV-02:~# date</span><br><span class="line">Saturday, 12 August, 2023 09:04:55 PM UTC</span><br><span class="line">root@WEBSRV-02:~#</span><br></pre></td></tr></tbody></table></figure>
+
+<p>日志管理</p>
+<p>高效的日志管理确保每个收集的日志都安全地存储，系统地组织，并准备快速检索。混合方法可以通过收集所有日志文件并选择性地进行修剪来提供平衡的解决方案。</p>
+<p>一旦你整理了你的日志，对它们的有效管理是至关重要的。可以遵循以下步骤来实现这一点：</p>
+<ul>
+<li><strong>存储：</strong>考虑保留期和可访问性等因素，确定安全的存储解决方案。    </li>
+<li><strong>组织：</strong>根据日志的来源、类型或其他标准对日志进行分类，以便以后更容易访问。    </li>
+<li><strong>备份：</strong>定期备份您的日志，以防止数据丢失。    </li>
+<li><strong>审查：</strong>定期审查日志，以确保它们被正确存储和分类。</li>
+</ul>
+<p>日志集中</p>
+<p>集中化对于快速日志访问、深入分析和快速事件响应至关重要。统一的系统允许使用提供实时检测、自动通知以及与事件管理系统无缝集成的工具进行高效的日志管理。</p>
+<p>集中日志可以显著简化访问和分析。这里有一个实现它的简单过程：</p>
+<ul>
+<li><strong>选择一个集中式系统：</strong>选择一个整合所有来源的日志的系统，例如Elastic Stack或Splunk。    </li>
+<li><strong>集成源：</strong>将所有日志源连接到这个集中式系统。    </li>
+<li><strong>设置监控：</strong>利用工具，提供实时监控和警报的指定事件。    </li>
+<li><strong>与事件管理集成：</strong>确保您的集中式系统可以与您现有的任何事件管理工具或协议无缝集成。</li>
+</ul>
+<p>实践活动：使用rsyslog收集日志</p>
+<p>本活动旨在介绍<code>rsyslog</code>并演示它如何增强日志的集中化和管理。作为收集过程的一部分，我们将配置<code>rsyslog</code>将所有sshd消息记录到特定的文件中，例如<code>/var/log/websrv-02/rsyslog_sshd.log</code>。可以遵循以下步骤来实现这一点：</p>
+<ol>
+<li><strong>打开终端。</strong></li>
+<li><strong>确保rsyslog已安装：</strong>您可以通过运行以下命令来检查rsyslog是否已安装：<code>sudo systemctl status rsyslog</code>    </li>
+<li><strong>创建配置文件：</strong>使用文本编辑器创建以下配置文件：<code>gedit /etc/rsyslog.d/98-websrv-02-sshd.conf</code>、<code>nano /etc/rsyslog.d/98-websrv-02-sshd.conf</code>、<code>vi /etc/rsyslog.d/98-websrv-02-sshd.conf</code>或<code>vim /etc/rsyslog.d/98-websrv-02-sshd.conf</code>    </li>
+<li><strong>添加配置：</strong>在<code>/etc/rsyslog.d/98-websrv-02-sshd.conf</code>中添加以下行，将sshd消息定向到特定的日志文件：<code>$FileLog Mode 0644 ：programname，isequal，“sshd”/var/log/websrv-02/rsyystem_sshd.log</code>    </li>
+<li><strong>保存并关闭配置文件。</strong></li>
+<li><strong>重新启动rsyslog：</strong>使用以下命令重新启动rsyslog以应用更改：<code>sudo systemctl restart rsyslog</code> </li>
+<li><strong>验证配置：</strong>您可以通过<code>ssh localhost</code>启动到localhost的SSH连接或在一两分钟后检查日志文件来验证配置是否有效。</li>
+</ol>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/63da722f2d207d0049da10b1/room-content/541d9cd9d9bc4487ee7f6cbd2390f406.png" alt="Expected Output after rsyslog configuration to monitor sshd"></p>
+<p><strong>重要提示：</strong>如果未配置日志的远程转发，则可以使用<code>scp</code> / <code>rsync</code>等工具手动收集日志。</p>
+<h1 id="Storage-Retention-and-Deletion"><a href="#Storage-Retention-and-Deletion" class="headerlink" title="Storage, Retention, and Deletion"></a>Storage, Retention, and Deletion</h1><p>Log Storage</p>
+<p> 数据可以存储在各种位置，例如生成它们的本地系统，集中式存储库或基于云的存储。</p>
+<p>存储位置的选择通常取决于多个因素：</p>
+<p>​	安全要求：确保日志的存储符合组织或监管安全协议。<br>​     可访问性需求：访问日志的速度和访问者可能会影响存储的选择。<br>​     存储容量：生成的日志量可能需要大量的存储空间，影响存储解决方案的选择。<br>​     成本考虑因素：日志存储的预算可能决定基于云的解决方案或本地解决方案之间的选择。<br>​     合规性法规：管理日志存储的特定行业法规可能会影响存储的选择。<br>​     保留策略：所需的保留时间和检索的难易程度会影响决策过程。<br>​     灾难恢复计划：即使在系统故障时也确保日志的可用性可能需要特定的存储解决方案。</p>
+<p>日志保留</p>
+<p>重要的是要认识到日志存储不是无限的。因此，必须在保留原木以满足未来的潜在需要和储存成本之间取得合理的平衡。了解热、温和冷存储的概念可以帮助您做出决策：</p>
+<p>​	 热存储：过去 3-6 个月最容易访问的日志。 查询速度应该接近实时，具体取决于查询的复杂性。<br>​     温存储：六个月到两年的日志，充当数据湖，易于访问，但不如热存储那么即时。<br>​     冷存储：存档或压缩日志 2-5 年。 这些日志不易访问，通常用于追溯分析或范围界定目的。</p>
+<p>管理存储日志的成本对组织至关重要，仔细选择热、温或冷存储策略可以帮助控制这些成本。</p>
+<p>​    Log Deletion</p>
+<p>必须小心执行日志删除，以避免删除可能仍然有价值的日志。日志文件的备份，特别是重要的，是必要的删除之前。</p>
+<p>制定明确的删除政策以确保遵守数据保护法律法规至关重要。日志删除有助于：</p>
+<ul>
+<li>维护可管理的日志大小以供分析。        </li>
+<li>遵守GDPR等要求删除不必要数据的隐私法规。        </li>
+<li>保持存储成本平衡。</li>
+</ul>
+<p>最佳实践：日志存储、保留和删除</p>
+<ul>
+<li>根据业务需求和法律的要求确定存储、保留和删除策略。        </li>
+<li>根据不断变化的条件和法规，定期审查和更新指导方针。        </li>
+<li>自动执行存储、保留和删除流程，以确保一致性并避免人为错误。        </li>
+<li>加密敏感日志以保护数据。        </li>
+<li>应定期进行备份，尤其是在删除之前。</li>
+</ul>
+<p> 实践活动：使用logrotate进行日志管理</p>
+<p>本活动旨在介绍<code>logrotate</code>，这是一个自动化日志文件旋转、压缩和管理的工具，可确保系统地处理日志文件。它允许自动旋转、压缩和删除日志文件。作为一个例子，下面是我们如何为<code>/var/log/websrv-02/rsyslog_sshd.log</code>设置它：</p>
+<ol>
+<li><p><strong>创建配置文件：</strong><code>sudo gedit /etc/logrotate.d/98-websrv-02_sshd.conf</code>、<code>sudo nano /etc/logrotate.d/98-websrv-02_sshd.conf</code>、<code>sudo vi /etc/logrotate.d/98-websrv-02_sshd.conf</code>或<code>sudo vim /etc/logrotate.d/98-websrv-02_sshd.conf</code></p>
+</li>
+<li><p><strong>定义日志设置：</strong></p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">/var/log/websrv-02/rsyslog_sshd.log {</span><br><span class="line">    daily</span><br><span class="line">    rotate 30</span><br><span class="line">    compress</span><br><span class="line">    lastaction</span><br><span class="line">        DATE=$(date +"%Y-%m-%d")</span><br><span class="line">        echo "$(date)" &gt;&gt; "/var/log/websrv-02/hashes_"$DATE"_rsyslog_sshd.txt"</span><br><span class="line">        for i in $(seq 1 30); do</span><br><span class="line">            FILE="/var/log/websrv-02/rsyslog_sshd.log.$i.gz"</span><br><span class="line">            if [ -f "$FILE" ]; then</span><br><span class="line">                HASH=$(/usr/bin/sha256sum "$FILE" | awk '{ print $1 }')</span><br><span class="line">                echo "rsyslog_sshd.log.$i.gz "$HASH"" &gt;&gt; "/var/log/websrv-02/hashes_"$DATE"_rsyslog_sshd.txt"</span><br><span class="line">            fi</span><br><span class="line">        done</span><br><span class="line">        systemctl restart rsyslog</span><br><span class="line">    endscript</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+</li>
+<li><p><strong>保存并关闭文件。</strong></p>
+</li>
+<li><p><strong>手动执行：</strong><code>sudo logrotate -f /etc/logrotate.d/98-websrv-02_sshd.conf</code></p>
+</li>
+</ol>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/63da722f2d207d0049da10b1/room-content/504e02458a483779036168dd88b0e49a.png" alt="Expected Output after logrotate configuration of sshd"></p>
+<h1 id="Hands-on-Exercise-Log-analysis-process-tools-and-techniques"><a href="#Hands-on-Exercise-Log-analysis-process-tools-and-techniques" class="headerlink" title="Hands-on Exercise: Log analysis process, tools, and techniques"></a>Hands-on Exercise: Log analysis process, tools, and techniques</h1><p>日志分析过程</p>
+<p>日志分析涉及解析、规范化、排序、分类、丰富、相关、可视化和报告。它可以通过各种工具和技术来完成，从Splunk和ELK等复杂系统到从默认命令行工具到开源工具的临时方法。</p>
+<table>
+<thead>
+<tr>
+<th><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/63da722f2d207d0049da10b1/room-content/bb3dac37904b48660e1ad524832a6383.svg" alt="Image Representation of a Data Source"></th>
+<th>Data Sources                                                                                      数据源是配置为记录系统事件或用户活动的系统或应用程序。这就是原木的起源。</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/63da722f2d207d0049da10b1/room-content/b92ca5757d85ab49ee32cb0217b84b3a.svg" alt="Image Representation of Log Parsing"></td>
+<td>Parsing                                                                                                解析是将日志数据分解为更易于管理和理解的组件。由于日志的格式因源而异，因此必须解析这些日志以提取有价值的信息。</td>
+</tr>
+<tr>
+<td><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/63da722f2d207d0049da10b1/room-content/6d50d78e6c09b878bc4bf6aebf73b7a9.svg" alt="Image Representation of Log Normalisation"></td>
+<td>Normalisation                                                                                      规范化是对解析后的数据进行标准化。它涉及将各种日志数据转换为标准格式，使比较和分析来自不同来源的数据更加容易。在具有多个系统和应用程序的环境中，这是必不可少的，其中每个系统和应用程序都可能以另一种格式生成日志。</td>
+</tr>
+<tr>
+<td><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/63da722f2d207d0049da10b1/room-content/26eb3e15a848f9249e2951ef44bbcedb.svg" alt="Image Representation of Log Sorting"></td>
+<td>Sorting                                                                                                 排序是日志分析的一个重要方面，因为它允许有效的数据检索和模式识别。事件可以按时间、来源、事件类型、严重性和数据中存在的任何其他参数进行排序。正确的分类对于识别表明运营问题或安全事件的趋势和异常至关重要。</td>
+</tr>
+<tr>
+<td><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/63da722f2d207d0049da10b1/room-content/907a1ff6f5a4c8fd0c0250282a23568f.svg" alt="Image Representation of Log Classification"></td>
+<td>Classification                                                                                       分类涉及根据日志的特征将其分配到类别。通过对日志文件进行分类，您可以快速筛选并集中于对分析最重要的日志。例如，分类可以基于严重性级别、事件类型或来源。使用机器学习的自动分类可以显著增强这一过程，帮助识别可能被忽视的潜在问题或威胁。</td>
+</tr>
+<tr>
+<td><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/63da722f2d207d0049da10b1/room-content/2f5c66bfdad44c7f2fd5dd211a7541fc.svg" alt="Image Representation of Log Enrichment"></td>
+<td>Enrichment                                                                                  日志丰富为日志添加上下文，使其更有意义，更易于分析。它可能涉及添加地理数据，用户详细信息，威胁情报，甚至来自其他来源的数据等信息，这些数据可以提供事件的全貌。                                                                            丰富使日志更有价值，使分析师能够做出更好的决策，更准确地响应事件。与分类一样，日志丰富可以使用机器学习自动化，从而减少日志分析所需的时间和精力。</td>
+</tr>
+<tr>
+<td><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/63da722f2d207d0049da10b1/room-content/0a909d3f679c458f65ef08d5770389fc.svg" alt="Image Representation of Log Correlation"></td>
+<td>Correlation                                                                                    相关性包括链接相关记录和识别日志条目之间的连接。此过程有助于检测模式和趋势，从而更容易理解各种日志事件之间的复杂关系。相关性对于确定可能未被注意到的安全威胁或系统性能问题至关重要。</td>
+</tr>
+<tr>
+<td><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/63da722f2d207d0049da10b1/room-content/f19a2dcb7e6af13d489590b4b13c6c3f.svg" alt="Image Representation of Log Visualisation"></td>
+<td>Visualisation                                                                                  可视化以图表、图形或热图等图形格式表示日志数据。可视化呈现数据使识别模式、趋势和异常更容易。可视化工具提供了一种直观的方式来解释大量的日志数据，使复杂的信息更容易访问和理解。</td>
+</tr>
+<tr>
+<td><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/63da722f2d207d0049da10b1/room-content/315f0456ea5f0130ac6a05a7d17153f3.svg" alt="Image Representation of Log Reporting"></td>
+<td>Reporting                                                                            报告将日志数据汇总为结构化格式，以提供见解、支持决策或满足合规性要求。有效的报告包括创建清晰简洁的日志数据摘要，以满足利益相关者的需求，例如管理层、安全团队或审计员。定期报告对于监控系统运行状况、安全状况和运营效率至关重要。</td>
+</tr>
+</tbody></table>
+<p>日志分析工具</p>
+<p>安全信息和事件管理（SIEM）工具，如Splunk或Elastic Search，可用于复杂的日志分析任务。</p>
+<p>然而，在需要立即进行数据分析的情况下，例如在事件响应期间，基于Linux的系统可以使用默认工具，如<code>cat</code>、<code>grep</code>、<code>sed</code>、<code>sort</code>、<code>uniq</code>和<code>awk</code>，沿着<code>sha256sum</code>来散列日志文件。基于Windows的系统可以利用<a target="_blank" rel="noopener" href="https://ericzimmerman.github.io/#!index.md">EZ-Tools</a>和默认的小工具<code>Get-FileHash</code>来实现类似的目的。这些工具支持快速解析和分析，适合这些情况。</p>
+<p> 此外，应通过在收集期间获取日志文件的<strong>散列来</strong>观察适当的获取，以确保其在法庭上的可接受性。</p>
+<p>因此，不仅必须记录事件，而且必须确保其完整性，对事件进行分析，并从日志中吸取任何经验教训，因为组织的安全性和效率取决于它们。</p>
+<p>日志分析技术</p>
+<p>日志分析技术是用于解释日志数据并从中获得见解的方法或实践。这些技术可以从简单到复杂，对于识别模式，异常和关键见解至关重要。以下是一些常用的技巧：</p>
+<p> <strong>模式识别：</strong>这涉及识别日志数据中的重复序列或趋势。它可以检测常规的系统行为或识别可能表明安全威胁的异常活动。</p>
+<p> <strong>异常检测：</strong>异常检测侧重于识别偏离预期模式的数据点。尽早发现潜在问题或恶意活动至关重要。</p>
+<p><strong>相关性分析：</strong>将不同的日志条目关联起来有助于理解各种事件之间的关系。它可以揭示系统组件之间的因果关系和依赖关系，在根本原因分析中至关重要。</p>
+<p><strong>时间轴分析：</strong>分析一段时间内的日志有助于了解趋势、季节性和周期性行为。它对于性能监控和预测系统负载至关重要。</p>
+<p> <strong>机器学习和人工智能：</strong>利用机器学习模型可以自动化和增强各种日志分析技术，例如分类和丰富。人工智能可以提供预测性见解，并帮助自动响应特定事件。</p>
+<p><strong>可视化：</strong>通过图形和图表表示日志数据，可以直观地理解和快速洞察。可视化可以使复杂的数据更容易访问，并有助于识别关键模式和关系。</p>
+<p><strong>统计分析：</strong>使用统计方法分析日志数据可以提供定量见解，并有助于做出数据驱动的决策。回归分析和假设检验可以推断关系并验证假设。</p>
+<p>根据日志分析任务的具体要求和复杂性，可以单独或组合应用这些技术。理解和使用这些技术可以显著提高日志分析的有效性，从而做出更明智的决策和更强大的安全措施。</p>
+<p>使用MySQL：实际应用</p>
+<p>使用日志是一项复杂的任务，需要理解和操作数据。本教程涵盖两个场景。第一个是处理通过开源<a target="_blank" rel="noopener" href="https://github.com/sevdokimov/log-viewer">日志查看器</a>工具直接访问的未解析原始日志文件。这种方法无需预处理即可进行即时分析，非常适合快速检测或保留原始格式。</p>
+<p>第二个场景重点关注使用Unix工具（如<code>cat</code>、<code>grep</code>、<code>sed</code>、<code>sort</code>、<code>uniq</code>和<code>awk</code>）创建经过解析和整合的日志文件。它涉及合并、过滤和格式化日志以创建标准化文件。通过<a target="_blank" rel="noopener" href="https://github.com/sevdokimov/log-viewer">日志查看器</a>工具，此合并文件可提供清晰有效的数据视图，有助于识别模式和问题。</p>
+<p>这些方法突出了日志分析在系统诊断和网络安全中的灵活性和重要性。无论是使用原始日志还是解析日志，编译、查看和分析数据的能力对于组织的安全性和效率至关重要。</p>
+<p>未解析的原始日志文件</p>
+<p>在处理原始日志文件时，您可以通过在URL中指定路径，直接通过日志查看器工具访问它们。下面是一个包含多个日志文件的URL示例：</p>
+<figure class="highlight yaml"><table><tbody><tr><td class="code"><pre><span class="line"><span class="string">http://10.10.3.201:8111/log?log=%2Fvar%2Flog%2Fgitlab%2Fnginx%2Faccess.log&amp;log=%2Fvar%2Flog%2Fwebsrv-02%2Frsyslog_cron.log&amp;log=%2Fvar%2Flog%2Fwebsrv-02%2Frsyslog_sshd.log&amp;log=%2Fvar%2Flog%2Fgitlab%2Fgitlab-rails%2Fapi_json.log</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>将此URL粘贴到浏览器中，以使用<a target="_blank" rel="noopener" href="https://github.com/sevdokimov/log-viewer">日志查看器</a>工具查看未解析的原始日志文件。</p>
+<p> <strong>注意：</strong>您可以使用AttackBox或VM浏览器访问URL。但是，请注意，虚拟机上的Firefox可能需要几分钟的时间才能启动靴子。</p>
+<p>已解析和整合的日志文件</p>
+<p>要创建一个经过解析和整合的日志文件，您可以使用Unix工具的组合，如<code>cat</code>、<code>grep</code>、<code>sed</code>、<code>sort</code>、<code>uniq</code>和<code>awk</code>。下面是一个分步指南：</p>
+<ol>
+<li><p>使用<code>awk</code>和<code>sed</code>将日志条目规范化为所需的格式。在这个例子中，我们将按日期和时间排序： </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line"># Process nginx access log</span><br><span class="line">awk -F'[][]' '{print "[" $2 "]", "--- /var/log/gitlab/nginx/access.log ---", "\"" $0 "\""}' /var/log/gitlab/nginx/access.log  | sed "s/ +0000//g" &gt; /tmp/parsed_consolidated.log</span><br><span class="line"></span><br><span class="line"># Process rsyslog_cron.log</span><br><span class="line">awk '{ original_line = $0; gsub(/ /, "/", $1); printf "[%s/%s/2023:%s] --- /var/log/websrv-02/rsyslog_cron.log --- \"%s\"\n", $2, $1, $3, original_line }' /var/log/websrv-02/rsyslog_cron.log &gt;&gt; /tmp/parsed_consolidated.log</span><br><span class="line"></span><br><span class="line"># Process rsyslog_sshd.log</span><br><span class="line">awk '{ original_line = $0; gsub(/ /, "/", $1); printf "[%s/%s/2023:%s] --- /var/log/websrv-02/rsyslog_sshd.log --- \"%s\"\n", $2, $1, $3, original_line }' /var/log/websrv-02/rsyslog_sshd.log &gt;&gt; /tmp/parsed_consolidated.log</span><br><span class="line"></span><br><span class="line"># Process gitlab-rails/api_json.log</span><br><span class="line">awk -F'"' '{timestamp = $4; converted = strftime("[%d/%b/%Y:%H:%M:%S]", mktime(substr(timestamp, 1, 4) " " substr(timestamp, 6, 2) " " substr(timestamp, 9, 2) " " substr(timestamp, 12, 2) " " substr(timestamp, 15, 2) " " substr(timestamp, 18, 2) " 0 0")); print converted, "--- /var/log/gitlab/gitlab-rails/api_json.log ---", "\""$0"\""}' /var/log/gitlab/gitlab-rails/api_json.log &gt;&gt; /tmp/parsed_consolidated.log</span><br></pre></td></tr></tbody></table></figure>
+
+
+</li>
+<li><p><strong>可选：</strong>使用<code>grep</code>过滤特定条目： <code>grep "34.253.159.159" /tmp/parsed_consolidated.log &gt; /tmp/filtered_consolidated.log</code>    </p>
+</li>
+<li><p>使用<code>sort</code>按日期和时间对所有日志条目进行排序： <code>sort /tmp/parsed_consolidated.log &gt; /tmp/sort_parsed_consolidated.log</code>    </p>
+</li>
+<li><p>使用<code>uniq</code>删除重复条目： <code>uniq /tmp/sort_parsed_consolidated.log &gt; /tmp/uniq_sort_parsed_consolidated.log</code></p>
+</li>
+</ol>
+<p> 现在，您可以使用以下URL通过<a target="_blank" rel="noopener" href="https://github.com/sevdokimov/log-viewer">日志查看器</a>工具访问已解析和合并的日志文件：</p>
+<figure class="highlight yaml"><table><tbody><tr><td class="code"><pre><span class="line"><span class="string">http://10.10.3.201:8111/log?path=%2Ftmp%2Funiq_sort_parsed_consolidated.log</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>​    <img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/63da722f2d207d0049da10b1/room-content/5ef64ce6f3e0eaf396d91cf2409c473f.png" alt="Expected Output after logrotate configuration of sshd"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://mikannse.space">Mikannse</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://mikannse.space/2024/03/21/IntrotoLogsTHM/">http://mikannse.space/2024/03/21/IntrotoLogsTHM/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://mikannse.space" target="_blank">MikannseのSekai</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a><a class="post-meta__tags" href="/tags/%E8%BF%90%E7%BB%B4/">运维</a><a class="post-meta__tags" href="/tags/Log/">Log</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/03/22/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E4%B8%80%E9%9B%B6)%E4%B9%8BTHMPeakHill/" title="打靶记录(一一零)之THMPeakHill"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">打靶记录(一一零)之THMPeakHill</div></div></a></div><div class="next-post pull-right"><a href="/2024/03/21/k8s%E5%85%A5%E9%97%A8%E5%88%9D%E5%AD%A6%E4%B9%A0/" title="k8s入门初学习"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">k8s入门初学习</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/05/27/IntrotoLogAnalysisTHM/" title="IntrotoLogAnalysisTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-27</div><div class="title">IntrotoLogAnalysisTHM</div></div></a></div><div><a href="/2024/05/30/IntrotoKubernetesTHM/" title="IntrotoKubernetesTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-30</div><div class="title">IntrotoKubernetesTHM</div></div></a></div><div><a href="/2024/03/16/IntrotoDockerTHM/" title="IntrotoDockerTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-03-16</div><div class="title">IntrotoDockerTHM</div></div></a></div><div><a href="/2024/03/17/LinuxSystemHardeningTHM/" title="LinuxSystemHardeningTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-03-17</div><div class="title">LinuxSystemHardeningTHM</div></div></a></div><div><a href="/2024/03/21/k8s%E5%85%A5%E9%97%A8%E5%88%9D%E5%AD%A6%E4%B9%A0/" title="k8s入门初学习"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-03-21</div><div class="title">k8s入门初学习</div></div></a></div><div><a href="/2024/03/04/nosql%E4%B8%8Emongodb%E5%88%9D%E5%AD%A6%E4%B9%A0/" title="nosql与mongodb初学习"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-03-04</div><div class="title">nosql与mongodb初学习</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Mikannse</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">274</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mikannse/mikannse.github.io"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">暂时没有公告QAQ</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Expanding-Perspectives-Logs-as-Evidence-of-Historical-Activity"><span class="toc-number">1.</span> <span class="toc-text">Expanding Perspectives: Logs as Evidence of Historical Activity</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Types-Formats-and-Standards"><span class="toc-number">2.</span> <span class="toc-text">Types, Formats, and Standards</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Collection-Management-and-Centralisation"><span class="toc-number">3.</span> <span class="toc-text">Collection, Management, and Centralisation</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Storage-Retention-and-Deletion"><span class="toc-number">4.</span> <span class="toc-text">Storage, Retention, and Deletion</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Hands-on-Exercise-Log-analysis-process-tools-and-techniques"><span class="toc-number">5.</span> <span class="toc-text">Hands-on Exercise: Log analysis process, tools, and techniques</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/11/pwncollegeAssembly30/" title="pwncollegeAssembly30">pwncollegeAssembly30</a><time datetime="2024-10-10T17:05:42.000Z" title="发表于 2024-10-11 01:05:42">2024-10-11</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/09/pwncollege%E6%B1%87%E7%BC%96%E5%85%A5%E9%97%A8/" title="pwncollege汇编入门">pwncollege汇编入门</a><time datetime="2024-10-09T14:39:52.000Z" title="发表于 2024-10-09 22:39:52">2024-10-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/05/Git%E9%80%9F%E6%88%90/" title="Git速成">Git速成</a><time datetime="2024-10-05T04:57:08.000Z" title="发表于 2024-10-05 12:57:08">2024-10-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/03/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%BA%8C)%E4%B9%8BVulnHubCorrosion2/" title="打靶记录(一六二)之VulnHubCorrosion2">打靶记录(一六二)之VulnHubCorrosion2</a><time datetime="2024-10-03T09:24:11.000Z" title="发表于 2024-10-03 17:24:11">2024-10-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/02/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%B8%80)%E4%B9%8BVulnHubDrippingBlues1/" title="打靶记录(一六一)之VulnHubDrippingBlues1">打靶记录(一六一)之VulnHubDrippingBlues1</a><time datetime="2024-10-02T05:16:28.000Z" title="发表于 2024-10-02 13:16:28">2024-10-02</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2024 By Mikannse</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function loadDisqus () {
+  const disqus_config = function () {
+    this.page.url = 'http://mikannse.space/2024/03/21/IntrotoLogsTHM/'
+    this.page.identifier = '/2024/03/21/IntrotoLogsTHM/'
+    this.page.title = 'IntrotoLogsTHM'
+  }
+
+  const disqusReset = () => {
+    DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addModeChange('disqus', disqusReset)
+
+  if (window.DISQUS) disqusReset()
+  else {
+    (function() { 
+      var d = document, s = d.createElement('script');
+      s.src = 'https://.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  }
+}
+
+if ('Valine' === 'Disqus' || !true) {
+  if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+  else loadDisqus()
+} else {
+  function loadOtherComment () {
+    loadDisqus()
+  }
+}
+</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

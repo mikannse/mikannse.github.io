@@ -1,0 +1,550 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>THM域学习ActiveDirectoryBasics | MikannseのSekai</title><meta name="author" content="Mikannse"><meta name="copyright" content="Mikannse"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="IntroductionMicrosoft 的Active Directory 是企业界的支柱。 它简化了企业环境中设备和用户的管理。 在这个房间中，我们将深入探讨 Active Directory 的基本组件。 房间目标 在这个房间中，我们将了解 Active Directory 并熟悉以下主题  什么是活动目录  什么是 Active Directory 域  哪些组件进入 Active Di">
+<meta property="og:type" content="article">
+<meta property="og:title" content="THM域学习ActiveDirectoryBasics">
+<meta property="og:url" content="http://mikannse.space/2024/04/12/THM%E5%9F%9F%E5%AD%A6%E4%B9%A0ActiveDirectoryBasics/index.html">
+<meta property="og:site_name" content="MikannseのSekai">
+<meta property="og:description" content="IntroductionMicrosoft 的Active Directory 是企业界的支柱。 它简化了企业环境中设备和用户的管理。 在这个房间中，我们将深入探讨 Active Directory 的基本组件。 房间目标 在这个房间中，我们将了解 Active Directory 并熟悉以下主题  什么是活动目录  什么是 Active Directory 域  哪些组件进入 Active Di">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg">
+<meta property="article:published_time" content="2024-04-12T07:48:02.000Z">
+<meta property="article:modified_time" content="2024-07-14T13:00:36.820Z">
+<meta property="article:author" content="Mikannse">
+<meta property="article:tag" content="笔记">
+<meta property="article:tag" content="渗透测试">
+<meta property="article:tag" content="Domain">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg"><link rel="shortcut icon" href="/img/icon.jpg"><link rel="canonical" href="http://mikannse.space/2024/04/12/THM%E5%9F%9F%E5%AD%A6%E4%B9%A0ActiveDirectoryBasics/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Mikannse","link":"链接: ","source":"来源: MikannseのSekai","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'THM域学习ActiveDirectoryBasics',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: undefined,
+  isToc: true,
+  postUpdate: '2024-07-14 21:00:36'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">274</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="MikannseのSekai"><span class="site-name">MikannseのSekai</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">THM域学习ActiveDirectoryBasics</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-04-12T07:48:02.000Z" title="发表于 2024-04-12 15:48:02">2024-04-12</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-07-14T13:00:36.820Z" title="更新于 2024-07-14 21:00:36">2024-07-14</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BD%91%E5%AE%89/">网安</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">7.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>22分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="THM域学习ActiveDirectoryBasics"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>Microsoft 的Active Directory 是企业界的支柱。 它简化了企业环境中设备和用户的管理。 在这个房间中，我们将深入探讨 Active Directory 的基本组件。</p>
+<p>房间目标</p>
+<p>在这个房间中，我们将了解 Active Directory 并熟悉以下主题</p>
+<pre><code> 什么是活动目录
+ 什么是 Active Directory 域
+ 哪些组件进入 Active Directory 域
+ 森林和域信任
+ 以及更多！
+</code></pre>
+<h1 id="Windows-Domains"><a href="#Windows-Domains" class="headerlink" title="Windows Domains"></a>Windows Domains</h1><p>想象一下您正在管理一个只有五台计算机和五名员工的小型企业网络。 在如此小的网络中，您可能能够毫无问题地单独配置每台计算机。 您将手动登录每台计算机，为使用它们的人员创建用户，并为每个员工的帐户进行特定配置。 如果用户的计算机停止工作，您可能会去他们的地方并现场修复计算机。</p>
+<p>虽然这听起来像是一种非常轻松的生活方式，但让我们假设您的业务突然增长，现在拥有 157 台计算机和分布在四个不同办公室的 320 名不同用户。 您是否仍然能够将每台计算机作为单独的实体进行管理，为网络上的每个用户手动配置策略并为每个人提供现场支持？ 答案很可能是否定的。</p>
+<p>为了克服这些限制，我们可以使用 Windows 域。 简而言之，Windows 域是给定企业管理下的一组用户和计算机。 域背后的主要思想是将 Windows 计算机网络的常见组件的管理集中到称为 Active Directory (AD) 的单个存储库中。 运行 Active Directory 服务的服务器称为域控制器 (DC)。</p>
+<p>Windows 域概述</p>
+<p>配置 Windows 域的主要优点是：</p>
+<pre><code> 集中身份管理：网络上的所有用户都可以轻松地从 Active Directory 进行配置。
+ 管理安全策略：您可以直接从 Active Directory 配置安全策略，并根据需要将它们应用到网络上的用户和计算机。
+</code></pre>
+<p>一个现实世界的例子</p>
+<p>如果这听起来有点令人困惑，那么您很可能已经在学校、大学或工作中的某个时刻与 Windows 域进行过交互。</p>
+<p>在学校/大学网络中，您通常会获得一个用户名和密码，您可以在校园内的任何计算机上使用它们。 您的凭据对所有计算机都有效，因为每当您在计算机上输入它们时，它都会将身份验证过程转发回 Active Directory，在那里将检查您的凭据。 借助 Active Directory，您的凭据无需存在于每台计算机中，并且可以在整个网络中使用。</p>
+<p>Active Directory 也是允许您的学校/大学限制您访问学校/大学计算机上的控制面板的组件。 策略通常会部署在整个网络中，以便您对这些计算机没有管理权限。</p>
+<h1 id="Active-Directory"><a href="#Active-Directory" class="headerlink" title="Active Directory"></a>Active Directory</h1><p>任何 Windows 域的核心都是 Active Directory 域服务 (AD DS)。 该服务充当目录，保存网络上存在的所有“对象”的信息。 在AD支持的众多对象中，有用户、组、机器、打印机、共享等等。 让我们看看其中的一些：</p>
+<p>用户</p>
+<p>用户是 Active Directory 中最常见的对象类型之一。 用户是被称为安全主体的对象之一，这意味着他们可以通过域进行身份验证，并且可以被分配对文件或打印机等资源的权限。 您可以说安全主体是一个可以对网络中的资源进行操作的对象。</p>
+<p>用户可以用来表示两种类型的实体：</p>
+<pre><code> 人员：用户通常代表组织中需要访问网络的人员，例如员工。
+ 服务：您还可以定义供 IIS 或 MSSQL 等服务使用的用户。 每个服务都需要用户来运行，但服务用户与普通用户不同，因为他们只拥有运行特定服务所需的权限。
+</code></pre>
+<p>机器</p>
+<p>机器是 Active Directory 中的另一种对象； 对于加入 Active Directory 域的每台计算机，都会创建一个计算机对象。 机器也被视为“安全主体”，并像任何普通用户一样被分配一个帐户。 该帐户在域本身内的权限有些有限。</p>
+<p>计算机帐户本身是指定计算机上的本地管理员，除了计算机本身之外，通常不应由任何人访问它们，但与任何其他帐户一样，如果您有密码，则可以使用它来登录。</p>
+<p>注意：机器帐户密码会自动轮换，通常由 120 个随机字符组成。</p>
+<p>识别机器帐户相对容易。 它们遵循特定的命名方案。 计算机帐户名称是计算机名称后跟美元符号。 例如，名为 DC01 的计算机将有一个名为 DC01$ 的计算机帐户。</p>
+<p>安全组</p>
+<p>如果您熟悉 Windows，您可能知道可以定义用户组，将文件或其他资源的访问权限分配给整个组而不是单个用户。 这可以实现更好的可管理性，因为您可以将用户添加到现有组，并且他们将自动继承该组的所有权限。 安全组也被视为安全主体，因此可以对网络上的资源拥有特权。</p>
+<p>组可以同时包含用户和计算机作为成员。 如果需要，组也可以包括其他组。</p>
+<p>默认情况下，域中会创建多个组，可用于向用户授予特定权限。 例如，以下是域中一些最重要的组：</p>
+<table>
+<thead>
+<tr>
+<th><strong>Security Group</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Domain Admins</td>
+<td>该组的用户拥有整个域的管理权限。 默认情况下，他们可以管理域中的任何计算机，包括 DC。</td>
+</tr>
+<tr>
+<td>Server Operators</td>
+<td>该组中的用户可以管理域控制器。 他们无法更改任何管理组成员身份。</td>
+</tr>
+<tr>
+<td>Backup Operators</td>
+<td>该组中的用户可以访问任何文件，但忽略其权限。 它们用于在计算机上执行数据备份。</td>
+</tr>
+<tr>
+<td>Account Operators</td>
+<td>该组中的用户可以创建或修改域中的其他帐户。</td>
+</tr>
+<tr>
+<td>Domain Users</td>
+<td>包括域中所有现有的用户帐户。</td>
+</tr>
+<tr>
+<td>Domain Computers</td>
+<td>包括域中的所有现有计算机。</td>
+</tr>
+<tr>
+<td>Domain Controllers</td>
+<td>包括域中所有现有的 DC。</td>
+</tr>
+</tbody></table>
+<p>您可以从 Microsoft 文档获取默认安全组的完整列表。</p>
+<p>Active Directory 用户和计算机</p>
+<p>要在 Active Directory 中配置用户、组或计算机，我们需要登录域控制器并从开始菜单运行“Active Directory 用户和计算机”：</p>
+<p>开始菜单 AD 用户和计算机</p>
+<p>这将打开一个窗口，您可以在其中查看域中存在的用户、计算机和组的层次结构。 这些对象按组织单位 (OU) 进行组织，组织单位是允许您对用户和计算机进行分类的容器对象。 OU 主要用于定义具有相似监管要求的用户组。 例如，组织销售部门的人员可能会应用与 IT 人员不同的策略集。 请记住，用户一次只能是单个 OU 的一部分。</p>
+<p>检查我们的机器，我们可以看到已经有一个名为 THM 的 OU，其中有四个子 OU，分别用于 IT、管理、营销和销售部门。 组织单位模仿业务结构是很常见的，因为它允许有效地部署适用于整个部门的基线策略。 请记住，虽然这在大多数情况下是预期的模型，但您可以任意定义 OU。 请随意右键单击 THM OU 并在其下创建一个名为 Students 的新 OU，只是为了好玩。</p>
+<p>AD 用户和计算机</p>
+<p>如果您打开一个OU，您可以查看它们包含的用户并执行简单的任务，例如根据需要创建、删除或修改它们。 如果需要，您还可以重置密码（对于帮助台非常有用）：</p>
+<p>IT 部门 OU</p>
+<p>您可能已经注意到，除了 THM OU 之外还有其他默认容器。 这些容器由 Windows 自动创建并包含以下内容：</p>
+<pre><code> Builtin：包含可供任何 Windows 主机使用的默认组。
+ Computers：默认情况下，任何加入网络的计算机都会放在这里。 如果需要，您可以移动它们。
+ Domain Controllers：包含网络中 DC 的默认 OU。
+ Users：适用于域范围上下文的默认用户和组。
+ Managed Service Accounts：保存 Windows 域中的服务使用的帐户。
+</code></pre>
+<p>安全组与 OU</p>
+<p>您可能想知道为什么我们既有组又有 OU。 虽然两者都用于对用户和计算机进行分类，但它们的目的完全不同：</p>
+<pre><code> OU 可以方便地将策略应用于用户和计算机，其中包括与用户组相关的特定配置，具体取决于用户在企业中的特定角色。 请记住，用户一次只能是单个 OU 的成员，因为尝试对单个用户应用两组不同的策略是没有意义的。
+ 另一方面，安全组用于授予对资源的权限。 例如，如果您希望允许某些用户访问共享文件夹或网络打印机，您将使用组。 一个用户可以属于多个组，这需要授予对多个资源的访问权限。
+</code></pre>
+<h1 id="Managing-Users-in-AD"><a href="#Managing-Users-in-AD" class="headerlink" title="Managing Users in AD"></a>Managing Users in AD</h1><p>作为新域管理员，您的首要任务是检查现有的 AD OU 和用户，因为最近业务发生了一些变化。 您已获得以下组织结构图，并需要对 AD 进行更改以匹配它：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/88f0ade5a672ae681639e6049406a4ec.png" alt="THM Organisational Chart"></p>
+<p>删除额外的 OU 和用户</p>
+<p>您应该注意到的第一件事是，您当前的 AD 配置中有一个额外的部门 OU，该部门未出现在图表中。 我们被告知它由于预算削减而关闭，应该从域中删除。 如果您尝试右键单击并删除 OU，您将收到以下错误：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/38edaf4a8665c257c62556096c69cb6f.png" alt="OU delete error"></p>
+<p>默认情况下，OU 受到保护，不会被意外删除。 要删除 OU，我们需要在“视图”菜单中启用<strong>高级功能</strong>：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/15b282b6e3940f4c26c477a8c21f8266.png" alt="Enabling advanced features"></p>
+<p>这将向您显示一些其他容器，并使您能够禁用意外删除保护。 为此，请右键单击 OU 并转到“属性”。 您将在“对象”选项卡中找到一个用于禁用保护的复选框：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/ad6b6d886c0448d14ce4ec8c62250256.png" alt="Disable OU delete protection"></p>
+<p>请务必取消选中该框并再次尝试删除 OU。 系统将提示您确认是否要删除该 OU，因此，该 OU 下的任何用户、组或 OU 也将被删除。</p>
+<p>删除多余的 OU 后，您应该注意到对于某些部门，AD 中的用户与我们组织结构图中的用户不匹配。 根据需要创建和删除用户以匹配他们。</p>
+<p>代表团</p>
+<p>在 AD 中可以做的一件好事就是为特定用户提供对某些 OU 的一定控制权。 此过程称为“委托”，允许您授予用户在 OU 上执行高级任务的特定权限，而无需域管理员介入。</p>
+<p>最常见的用例之一是授予“IT 支持”重置其他低权限用户密码的权限。 根据我们的组织结构图，Phillip 负责 IT 支持，因此我们可能希望将重置销售、营销和管理 OU 密码的控制权委托给他。</p>
+<p>对于本示例，我们将对 Sales OU 的控制权委托给 Phillip。 要委派对 OU 的控制，您可以右键单击它并选择 <strong>委派控制</strong>：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/74f8d615658a03aeb1cfdb6767d0a0a3.png" alt="Delegating OU control"></p>
+<p>这应该会打开一个新窗口，其中首先会询问您要向其委派控制权的用户：</p>
+<p><strong>注意：</strong> 为避免输入错误用户名，请输入“phillip”，然后单击“<strong>检查姓名</strong>”按钮。 Windows 将自动为您补全用户。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/2814715e1dbadaef334973028e02da69.png" alt="Delegating Sales OU to Phillip"></p>
+<p>单击“确定”，然后在下一步中选择以下选项：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/3f81df2b38e35ca5729aee7a76c6b220.png" alt="Delegating password resets"></p>
+<p>单击“下一步”几次，现在 Phillip 应该能够为销售部门中的任何用户重置密码。 虽然您可能希望重复这些步骤来委派营销和管理部门的密码重置，但我们将把它留在这里来完成此任务。 如果您愿意，您可以继续配置其余的 OU。</p>
+<h1 id="Managing-Computers-in-AD"><a href="#Managing-Computers-in-AD" class="headerlink" title="Managing Computers in AD"></a>Managing Computers in AD</h1><p>默认情况下，加入域的所有计算机（DC 除外）都将放入名为“Computers”的容器中。 如果我们检查我们的 DC，我们会看到一些设备已经存在：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/a1d41d5437e73d62ede10f2015dc4dfc.png" alt="Computers OU"></p>
+<p>我们可以看到与我们网络中的用户相对应的一些服务器、一些笔记本电脑和一些PC。 将我们所有的设备放在那里并不是最好的主意，因为您很可能希望为您的服务器和普通用户日常使用的计算机制定不同的策略。</p>
+<p>虽然如何组织机器没有黄金法则，但一个很好的起点是根据设备的用途对其进行隔离。 一般来说，您期望看到的设备至少分为以下三个类别：</p>
+<p><strong>1. 工作站</strong></p>
+<p>工作站是 Active Directory 域中最常见的设备之一。 域中的每个用户都可能登录到工作站。 这是他们用来完成工作或正常浏览活动的设备。 这些设备不应该让特权用户登录。</p>
+<p><strong>2. 服务器</strong></p>
+<p>服务器是 Active Directory 域中第二常见的设备。 服务器一般用来为用户或其他服务器提供服务。</p>
+<p><strong>3. 域控制器</strong></p>
+<p>域控制器是 Active Directory 域中第三种最常见的设备。 域控制器允许您管理 Active Directory 域。 这些设备通常被认为是网络中最敏感的设备，因为它们包含环境中所有用户帐户的哈希密码。</p>
+<p>由于我们正在整理 AD，因此让我们为“工作站”和“服务器”创建两个单独的 OU（域控制器已位于 Windows 创建的 OU 中）。 我们将直接在“thm.local”域容器下创建它们。 最后，您应该具有以下 OU 结构：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/09405010962071f21c6dee7b4eb8c59a.png" alt="final OU structure"></p>
+<p>现在，将个人计算机和笔记本电脑从计算机容器移至工作站 OU，将服务器移至服务器 OU。 这样做将使我们能够稍后为每个 OU 配置策略。</p>
+<h1 id="Group-Policies"><a href="#Group-Policies" class="headerlink" title="Group Policies"></a>Group Policies</h1><p>到目前为止，我们将用户和计算机组织在 OU 中只是为了它，但这背后的主要思想是能够为每个 OU 单独部署不同的策略。 这样，我们就可以根据用户的部门向他们推送不同的配置和安全基线。</p>
+<p>Windows 通过<strong>组策略对象 (GPO)</strong> 管理此类策略。 GPO 只是可应用于OU 的设置的集合。 GPO 可以包含针对用户或计算机的策略，允许您在特定计算机和身份上设置基线。</p>
+<p>要配置 GPO，您可以使用“<strong>组策略管理</strong>”工具，可从开始菜单访问：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/b19052c41e27fbbb2651038cede63e11.png" alt="Start menu GPM"></p>
+<p>打开它时，您首先看到的是完整的 OU 层次结构，如之前所定义。 要配置组策略，首先在<strong>组策略对象</strong>下创建一个 GPO，然后将其链接到您希望应用策略的 OU。 例如，您可以看到您的计算机中已经存在一些 GPO：<img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/d82cb9440894c831f6f3d58a2b0538ed.png" alt="Existing OUs in your machine"></p>
+<p>我们可以在上图中看到已经创建了 3 个 GPO。 其中，“默认域策略”和“RDP 策略”作为一个整体链接到“thm.local”域，“默认域控制器策略”仅链接到“域控制器”OU。 需要记住的重要一点是，任何 GPO 都将应用于链接的 OU 及其下的任何子 OU。 例如，“销售”OU 仍将受到“默认域策略”的影响。</p>
+<p>让我们检查“默认域策略”以了解 GPO 内部的内容。 选择 GPO 时您将看到的第一个选项卡显示其<strong>范围</strong>，这是 GPO 在 AD 中链接的位置。 对于当前策略，我们可以看到它仅链接到“thm.local”域：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/06d5e70fbfa648f73e4598e18c8e9527.png" alt="OU scope"></p>
+<p>如您所见，您还可以对 GPO 应用<strong>安全过滤</strong>，以便它们仅应用于 OU 下的特定用户/计算机。 默认情况下，它们将应用于 <strong>Authenticated Users</strong> 组，其中包括所有用户/PC。</p>
+<p><strong>设置</strong>选项卡包含 GPO 的实际内容，让我们知道它应用的具体配置。 如前所述，每个 GPO 都有仅适用于计算机的配置和仅适用于用户的配置。 在这种情况下，“默认域策略”仅包含计算机配置：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/c9293853549d5126b77bf2de8086e076.png" alt="OU Settings"></p>
+<p>请随意探索 GPO 并使用每个配置右侧的“显示”链接扩展可用项目。 在这种情况下，“默认域策略”表示应适用于大多数域的真正基本配置，包括密码和帐户锁定策略：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/a5f4c2605062934579c64f2cfa025308.png" alt="OU detailed settings"></p>
+<p>由于此 GPO 适用于整个域，因此对其进行的任何更改都会影响所有计算机。 让我们更改最小密码长度策略，要求用户的密码至少包含 10 个字符。 为此，请右键单击 GPO 并选择“<strong>编辑</strong>”：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/b71d8de9e74d129d0ad4142863deadc4.png" alt="Editing a GPO settings"></p>
+<p>这将打开一个新窗口，我们可以在其中导航和编辑所有可用配置。 要更改最小密码长度，请转到“计算机配置 -&gt; 策略 -&gt; Windows 设置 -&gt; 安全设置 -&gt; 帐户策略 -&gt; 密码策略”并更改所需的策略值：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/bd3665c2569aa8fbe4f7482a5750f018.png" alt="Password policy GPO"></p>
+<p>正如您所看到的，可以在 GPO 中制定大量策略。 虽然在一个房间里解释每一项是不可能的，但请随意探索一下，因为有些政策很简单。 如果需要有关任何策略的更多信息，您可以双击它们并阅读每个策略的 <strong>解释</strong> 选项卡：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/de35e7c03fafcb5b9df5457181e32652.png" alt="OU settings explain tab"></p>
+<p>GPO分布</p>
+<p>GPO 通过名为“SYSVOL”的网络共享分发到网络，该共享存储在 DC 中。 域中的所有用户通常都应有权通过网络访问此共享，以定期同步其 GPO。 默认情况下，SYSVOL 共享指向网络中每个 DC 上的“C:\Windows\SYSVOL\sysvol\”目录。</p>
+<p>对任何 GPO 进行更改后，计算机可能需要长达 2 小时才能跟上。 如果您想强制任何特定计算机立即同步其 GPO，您始终可以在所需计算机上运行以下命令：</p>
+<p>​            Windows PowerShell        </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">PS C:\&gt; gpupdate /force</span><br></pre></td></tr></tbody></table></figure>
+
+<p>为 THM Inc. 创建一些 GPO</p>
+<p>作为新工作的一部分，我们的任务是实施一些 GPO，以便我们能够：</p>
+<ol>
+<li>阻止非 IT 用户访问控制面板。</li>
+<li>让工作站和服务器在用户不活动 5 分钟后自动锁定屏幕，以避免人们暴露其会话。</li>
+</ol>
+<p>让我们重点关注其中的每一个，并定义我们应该在每个 GPO 中启用哪些策略以及它们应该链接到哪里。</p>
+<p>*<strong>限制对控制面板的访问*</strong></p>
+<p>我们希望将所有计算机上的控制面板的访问权限限制为仅属于 IT 部门的用户。 其他部门的用户不应该能够更改系统的首选项。</p>
+<p>让我们创建一个名为“限制控制面板访问”的新 GPO 并将其打开进行编辑。 由于我们希望此 GPO 应用于特定用户，因此我们将在“用户配置”下查看以下策略：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/9b333a11d12f05dd4413e3f208aab363.png" alt="Restricting access to control panel"></p>
+<p>请注意，我们已启用 <strong>禁止访问控制面板和电脑设置</strong> 策略。</p>
+<p>配置 GPO 后，我们需要将其链接到与无权访问其 PC 控制面板的用户相对应的所有 OU。 在本例中，我们将通过将 GPO 拖动到每个 OU 来链接“Marketing”、“Management”和“Sales”：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/4a8f727788731b7fbf87fc079682d1a6.png" alt="Linking Restrict Control Panel GPO"></p>
+<p><strong>Auto Lock Screen GPO</strong></p>
+<p>对于第一个 GPO，关于工作站和服务器的屏幕锁定，我们可以直接将其应用于我们之前创建的“工作站”、“服务器”和“域控制器”OU。</p>
+<p>虽然此解决方案应该有效，但替代方案是简单地将 GPO 应用于根域，因为我们希望 GPO 影响我们的所有计算机。 由于“工作站”、“服务器”和“域控制器”OU 都是根域的子 OU，因此它们将继承根域的策略。</p>
+<p><strong>注意：</strong> 您可能会注意到，如果我们的 GPO 应用于根域，它也会被其他 OU（例如“销售”或“营销”）继承。 由于这些 OU 仅包含用户，因此 GPO 中的任何计算机配置都将被它们忽略。</p>
+<p>让我们创建一个新的 GPO，将其命名为“自动锁定屏幕”，然后对其进行编辑。 实现我们想要的策略位于以下路线：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/44c0cde18837cb6333c78749356ac0ee.png" alt="Configuring machine inactivity limit"></p>
+<p>我们将不活动限制设置为 5 分钟，以便在任何用户保持会话打开时计算机会自动锁定。 关闭 GPO 编辑器后，我们将 GPO 拖动到根域，将其链接到根域：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/fcfc77d126991ffee8c927202b4dde37.png" alt="Linking Auto Lock Screen GPO"></p>
+<h1 id="Authentication-Methods"><a href="#Authentication-Methods" class="headerlink" title="Authentication Methods"></a>Authentication Methods</h1><p>使用 Windows 域时，所有凭据都存储在域控制器中。 每当用户尝试使用域凭据对服务进行身份验证时，该服务都需要要求域控制器验证它们是否正确。 Windows 域中可以使用两种协议进行网络身份验证：</p>
+<ul>
+<li><strong>Kerberos：</strong> 由任何最新版本的 Windows 使用。 这是任何最近域中的默认协议。</li>
+<li><strong>NetNTLM：</strong> 出于兼容性目的保留旧版身份验证协议。</li>
+</ul>
+<p>虽然 NetNTLM 应被视为已过时，但大多数网络都会启用这两种协议。 让我们更深入地了解一下这些协议的工作原理。</p>
+<p>Kerberos 身份验证</p>
+<p>Kerberos 身份验证是任何最新版本的 Windows 的默认身份验证协议。 使用 Kerberos 登录服务的用户将被分配票证。 将票据视为先前身份验证的证明。 拥有票证的用户可以将其呈现给服务，以证明他们之前已经通过网络身份验证，因此能够使用它。</p>
+<p>当使用 Kerberos 进行身份验证时，会发生以下过程：</p>
+<ol>
+<li><p>用户将使用从其密码派生的密钥加密的用户名和时间戳发送到**密钥分发中心 (KDC)**，该服务通常安装在域控制器上，负责在网络上创建 Kerberos 票证。</p>
+<p>KDC 将创建并发回 **票证授予票证 (TGT)**，这将允许用户请求额外的票证以访问特定服务。 需要票证才能获得更多票证可能听起来有点奇怪，但它允许用户在每次想要连接到服务时请求服务票证，而无需传递其凭据。 除了 TGT 之外，还会向用户提供 <strong>会话密钥</strong>，用户需要使用该密钥来生成以下请求。</p>
+<p>请注意，TGT 使用 <strong>krbtgt</strong> 帐户的密码哈希进行加密，因此用户无法访问其内容。 必须知道，加密的 TGT 包含会话密钥的副本作为其内容的一部分，并且 KDC 不需要存储会话密钥，因为它可以在需要时通过解密 TGT 来恢复副本。</p>
+</li>
+<li><p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/d36f5a024c20fb480cdae8cd09ddc09f.png" alt="Kerberos step 1"></p>
+</li>
+<li><p>当用户想要连接到网络上的服务（例如共享、网站或数据库）时，他们将使用 TGT 向 KDC 请求**票证授予服务 (TGS)**。 TGS 是只允许连接到为其创建的特定服务的票证。 要请求 TGS，用户将发送使用会话密钥加密的用户名和时间戳，以及 TGT 和 **服务主体名称 (SPN)**，它指示我们打算访问的服务和服务器名称。</p>
+<p>因此，KDC 将向我们发送 TGS 以及<strong>服务会话密钥</strong>，我们需要对我们想要访问的服务进行身份验证。 TGS 使用从<strong>服务所有者哈希</strong>派生的密钥进行加密。 服务所有者是运行服务的用户或计算机帐户。 TGS 在其加密内容上包含服务会话密钥的副本，以便服务所有者可以通过解密 TGS 来访问它。</p>
+</li>
+<li><p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/84504666e78373c613d3e05d176282dc.png" alt="Kerberos step 2"></p>
+</li>
+<li><p>然后可以将 TGS 发送到所需的服务以进行身份验证并建立连接。 该服务将使用其配置的帐户的密码哈希来解密 TGS 并验证服务会话密钥。</p>
+</li>
+</ol>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/8fbf08d03459c1b792f3b6efa4d7f285.png" alt="Kerberos step 3"></p>
+<p>NetNTLM Authentication</p>
+<p>NetNTLM 使用质询-响应机制来工作。 整个流程如下：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/2eab5cacbd0d3e9dc9afb86169b711ec.png" alt="NetNTLM authentication"></p>
+<ol>
+<li>客户端向想要访问的服务器发送身份验证请求。</li>
+<li>服务器生成一个随机数并将其作为质询发送给客户端。</li>
+<li>客户端将其 NTLM 密码哈希与质询（以及其他已知数据）相结合，生成对质询的响应，并将其发送回服务器进行验证。</li>
+<li>服务器将质询和响应转发给域控制器进行验证。</li>
+<li>域控制器使用质询重新计算响应并将其与客户端发送的原始响应进行比较。 如果两者匹配，则客户端通过身份验证； 否则，访问将被拒绝。 认证结果发送回服务器。</li>
+<li>服务器将认证结果转发给客户端。</li>
+</ol>
+<p>请注意，为了安全起见，用户的密码（或哈希值）永远不会通过网络传输。</p>
+<p><strong>注意：</strong> 所描述的过程适用于使用域帐户时。 如果使用本地帐户，服务器可以验证对质询本身的响应，而无需与域控制器交互，因为它的 SAM 上本地存储有密码哈希值。</p>
+<h1 id="Trees-Forests-and-Trusts"><a href="#Trees-Forests-and-Trusts" class="headerlink" title="Trees, Forests and Trusts"></a>Trees, Forests and Trusts</h1><p>到目前为止，我们已经讨论了如何管理单个域、域控制器的角色以及它如何连接计算机、服务器和用户。</p>
+<p>随着公司的发展，他们的网络也在不断发展。 对于一家公司来说，拥有一个域名就足够了，但随着时间的推移，一些额外的需求可能会促使您拥有多个域名。</p>
+<p>Trees</p>
+<p>例如，想象一下，您的公司突然扩展到一个新的国家。 新国家/地区有不同的法律和法规，要求您更新 GPO 以遵守。 另外，现在你在两个国家都有IT人员，每个IT团队都需要管理每个国家对应的资源，而不干扰其他团队。 虽然您可以创建复杂的 OU 结构并使用委派来实现此目的，但拥有庞大的 AD 结构可能难以管理，并且容易出现人为错误。</p>
+<p>对我们来说幸运的是，Active Directory 支持集成多个域，以便您可以将网络划分为可以独立管理的单元。 如果您有两个共享相同命名空间的域（在我们的示例中为“thm.local”），则这些域可以连接到<strong>树</strong>中。</p>
+<p>如果我们的“thm.local”域被分为英国和美国分支机构的两个子域，您可以构建一个树，其中根域为“thm.local”，两个子域分别为“uk.thm.local”和“us.thm” .local`，每个都有其 AD、计算机和用户：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/abea24b7979676a1dcc0c568054544c8.png" alt="Tree"></p>
+<p>这种分区结构使我们能够更好地控制谁可以访问域中的内容。 来自英国的IT人员将拥有自己的DC，仅管理英国资源。 例如，英国用户将无法管理美国用户。 这样，每个分支机构的域管理员将完全控制各自的 DC，但不能控制其他分支机构的 DC。 还可以为树中的每个域独立配置策略。</p>
+<p>当谈论树木和森林时，需要引入一个新的安全组。 <strong>企业管理员</strong>组将授予用户对所有企业域的管理权限。 每个域仍将拥有对其单个域拥有管理员权限的域管理员以及可以控制企业中所有内容的企业管理员。</p>
+<p>Forests</p>
+<p>您管理的域也可以配置在不同的命名空间中。 假设您的公司继续发展并最终收购了另一家名为“MHT Inc.”的公司。当两家公司合并时，您可能会为每个公司拥有不同的域树，每个公司都由自己的 IT 部门管理。 将具有不同名称空间的几棵树联合到同一网络中称为<strong>森林</strong>。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/03448c2faf976db890118d835000bab7.png" alt="Forest"></p>
+<p>信任关系</p>
+<p>在树和森林中组织多个域可以让您在管理和资源方面拥有良好的划分网络。 但在某个时刻，THM UK 的用户可能需要访问 MHT ASIA 服务器之一中的共享文件。 为此，排列在树和森林中的域通过<strong>信任关系</strong>连接在一起。</p>
+<p>简而言之，域之间建立信任关系允许您授权域“THM UK”中的用户访问域“MHT EU”中的资源。</p>
+<p>可以建立的最简单的信任关系是<strong>单向信任关系</strong>。 在单向信任中，如果“域 AAA”信任“域 BBB”，则意味着 BBB 上的用户可以被授权访问 AAA 上的资源：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/af95eb1a4b6c672491d8989f79c00200.png" alt="Trusts"></p>
+<p>单向信任关系的方向与访问方向相反。</p>
+<p><strong>双向信任关系</strong>也可以允许两个域相互授权对方的用户。 默认情况下，加入树或森林下的多个域将形成双向信任关系。</p>
+<p>请务必注意，域之间建立信任关系不会自动授予对其他域上所有资源的访问权限。 一旦建立了信任关系，您就有机会跨不同域授权用户，但实际授权与否取决于您。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://mikannse.space">Mikannse</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://mikannse.space/2024/04/12/THM%E5%9F%9F%E5%AD%A6%E4%B9%A0ActiveDirectoryBasics/">http://mikannse.space/2024/04/12/THM域学习ActiveDirectoryBasics/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://mikannse.space" target="_blank">MikannseのSekai</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a><a class="post-meta__tags" href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">渗透测试</a><a class="post-meta__tags" href="/tags/Domain/">Domain</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/04/12/THM%E5%9F%9F%E5%AD%A6%E4%B9%A0BreachingActiveDirectory/" title="THM域学习BreachingActiveDirectory"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">THM域学习BreachingActiveDirectory</div></div></a></div><div class="next-post pull-right"><a href="/2024/04/09/THM%E5%85%8D%E6%9D%80%E5%AD%A6%E4%B9%A0SignatureEvasion/" title="THM免杀学习SignatureEvasion"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">THM免杀学习SignatureEvasion</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/04/30/THMZeroLogon/" title="THMZeroLogon"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-30</div><div class="title">THMZeroLogon</div></div></a></div><div><a href="/2024/04/12/THM%E5%9F%9F%E5%AD%A6%E4%B9%A0BreachingActiveDirectory/" title="THM域学习BreachingActiveDirectory"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-12</div><div class="title">THM域学习BreachingActiveDirectory</div></div></a></div><div><a href="/2024/05/21/THM%E5%9F%9F%E5%AD%A6%E4%B9%A0CredentialsHarvesting/" title="THM域学习CredentialsHarvesting"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-21</div><div class="title">THM域学习CredentialsHarvesting</div></div></a></div><div><a href="/2024/04/13/THM%E5%9F%9F%E5%AD%A6%E4%B9%A0EnumeratingActiveDirectory/" title="THM域学习EnumeratingActiveDirectory"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-13</div><div class="title">THM域学习EnumeratingActiveDirectory</div></div></a></div><div><a href="/2024/04/25/THM%E5%9F%9F%E5%AD%A6%E4%B9%A0LateralMovementandPivoting/" title="THM域学习LateralMovementandPivoting"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-25</div><div class="title">THM域学习LateralMovementandPivoting</div></div></a></div><div><a href="/2024/04/27/THM%E5%9F%9F%E5%AD%A6%E4%B9%A0ExploitingActiveDirectory/" title="THM域学习ExploitingActiveDirectory"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-27</div><div class="title">THM域学习ExploitingActiveDirectory</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Mikannse</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">274</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mikannse/mikannse.github.io"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">暂时没有公告QAQ</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Introduction"><span class="toc-number">1.</span> <span class="toc-text">Introduction</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Windows-Domains"><span class="toc-number">2.</span> <span class="toc-text">Windows Domains</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Active-Directory"><span class="toc-number">3.</span> <span class="toc-text">Active Directory</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Managing-Users-in-AD"><span class="toc-number">4.</span> <span class="toc-text">Managing Users in AD</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Managing-Computers-in-AD"><span class="toc-number">5.</span> <span class="toc-text">Managing Computers in AD</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Group-Policies"><span class="toc-number">6.</span> <span class="toc-text">Group Policies</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Authentication-Methods"><span class="toc-number">7.</span> <span class="toc-text">Authentication Methods</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Trees-Forests-and-Trusts"><span class="toc-number">8.</span> <span class="toc-text">Trees, Forests and Trusts</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/11/pwncollegeAssembly30/" title="pwncollegeAssembly30">pwncollegeAssembly30</a><time datetime="2024-10-10T17:05:42.000Z" title="发表于 2024-10-11 01:05:42">2024-10-11</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/09/pwncollege%E6%B1%87%E7%BC%96%E5%85%A5%E9%97%A8/" title="pwncollege汇编入门">pwncollege汇编入门</a><time datetime="2024-10-09T14:39:52.000Z" title="发表于 2024-10-09 22:39:52">2024-10-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/05/Git%E9%80%9F%E6%88%90/" title="Git速成">Git速成</a><time datetime="2024-10-05T04:57:08.000Z" title="发表于 2024-10-05 12:57:08">2024-10-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/03/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%BA%8C)%E4%B9%8BVulnHubCorrosion2/" title="打靶记录(一六二)之VulnHubCorrosion2">打靶记录(一六二)之VulnHubCorrosion2</a><time datetime="2024-10-03T09:24:11.000Z" title="发表于 2024-10-03 17:24:11">2024-10-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/02/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%B8%80)%E4%B9%8BVulnHubDrippingBlues1/" title="打靶记录(一六一)之VulnHubDrippingBlues1">打靶记录(一六一)之VulnHubDrippingBlues1</a><time datetime="2024-10-02T05:16:28.000Z" title="发表于 2024-10-02 13:16:28">2024-10-02</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2024 By Mikannse</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function loadDisqus () {
+  const disqus_config = function () {
+    this.page.url = 'http://mikannse.space/2024/04/12/THM%E5%9F%9F%E5%AD%A6%E4%B9%A0ActiveDirectoryBasics/'
+    this.page.identifier = '/2024/04/12/THM%E5%9F%9F%E5%AD%A6%E4%B9%A0ActiveDirectoryBasics/'
+    this.page.title = 'THM域学习ActiveDirectoryBasics'
+  }
+
+  const disqusReset = () => {
+    DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addModeChange('disqus', disqusReset)
+
+  if (window.DISQUS) disqusReset()
+  else {
+    (function() { 
+      var d = document, s = d.createElement('script');
+      s.src = 'https://.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  }
+}
+
+if ('Valine' === 'Disqus' || !true) {
+  if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+  else loadDisqus()
+} else {
+  function loadOtherComment () {
+    loadDisqus()
+  }
+}
+</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

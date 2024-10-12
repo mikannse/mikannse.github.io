@@ -1,0 +1,730 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>IntroductiontoBashScriptingHTB | MikannseのSekai</title><meta name="author" content="Mikannse"><meta name="copyright" content="Mikannse"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="Working ComponentsConditional Execution条件执行允许我们通过达到不同的条件来控制脚本的流程。这一功能是必不可少的组成部分之一。否则，我们只能一个接一个地执行命令。 在定义各种条件时，我们指定应该为特定值执行哪些函数或代码段。如果我们达到了一个特定的条件，那么只执行该条件的代码，而跳过其他代码。一旦代码部分完成，以下命令将在条件执行之外执行。让我们再看一下脚本的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IntroductiontoBashScriptingHTB">
+<meta property="og:url" content="http://mikannse.space/2023/10/28/IntroductiontoBashScriptingHTB/index.html">
+<meta property="og:site_name" content="MikannseのSekai">
+<meta property="og:description" content="Working ComponentsConditional Execution条件执行允许我们通过达到不同的条件来控制脚本的流程。这一功能是必不可少的组成部分之一。否则，我们只能一个接一个地执行命令。 在定义各种条件时，我们指定应该为特定值执行哪些函数或代码段。如果我们达到了一个特定的条件，那么只执行该条件的代码，而跳过其他代码。一旦代码部分完成，以下命令将在条件执行之外执行。让我们再看一下脚本的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg">
+<meta property="article:published_time" content="2023-10-28T05:02:03.000Z">
+<meta property="article:modified_time" content="2023-10-28T05:03:21.537Z">
+<meta property="article:author" content="Mikannse">
+<meta property="article:tag" content="网安">
+<meta property="article:tag" content="笔记">
+<meta property="article:tag" content="渗透测试">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg"><link rel="shortcut icon" href="/img/icon.jpg"><link rel="canonical" href="http://mikannse.space/2023/10/28/IntroductiontoBashScriptingHTB/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Mikannse","link":"链接: ","source":"来源: MikannseのSekai","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'IntroductiontoBashScriptingHTB',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: undefined,
+  isToc: true,
+  postUpdate: '2023-10-28 13:03:21'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">274</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="MikannseのSekai"><span class="site-name">MikannseのSekai</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">IntroductiontoBashScriptingHTB</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-10-28T05:02:03.000Z" title="发表于 2023-10-28 13:02:03">2023-10-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-10-28T05:03:21.537Z" title="更新于 2023-10-28 13:03:21">2023-10-28</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BD%91%E5%AE%89/">网安</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">3.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>14分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="IntroductiontoBashScriptingHTB"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Working-Components"><a href="#Working-Components" class="headerlink" title="Working Components"></a>Working Components</h1><h2 id="Conditional-Execution"><a href="#Conditional-Execution" class="headerlink" title="Conditional Execution"></a>Conditional Execution</h2><p>条件执行允许我们通过达到不同的条件来控制脚本的流程。这一功能是必不可少的组成部分之一。否则，我们只能一个接一个地执行命令。</p>
+<p>在定义各种条件时，我们指定应该为特定值执行哪些函数或代码段。如果我们达到了一个特定的条件，那么只执行该条件的代码，而跳过其他代码。一旦代码部分完成，以下命令将在条件执行之外执行。让我们再看一下脚本的第一部分并分析它。</p>
+<h4 id="Script-sh"><a href="#Script-sh" class="headerlink" title="Script.sh"></a>Script.sh</h4><p>Code:</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Check for given argument</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$#</span> -eq 0 ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">	<span class="built_in">echo</span> -e <span class="string">"You need to specify the target domain.\n"</span></span><br><span class="line">	<span class="built_in">echo</span> -e <span class="string">"Usage:"</span></span><br><span class="line">	<span class="built_in">echo</span> -e <span class="string">"\t<span class="variable">$0</span> &lt;domain&gt;"</span></span><br><span class="line">	<span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">	domain=<span class="variable">$1</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line">&lt;SNIP&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>总而言之，此代码段使用以下组件：</p>
+<ul>
+<li><code>#!/bin/bash</code> - Shebang.</li>
+<li><code>if-else-fi</code> - Conditional execution.</li>
+<li><code>echo</code> - Prints specific output.</li>
+<li><code>$#</code> / <code>$0</code> / <code>$1</code> - Special variables.</li>
+<li><code>domain</code> - Variables.</li>
+</ul>
+<p>条件执行的条件可以使用变量（<code>$#</code>、<code>$0</code>、<code>$1</code>、<code>domain</code>）、值（<code>0</code>）和字符串来定义，我们将在下面的示例中看到。这些值将与我们将在下一节中查看的<code>comparison operators</code>（<code>-eq</code>）进行比较。</p>
+<h3 id="Shebang"><a href="#Shebang" class="headerlink" title="Shebang"></a>Shebang</h3><p>shebang行始终位于每个脚本的顶部，并且始终以“<code>#!</code>“开头。这一行包含执行脚本的指定解释器（<code>/bin/bash</code>）的路径。我们还可以使用Shebang来定义其他解释器，如Python，Perl等。</p>
+<p>Code: </p>
+<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>Code: </p>
+<figure class="highlight perl"><table><tbody><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env perl</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="If-Else-Fi"><a href="#If-Else-Fi" class="headerlink" title="If-Else-Fi"></a>If-Else-Fi</h3><p>最基本的编程任务之一是检查不同的条件来处理这些条件。在编程和脚本语言中，条件检查通常有两种不同的形式，<code>if-else condition</code>和<code>case statements</code>。在伪代码中，if条件的含义如下：</p>
+<h4 id="Pseudo-Code-伪代码"><a href="#Pseudo-Code-伪代码" class="headerlink" title="Pseudo-Code 伪代码"></a>Pseudo-Code 伪代码</h4><p>Code: </p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> [ the number of given arguments equals 0 ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">	Print: <span class="string">"You need to specify the target domain."</span></span><br><span class="line">	Print: <span class="string">"&lt;empty line&gt;"</span></span><br><span class="line">	Print: <span class="string">"Usage:"</span></span><br><span class="line">	Print: <span class="string">"   &lt;name of the script&gt; &lt;domain&gt;"</span></span><br><span class="line">	Exit the script with an error</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">	The <span class="string">"domain"</span> variable serves as the <span class="built_in">alias</span> <span class="keyword">for</span> the given argument </span><br><span class="line">finish the if-condition</span><br></pre></td></tr></tbody></table></figure>
+
+<p>默认情况下，一个<code>If-Else</code>条件只能包含一个“<code>If</code>“，如下例所示。</p>
+<h4 id="If-Only-sh"><a href="#If-Only-sh" class="headerlink" title="If-Only.sh"></a>If-Only.sh</h4><p>Code: 验证码： bash</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line">value=<span class="variable">$1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$value</span> -gt <span class="string">"10"</span> ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"Given argument is greater than 10."</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="If-Only-sh-Execution"><a href="#If-Only-sh-Execution" class="headerlink" title="If-Only.sh - Execution"></a>If-Only.sh - Execution</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ bash if-only.sh 5</span><br></pre></td></tr></tbody></table></figure>
+
+<p>​                                                                                If-Only.sh - ExecutionIf-Only.sh执行                </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ bash if-only.sh 12</span><br><span class="line"></span><br><span class="line">Given argument is greater than 10.</span><br></pre></td></tr></tbody></table></figure>
+
+<p>当添加<code>Elif</code>或<code>Else</code>时，我们添加替代项来处理特定的值或状态。如果一个特定的值不适用于第一种情况，它将被其他人捕获。</p>
+<h4 id="If-Elif-Else-sh"><a href="#If-Elif-Else-sh" class="headerlink" title="If-Elif-Else.sh"></a>If-Elif-Else.sh</h4><p>Code:</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line">value=<span class="variable">$1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$value</span> -gt <span class="string">"10"</span> ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">	<span class="built_in">echo</span> <span class="string">"Given argument is greater than 10."</span></span><br><span class="line"><span class="keyword">elif</span> [ <span class="variable">$value</span> -lt <span class="string">"10"</span> ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">	<span class="built_in">echo</span> <span class="string">"Given argument is less than 10."</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">	<span class="built_in">echo</span> <span class="string">"Given argument is not a number."</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="If-Elif-Else-sh-Execution"><a href="#If-Elif-Else-sh-Execution" class="headerlink" title="If-Elif-Else.sh - Execution"></a>If-Elif-Else.sh - Execution</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ bash if-elif-else.sh 5</span><br><span class="line"></span><br><span class="line">Given argument is less than 10.</span><br></pre></td></tr></tbody></table></figure>
+
+<p>​                                                                                If-Elif-Else.sh - ExecutionIf-Elif-Else.sh执行                </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ bash if-elif-else.sh 12</span><br><span class="line"></span><br><span class="line">Given argument is greater than 10.</span><br></pre></td></tr></tbody></table></figure>
+
+<p>​                                                                                If-Elif-Else.sh - ExecutionIf-Elif-Else.sh执行                </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ bash if-elif-else.sh HTB</span><br><span class="line"></span><br><span class="line">if-elif-else.sh: line 5: [: HTB: integer expression expected</span><br><span class="line">if-elif-else.sh: line 8: [: HTB: integer expression expected</span><br><span class="line">Given argument is not a number.</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们可以扩展脚本并指定几个条件。这可能看起来像这样：</p>
+<h4 id="Several-Conditions-Script-sh-几个条件-Script-sh"><a href="#Several-Conditions-Script-sh-几个条件-Script-sh" class="headerlink" title="Several Conditions - Script.sh 几个条件-Script.sh"></a>Several Conditions - Script.sh 几个条件-Script.sh</h4><p>Code: </p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Check for given argument</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$#</span> -eq 0 ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">	<span class="built_in">echo</span> -e <span class="string">"You need to specify the target domain.\n"</span></span><br><span class="line">	<span class="built_in">echo</span> -e <span class="string">"Usage:"</span></span><br><span class="line">	<span class="built_in">echo</span> -e <span class="string">"\t<span class="variable">$0</span> &lt;domain&gt;"</span></span><br><span class="line">	<span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">elif</span> [ <span class="variable">$#</span> -eq 1 ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">	domain=<span class="variable">$1</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">	<span class="built_in">echo</span> -e <span class="string">"Too many arguments given."</span></span><br><span class="line">	<span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line">&lt;SNIP&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这里我们定义了另一个条件（<code>elif [&lt;condition&gt;];then</code>），它打印一行，告诉我们（<code>echo -e "..."</code>）我们已经给出了多个参数，并以错误（<code>exit 1</code>）退出程序。</p>
+<h3 id="Exercise-Script"><a href="#Exercise-Script" class="headerlink" title="Exercise Script"></a>Exercise Script</h3><p>Code:</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment"># Count number of characters in a variable:</span></span><br><span class="line"><span class="comment">#     echo $variable | wc -c</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Variable to encode</span></span><br><span class="line">var=<span class="string">"nef892na9s1p9asn2aJs71nIsm"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> counter <span class="keyword">in</span> {1..40}</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">        var=$(<span class="built_in">echo</span> <span class="variable">$var</span> | <span class="built_in">base64</span>)</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="Arguments-Variables-and-Arrays"><a href="#Arguments-Variables-and-Arrays" class="headerlink" title="Arguments, Variables, and Arrays"></a>Arguments, Variables, and Arrays</h2><h3 id="Arguments"><a href="#Arguments" class="headerlink" title="Arguments"></a>Arguments</h3><p>bash脚本的优点是，我们总是可以传递多达9个参数（<code>$0</code>-<code>$9</code>）给脚本，而无需将它们分配给变量或为这些变量设置相应的要求。<code>9 arguments</code>因为第一个参数<code>$0</code>是为脚本保留的。正如我们在这里看到的，我们需要在变量名之前使用美元符号（<code>$</code>），以便在指定的位置使用它。相比之下，赋值看起来像这样：                                                             </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ ./script.sh ARG1 ARG2 ARG3 ... ARG9</span><br><span class="line">       ASSIGNMENTS:       $0      $1   $2   $3 ...   $9</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这意味着我们已经自动将相应的参数分配给了这个地方的预定义变量。这些变量称为特殊变量。这些特殊变量充当占位符。如果我们现在再次查看代码部分，我们将看到在何处使用了哪些参数。</p>
+<h4 id="CIDR-sh"><a href="#CIDR-sh" class="headerlink" title="CIDR.sh"></a>CIDR.sh</h4><p>Code: </p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Check for given argument</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$#</span> -eq 0 ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">	<span class="built_in">echo</span> -e <span class="string">"You need to specify the target domain.\n"</span></span><br><span class="line">	<span class="built_in">echo</span> -e <span class="string">"Usage:"</span></span><br><span class="line">	<span class="built_in">echo</span> -e <span class="string">"\t<span class="variable">$0</span> &lt;domain&gt;"</span></span><br><span class="line">	<span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">	domain=<span class="variable">$1</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line">&lt;SNIP&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>有几种方法可以执行我们的脚本。但是，在使用脚本中定义的解释器执行脚本之前，我们必须首先设置脚本的执行特权。</p>
+<h4 id="CIDR-sh-Set-Execution-Privileges"><a href="#CIDR-sh-Set-Execution-Privileges" class="headerlink" title="CIDR.sh - Set Execution Privileges"></a>CIDR.sh - Set Execution Privileges</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ chmod +x cidr.sh</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="CIDR-sh-Execution-without-Arguments"><a href="#CIDR-sh-Execution-without-Arguments" class="headerlink" title="CIDR.sh - Execution without Arguments"></a>CIDR.sh - Execution without Arguments</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ ./cidr.sh</span><br><span class="line"></span><br><span class="line">You need to specify the target domain.</span><br><span class="line"></span><br><span class="line">Usage:</span><br><span class="line">	cidr.sh &lt;domain&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="CIDR-sh-Execution-without-Execution-Permissions"><a href="#CIDR-sh-Execution-without-Execution-Permissions" class="headerlink" title="CIDR.sh - Execution without Execution Permissions"></a>CIDR.sh - Execution without Execution Permissions</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ bash cidr.sh</span><br><span class="line"></span><br><span class="line">You need to specify the target domain.</span><br><span class="line"></span><br><span class="line">Usage:</span><br><span class="line">	cidr.sh &lt;domain&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="Special-Variables"><a href="#Special-Variables" class="headerlink" title="Special Variables"></a>Special Variables</h3><p>特殊变量使用<a target="_blank" rel="noopener" href="https://bash.cyberciti.biz/guide/$IFS">内部字段分隔符</a>（<code>IFS</code>）来标识参数结束和下一个参数开始的时间。Bash提供了各种特殊的变量来帮助编写脚本。其中一些变量是：</p>
+<table>
+<thead>
+<tr>
+<th><strong>IFS</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>$#</code></td>
+<td>此变量保存传递给脚本的参数的数量。</td>
+</tr>
+<tr>
+<td><code>$@</code></td>
+<td>此变量可用于检索命令行参数列表。</td>
+</tr>
+<tr>
+<td><code>$n</code></td>
+<td>每个命令行参数都可以使用其位置有选择地检索。例如，第一个参数位于<code>$1</code>。</td>
+</tr>
+<tr>
+<td><code>$$</code></td>
+<td>当前正在执行的进程的进程ID。</td>
+</tr>
+<tr>
+<td><code>$?</code> <code>$n</code></td>
+<td>脚本的退出状态。此变量对于确定命令是否成功很有用。值0表示成功执行，而1表示失败的结果。</td>
+</tr>
+</tbody></table>
+<p>在上面显示的那些中，我们在<code>if-else</code>条件中有3个这样的特殊变量。</p>
+<table>
+<thead>
+<tr>
+<th><strong>IFS</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>$#</code> <code>$n</code></td>
+<td>在这种情况下，我们只需要一个变量，需要分配给<code>domain</code>变量。此变量用于指定我们要使用的目标。如果我们只提供一个参数，那么<code>$#</code>变量的值将为<code>1</code>。</td>
+</tr>
+<tr>
+<td><code>$0</code> <code>$n</code></td>
+<td>这个特殊的变量被分配了执行脚本的名称，然后在“<code>Usage:</code>”示例中显示。</td>
+</tr>
+<tr>
+<td><code>$1</code> <code>$n</code></td>
+<td>用空格分隔，第一个参数被分配给该特殊变量。</td>
+</tr>
+</tbody></table>
+<h3 id="Variables"><a href="#Variables" class="headerlink" title="Variables"></a>Variables</h3><p>我们还看到在if-else循环的末尾，我们将第一个参数的值赋给了名为“<code>domain</code>“的变量。变量的赋值没有美元符号（<code>$</code>）。美元符号仅用于允许此变量的对应值在其他代码部分中使用。在分配变量时，名称和值之间不能有空格。</p>
+<p>Code: </p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">&lt;SNIP&gt;</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">	domain=<span class="variable">$1</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line">&lt;SNIP&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>与其他编程语言相比，Bash中的变量类型（如“<code>strings</code>”、“<code>integers</code>”和“<code>boolean</code>”）之间没有直接的区别和识别。“变量的所有内容都被视为字符串字符。Bash根据是否只分配数字来启用算术函数。重要的是要注意，当声明变量时，它们确实包含<code>not</code>。否则，实际变量名将被解释为内部函数或命令。</p>
+<h4 id="Declaring-a-Variable-Error"><a href="#Declaring-a-Variable-Error" class="headerlink" title="Declaring a Variable - Error"></a>Declaring a Variable - Error</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ variable = "this will result with an error."</span><br><span class="line"></span><br><span class="line">command not found: variable</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="Declaring-a-Variable-Without-an-Error"><a href="#Declaring-a-Variable-Without-an-Error" class="headerlink" title="Declaring a Variable - Without an Error"></a>Declaring a Variable - Without an Error</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ variable="Declared without an error."</span><br><span class="line">mikannse7@htb[/htb]$ echo $variable</span><br><span class="line"></span><br><span class="line">Declared without an error.</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="Arrays"><a href="#Arrays" class="headerlink" title="Arrays"></a>Arrays</h3><p>在Bash中，也可以为单个变量分配多个值。如果我们想扫描多个域或IP地址，这可能是有益的。这些变量被称为<code>arrays</code>，我们可以使用它们来存储和处理特定类型值的有序序列。<code>Arrays</code>用从<code>index</code>开始的<code>0</code>标识每个存储的条目。当我们想给数组组件赋值时，我们用与标准shell变量相同的方式来做。我们所做的就是指定用方括号括起来的字段索引。在Bash中，<code>arrays</code>的声明看起来像这样：</p>
+<h4 id="Arrays-sh"><a href="#Arrays-sh" class="headerlink" title="Arrays.sh"></a>Arrays.sh</h4><p>Code: </p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line">domains=(www.inlanefreight.com ftp.inlanefreight.com vpn.inlanefreight.com www2.inlanefreight.com)</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">${domains[0]}</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们也可以使用索引单独检索它们，使用变量和花括号中的相应索引。花括号用于变量展开。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ ./Arrays.sh</span><br><span class="line"></span><br><span class="line">www.inlanefreight.com</span><br></pre></td></tr></tbody></table></figure>
+
+<p>值得注意的是，单引号（<code>'</code> … <code>'</code>）和双引号（<code>"</code>. <code>"</code>）防止数组中的各个值之间用空格分隔。这意味着单引号和双引号之间的所有空格都将被忽略，并作为分配给数组的单个值处理。</p>
+<h4 id="Arrays-sh-1"><a href="#Arrays-sh-1" class="headerlink" title="Arrays.sh"></a>Arrays.sh</h4><p>Code:</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line">domains=(<span class="string">"www.inlanefreight.com ftp.inlanefreight.com vpn.inlanefreight.com"</span> www2.inlanefreight.com)</span><br><span class="line"><span class="built_in">echo</span> <span class="variable">${domains[0]}</span>          </span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ ./Arrays.sh</span><br><span class="line"></span><br><span class="line">www.inlanefreight.com ftp.inlanefreight.com vpn.inlanefreight.com</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="Comparison-Operators"><a href="#Comparison-Operators" class="headerlink" title="Comparison Operators"></a>Comparison Operators</h2><p>为了将特定的值相互比较，我们需要称为<a target="_blank" rel="noopener" href="https://www.tldp.org/LDP/abs/html/comparison-ops.html">比较运算符</a>的元素。<code>comparison operators</code>用于确定如何比较定义的值。对于这些运营商，我们区分：</p>
+<ul>
+<li><code>string</code> operators</li>
+<li><code>integer</code> operators</li>
+<li><code>file</code> operators</li>
+<li><code>boolean</code> operators</li>
+</ul>
+<h3 id="String-Operators"><a href="#String-Operators" class="headerlink" title="String Operators"></a>String Operators</h3><p>如果我们比较字符串，那么我们就知道我们希望在相应的值中有什么。</p>
+<table>
+<thead>
+<tr>
+<th><strong>Operator</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>==</code></td>
+<td>is equal to</td>
+</tr>
+<tr>
+<td><code>!=</code></td>
+<td>is not equal to</td>
+</tr>
+<tr>
+<td><code>&lt;</code></td>
+<td>is less than in ASCII alphabetical order</td>
+</tr>
+<tr>
+<td><code>&gt;</code></td>
+<td>is greater than in ASCII alphabetical order</td>
+</tr>
+<tr>
+<td><code>-z</code></td>
+<td>if the string is empty (null)</td>
+</tr>
+<tr>
+<td><code>-n</code></td>
+<td>if the string is not null</td>
+</tr>
+</tbody></table>
+<p>这里需要注意的是，我们将给定参数（<code>$1</code>）的变量放在双引号（<code>"$1"</code>）中。这告诉Bash变量的内容应该作为字符串处理。否则，我们会得到一个错误。</p>
+<p>Code: </p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Check the given argument</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="string">"<span class="variable">$1</span>"</span> != <span class="string">"HackTheBox"</span> ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">	<span class="built_in">echo</span> -e <span class="string">"You need to give 'HackTheBox' as argument."</span></span><br><span class="line">	<span class="built_in">exit</span> 1</span><br><span class="line"></span><br><span class="line"><span class="keyword">elif</span> [ <span class="variable">$#</span> -gt 1 ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">	<span class="built_in">echo</span> -e <span class="string">"Too many arguments given."</span></span><br><span class="line">	<span class="built_in">exit</span> 1</span><br><span class="line"></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">	domain=<span class="variable">$1</span></span><br><span class="line">	<span class="built_in">echo</span> -e <span class="string">"Success!"</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>字符串比较运算符“<code>&lt;</code> / <code>&gt;</code>”仅在双方括号<code>[[ &lt;condition&gt; ]]</code>中起作用。我们可以在互联网上找到ASCII表，或者在终端中使用以下命令。我们稍后来看一个例子。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ man ascii</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="ASCII-Table"><a href="#ASCII-Table" class="headerlink" title="ASCII Table"></a>ASCII Table</h4><table>
+<thead>
+<tr>
+<th><strong>Decimal小数</strong></th>
+<th><strong>Hexadecial十六进制的</strong></th>
+<th><strong>Character字符</strong></th>
+<th><strong>Description描述</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>00</td>
+<td>NUL</td>
+<td>End of a string字符串末尾</td>
+</tr>
+<tr>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr>
+<td>65</td>
+<td>41</td>
+<td>A一</td>
+<td>Capital A大写的A</td>
+</tr>
+<tr>
+<td>66</td>
+<td>42</td>
+<td>B</td>
+<td>Capital B资本B</td>
+</tr>
+<tr>
+<td>67</td>
+<td>43</td>
+<td>C</td>
+<td>Capital C资本C</td>
+</tr>
+<tr>
+<td>68</td>
+<td>44</td>
+<td>D</td>
+<td>Capital D大写D</td>
+</tr>
+<tr>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr>
+<td>127</td>
+<td>7F</td>
+<td>DEL</td>
+<td>Delete删除</td>
+</tr>
+</tbody></table>
+<p><code>ASCII</code>代表<code>American Standard Code for Information Interchange</code>，表示7位字符编码。由于每个位可以取两个值，因此存在<code>128</code>不同的位模式，其也可以被解释为十进制整数<code>0</code> - <code>127</code>或十六进制值<code>00</code> -<code>7F</code>。前32个ASCII字符代码被保留为所谓的<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Control_character">控制字符</a>。</p>
+<h3 id="Integer-Operators"><a href="#Integer-Operators" class="headerlink" title="Integer Operators"></a>Integer Operators</h3><p>如果我们知道要比较什么值，比较整数对我们来说非常有用。因此，我们定义了接下来的步骤和命令，脚本应该如何处理相应的值。</p>
+<table>
+<thead>
+<tr>
+<th><strong>Operator</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-eq</code> <code>-n</code></td>
+<td>is equal to</td>
+</tr>
+<tr>
+<td><code>-ne</code> <code>-n</code></td>
+<td>is not equal to不</td>
+</tr>
+<tr>
+<td><code>-lt</code> <code>-n</code></td>
+<td>is less than</td>
+</tr>
+<tr>
+<td><code>-le</code> <code>-n</code></td>
+<td>is less than or equal to</td>
+</tr>
+<tr>
+<td><code>-gt</code> <code>-n</code></td>
+<td>is greater than</td>
+</tr>
+<tr>
+<td><code>-ge</code> <code>-n</code></td>
+<td>is greater than or equal to</td>
+</tr>
+</tbody></table>
+<p>Code: </p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Check the given argument</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$#</span> -lt 1 ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">	<span class="built_in">echo</span> -e <span class="string">"Number of given arguments is less than 1"</span></span><br><span class="line">	<span class="built_in">exit</span> 1</span><br><span class="line"></span><br><span class="line"><span class="keyword">elif</span> [ <span class="variable">$#</span> -gt 1 ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">	<span class="built_in">echo</span> -e <span class="string">"Number of given arguments is greater than 1"</span></span><br><span class="line">	<span class="built_in">exit</span> 1</span><br><span class="line"></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">	domain=<span class="variable">$1</span></span><br><span class="line">	<span class="built_in">echo</span> -e <span class="string">"Number of given arguments equals 1"</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="File-Operators"><a href="#File-Operators" class="headerlink" title="File Operators"></a>File Operators</h3><p>如果我们想找出特定的权限或它们是否存在，文件操作符是很有用的。</p>
+<table>
+<thead>
+<tr>
+<th><strong>Operator</strong></th>
+<th><strong>Descriptio</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-e</code> <code>-n</code></td>
+<td>if the file exist</td>
+</tr>
+<tr>
+<td><code>-f</code> <code>-n</code></td>
+<td>tests if it is a file</td>
+</tr>
+<tr>
+<td><code>-d</code> <code>-n</code></td>
+<td>tests if it is a directory</td>
+</tr>
+<tr>
+<td><code>-L</code> <code>-n</code></td>
+<td>tests if it is if a symbolic link</td>
+</tr>
+<tr>
+<td><code>-N</code> <code>-n</code></td>
+<td>checks if the file was modified after it was last read检查文件在上次读取后是否被修改</td>
+</tr>
+<tr>
+<td><code>-O</code> <code>-n</code></td>
+<td>if the current user owns the file</td>
+</tr>
+<tr>
+<td><code>-G</code> <code>-n</code></td>
+<td>if the file’s group id matches the current user’s</td>
+</tr>
+<tr>
+<td><code>-s</code> <code>-n</code></td>
+<td>tests if the file has a size greater than 0</td>
+</tr>
+<tr>
+<td><code>-r</code> <code>-n</code></td>
+<td>tests if the file has read permission</td>
+</tr>
+<tr>
+<td><code>-w</code> <code>-n</code></td>
+<td>tests if the file has write permission</td>
+</tr>
+<tr>
+<td><code>-x</code> <code>-n</code></td>
+<td>tests if the file has execute permission</td>
+</tr>
+</tbody></table>
+<p>Code: </p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Check if the specified file exists</span></span><br><span class="line"><span class="keyword">if</span> [ -e <span class="string">"<span class="variable">$1</span>"</span> ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">	<span class="built_in">echo</span> -e <span class="string">"The file exists."</span></span><br><span class="line">	<span class="built_in">exit</span> 0</span><br><span class="line"></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">	<span class="built_in">echo</span> -e <span class="string">"The file does not exist."</span></span><br><span class="line">	<span class="built_in">exit</span> 2</span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="Boolean-and-Logical-Operators"><a href="#Boolean-and-Logical-Operators" class="headerlink" title="Boolean and Logical Operators"></a>Boolean and Logical Operators</h3><p>我们得到一个布尔值“<code>false</code>”或“<code>true</code>”作为逻辑运算符的结果。Bash让我们可以使用双方括号<code>[[ &lt;condition&gt; ]]</code>来比较字符串。为了得到这些布尔值，我们可以使用字符串运算符。无论比较是否匹配，我们都会得到布尔值“<code>false</code>”或“<code>true</code>“。</p>
+<p>Code: </p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Check the boolean value</span></span><br><span class="line"><span class="keyword">if</span> [[ -z <span class="variable">$1</span> ]]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">	<span class="built_in">echo</span> -e <span class="string">"Boolean value: True (is null)"</span></span><br><span class="line">	<span class="built_in">exit</span> 1</span><br><span class="line"></span><br><span class="line"><span class="keyword">elif</span> [[ <span class="variable">$#</span> &gt; 1 ]]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">	<span class="built_in">echo</span> -e <span class="string">"Boolean value: True (is greater than)"</span></span><br><span class="line">	<span class="built_in">exit</span> 1</span><br><span class="line"></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">	domain=<span class="variable">$1</span></span><br><span class="line">	<span class="built_in">echo</span> -e <span class="string">"Boolean value: False (is equal to)"</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="Logical-Operators"><a href="#Logical-Operators" class="headerlink" title="Logical Operators"></a>Logical Operators</h3><p>使用逻辑运算符，我们可以在一个条件中定义多个条件。这意味着我们定义的所有条件必须匹配，然后才能执行相应的代码。</p>
+<table>
+<thead>
+<tr>
+<th><strong>Operator</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>!</code> <code>-n</code></td>
+<td>logical negotation NOT</td>
+</tr>
+<tr>
+<td><code>&amp;&amp;</code> <code>-n</code></td>
+<td>logical AND</td>
+</tr>
+<tr>
+<td>`</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>Code: </p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Check if the specified file exists and if we have read permissions</span></span><br><span class="line"><span class="keyword">if</span> [[ -e <span class="string">"<span class="variable">$1</span>"</span> &amp;&amp; -r <span class="string">"<span class="variable">$1</span>"</span> ]]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">	<span class="built_in">echo</span> -e <span class="string">"We can read the file that has been specified."</span></span><br><span class="line">	<span class="built_in">exit</span> 0</span><br><span class="line"></span><br><span class="line"><span class="keyword">elif</span> [[ ! -e <span class="string">"<span class="variable">$1</span>"</span> ]]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">	<span class="built_in">echo</span> -e <span class="string">"The specified file does not exist."</span></span><br><span class="line">	<span class="built_in">exit</span> 2</span><br><span class="line"></span><br><span class="line"><span class="keyword">elif</span> [[ -e <span class="string">"<span class="variable">$1</span>"</span> &amp;&amp; ! -r <span class="string">"<span class="variable">$1</span>"</span> ]]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">	<span class="built_in">echo</span> -e <span class="string">"We don't have read permission for this file."</span></span><br><span class="line">	<span class="built_in">exit</span> 1</span><br><span class="line"></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">	<span class="built_in">echo</span> -e <span class="string">"Error occured."</span></span><br><span class="line">	<span class="built_in">exit</span> 5</span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="Exercise-Script-1"><a href="#Exercise-Script-1" class="headerlink" title="Exercise Script"></a>Exercise Script</h3><p>Code: </p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line">var=<span class="string">"8dm7KsjU28B7v621Jls"</span></span><br><span class="line">value=<span class="string">"ERmFRMVZ0U2paTlJYTkxDZz09Cg"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> {1..40}</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">        var=$(<span class="built_in">echo</span> <span class="variable">$var</span> | <span class="built_in">base64</span>)</span><br><span class="line">		</span><br><span class="line">		<span class="comment">#&lt;---- If condition here:</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="Arithmetic"><a href="#Arithmetic" class="headerlink" title="Arithmetic"></a>Arithmetic</h2><p>在Bash中，我们有七个不同的<code>arithmetic operators</code>可以使用。这些用于执行不同的数学运算或修改某些整数。</p>
+<h4 id="Arithmetic-Operators-算术运算符"><a href="#Arithmetic-Operators-算术运算符" class="headerlink" title="Arithmetic Operators 算术运算符"></a>Arithmetic Operators 算术运算符</h4><table>
+<thead>
+<tr>
+<th><strong>Operator操作者</strong></th>
+<th><strong>Description描述</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>+</code></td>
+<td>Addition</td>
+</tr>
+<tr>
+<td><code>-</code></td>
+<td>Substraction</td>
+</tr>
+<tr>
+<td><code>*</code></td>
+<td>Multiplication</td>
+</tr>
+<tr>
+<td><code>/</code></td>
+<td>Division</td>
+</tr>
+<tr>
+<td><code>%</code></td>
+<td>Modulus</td>
+</tr>
+<tr>
+<td><code>variable++</code></td>
+<td>Increase the value of the variable by 1</td>
+</tr>
+<tr>
+<td><code>variable--</code></td>
+<td>Decrease the value of the variable by 1</td>
+</tr>
+</tbody></table>
+<p>我们可以在一个小脚本中总结所有这些操作符：</p>
+<h4 id="Arithmetic-sh"><a href="#Arithmetic-sh" class="headerlink" title="Arithmetic.sh"></a>Arithmetic.sh</h4><p>Code: </p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line">increase=1</span><br><span class="line">decrease=1</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"Addition: 10 + 10 = <span class="subst">$((10 + 10)</span>)"</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"Substraction: 10 - 10 = <span class="subst">$((10 - 10)</span>)"</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"Multiplication: 10 * 10 = <span class="subst">$((10 * 10)</span>)"</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"Division: 10 / 10 = <span class="subst">$((10 / 10)</span>)"</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"Modulus: 10 % 4 = <span class="subst">$((10 % 4)</span>)"</span></span><br><span class="line"></span><br><span class="line">((increase++))</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"Increase Variable: <span class="variable">$increase</span>"</span></span><br><span class="line"></span><br><span class="line">((decrease--))</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"Decrease Variable: <span class="variable">$decrease</span>"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>该脚本的输出如下所示：</p>
+<h4 id="Arithmetic-sh-Execution"><a href="#Arithmetic-sh-Execution" class="headerlink" title="Arithmetic.sh - Execution"></a>Arithmetic.sh - Execution</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ ./Arithmetic.sh</span><br><span class="line"></span><br><span class="line">Addition: 10 + 10 = 20</span><br><span class="line">Substraction: 10 - 10 = 0</span><br><span class="line">Multiplication: 10 * 10 = 100</span><br><span class="line">Division: 10 / 10 = 1</span><br><span class="line">Modulus: 10 % 4 = 2</span><br><span class="line">Increase Variable: 2</span><br><span class="line">Decrease Variable: 0</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们还可以计算变量的长度。使用这个函数`$</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://mikannse.space">Mikannse</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://mikannse.space/2023/10/28/IntroductiontoBashScriptingHTB/">http://mikannse.space/2023/10/28/IntroductiontoBashScriptingHTB/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://mikannse.space" target="_blank">MikannseのSekai</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%BD%91%E5%AE%89/">网安</a><a class="post-meta__tags" href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a><a class="post-meta__tags" href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">渗透测试</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/10/30/ServersideAttacksHTB/" title="ServersideAttacksHTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">ServersideAttacksHTB</div></div></a></div><div class="next-post pull-right"><a href="/2023/10/24/HackingWordPressHTB/" title="HackingWordPressHTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">HackingWordPressHTB</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2023/11/17/Cross-Site%20Scripting%20(XSS)HTB/" title="Cross-Site Scripting (XSS)HTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-17</div><div class="title">Cross-Site Scripting (XSS)HTB</div></div></a></div><div><a href="/2023/10/24/HackingWordPressHTB/" title="HackingWordPressHTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-10-24</div><div class="title">HackingWordPressHTB</div></div></a></div><div><a href="/2023/11/15/Information%20Gathering%20-%20Web%20EditionHTB/" title="Information Gathering - Web EditionHTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-15</div><div class="title">Information Gathering - Web EditionHTB</div></div></a></div><div><a href="/2023/11/07/IntroToAssemblyShellcodingANDSkill/" title="IntroToAssemblyShellcodingANDSkillHTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-07</div><div class="title">IntroToAssemblyShellcodingANDSkillHTB</div></div></a></div><div><a href="/2023/11/04/IntroToAssemblyArchANDAssembDebugger/" title="IntroToAssemblyArchANDAssembDebuggerHTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-04</div><div class="title">IntroToAssemblyArchANDAssembDebuggerHTB</div></div></a></div><div><a href="/2023/11/05/IntroToAssemblyBasicInstructionsANDFunctions/" title="IntroToAssemblyBasicInstructionsANDFunctionsHTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-05</div><div class="title">IntroToAssemblyBasicInstructionsANDFunctionsHTB</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Mikannse</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">274</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mikannse/mikannse.github.io"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">暂时没有公告QAQ</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Working-Components"><span class="toc-number">1.</span> <span class="toc-text">Working Components</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Conditional-Execution"><span class="toc-number">1.1.</span> <span class="toc-text">Conditional Execution</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Script-sh"><span class="toc-number">1.1.0.1.</span> <span class="toc-text">Script.sh</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Shebang"><span class="toc-number">1.1.1.</span> <span class="toc-text">Shebang</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#If-Else-Fi"><span class="toc-number">1.1.2.</span> <span class="toc-text">If-Else-Fi</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Pseudo-Code-%E4%BC%AA%E4%BB%A3%E7%A0%81"><span class="toc-number">1.1.2.1.</span> <span class="toc-text">Pseudo-Code 伪代码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#If-Only-sh"><span class="toc-number">1.1.2.2.</span> <span class="toc-text">If-Only.sh</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#If-Only-sh-Execution"><span class="toc-number">1.1.2.3.</span> <span class="toc-text">If-Only.sh - Execution</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#If-Elif-Else-sh"><span class="toc-number">1.1.2.4.</span> <span class="toc-text">If-Elif-Else.sh</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#If-Elif-Else-sh-Execution"><span class="toc-number">1.1.2.5.</span> <span class="toc-text">If-Elif-Else.sh - Execution</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Several-Conditions-Script-sh-%E5%87%A0%E4%B8%AA%E6%9D%A1%E4%BB%B6-Script-sh"><span class="toc-number">1.1.2.6.</span> <span class="toc-text">Several Conditions - Script.sh 几个条件-Script.sh</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Exercise-Script"><span class="toc-number">1.1.3.</span> <span class="toc-text">Exercise Script</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Arguments-Variables-and-Arrays"><span class="toc-number">1.2.</span> <span class="toc-text">Arguments, Variables, and Arrays</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Arguments"><span class="toc-number">1.2.1.</span> <span class="toc-text">Arguments</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#CIDR-sh"><span class="toc-number">1.2.1.1.</span> <span class="toc-text">CIDR.sh</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CIDR-sh-Set-Execution-Privileges"><span class="toc-number">1.2.1.2.</span> <span class="toc-text">CIDR.sh - Set Execution Privileges</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CIDR-sh-Execution-without-Arguments"><span class="toc-number">1.2.1.3.</span> <span class="toc-text">CIDR.sh - Execution without Arguments</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CIDR-sh-Execution-without-Execution-Permissions"><span class="toc-number">1.2.1.4.</span> <span class="toc-text">CIDR.sh - Execution without Execution Permissions</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Special-Variables"><span class="toc-number">1.2.2.</span> <span class="toc-text">Special Variables</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Variables"><span class="toc-number">1.2.3.</span> <span class="toc-text">Variables</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Declaring-a-Variable-Error"><span class="toc-number">1.2.3.1.</span> <span class="toc-text">Declaring a Variable - Error</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Declaring-a-Variable-Without-an-Error"><span class="toc-number">1.2.3.2.</span> <span class="toc-text">Declaring a Variable - Without an Error</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Arrays"><span class="toc-number">1.2.4.</span> <span class="toc-text">Arrays</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Arrays-sh"><span class="toc-number">1.2.4.1.</span> <span class="toc-text">Arrays.sh</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Arrays-sh-1"><span class="toc-number">1.2.4.2.</span> <span class="toc-text">Arrays.sh</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Comparison-Operators"><span class="toc-number">1.3.</span> <span class="toc-text">Comparison Operators</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#String-Operators"><span class="toc-number">1.3.1.</span> <span class="toc-text">String Operators</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#ASCII-Table"><span class="toc-number">1.3.1.1.</span> <span class="toc-text">ASCII Table</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Integer-Operators"><span class="toc-number">1.3.2.</span> <span class="toc-text">Integer Operators</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#File-Operators"><span class="toc-number">1.3.3.</span> <span class="toc-text">File Operators</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Boolean-and-Logical-Operators"><span class="toc-number">1.3.4.</span> <span class="toc-text">Boolean and Logical Operators</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Logical-Operators"><span class="toc-number">1.3.5.</span> <span class="toc-text">Logical Operators</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Exercise-Script-1"><span class="toc-number">1.3.6.</span> <span class="toc-text">Exercise Script</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Arithmetic"><span class="toc-number">1.4.</span> <span class="toc-text">Arithmetic</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Arithmetic-Operators-%E7%AE%97%E6%9C%AF%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">1.4.0.1.</span> <span class="toc-text">Arithmetic Operators 算术运算符</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Arithmetic-sh"><span class="toc-number">1.4.0.2.</span> <span class="toc-text">Arithmetic.sh</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Arithmetic-sh-Execution"><span class="toc-number">1.4.0.3.</span> <span class="toc-text">Arithmetic.sh - Execution</span></a></li></ol></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/11/pwncollegeAssembly30/" title="pwncollegeAssembly30">pwncollegeAssembly30</a><time datetime="2024-10-10T17:05:42.000Z" title="发表于 2024-10-11 01:05:42">2024-10-11</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/09/pwncollege%E6%B1%87%E7%BC%96%E5%85%A5%E9%97%A8/" title="pwncollege汇编入门">pwncollege汇编入门</a><time datetime="2024-10-09T14:39:52.000Z" title="发表于 2024-10-09 22:39:52">2024-10-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/05/Git%E9%80%9F%E6%88%90/" title="Git速成">Git速成</a><time datetime="2024-10-05T04:57:08.000Z" title="发表于 2024-10-05 12:57:08">2024-10-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/03/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%BA%8C)%E4%B9%8BVulnHubCorrosion2/" title="打靶记录(一六二)之VulnHubCorrosion2">打靶记录(一六二)之VulnHubCorrosion2</a><time datetime="2024-10-03T09:24:11.000Z" title="发表于 2024-10-03 17:24:11">2024-10-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/02/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%B8%80)%E4%B9%8BVulnHubDrippingBlues1/" title="打靶记录(一六一)之VulnHubDrippingBlues1">打靶记录(一六一)之VulnHubDrippingBlues1</a><time datetime="2024-10-02T05:16:28.000Z" title="发表于 2024-10-02 13:16:28">2024-10-02</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2024 By Mikannse</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function loadDisqus () {
+  const disqus_config = function () {
+    this.page.url = 'http://mikannse.space/2023/10/28/IntroductiontoBashScriptingHTB/'
+    this.page.identifier = '/2023/10/28/IntroductiontoBashScriptingHTB/'
+    this.page.title = 'IntroductiontoBashScriptingHTB'
+  }
+
+  const disqusReset = () => {
+    DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addModeChange('disqus', disqusReset)
+
+  if (window.DISQUS) disqusReset()
+  else {
+    (function() { 
+      var d = document, s = d.createElement('script');
+      s.src = 'https://.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  }
+}
+
+if ('Valine' === 'Disqus' || !true) {
+  if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+  else loadDisqus()
+} else {
+  function loadOtherComment () {
+    loadDisqus()
+  }
+}
+</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

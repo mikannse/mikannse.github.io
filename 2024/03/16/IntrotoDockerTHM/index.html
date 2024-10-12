@@ -1,0 +1,791 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>IntrotoDockerTHM | MikannseのSekai</title><meta name="author" content="Mikannse"><meta name="copyright" content="Mikannse"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="基本DockerDocker一开始看起来很强大。然而，这些命令非常直观，只要稍加练习，你很快就会成为Docker向导。 Docker的语法可以分为四大类：  运行容器 管理和检查容器 管理Docker镜像 Docker守护进程统计数据和信息  我们将在本任务中分解这些类别。 管理Docker镜像Docker Pull 在运行Docker容器之前，我们首先需要一个镜像。回忆起“Intro to Co">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IntrotoDockerTHM">
+<meta property="og:url" content="http://mikannse.space/2024/03/16/IntrotoDockerTHM/index.html">
+<meta property="og:site_name" content="MikannseのSekai">
+<meta property="og:description" content="基本DockerDocker一开始看起来很强大。然而，这些命令非常直观，只要稍加练习，你很快就会成为Docker向导。 Docker的语法可以分为四大类：  运行容器 管理和检查容器 管理Docker镜像 Docker守护进程统计数据和信息  我们将在本任务中分解这些类别。 管理Docker镜像Docker Pull 在运行Docker容器之前，我们首先需要一个镜像。回忆起“Intro to Co">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg">
+<meta property="article:published_time" content="2024-03-15T18:57:43.000Z">
+<meta property="article:modified_time" content="2024-06-14T03:43:15.277Z">
+<meta property="article:author" content="Mikannse">
+<meta property="article:tag" content="笔记">
+<meta property="article:tag" content="Docker">
+<meta property="article:tag" content="运维">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg"><link rel="shortcut icon" href="/img/icon.jpg"><link rel="canonical" href="http://mikannse.space/2024/03/16/IntrotoDockerTHM/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Mikannse","link":"链接: ","source":"来源: MikannseのSekai","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'IntrotoDockerTHM',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: undefined,
+  isToc: true,
+  postUpdate: '2024-06-14 11:43:15'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">274</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="MikannseのSekai"><span class="site-name">MikannseのSekai</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">IntrotoDockerTHM</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-03-15T18:57:43.000Z" title="发表于 2024-03-16 02:57:43">2024-03-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-06-14T03:43:15.277Z" title="更新于 2024-06-14 11:43:15">2024-06-14</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BD%91%E5%AE%89/">网安</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">6.6k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>23分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="IntrotoDockerTHM"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="基本Docker"><a href="#基本Docker" class="headerlink" title="基本Docker"></a>基本Docker</h1><p>Docker一开始看起来很强大。然而，这些命令非常直观，只要稍加练习，你很快就会成为Docker向导。</p>
+<p>Docker的语法可以分为四大类：</p>
+<ul>
+<li>运行容器</li>
+<li>管理和检查容器</li>
+<li>管理Docker镜像</li>
+<li>Docker守护进程统计数据和信息</li>
+</ul>
+<p>我们将在本任务中分解这些类别。</p>
+<h2 id="管理Docker镜像"><a href="#管理Docker镜像" class="headerlink" title="管理Docker镜像"></a>管理Docker镜像</h2><p>Docker Pull</p>
+<p>在运行Docker容器之前，我们首先需要一个镜像。回忆起“<a target="_blank" rel="noopener" href="https://tryhackme.com/room/introtocontainerisation">Intro to Containerisation集装箱化简介</a>” 房间，图像是容器应该执行的指令。运行一个什么都不做的容器是没有用的！</p>
+<p>器中运行Web服务器。在下载映像之前，让我们分解下载映像所需的命令和语法。可以使用 <code>docker pull</code> 命令并提供图像的名称。</p>
+<p>比如说， <code>docker pull nginx</code>. Docker必须知道从哪里获取这个镜像（比如从一个我们将在后面的任务中提到的存储库）。</p>
+<p>继续我们上面的例子，让我们下载这个Nginx镜像！</p>
+<p>显示下载“Nginx”图像的终端</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           cmnatic@thm:~$ docker pull nginx</span><br><span class="line">Using default tag: latest</span><br><span class="line">latest: Pulling from library/nginx</span><br><span class="line">-- omitted for brevity --</span><br><span class="line">Status: Downloaded newer image for nginx:latest</span><br><span class="line">cmnatic@thm:~$</span><br></pre></td></tr></tbody></table></figure>
+
+<p>通过运行此命令，我们正在下载名为“nginx”的最新版本的图像。图像具有这些标签，称为 <em>tags</em>. 这些 <em>tags</em> 用于表示图像的变化。例如，图像可以具有相同的名称，但不同的标记表示不同的版本。我提供了一个如何在下表中使用标签的示例：</p>
+<table>
+<thead>
+<tr>
+<th><strong>Docker镜像</strong></th>
+<th><strong>TAG</strong></th>
+<th><strong>命令示例</strong></th>
+<th><strong>解释</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Ubuntu</td>
+<td>最新</td>
+<td>docker pull ubuntu**- IS THE SAME AS -<strong>docker pull ubuntu:latest docker pull ubuntu</strong>-是什么-**docker pull ubuntu：latest</td>
+<td>此命令将拉取最新版本的“ubuntu”镜像。如果没有指定标签，Docker会假设你想要的是“最新”版本。值得记住的是，你并不总是想要“最新的”。这个图像是相当字面上的“最新”的意义上，它将有最新的变化。这可能会修复或损坏您的容器。</td>
+</tr>
+<tr>
+<td>ubuntu</td>
+<td>22.04</td>
+<td>docker pull ubuntu:22.04docker pull ubuntu：22.04</td>
+<td>此命令将拉取“ubuntu”映像的“22.04（Jammy）”版本。</td>
+</tr>
+<tr>
+<td>ubuntu</td>
+<td>20.04</td>
+<td>docker pull ubuntu:20.04Docker pull ubuntu：20.04</td>
+<td>此命令将拉取“ubuntu”镜像的“20.04（Focal）”版本。</td>
+</tr>
+<tr>
+<td>ubuntu</td>
+<td>18.04</td>
+<td>docker pull ubuntu:18.04</td>
+<td>此命令将拉取“ubuntu”映像的“18.04（Bionic）”版本。</td>
+</tr>
+</tbody></table>
+<p>指定标记时，必须包含冒号 <code>:</code> 在图像名称和标签之间，例如， <code>ubuntu:22.04</code> 不要忘记标签-我们将在未来的任务中返回到这些！</p>
+<p>Docker Image x/y/z</p>
+<p> <code>docker image</code><br> 命令，以及适当的选项，允许我们管理本地系统上的映像。要列出可用的选项，我们可以简单地做 <code>docker image</code><br> 看看我们能做些什么我在下面的终端中为您做了这个：</p>
+<p>一个终端，显示我们可以提供的各种参数“docker image”</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           cmnatic@thm:~$ docker image</span><br><span class="line"></span><br><span class="line">Usage:  docker image COMMAND</span><br><span class="line"></span><br><span class="line">Manage images</span><br><span class="line"></span><br><span class="line">Commands:</span><br><span class="line">  build       Build an image from a Dockerfile</span><br><span class="line">  history     Show the history of an image</span><br><span class="line">  import      Import the contents from a tarball to create a filesystem image</span><br><span class="line">  inspect     Display detailed information on one or more images</span><br><span class="line">  load        Load an image from a tar archive or STDIN</span><br><span class="line">  ls          List images</span><br><span class="line">  prune       Remove unused images</span><br><span class="line">  pull        Pull an image or a repository from a registry</span><br><span class="line">  push        Push an image or a repository to a registry</span><br><span class="line">  rm          Remove one or more images</span><br><span class="line">  save        Save one or more images to a tar archive (streamed to STDOUT by default)</span><br><span class="line">  tag         Create a tag TARGET_IMAGE that refers to SOURCE_IMAGE</span><br><span class="line"></span><br><span class="line">Run 'docker image COMMAND --help' for more information on a command.</span><br><span class="line">cmnatic@thm:~$</span><br><span class="line">        </span><br></pre></td></tr></tbody></table></figure>
+
+<ul>
+<li>在这个房间里，我们只会介绍Docker镜像的以下选项：<ul>
+<li>pull (we have done this above!)pull（我们已经在上面做了！）</li>
+<li>ls (list images)ls（列表图像）</li>
+<li>rm (remove an image)</li>
+<li>build (we will come onto this in the “Building your First Container” task)</li>
+</ul>
+</li>
+</ul>
+<p>Docker镜像ls</p>
+<p>此命令允许我们列出本地系统上存储的所有图像。我们可以使用此命令来验证图像是否已正确下载，并查看有关它的更多信息（例如标记，图像创建时间和图像大小）。</p>
+<p>列出存储在主机操作系统上的Docker镜像的终端</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           cmnatic@thm:~$ docker image ls</span><br><span class="line">REPOSITORY   TAG       IMAGE ID       CREATED       SIZE</span><br><span class="line">ubuntu       22.04     2dc39ba059dc   10 days ago   77.8MB</span><br><span class="line">nginx        latest    2b7d6430f78d   2 weeks ago   142MB</span><br><span class="line">cmnatic@thm:~$</span><br><span class="line">        </span><br></pre></td></tr></tbody></table></figure>
+
+<p>例如，在上面的终端中，我们可以看到系统上两个图像的一些信息：</p>
+<table>
+<thead>
+<tr>
+<th><strong>Repository</strong></th>
+<th><strong>Tag</strong></th>
+<th><strong>Image ID</strong></th>
+<th><strong>Created</strong></th>
+<th><strong>Size</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ubuntu</td>
+<td>22.04</td>
+<td>2dc39ba059dc</td>
+<td>10 days ago</td>
+<td>77.8MB</td>
+</tr>
+<tr>
+<td>nginx</td>
+<td>latest</td>
+<td>2b7d6430f78d</td>
+<td>2 weeks ago</td>
+<td>142MB</td>
+</tr>
+</tbody></table>
+<p>Docker镜像rm</p>
+<p>如果我们想从系统中删除一个图像，我们可以使用 <code>docker image rm</code> 沿着名称（或映像ID）。在下面的示例中，我将删除“<em>ubuntu</em>“ image with the tag ““带标签的图像“<em>22.04</em>“.  “.我的命令是 <code>docker image rm ubuntu:22.04</code>:</p>
+<p>重要的是要记住， <em>tag</em> 图像名称。</p>
+<p>一种显示对图像的取消标记的终端，</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           cmnatic@thm:~$ docker image rm ubuntu:22.04</span><br><span class="line">Untagged: ubuntu:22.04</span><br><span class="line">Untagged: ubuntu@sha256:20fa2d7bb4de7723f542be5923b06c4d704370f0390e4ae9e1c833c8785644c1</span><br><span class="line">Deleted: sha256:2dc39ba059dcd42ade30aae30147b5692777ba9ff0779a62ad93a74de02e3e1f</span><br><span class="line">Deleted: sha256:7f5cbd8cc787c8d628630756bcc7240e6c96b876c2882e6fc980a8b60cdfa274</span><br><span class="line">cmnatic@thm:~$</span><br><span class="line">        </span><br></pre></td></tr></tbody></table></figure>
+
+<p>如果我们要运行一个 <code>docker image ls</code>, 我们将看到该图像不再列出：</p>
+<p>确认我们的Docker镜像已被删除的终端</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           cmnatic@thm:~$ docker image ls</span><br><span class="line">REPOSITORY   TAG       IMAGE ID       CREATED       SIZE</span><br><span class="line">nginx        latest    2b7d6430f78d   2 weeks ago   142MB</span><br><span class="line">cmnatic@thm:~$</span><br></pre></td></tr></tbody></table></figure>
+
+<h1 id="运行您的第一个容器"><a href="#运行您的第一个容器" class="headerlink" title="运行您的第一个容器"></a>运行您的第一个容器</h1><p>Docker run命令从镜像创建运行容器。这是运行来自Dockerfile的命令（以及我们自己在运行时的输入）的地方。正因为如此，它必须是你学习的第一个语法。</p>
+<p>该命令的工作方式如下：<code>docker run [OPTIONS] IMAGE_NAME [COMMAND] [ARGUMENTS...] </code>括号中的选项不是容器运行所必需的。</p>
+<p>Docker容器可以使用各种选项运行-这取决于我们如何使用容器。本任务将解释您可能要使用的一些最常见的选项。</p>
+<p>首先，简单地运行一个容器</p>
+<p>让我们回想一下运行Docker容器所需的语法： <code>docker run [OPTIONS] IMAGE_NAME [COMMAND] [ARGUMENTS...]</code>。在这个例子中，我将配置 容器运行：</p>
+<ul>
+<li>一个名为“helloworld”的图像</li>
+<li>通过在[OPTIONS]命令中提供<code>-it</code>开关实现“交互式”。这将允许我们直接与容器交互。</li>
+<li>我将通过提供<code>/bin/bash</code>作为[COMMAND]部分在容器中生成一个shell。这个参数是你放置你想要在容器中运行的命令的地方（比如文件，应用程序或者shell！）</li>
+</ul>
+<p>因此，为了实现上述目标，我的命令将如下所示：<code>docker run -it helloworld /bin/bash</code></p>
+<p>一个终端显示一个集装箱在“交互”模式下被启动        </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           cmnatic@thm-intro-to-docker:~$ docker run -it helloworld /bin/bash</span><br><span class="line">root@30eff5ed7492:/#</span><br><span class="line">        </span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们可以验证是否成功启动了shell，因为我们的提示符将更改为另一个用户帐户和主机名。容器的主机名是容器ID（可以使用<code>docker ps</code>找到）。例如，在上面的终端中，我们的用户名和主机名是<code>root@30eff5ed7492</code></p>
+<p>正在运行容器…继续</p>
+<p>如前所述，Docker容器可以使用各种选项运行。容器的用途和Dockerfile中的指令集（我们将在后面的任务中讨论）决定了我们需要使用什么选项来运行容器。首先，我将一些运行Docker容器所需的最常见选项放入下表。</p>
+<table>
+<thead>
+<tr>
+<th><strong>[OPTION]</strong></th>
+<th><strong>Explanation</strong></th>
+<th><strong>相关Dockerfile说明</strong></th>
+<th><strong>Example</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-d-</td>
+<td>这个参数告诉容器以“分离”模式启动。这意味着容器将在后台运行。</td>
+<td>N/A</td>
+<td><code>docker run -d helloworld</code></td>
+</tr>
+<tr>
+<td>-it</td>
+<td>这个参数有两个部分。“i”表示交互运行，“t”告诉Docker在容器中运行shell。如果我们希望在容器运行后直接与它交互，我们将使用此选项。</td>
+<td>N/A</td>
+<td><code>docker run -it helloworld</code></td>
+</tr>
+<tr>
+<td>-v</td>
+<td>这个参数是“Volume”的缩写，它告诉Docker将一个目录或文件从主机操作系统挂载到容器中的某个位置。这些文件的存储位置在Dockerfile中定义</td>
+<td>VOLUME</td>
+<td><code>docker run -v /host/os/directory:/container/directory helloworld</code></td>
+</tr>
+<tr>
+<td>-p</td>
+<td>这个参数告诉Docker将主机操作系统上的端口绑定到容器中公开的端口。如果您正在容器中运行应用程序或服务（如Web服务器），并希望通过导航到IP地址来访问应用程序/服务，则可以使用此说明。</td>
+<td>EXPOSE</td>
+<td><code>docker run -p 80:80 webserver</code></td>
+</tr>
+<tr>
+<td>–rm</td>
+<td>这个参数告诉Docker一旦容器完成运行它被指示做的任何事情，就删除容器。</td>
+<td>N/A</td>
+<td><code>docker run --rm helloworld</code></td>
+</tr>
+<tr>
+<td>–name</td>
+<td>这个参数让我们为容器给予一个友好的、好记的名字。当一个容器在没有这个选项的情况下运行时，名称是两个随机的单词。我们可以使用这个open来命名一个容器，以该容器正在运行的应用程序命名。</td>
+<td>N/A</td>
+<td><code>docker run --name helloworld</code></td>
+</tr>
+</tbody></table>
+<p>这些只是我们在运行容器时可以提供的一些参数。同样，我们需要运行的大多数参数将由容器的构建方式决定。但是，像<code>--rm</code>和<code>--name</code>这样的参数将指示Docker如何运行容器。其他参数包括（但不限于！）：</p>
+<ul>
+<li>告诉Docker容器应该使用哪个网络适配器</li>
+<li>容器应该访问哪些功能。这是在TryHackMe上的“<a target="_blank" rel="noopener" href="https://tryhackme.com/room/dockerrodeo">Docker牛仔竞技表演</a>“室中介绍的。</li>
+<li>将值存储到环境变量中</li>
+</ul>
+<p>如果你想探索更多的这些论点，我强烈建议你阅读<a target="_blank" rel="noopener" href="https://docs.docker.com/engine/reference/run/">Docker run文档</a>。</p>
+<p>列出正在运行的容器</p>
+<p>要列出正在运行的容器，我们可以使用docker ps命令。此命令将列出当前正在运行的容器-如下所示：</p>
+<p> 一种显示运行中的容器及其信息的终端        </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           cmnatic@thm:~/intro-to-docker$ docker ps</span><br><span class="line">CONTAINER ID   IMAGE                           COMMAND        CREATED        STATUS      PORTS     NAMES                                                                                      </span><br><span class="line">                             </span><br><span class="line">a913a8f6e30f   cmnatic/helloworld:latest   "sleep"   1 months ago   Up 3 days   0.0.0.0:8000-&gt;8000/tcp   helloworld</span><br><span class="line">cmnatic@thm:~/intro-to-docker$</span><br><span class="line">        </span><br></pre></td></tr></tbody></table></figure>
+
+<p>此命令还将显示有关容器的信息，包括：</p>
+<ul>
+<li>容器的ID</li>
+<li>容器正在运行什么命令</li>
+<li>容器是什么时候创建的</li>
+<li>容器运行多久了</li>
+<li>映射哪些端口</li>
+<li>容器的名称</li>
+</ul>
+<p><strong>提示：</strong>要列出所有容器（即使是停止的），您可以使用<code>docker ps -a</code>：</p>
+<p> 显示所有集装箱及其信息列表的终端        </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           cmnatic@thm:~/intro-to-docker$ docker ps -a</span><br><span class="line">CONTAINER ID   IMAGE                             COMMAND                  CREATED             STATUS     PORTS    NAMES                                                                                  </span><br><span class="line">00ba1eed0826   gobuster:cmnatic                  "./gobuster dir -url…"   an hour ago   Exited an hour ago practical_khayyam</span><br><span class="line">        </span><br></pre></td></tr></tbody></table></figure>
+
+<h1 id="Dockerfiles简介"><a href="#Dockerfiles简介" class="headerlink" title="Dockerfiles简介"></a>Dockerfiles简介</h1><p>Dockerfiles在Docker中扮演着重要的角色。Dockerfiles是一个格式化的文本文件，本质上是容器应该做什么的指导手册，并最终组装Docker镜像。</p>
+<p>您使用Dockerfiles来包含容器在构建时应该执行的命令。要开始使用Dockerfiles，我们需要了解一些基本的语法和说明。Dockerfiles的格式如下：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">INSTRUCTION argument</span><br></pre></td></tr></tbody></table></figure>
+
+<p>首先，让我们介绍一些基本的说明：</p>
+<table>
+<thead>
+<tr>
+<th><strong>Instruction</strong> <strong>指令</strong></th>
+<th><strong>Description</strong> <strong>描述</strong></th>
+<th><strong>Example</strong> <strong>例如</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>FROM</td>
+<td>此指令为容器设置构建阶段以及设置基础映像（操作系统）。所有Dockerfiles都必须以这个开头。</td>
+<td>FROM ubuntu</td>
+</tr>
+<tr>
+<td>RUN</td>
+<td>此指令将在新层的容器中执行命令。</td>
+<td>RUN whoami</td>
+</tr>
+<tr>
+<td>COPY</td>
+<td>此指令将文件从本地系统复制到容器中的工作目录（语法类似于<code>cp</code>命令）。</td>
+<td>COPY /home/cmnatic/myfolder/app/</td>
+</tr>
+<tr>
+<td>WORKDIR</td>
+<td>此指令设置容器的工作目录。（类似于在Linux上使用<code>cd</code>）。</td>
+<td>WORKDIR / (sets to the root of the filesystem in the container)</td>
+</tr>
+<tr>
+<td>CMD</td>
+<td>此指令确定容器启动时运行的命令（您可以使用此命令启动服务或应用程序）。</td>
+<td>CMD /bin/sh -c script.sh</td>
+</tr>
+<tr>
+<td>EXPOSE</td>
+<td>.此指令用于告诉运行容器的人在运行容器时应该发布什么端口。</td>
+<td>EXPOSE 80（告诉运行容器的人发布到端口80，即<code>docker run -p 80:80</code>）</td>
+</tr>
+</tbody></table>
+<p>现在我们理解了组成Dockerfile的核心指令，让我们看一个Dockerfile的工作示例。但首先，我将解释我想要容器做什么：</p>
+<ol>
+<li>使用“Ubuntu”（版本22.04）操作系统作为基础。</li>
+<li>将工作目录设置为容器的根目录。</li>
+<li>创建文本文件“helloworld.txt”。</li>
+</ol>
+<figure class="highlight yml"><table><tbody><tr><td class="code"><pre><span class="line"><span class="comment"># THIS IS A COMMENT</span></span><br><span class="line"><span class="comment"># Use Ubuntu 22.04 as the base operating system of the container</span></span><br><span class="line"><span class="string">FROM</span> <span class="string">ubuntu:22.04</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Set the working directory to the root of the container</span></span><br><span class="line"><span class="string">WORKDIR</span> <span class="string">/</span> </span><br><span class="line"></span><br><span class="line"><span class="comment"># Create helloworld.txt</span></span><br><span class="line"><span class="string">RUN</span> <span class="string">touch</span> <span class="string">helloworld.txt</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>请记住，您可以通过<code>RUN</code>指令运行的命令将取决于您在<code>FROM</code>指令中使用的操作系统。(In在这个例子中，我选择了Ubuntu。重要的是要记住，容器中使用的操作系统通常非常少。也就是说，don’t expect a command to be there from the start (even commands like 可能需要安装）。</p>
+<p>构建您的第一个容器</p>
+<p>一旦我们有了Dockerfile，我们就可以使用<code>docker build</code>命令创建一个镜像。此命令需要几条信息：</p>
+<ol>
+<li>无论您是否想自己命名图像（我们将使用<code>-t</code>（标记）参数）。</li>
+<li>您要为图像给予的名称。</li>
+<li>您希望使用的Dockerfile的位置。</li>
+</ol>
+<p>我将提供场景，然后解释相关的命令。假设我们想要构建一个图像-让我们填写上面列出的两条必需信息：</p>
+<ol>
+<li>我们将自己命名它，所以我们将使用<code>-t</code>参数。</li>
+<li>我们想给这个图像命名。</li>
+<li>Dockerfile位于我们当前的工作目录（<code>.</code>）。</li>
+</ol>
+<p>我们要构建的Dockerfile如下：</p>
+<figure class="highlight yml"><table><tbody><tr><td class="code"><pre><span class="line"><span class="comment"># Use Ubuntu 22.04 as the base operating system of the container</span></span><br><span class="line"><span class="string">FROM</span> <span class="string">ubuntu:22.04</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Set the working directory to the root of the container</span></span><br><span class="line"><span class="string">WORKDIR</span> <span class="string">/</span> </span><br><span class="line"></span><br><span class="line"><span class="comment"># Create helloworld.txt</span></span><br><span class="line"><span class="string">RUN</span> <span class="string">touch</span> <span class="string">helloworld.txt</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>命令看起来像这样： <code>docker build -t helloworld .</code> 正在使用点来告诉Docker在我们的工作目录中查找）。如果我们正确填写了命令，我们将看到Docker开始构建镜像：</p>
+<p>展示“helloworld”图像构建过程的终端</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           cmnatic@thm:~$ docker build -t helloworld .</span><br><span class="line">Sending build context to Docker daemon  4.778MB</span><br><span class="line">Step 1/3 : FROM ubuntu:22.04</span><br><span class="line">22.04: Pulling from library/ubuntu</span><br><span class="line">2b55860d4c66: Pull complete</span><br><span class="line">Digest: sha256:20fa2d7bb4de7723f542be5923b06c4d704370f0390e4ae9e1c833c8785644c1</span><br><span class="line">Status: Downloaded newer image for ubuntu:22.04</span><br><span class="line"> ---&gt; 2dc39ba059dc</span><br><span class="line">Step 2/3 : WORKDIR /</span><br><span class="line"> ---&gt; Running in 64d497097f8a</span><br><span class="line">Removing intermediate container 64d497097f8a</span><br><span class="line"> ---&gt; d6bd1253fd4e</span><br><span class="line">Step 3/3 : RUN touch helloworld.txt</span><br><span class="line"> ---&gt; Running in 54e94c9774be</span><br><span class="line">Removing intermediate container 54e94c9774be</span><br><span class="line"> ---&gt; 4b11fc80fdd5</span><br><span class="line">Successfully built 4b11fc80fdd5</span><br><span class="line">Successfully tagged helloworld:latest</span><br><span class="line">cmnatic@thm:~$</span><br><span class="line">        </span><br></pre></td></tr></tbody></table></figure>
+
+<p>好极了！看上去很成功。让我们使用<code>docker image ls</code>来看看这个镜像是否已经构建好了：</p>
+<p>使用“docker image ls”命令确认我们的镜像是否已经成功构建</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           cmnatic@thm:~$ docker image ls</span><br><span class="line">REPOSITORY   TAG       IMAGE ID       CREATED         SIZE</span><br><span class="line">helloworld   latest    4b11fc80fdd5   2 minutes ago   77.8MB</span><br><span class="line">ubuntu       22.04     2dc39ba059dc   10 days ago     77.8MB</span><br><span class="line">cmnatic@thm:~$</span><br><span class="line">        </span><br></pre></td></tr></tbody></table></figure>
+
+<p> Dockerfile中的指令也将被下载。这就是为什么我们可以看到两个图像：</p>
+<ol>
+<li>helloworld (our image)</li>
+<li>ubuntu（我们图像中使用的基本操作系统）。</li>
+</ol>
+<p>您现在可以在容器中使用此映像。请参阅“运行您的第一个容器”任务以提醒您如何启动容器。</p>
+<p>升级我们的Dockerfile</p>
+<p>让我们升级我们的Dockerfile。到目前为止，我们的容器只会创建一个文件-这不是很有用！在下面的Dockerfile中，我将：</p>
+<ol>
+<li>使用Ubuntu 22.04作为容器的基本操作系统。</li>
+<li>安装“apache2”Web服务器。</li>
+<li>增加一些网络。由于这是一个Web服务器，我们需要能够通过网络连接到容器。我将通过使用<code>EXPOSE</code>指令并告诉容器暴露端口<em>80来</em>实现这一点。</li>
+<li>告诉容器在启动时启动“apache 2”服务。容器没有像<code>systemd</code>这样的服务管理器（这是设计的-在同一个容器中运行多个应用程序是不好的做法。例如，此容器用于apache 2 web服务器-并且仅用于apache 2 web服务器）。</li>
+</ol>
+<figure class="highlight yml"><table><tbody><tr><td class="code"><pre><span class="line"><span class="comment"># THIS IS A COMMENT</span></span><br><span class="line"><span class="string">FROM</span> <span class="string">ubuntu:22.04</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Update the APT repository to ensure we get the latest version of apache2</span></span><br><span class="line"><span class="string">RUN</span> <span class="string">apt-get</span> <span class="string">update</span> <span class="string">-y</span> </span><br><span class="line"></span><br><span class="line"><span class="comment"># Install apache2</span></span><br><span class="line"><span class="string">RUN</span> <span class="string">apt-get</span> <span class="string">install</span> <span class="string">apache2</span> <span class="string">-y</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Tell the container to expose port 80 to allow us to connect to the web server</span></span><br><span class="line"><span class="string">EXPOSE</span> <span class="number">80</span> </span><br><span class="line"></span><br><span class="line"><span class="comment"># Tell the container to run the apache2 service</span></span><br><span class="line"><span class="string">CMD</span> [<span class="string">"apache2ctl"</span>, <span class="string">"-D"</span>,<span class="string">"FOREGROUND"</span>]</span><br></pre></td></tr></tbody></table></figure>
+
+<p>作为参考，构建此文件的命令是<code>docker build -t webserver .</code>（假设Dockerfile与您运行命令的目录相同）。一旦使用适当的选项（<code>docker run -d --name webserver -p 80:80 webserver</code>）启动容器，我们就可以在浏览器中导航到本地机器的IP地址！</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5de96d9ca744773ea7ef8c00/room-content/95f7f4b43b7cdf6079a71a7a3e19f937.png" alt="The default landing page of apache2 which can be used to confirm that the service is running"></p>
+<p>WEB服务器工作！目前，Apache 2正在提供默认文件，因为我们还没有将自己的文件添加到容器中。</p>
+<p>优化我们的Dockerfile</p>
+<p>Docker当然是一门艺术-而且它不会停止于Dockerfiles！首先，我们需要问自己为什么优化我们的Dockerfile是必要的？臃肿的Dockerfiles很难阅读和维护，并且经常使用大量不必要的存储空间！例如，你可以减少Docker镜像的大小（并减少构建时间！）使用几种方法：</p>
+<ol>
+<li>只安装必要的软件包。容器的好处在于，它们从一开始就几乎是空的–我们有完全的自由来决定我们想要什么。</li>
+<li>删除缓存文件（如APT缓存或随工具安装的文档）。容器中的代码只执行一次（在构建时！），所以我们不需要储存任何东西以备后用。</li>
+<li>在我们的<code>FROM</code>指令中使用最小的基本操作系统。尽管像Ubuntu这样的容器操作系统已经非常苗条了，但还是考虑使用更精简的版本（即<code>ubuntu:22.04-minimal</code>）。或者，例如，使用Alpine（可以小到5.59MB！）。</li>
+<li>最小化层数-我将在下面进一步解释。</li>
+</ol>
+<p>每个指令（即<code>FROM</code>、<code>RUN</code>等）在自己的层中运行。层增加构建时间！目标是尽可能少的层。例如，尝试将来自<code>RUN</code>的命令链接在一起，如下所示：</p>
+<p><strong>Before:</strong></p>
+<figure class="highlight yml"><table><tbody><tr><td class="code"><pre><span class="line"><span class="string">FROM</span> <span class="string">ubuntu:latest</span></span><br><span class="line"><span class="string">RUN</span> <span class="string">apt-get</span> <span class="string">update</span> <span class="string">-y</span></span><br><span class="line"><span class="string">RUN</span> <span class="string">apt-get</span> <span class="string">upgrade</span> <span class="string">-y</span></span><br><span class="line"><span class="string">RUN</span> <span class="string">apt-get</span> <span class="string">install</span> <span class="string">apache2</span> <span class="string">-y</span></span><br><span class="line"><span class="string">RUN</span> <span class="string">apt-get</span> <span class="string">install</span> <span class="string">net-tools</span> <span class="string">-y</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>显示正在构建的Dockerfile的五个层的终端</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           cmnatic@thm:~$ docker build -t before .</span><br><span class="line">--omitted for brevity--</span><br><span class="line">Step 2/5 : RUN apt-get update -y</span><br><span class="line"> ---&gt; Using cache</span><br><span class="line"> ---&gt; 446962612d20</span><br><span class="line">Step 3/5 : RUN apt-get upgrade -y</span><br><span class="line"> ---&gt; Running in 8bed81c695f4</span><br><span class="line">--omitted for brevity--</span><br><span class="line">cmnatic@thm:~$</span><br><span class="line">        </span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>After:</strong></p>
+<figure class="highlight yml"><table><tbody><tr><td class="code"><pre><span class="line"><span class="string">FROM</span> <span class="string">ubuntu:latest</span></span><br><span class="line"><span class="string">RUN</span> <span class="string">apt-get</span> <span class="string">update</span> <span class="string">-y</span> <span class="string">&amp;&amp;</span> <span class="string">apt-get</span> <span class="string">upgrade</span> <span class="string">-y</span> <span class="string">&amp;&amp;</span> <span class="string">apt-get</span> <span class="string">install</span> <span class="string">apache2</span> <span class="string">-y</span> <span class="string">&amp;&amp;</span> <span class="string">apt-get</span> <span class="string">install</span> <span class="string">net-tools</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>显示正在构建的Dockerfile的两层的终端</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">           cmnatic@thm:~$ docker build -t after .</span><br><span class="line">Sending build context to Docker daemon   4.78MB</span><br><span class="line">Step 1/2 : FROM ubuntu</span><br><span class="line"> ---&gt; 2dc39ba059dc</span><br><span class="line">Step 2/2 : RUN apt-get update -y &amp;&amp; apt-get upgrade -y &amp;&amp; apt-get install apache2 -y &amp;&amp; apt-get install net-tools</span><br><span class="line"> ---&gt; Running in a4d4943bcf04</span><br><span class="line">--omitted for brevity--</span><br><span class="line">cmnatic@thm:~$</span><br><span class="line">        </span><br></pre></td></tr></tbody></table></figure>
+
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5de96d9ca744773ea7ef8c00/room-content/743dd22bcf1f3a709ee6288d519d5930.png" alt="An illustration showing that the commands have been compressed into two layers."></p>
+<p>请注意，现在只有两个构建步骤（这将是两个层，使构建更快）。这只是Dockerfile的一个小例子，所以构建时间不会那么激烈，但是在更大的Dockerfile中-减少层的数量将在构建过程中获得惊人的性能提升。</p>
+<h1 id="Docker-Compose介绍"><a href="#Docker-Compose介绍" class="headerlink" title="Docker Compose介绍"></a>Docker Compose介绍</h1><p>让我们首先了解Docker Compose是什么以及为什么它值得理解。到目前为止，我们只与单独的容器进行了交互。总之，Docker Compose允许多个容器（或应用程序）在需要时相互交互，同时彼此隔离运行。</p>
+<p>到目前为止，你可能已经注意到Docker的一个问题。通常情况下，应用程序需要额外的服务才能运行，而我们无法在单个容器中完成这些工作。例如，现代动态网站使用诸如数据库和Web服务器之类的服务。为了完成这项任务，我们将把每个应用程序都视为一个“微服务”。</p>
+<p>虽然我们可以单独启动多个容器或“微服务”并将它们连接起来，但一个接一个地这样做既麻烦又低效。Docker Compose允许我们将这些“微服务”创建为一个单一的“服务”。</p>
+<p>此插图显示了如何使用Docker Compose与Docker一起部署容器：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5de96d9ca744773ea7ef8c00/room-content/c7c8b38dc06c22207134fb6f58d036a0.png" alt="A blue box (representing a computer) with a caption of docker, is isolated from another set of blue boxes (representing a computer)."></p>
+<p>在演示Docker Compose之前，让我们先介绍一下使用Docker Compose的基础知识。</p>
+<ol>
+<li>Docker Compose（默认情况下Docker不附带）。安装它超出了本会议室的范围，因为它会根据您的操作系统和其他因素而变化。您可以查看安装文档 <a target="_blank" rel="noopener" href="https://docs.docker.com/compose/install/">here这里</a>.</li>
+<li>我们需要一个有效<em>的docker-compose.yml</em>文件-我们很快就会处理这个问题。</li>
+<li>基本了解使用Docker Compose构建和管理容器。</li>
+</ol>
+<p>我将一些基本的Docker Compose命令放入下表：</p>
+<table>
+<thead>
+<tr>
+<th><strong>Command</strong></th>
+<th><strong>Explanation</strong></th>
+<th><strong>Example</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>up</td>
+<td>此命令将（重新）创建/构建并启动组合文件中指定的容器。</td>
+<td><code>docker-compose up</code> <code>docker run --rm helloworld</code></td>
+</tr>
+<tr>
+<td>start</td>
+<td>此命令将启动（但需要已构建的容器）组合文件中指定的容器。</td>
+<td><code>docker-compose start</code></td>
+</tr>
+<tr>
+<td>down</td>
+<td>此命令将停止并<strong>删除</strong>在编写文件中指定的容器。</td>
+<td><code>docker-compose down</code></td>
+</tr>
+<tr>
+<td>stop</td>
+<td>此命令将停止（<strong>而不是</strong>删除）组合文件中指定的容器。</td>
+<td><code>docker-compose stop</code></td>
+</tr>
+<tr>
+<td>build</td>
+<td>此命令将构建（但不会启动）组合文件中指定的容器。</td>
+<td><code>docker-compose build</code></td>
+</tr>
+</tbody></table>
+<p> <strong>注意</strong>：这些只是一些可能的命令。查看<a target="_blank" rel="noopener" href="https://docs.docker.com/compose/reference/">撰写文档</a>了解所有可能的选项。*</p>
+<p>Docker Compose展示</p>
+<p>说到这里，让我们来看看如何使用Docker Compose。在这种情况下，我将假设以下要求：</p>
+<ol>
+<li>在Apache上运行的电子商务网站</li>
+<li>本电子商务网站将客户信息存储在MySQL数据库中</li>
+</ol>
+<p>现在，我们可以通过以下方式手动运行两个容器：</p>
+<ol>
+<li>在两个容器之间创建网络：<code>docker network create ecommerce</code></li>
+<li>运行Apache2 Web服务器容器：<code>docker run -p 80:80 --name webserver --net ecommerce webserver</code></li>
+<li>运行MySQL数据库服务器：<code>docker run --name database --net ecommerce webserver</code></li>
+</ol>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5de96d9ca744773ea7ef8c00/room-content/4f236c94f79474475f2dc5df15146c91.png" alt="An illustration showing the two containers spun up using docker compose. Note that they are unable to communicate with one another"></p>
+<p><em>下图显示了两个容器彼此独立运行，并且<strong>无法</strong>相互通信。</em></p>
+<p>但我们每次都要这样吗或者，如果我们决定扩大规模，让许多Web服务器参与进来呢？我们是否要对每个容器每次都这样做？我当然不知道</p>
+<p>相反，我们可以通过<code>docker-compose up</code>使用Docker Compose来一起运行这些容器，这给我们带来了以下优势：</p>
+<ol>
+<li>一个简单的命令来运行它们</li>
+<li>这两个容器联网在一起，所以我们不需要配置网络。</li>
+<li>非常便携。我们可以与其他人共享<em>docker-compose.yml</em>文件，他们可以让设置工作完全相同，而无需了解容器如何单独工作。</li>
+<li>易于维护和更换。我们不必担心特定的容器使用（可能是过时的）图像。</li>
+</ol>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5de96d9ca744773ea7ef8c00/room-content/21ba7a242ec9660be9694e69ec4c33e6.png" alt="img"></p>
+<p><em>显示作为组合服务部署的两个容器的插图。这两个容器<strong>可以</strong>相互通信。</em></p>
+<p>Docker-compose.yml files 101</p>
+<p>一个文件来管理所有文件。<em>docker-compose.yml</em>文件的格式与Dockerfile的格式不同。需要注意的是，YAML需要缩进（一个好的做法是两个空格必须一致！）。首先，在我们开始创建docker-compose.yml文件之前，我</p>
+<table>
+<thead>
+<tr>
+<th><strong>Instruction</strong></th>
+<th><strong>Explanation</strong></th>
+<th><strong>Example</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>version</td>
+<td>它位于文件的顶部，用于标识docker-compose.yml是为哪个版本的Compose编写的。</td>
+<td>‘3.3’</td>
+</tr>
+<tr>
+<td>services</td>
+<td>此指令标记要管理的容器的开始。</td>
+<td>services:</td>
+</tr>
+<tr>
+<td>name (replace value)</td>
+<td>此指令是定义容器及其配置的地方。“name”需要替换为您要定义的容器的实际名称，即“webserver”或“database”。</td>
+<td>webserver</td>
+</tr>
+<tr>
+<td>build</td>
+<td>此指令定义包含此容器/服务的Dockerfile的目录。(you将需要使用此或图像）。</td>
+<td>./webserver</td>
+</tr>
+<tr>
+<td>ports</td>
+<td>此指令将端口发布到暴露的端口（这取决于image/Dockerfile）。</td>
+<td>‘80:80’</td>
+</tr>
+<tr>
+<td>volumes</td>
+<td>此指令列出了应该从主机操作系统装入容器的目录。</td>
+<td>‘./home/cmnatic/webserver/:/var/www/html’’</td>
+</tr>
+<tr>
+<td>environment</td>
+<td>此指令用于传递环境变量（不安全），即密码，用户名，时区配置等。</td>
+<td>MYSQL_ROOT_PASSWORD=helloworld</td>
+</tr>
+<tr>
+<td>image</td>
+<td>.这个指令定义了容器应该使用什么镜像来构建（你需要使用this或者build）。</td>
+<td>mysql:latest</td>
+</tr>
+<tr>
+<td>networks</td>
+<td>此指令定义容器将成为哪些网络的一部分。容器可以是多个网络的一部分（即Web服务器只能连接一个数据库，但数据库可以连接多个Web服务器）。</td>
+<td>ecommerce</td>
+</tr>
+</tbody></table>
+<p><strong>注意</strong>：这些只是一些可能的指令。查看<a target="_blank" rel="noopener" href="https://docs.docker.com/compose/compose-file/">compose文件</a>文档以获取所有可能的说明。*</p>
+<p>说到这里，让我们看看我们的第一个docker-compose.yml文件。这个<em>docker-compose.yml</em>文件假设如下：</p>
+<ol>
+<li>我们将从前面提到的场景中运行一个Web服务器（名为Web）。</li>
+<li>我们将从前面提到的场景中运行一个数据库服务器（命名为database）。</li>
+<li>Web服务器将使用其Dockerfile构建，但我们将使用已经构建的数据库服务器（MySQL）映像</li>
+<li>集装箱将联网以相互通信（该网络称为电子商务）。</li>
+<li>我们的目录列表如下所示：</li>
+<li>docker-compose.yml</li>
+<li>web/DockerfileWeb/Dockerfile</li>
+</ol>
+<p>下面是我们的docker-compose.yml文件的样子（提醒一下，必须注意缩进）：</p>
+<figure class="highlight yml"><table><tbody><tr><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">'3.3'</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">web:</span></span><br><span class="line">    <span class="attr">build:</span> <span class="string">./web</span></span><br><span class="line">    <span class="attr">networks:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">ecommerce</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">'80:80'</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  <span class="attr">database:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">mysql:latest</span></span><br><span class="line">    <span class="attr">networks:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">ecommerce</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">MYSQL_DATABASE=ecommerce</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">MYSQL_USERNAME=root</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">MYSQL_ROOT_PASSWORD=helloword</span></span><br><span class="line">    </span><br><span class="line"><span class="attr">networks:</span></span><br><span class="line">  <span class="attr">ecommerce:</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h1 id="Docker-Socket简介"><a href="#Docker-Socket简介" class="headerlink" title="Docker Socket简介"></a>Docker Socket简介</h1><p>本任务将解释Docker如何在操作系统和容器之间进行交互。当你安装Docker时，会安装两个程序：</p>
+<ol>
+<li>The Docker Client</li>
+<li>The Docker Server</li>
+</ol>
+<p>Docker采用客户端/服务器模式。具体来说，这两个程序相互通信，形成了我们所熟悉和喜爱的Docker。Docker使用一种叫做socket的东西来实现这种通信。套接字是操作系统的一个基本特征，它允许数据进行通信。</p>
+<p>例如，当使用聊天程序时，可能有两个套接字：</p>
+<ol>
+<li>用于存储您要发送的消息的套接字</li>
+<li>用于存储某人发送给您的消息的套接字。</li>
+</ol>
+<p>程序将与这两个套接字交互以存储或检索其中的数据！套接字可以是网络连接或表示为文件的内容。关于套接字，重要的是要知道它们允许进程间通信（IPC）。这仅仅意味着操作系统上的进程可以相互通信！</p>
+<p>在Docker的上下文中，Docker Server实际上只是一个API。Docker Server使用此API来<strong>侦听</strong>请求，而Docker Client使用API来<strong>发送</strong>请求。</p>
+<p>例如，让我们使用这个命令：<code>docker run helloworld</code>。Docker客户端将请求Docker服务器运行一个使用镜像“helloworld”的容器。现在，虽然这个解释是相当基本的，但它是Docker如何工作的基本前提。</p>
+<p>让我们看看下面的图表来展示这个过程的实际情况：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5de96d9ca744773ea7ef8c00/room-content/7ef5f80912c890645b102b28a23b9b8b.png" alt="illustrating the flow of Docker interaction using the docker.sock file on the operating system"></p>
+<p>有趣的是，正因为如此，我们可以使用<code>curl</code>这样的命令或API开发人员工具（如Postman）与Docker Server交互。现在，使用这个超出了这个房间的范围，但我将演示使用Postman与Docker Server通信，以列出存储在操作系统上的所有映像：</p>
+<p><img src="https://resources.cmnatic.co.uk/TryHackMe/rooms/docker-rodeo/dockerregistry/catalog1.png" alt="the list of Docker images on an operating system captured using postman"></p>
+<p>最后，重要的是要注意，正因为如此，运行Docker的主机可以配置为处理从另一个设备发送的命令。如果没有正确配置，这是一个非常危险的漏洞，因为这意味着有人可以远程停止，启动和访问Docker容器。尽管如此，在一些用例中，Docker的这个功能非常有用！我们将在稍后的会议室中进一步详细介绍这一点！</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://mikannse.space">Mikannse</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://mikannse.space/2024/03/16/IntrotoDockerTHM/">http://mikannse.space/2024/03/16/IntrotoDockerTHM/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://mikannse.space" target="_blank">MikannseのSekai</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a><a class="post-meta__tags" href="/tags/Docker/">Docker</a><a class="post-meta__tags" href="/tags/%E8%BF%90%E7%BB%B4/">运维</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/03/16/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E9%9B%B6%E5%85%AD)%E4%B9%8BTHMUnbakedPie/" title="打靶记录(一零六)之THMUnbakedPie"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">打靶记录(一零六)之THMUnbakedPie</div></div></a></div><div class="next-post pull-right"><a href="/2024/03/15/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E9%9B%B6%E4%BA%94)%E4%B9%8BTHMColdVVars/" title="打靶记录(一零五)之THMColdVVars"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">打靶记录(一零五)之THMColdVVars</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/03/14/ContainerVulnerabilitiesTHM/" title="ContainerVulnerabilitiesTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-03-14</div><div class="title">ContainerVulnerabilitiesTHM</div></div></a></div><div><a href="/2024/05/30/IntrotoKubernetesTHM/" title="IntrotoKubernetesTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-30</div><div class="title">IntrotoKubernetesTHM</div></div></a></div><div><a href="/2024/03/21/IntrotoLogsTHM/" title="IntrotoLogsTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-03-21</div><div class="title">IntrotoLogsTHM</div></div></a></div><div><a href="/2024/05/27/IntrotoLogAnalysisTHM/" title="IntrotoLogAnalysisTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-27</div><div class="title">IntrotoLogAnalysisTHM</div></div></a></div><div><a href="/2024/03/17/LinuxSystemHardeningTHM/" title="LinuxSystemHardeningTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-03-17</div><div class="title">LinuxSystemHardeningTHM</div></div></a></div><div><a href="/2024/03/21/k8s%E5%85%A5%E9%97%A8%E5%88%9D%E5%AD%A6%E4%B9%A0/" title="k8s入门初学习"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-03-21</div><div class="title">k8s入门初学习</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Mikannse</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">274</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mikannse/mikannse.github.io"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">暂时没有公告QAQ</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9F%BA%E6%9C%ACDocker"><span class="toc-number">1.</span> <span class="toc-text">基本Docker</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%A1%E7%90%86Docker%E9%95%9C%E5%83%8F"><span class="toc-number">1.1.</span> <span class="toc-text">管理Docker镜像</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C%E6%82%A8%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%AE%B9%E5%99%A8"><span class="toc-number">2.</span> <span class="toc-text">运行您的第一个容器</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Dockerfiles%E7%AE%80%E4%BB%8B"><span class="toc-number">3.</span> <span class="toc-text">Dockerfiles简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Docker-Compose%E4%BB%8B%E7%BB%8D"><span class="toc-number">4.</span> <span class="toc-text">Docker Compose介绍</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Docker-Socket%E7%AE%80%E4%BB%8B"><span class="toc-number">5.</span> <span class="toc-text">Docker Socket简介</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/11/pwncollegeAssembly30/" title="pwncollegeAssembly30">pwncollegeAssembly30</a><time datetime="2024-10-10T17:05:42.000Z" title="发表于 2024-10-11 01:05:42">2024-10-11</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/09/pwncollege%E6%B1%87%E7%BC%96%E5%85%A5%E9%97%A8/" title="pwncollege汇编入门">pwncollege汇编入门</a><time datetime="2024-10-09T14:39:52.000Z" title="发表于 2024-10-09 22:39:52">2024-10-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/05/Git%E9%80%9F%E6%88%90/" title="Git速成">Git速成</a><time datetime="2024-10-05T04:57:08.000Z" title="发表于 2024-10-05 12:57:08">2024-10-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/03/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%BA%8C)%E4%B9%8BVulnHubCorrosion2/" title="打靶记录(一六二)之VulnHubCorrosion2">打靶记录(一六二)之VulnHubCorrosion2</a><time datetime="2024-10-03T09:24:11.000Z" title="发表于 2024-10-03 17:24:11">2024-10-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/02/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%B8%80)%E4%B9%8BVulnHubDrippingBlues1/" title="打靶记录(一六一)之VulnHubDrippingBlues1">打靶记录(一六一)之VulnHubDrippingBlues1</a><time datetime="2024-10-02T05:16:28.000Z" title="发表于 2024-10-02 13:16:28">2024-10-02</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2024 By Mikannse</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function loadDisqus () {
+  const disqus_config = function () {
+    this.page.url = 'http://mikannse.space/2024/03/16/IntrotoDockerTHM/'
+    this.page.identifier = '/2024/03/16/IntrotoDockerTHM/'
+    this.page.title = 'IntrotoDockerTHM'
+  }
+
+  const disqusReset = () => {
+    DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addModeChange('disqus', disqusReset)
+
+  if (window.DISQUS) disqusReset()
+  else {
+    (function() { 
+      var d = document, s = d.createElement('script');
+      s.src = 'https://.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  }
+}
+
+if ('Valine' === 'Disqus' || !true) {
+  if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+  else loadDisqus()
+} else {
+  function loadOtherComment () {
+    loadDisqus()
+  }
+}
+</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

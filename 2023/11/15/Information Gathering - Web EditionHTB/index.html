@@ -1,0 +1,803 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Information Gathering - Web EditionHTB | MikannseのSekai</title><meta name="author" content="Mikannse"><meta name="copyright" content="Mikannse"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="被动信息收集WHOIS我们可以将WHOIS视为域名的“白色页面”。它是一个基于TCP的面向事务的查询&#x2F;响应协议，默认情况下侦听TCP端口43。我们可以使用它来查询包含域名、IP地址或自治系统的数据库，并为Internet用户提供信息服务。该协议在RFC 3912中定义。第一个WHOIS目录是在20世纪70年代初由伊丽莎白·费恩勒（Elizabeth Feinler）和她的团队在斯坦福大学的网络信息">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Information Gathering - Web EditionHTB">
+<meta property="og:url" content="http://mikannse.space/2023/11/15/Information%20Gathering%20-%20Web%20EditionHTB/index.html">
+<meta property="og:site_name" content="MikannseのSekai">
+<meta property="og:description" content="被动信息收集WHOIS我们可以将WHOIS视为域名的“白色页面”。它是一个基于TCP的面向事务的查询&#x2F;响应协议，默认情况下侦听TCP端口43。我们可以使用它来查询包含域名、IP地址或自治系统的数据库，并为Internet用户提供信息服务。该协议在RFC 3912中定义。第一个WHOIS目录是在20世纪70年代初由伊丽莎白·费恩勒（Elizabeth Feinler）和她的团队在斯坦福大学的网络信息">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg">
+<meta property="article:published_time" content="2023-11-15T13:59:32.000Z">
+<meta property="article:modified_time" content="2023-11-17T13:47:48.659Z">
+<meta property="article:author" content="Mikannse">
+<meta property="article:tag" content="网安">
+<meta property="article:tag" content="笔记">
+<meta property="article:tag" content="渗透测试">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg"><link rel="shortcut icon" href="/img/icon.jpg"><link rel="canonical" href="http://mikannse.space/2023/11/15/Information%20Gathering%20-%20Web%20EditionHTB/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Mikannse","link":"链接: ","source":"来源: MikannseのSekai","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Information Gathering - Web EditionHTB',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: undefined,
+  isToc: true,
+  postUpdate: '2023-11-17 21:47:48'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">274</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="MikannseのSekai"><span class="site-name">MikannseのSekai</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Information Gathering - Web EditionHTB</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-11-15T13:59:32.000Z" title="发表于 2023-11-15 21:59:32">2023-11-15</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-11-17T13:47:48.659Z" title="更新于 2023-11-17 21:47:48">2023-11-17</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BD%91%E5%AE%89/">网安</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">13.2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>59分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Information Gathering - Web EditionHTB"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="被动信息收集"><a href="#被动信息收集" class="headerlink" title="被动信息收集"></a>被动信息收集</h1><h2 id="WHOIS"><a href="#WHOIS" class="headerlink" title="WHOIS"></a>WHOIS</h2><p>我们可以将<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/WHOIS">WHOIS</a>视为域名的“白色页面”。它是一个基于TCP的面向事务的查询/响应协议，默认情况下侦听TCP端口43。我们可以使用它来查询包含域名、IP地址或自治系统的数据库，并为Internet用户提供信息服务。该协议在<a target="_blank" rel="noopener" href="https://datatracker.ietf.org/doc/html/rfc3912">RFC 3912</a>中定义。第一个WHOIS目录是在20世纪70年代初由<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Elizabeth_J._Feinler">伊丽莎白·费恩勒（Elizabeth Feinler）</a>和她的团队在斯坦福大学的网络信息中心（NIC）创建的。他们与她的团队一起创建了基于计算机物理地址划分类别的域。我们可以<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/WHOIS#History">在这里</a>阅读更多关于WHOIS的迷人历史。</p>
+<p>WHOIS域名查找允许我们检索有关已注册域名的信息。<a target="_blank" rel="noopener" href="https://www.icann.org/get-started">互联网域名和数字公司</a>（<code>ICANN</code>）要求认证注册商在注册域名后立即在Whois数据库中输入保持器的联系信息、域名的创建和到期日期以及其他信息。简单来说，Whois数据库是目前全球注册的所有域名的可搜索列表。</p>
+<p>WHOIS查询最初使用命令行工具执行。如今，有许多基于Web的工具，但命令行选项通常给予我们对查询的最大控制权，并帮助过滤和排序结果输出。<a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-gb/sysinternals/downloads/whois">Sysinternals WHOIS</a>for Windows或Linux<a target="_blank" rel="noopener" href="https://linux.die.net/man/1/whois">WHOIS</a>命令行实用程序是我们收集信息的首选工具。但是，我们也可以使用一些在线版本，如<a target="_blank" rel="noopener" href="https://whois.domaintools.com/">whois.domaintools.com</a>。</p>
+<p>我们将从前面的命令中获得以下响应，以针对<code>whois</code>域运行<code>facebook.com</code>查找。这个<code>whois</code>命令的一个例子是：                                                            </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ export TARGET="facebook.com" # Assign our target to an environment variable</span><br><span class="line">mikannse7@htb[/htb]$ whois $TARGET</span><br><span class="line"></span><br><span class="line">Domain Name: FACEBOOK.COM</span><br><span class="line">Registry Domain ID: 2320948_DOMAIN_COM-VRSN</span><br><span class="line">Registrar WHOIS Server: whois.registrarsafe.com</span><br><span class="line">Registrar URL: https://www.registrarsafe.com</span><br><span class="line">Updated Date: 2021-09-22T19:33:41Z</span><br><span class="line">Creation Date: 1997-03-29T05:00:00Z</span><br><span class="line">Registrar Registration Expiration Date: 2030-03-30T04:00:00Z</span><br><span class="line">Registrar: RegistrarSafe, LLC</span><br><span class="line">Registrar IANA ID: 3237</span><br><span class="line">Registrar Abuse Contact Email: abusecomplaints@registrarsafe.com</span><br><span class="line">Registrar Abuse Contact Phone: +1.6503087004</span><br><span class="line">Domain Status: clientDeleteProhibited https://www.icann.org/epp#clientDeleteProhibited</span><br><span class="line">Domain Status: clientTransferProhibited https://www.icann.org/epp#clientTransferProhibited</span><br><span class="line">Domain Status: clientUpdateProhibited https://www.icann.org/epp#clientUpdateProhibited</span><br><span class="line">Domain Status: serverDeleteProhibited https://www.icann.org/epp#serverDeleteProhibited</span><br><span class="line">Domain Status: serverTransferProhibited https://www.icann.org/epp#serverTransferProhibited</span><br><span class="line">Domain Status: serverUpdateProhibited https://www.icann.org/epp#serverUpdateProhibited</span><br><span class="line">Registry Registrant ID:</span><br><span class="line">Registrant Name: Domain Admin</span><br><span class="line">Registrant Organization: Facebook, Inc.</span><br><span class="line">Registrant Street: 1601 Willow Rd</span><br><span class="line">Registrant City: Menlo Park</span><br><span class="line">Registrant State/Province: CA</span><br><span class="line">Registrant Postal Code: 94025</span><br><span class="line">Registrant Country: US</span><br><span class="line">Registrant Phone: +1.6505434800</span><br><span class="line">Registrant Phone Ext:</span><br><span class="line">Registrant Fax: +1.6505434800</span><br><span class="line">Registrant Fax Ext:</span><br><span class="line">Registrant Email: domain@fb.com</span><br><span class="line">Registry Admin ID:</span><br><span class="line">Admin Name: Domain Admin</span><br><span class="line">Admin Organization: Facebook, Inc.</span><br><span class="line">Admin Street: 1601 Willow Rd</span><br><span class="line">Admin City: Menlo Park</span><br><span class="line">Admin State/Province: CA</span><br><span class="line">Admin Postal Code: 94025</span><br><span class="line">Admin Country: US</span><br><span class="line">Admin Phone: +1.6505434800</span><br><span class="line">Admin Phone Ext:</span><br><span class="line">Admin Fax: +1.6505434800</span><br><span class="line">Admin Fax Ext:</span><br><span class="line">Admin Email: domain@fb.com</span><br><span class="line">Registry Tech ID:</span><br><span class="line">Tech Name: Domain Admin</span><br><span class="line">Tech Organization: Facebook, Inc.</span><br><span class="line">Tech Street: 1601 Willow Rd</span><br><span class="line">Tech City: Menlo Park</span><br><span class="line">Tech State/Province: CA</span><br><span class="line">Tech Postal Code: 94025</span><br><span class="line">Tech Country: US</span><br><span class="line">Tech Phone: +1.6505434800</span><br><span class="line">Tech Phone Ext:</span><br><span class="line">Tech Fax: +1.6505434800</span><br><span class="line">Tech Fax Ext:</span><br><span class="line">Tech Email: domain@fb.com</span><br><span class="line">Name Server: C.NS.FACEBOOK.COM</span><br><span class="line">Name Server: B.NS.FACEBOOK.COM</span><br><span class="line">Name Server: A.NS.FACEBOOK.COM</span><br><span class="line">Name Server: D.NS.FACEBOOK.COM</span><br><span class="line">DNSSEC: unsigned</span><br><span class="line"></span><br><span class="line">&lt;SNIP&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们可以使用Windows Sysinternals中的<code>whois.exe</code>收集相同的数据：                                                                   </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\htb&gt; whois.exe facebook.com</span><br><span class="line"></span><br><span class="line">Whois v1.21 - Domain information lookup</span><br><span class="line">Copyright (C) 2005-2019 Mark Russinovich</span><br><span class="line">Sysinternals - www.sysinternals.com</span><br><span class="line"></span><br><span class="line">Connecting to COM.whois-servers.net...</span><br><span class="line"></span><br><span class="line">WHOIS Server: whois.registrarsafe.com</span><br><span class="line">   Registrar URL: http://www.registrarsafe.com</span><br><span class="line">   Updated Date: 2021-09-22T19:33:41Z</span><br><span class="line">   Creation Date: 1997-03-29T05:00:00Z</span><br><span class="line">   Registry Expiry Date: 2030-03-30T04:00:00Z</span><br><span class="line">   Registrar: RegistrarSafe, LLC</span><br><span class="line">   Registrar IANA ID: 3237</span><br><span class="line">   Registrar Abuse Contact Email: abusecomplaints@registrarsafe.com</span><br><span class="line">   Registrar Abuse Contact Phone: +1-650-308-7004</span><br><span class="line">   Domain Status: clientDeleteProhibited https://icann.org/epp#clientDeleteProhibited</span><br><span class="line">   Domain Status: clientTransferProhibited https://icann.org/epp#clientTransferProhibited</span><br><span class="line">   Domain Status: clientUpdateProhibited https://icann.org/epp#clientUpdateProhibited</span><br><span class="line">   Domain Status: serverDeleteProhibited https://icann.org/epp#serverDeleteProhibited</span><br><span class="line">   Domain Status: serverTransferProhibited https://icann.org/epp#serverTransferProhibited</span><br><span class="line">   Domain Status: serverUpdateProhibited https://icann.org/epp#serverUpdateProhibited</span><br><span class="line">   Name Server: A.NS.FACEBOOK.COM</span><br><span class="line">   Name Server: B.NS.FACEBOOK.COM</span><br><span class="line">   Name Server: C.NS.FACEBOOK.COM</span><br><span class="line">   Name Server: D.NS.FACEBOOK.COM</span><br><span class="line">   DNSSEC: unsigned</span><br><span class="line">   URL of the ICANN Whois Inaccuracy Complaint Form: https://www.icann.org/wicf/</span><br><span class="line">&gt;&gt;&gt; Last update of whois database: 2021-10-11T06:03:10Z &lt;&lt;&lt;</span><br><span class="line"></span><br><span class="line">&lt;SNIP&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>从该输出中，我们收集了以下信息：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Organisation</td>
+<td>Facebook, Inc.Facebook公司</td>
+</tr>
+<tr>
+<td>Locations</td>
+<td>US, 94025 Menlo Park, CA, 1601 Willo Rd94025 Menlo Park，美国，1601 Willo Rd，地图</td>
+</tr>
+<tr>
+<td>Domain Email address</td>
+<td><a href="mailto:domain@fb.com">domain@fb.com</a></td>
+</tr>
+<tr>
+<td>Registrar Email address</td>
+<td><a href="mailto:abusecomplaints@registrarsafe.com">abusecomplaints@registrarsafe.com</a></td>
+</tr>
+<tr>
+<td>Phone number</td>
+<td>+1.6505434800</td>
+</tr>
+<tr>
+<td>Language</td>
+<td>English (US)</td>
+</tr>
+<tr>
+<td>Registrar</td>
+<td>RegistrarSafe, LLCRegistrarSafe，LLC</td>
+</tr>
+<tr>
+<td>New Domain新域</td>
+<td>fb.com</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Domain_Name_System_Security_Extensions">DNSSEC</a></td>
+<td><a target="_blank" rel="noopener" href="https://aws.amazon.com/blogs/networking-and-content-delivery/configuring-dnssec-signing-and-validation-with-amazon-route-53">unsigned</a> <a target="_blank" rel="noopener" href="https://aws.amazon.com/blogs/networking-and-content-delivery/configuring-dnssec-signing-and-validation-with-amazon-route-53">无符号</a></td>
+</tr>
+<tr>
+<td>Name servers</td>
+<td>A.NS.FACEBOOK.COM</td>
+</tr>
+<tr>
+<td></td>
+<td>B.NS.FACEBOOK.COM</td>
+</tr>
+<tr>
+<td></td>
+<td>C.NS.FACEBOOK.COM</td>
+</tr>
+<tr>
+<td></td>
+<td>D.NS.FACEBOOK.COM</td>
+</tr>
+</tbody></table>
+<p>虽然这些信息本身并不足以让我们发起攻击，但这些都是我们希望稍后记录下来的重要数据。</p>
+<h2 id="DNS"><a href="#DNS" class="headerlink" title="DNS"></a>DNS</h2><p>我们可以开始进一步研究数据，以确定特定的目标，现在我们有一些关于我们的目标的信息。<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Domain_Name_System">域名系统</a>（<code>DNS</code>）是寻找此类信息的绝佳场所。首先，让我们来看看什么是DNS。</p>
+<h3 id="什么是DNS？"><a href="#什么是DNS？" class="headerlink" title="什么是DNS？"></a>什么是DNS？</h3><p>DNS是互联网的电话簿。域名如<code>hackthebox.com</code>和<code>inlanefreight.com</code>允许人们访问互联网上的内容。互联网协议（<code>IP</code>）地址用于在Web浏览器之间进行通信。DNS将域名转换为IP地址，允许浏览器访问Internet上的资源。</p>
+<p>每个连接到互联网的设备都有一个唯一的IP地址，其他机器可以使用它来定位它。DNS服务器最大限度地减少了人们学习IP地址（如<code>104.17.42.72</code>中的<code>IPv4</code>）或更复杂的现代字母数字IP地址（如<code>2606:4700::6811:2b48</code>中的<code>IPv6</code>）的需要。当用户在其Web浏览器中键入<code>www.facebook.com</code>时，必须在用户键入的内容与访问<code>www.facebook.com</code>网页所需的IP地址之间进行转换。</p>
+<p>使用DNS的一些优点是：</p>
+<ul>
+<li>它允许使用名称而不是数字来标识主机。</li>
+<li>记住一个名字比记住一个数字容易得多。</li>
+<li>通过将名称重定向到新的数字地址，服务器可以更改数字地址，而无需通知Internet上的每个人。</li>
+<li>一个名称可能指的是在不同服务器之间分配工作负载的多个主机。</li>
+</ul>
+<p>DNS结构中有一个名称层次结构。该系统的根，或最高级别，是未命名的。</p>
+<p>顶级域名服务器，顶级域名，可以比作图书馆里的一个书架。主机名的最后一部分由这个名称服务器托管，它是搜索特定IP地址的下一个阶段（在<code>www.facebook.com</code>中，DNS服务器是<code>com</code>）。大多数TLD已委托给各个国家/地区的经理，他们从<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes">ISO-3166-1表</a>中获得代码。这些被称为国家代码顶级域名或由联合国机构管理的国家代码顶级域名。</p>
+<p>也有少量的“通用”顶级域名（gTLD）与特定国家或地区无关。根据ISO-3166-1中规定的政策建议，域名管理人员被授予负责二级域名（SLD）和较低级别名称层次结构分配的程序和政策。</p>
+<p>每个国家的管理员组织国家代码域。这些管理人员代表互联网社区提供公共服务。资源记录是DNS查询的结果，具有以下结构：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Resource Record</code></td>
+<td>域名（通常是完全限定的域名）是资源记录的第一部分。如果您不使用完全限定的域名，则记录所在区域的名称将附加到名称的末尾。</td>
+</tr>
+<tr>
+<td><code>TTL</code></td>
+<td>以秒为单位，Time-To-Live（<code>TTL</code>）默认为SOA记录中指定的最小值。</td>
+</tr>
+<tr>
+<td><code>Record Class</code></td>
+<td>Internet, Hesiod, or Chaos</td>
+</tr>
+<tr>
+<td><code>Start Of Authority</code> (<code>SOA</code>)</td>
+<td>它应该在区域文件中的第一个，因为它指示区域的开始。每个区域只能有一个<code>SOA</code>记录，此外，它还包含区域的值，如序列号和多个过期超时。</td>
+</tr>
+<tr>
+<td><code>Name Servers</code> (<code>NS</code>)</td>
+<td>分布式数据库由<code>NS</code>记录绑定在一起。它们负责区域的权威名称服务器和子区域对名称服务器的权威。</td>
+</tr>
+<tr>
+<td><code>IPv4 Addresses</code> (<code>A</code>)</td>
+<td>A记录只是主机名和IP地址之间的映射。“前进”区域是指具有<code>A</code>记录的区域。</td>
+</tr>
+<tr>
+<td><code>Pointer</code> (<code>PTR</code>) <code>Pointer</code>（<code>PTR</code>）</td>
+<td>PTR记录是IP地址和主机名之间的映射。“反向”区域是那些有<code>PTR</code>记录的区域。</td>
+</tr>
+<tr>
+<td><code>Canonical Name</code> (<code>CNAME</code>) <code>Name Servers</code>（<code>NS</code>）</td>
+<td>别名主机名使用<code>A</code>记录映射到<code>CNAME</code>记录主机名。</td>
+</tr>
+<tr>
+<td><code>Mail Exchange</code> (<code>MX</code>) <code>Name Servers</code>（<code>NS</code>）</td>
+<td><code>MX</code>记录标识将接受特定主机的电子邮件的主机。已为指定的主机分配优先级值。多个MX记录可以存在于同一主机上，并且由特定主机的记录组成优先级列表。</td>
+</tr>
+</tbody></table>
+<h3 id="Nslookup-amp-DIG"><a href="#Nslookup-amp-DIG" class="headerlink" title="Nslookup &amp; DIG"></a>Nslookup &amp; DIG</h3><p>现在我们已经清楚地了解了DNS是什么，让我们来看看<code>Nslookup</code>命令行实用程序。假设客户要求我们执行外部渗透测试。因此，我们首先需要熟悉它们的基础设施，并确定哪些主机是可公开访问的。我们可以使用不同类型的DNS请求来发现这一点。使用<code>Nslookup</code>，我们可以在Internet上搜索域名服务器，并向它们询问有关主机和域的信息。虽然该工具有两种模式，交互式和非交互式，但我们将主要关注非交互式模块。</p>
+<p>我们可以通过提交域名查询<code>A</code>记录。但是我们也可以使用<code>-query</code>参数来搜索特定的资源记录。例如：</p>
+<h4 id="Querying-A-Records"><a href="#Querying-A-Records" class="headerlink" title="Querying: A Records"></a>Querying: A Records</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ export TARGET="facebook.com"</span><br><span class="line">mikannse7@htb[/htb]$ nslookup $TARGET</span><br><span class="line"></span><br><span class="line">Server:		1.1.1.1</span><br><span class="line">Address:	1.1.1.1#53</span><br><span class="line"></span><br><span class="line">Non-authoritative answer:</span><br><span class="line">Name:	facebook.com</span><br><span class="line">Address: 31.13.92.36</span><br><span class="line">Name:	facebook.com</span><br><span class="line">Address: 2a03:2880:f11c:8083:face:b00c:0:25de</span><br></pre></td></tr></tbody></table></figure>
+
+<p>如果需要，我们还可以通过在命令中添加<code>@&lt;nameserver/IP&gt;</code>来指定名称服务器。与nslookup不同，<code>DIG</code>向我们展示了更多重要的信息。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ dig facebook.com @1.1.1.1</span><br><span class="line"></span><br><span class="line">; &lt;&lt;&gt;&gt; DiG 9.16.1-Ubuntu &lt;&lt;&gt;&gt; facebook.com @1.1.1.1</span><br><span class="line">;; global options: +cmd</span><br><span class="line">;; Got answer:</span><br><span class="line">;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 58899</span><br><span class="line">;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1</span><br><span class="line"></span><br><span class="line">;; OPT PSEUDOSECTION:</span><br><span class="line">; EDNS: version: 0, flags:; udp: 1232</span><br><span class="line">;; QUESTION SECTION:</span><br><span class="line">;facebook.com.                  IN      A</span><br><span class="line"></span><br><span class="line">;; ANSWER SECTION:</span><br><span class="line">facebook.com.           169     IN      A       31.13.92.36</span><br><span class="line"></span><br><span class="line">;; Query time: 20 msec</span><br><span class="line">;; SERVER: 1.1.1.1#53(1.1.1.1)</span><br><span class="line">;; WHEN: Mo Okt 18 16:03:17 CEST 2021</span><br><span class="line">;; MSG SIZE  rcvd: 57</span><br></pre></td></tr></tbody></table></figure>
+
+<p>该条目以完整的域名开始，包括最后的点。在必须再次请求该信息之前，该条目可以在该高速缓存中保持<code>169</code>秒。这门课是可以理解的互联网（<code>IN</code>）。</p>
+<h4 id="查询：子域的记录"><a href="#查询：子域的记录" class="headerlink" title="查询：子域的记录"></a>查询：子域的记录</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ export TARGET=www.facebook.com</span><br><span class="line">mikannse7@htb[/htb]$ nslookup -query=A $TARGET</span><br><span class="line"></span><br><span class="line">Server:		1.1.1.1</span><br><span class="line">Address:	1.1.1.1#53</span><br><span class="line"></span><br><span class="line">Non-authoritative answer:</span><br><span class="line">www.facebook.com	canonical name = star-mini.c10r.facebook.com.</span><br><span class="line">Name:	star-mini.c10r.facebook.com</span><br><span class="line">Address: 31.13.92.36       </span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ dig a www.facebook.com @1.1.1.1</span><br><span class="line"></span><br><span class="line">; &lt;&lt;&gt;&gt; DiG 9.16.1-Ubuntu &lt;&lt;&gt;&gt; a www.facebook.com @1.1.1.1</span><br><span class="line">;; global options: +cmd</span><br><span class="line">;; Got answer:</span><br><span class="line">;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 15596</span><br><span class="line">;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1</span><br><span class="line"></span><br><span class="line">;; OPT PSEUDOSECTION:</span><br><span class="line">; EDNS: version: 0, flags:; udp: 1232</span><br><span class="line">;; QUESTION SECTION:</span><br><span class="line">;www.facebook.com.              IN      A</span><br><span class="line"></span><br><span class="line">;; ANSWER SECTION:</span><br><span class="line">www.facebook.com.       3585    IN      CNAME   star-mini.c10r.facebook.com.</span><br><span class="line">star-mini.c10r.facebook.com. 45 IN      A       31.13.92.36</span><br><span class="line"></span><br><span class="line">;; Query time: 16 msec</span><br><span class="line">;; SERVER: 1.1.1.1#53(1.1.1.1)</span><br><span class="line">;; WHEN: Mo Okt 18 16:11:48 CEST 2021</span><br><span class="line">;; MSG SIZE  rcvd: 90</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="查询：IP地址的PTR记录"><a href="#查询：IP地址的PTR记录" class="headerlink" title="查询：IP地址的PTR记录"></a>查询：IP地址的PTR记录</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ nslookup -query=PTR 31.13.92.36</span><br><span class="line"></span><br><span class="line">Server:		1.1.1.1</span><br><span class="line">Address:	1.1.1.1#53</span><br><span class="line"></span><br><span class="line">Non-authoritative answer:</span><br><span class="line">36.92.13.31.in-addr.arpa	name = edge-star-mini-shv-01-frt3.facebook.com.</span><br><span class="line"></span><br><span class="line">Authoritative answers can be found from:    </span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ dig -x 31.13.92.36 @1.1.1.1</span><br><span class="line"></span><br><span class="line">; &lt;&lt;&gt;&gt; DiG 9.16.1-Ubuntu &lt;&lt;&gt;&gt; -x 31.13.92.36 @1.1.1.1</span><br><span class="line">;; global options: +cmd</span><br><span class="line">;; Got answer:</span><br><span class="line">;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 51730</span><br><span class="line">;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1</span><br><span class="line"></span><br><span class="line">;; OPT PSEUDOSECTION:</span><br><span class="line">; EDNS: version: 0, flags:; udp: 1232</span><br><span class="line">;; QUESTION SECTION:</span><br><span class="line">;36.92.13.31.in-addr.arpa.      IN      PTR</span><br><span class="line"></span><br><span class="line">;; ANSWER SECTION:</span><br><span class="line">36.92.13.31.in-addr.arpa. 1028  IN      PTR     edge-star-mini-shv-01-frt3.facebook.com.</span><br><span class="line"></span><br><span class="line">;; Query time: 16 msec</span><br><span class="line">;; SERVER: 1.1.1.1#53(1.1.1.1)</span><br><span class="line">;; WHEN: Mo Okt 18 16:14:20 CEST 2021</span><br><span class="line">;; MSG SIZE  rcvd: 106</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="查询：任何现有记录"><a href="#查询：任何现有记录" class="headerlink" title="查询：任何现有记录"></a>查询：任何现有记录</h4><p>在这个例子中，我们使用谷歌作为例子，而不是Facebook，因为最后一个没有回应我们的查询。           </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ export TARGET="google.com"</span><br><span class="line">mikannse7@htb[/htb]$ nslookup -query=ANY $TARGET</span><br><span class="line"></span><br><span class="line">Server:		10.100.0.1</span><br><span class="line">Address:	10.100.0.1#53</span><br><span class="line"></span><br><span class="line">Non-authoritative answer:</span><br><span class="line">Name:	google.com</span><br><span class="line">Address: 172.217.16.142</span><br><span class="line">Name:	google.com</span><br><span class="line">Address: 2a00:1450:4001:808::200e</span><br><span class="line">google.com	text = "docusign=05958488-4752-4ef2-95eb-aa7ba8a3bd0e"</span><br><span class="line">google.com	text = "docusign=1b0a6754-49b1-4db5-8540-d2c12664b289"</span><br><span class="line">google.com	text = "v=spf1 include:_spf.google.com ~all"</span><br><span class="line">google.com	text = "MS=E4A68B9AB2BB9670BCE15412F62916164C0B20BB"</span><br><span class="line">google.com	text = "globalsign-smime-dv=CDYX+XFHUw2wml6/Gb8+59BsH31KzUr6c1l2BPvqKX8="</span><br><span class="line">google.com	text = "apple-domain-verification=30afIBcvSuDV2PLX"</span><br><span class="line">google.com	text = "google-site-verification=wD8N7i1JTNTkezJ49swvWW48f8_9xveREV4oB-0Hf5o"</span><br><span class="line">google.com	text = "facebook-domain-verification=22rm551cu4k0ab0bxsw536tlds4h95"</span><br><span class="line">google.com	text = "google-site-verification=TV9-DBe4R80X4v0M4U_bd_J9cpOJM0nikft0jAgjmsQ"</span><br><span class="line"></span><br><span class="line">google.com	nameserver = ns3.google.com.</span><br><span class="line">google.com	nameserver = ns2.google.com.</span><br><span class="line">google.com	nameserver = ns1.google.com.</span><br><span class="line">google.com	nameserver = ns4.google.com.</span><br><span class="line">google.com	mail exchanger = 10 aspmx.l.google.com.</span><br><span class="line">google.com	mail exchanger = 40 alt3.aspmx.l.google.com.</span><br><span class="line">google.com	mail exchanger = 20 alt1.aspmx.l.google.com.</span><br><span class="line">google.com	mail exchanger = 30 alt2.aspmx.l.google.com.</span><br><span class="line">google.com	mail exchanger = 50 alt4.aspmx.l.google.com.</span><br><span class="line">google.com</span><br><span class="line">	origin = ns1.google.com</span><br><span class="line">	mail addr = dns-admin.google.com</span><br><span class="line">	serial = 398195569</span><br><span class="line">	refresh = 900</span><br><span class="line">	retry = 900</span><br><span class="line">	expire = 1800</span><br><span class="line">	minimum = 60</span><br><span class="line">google.com	rdata_257 = 0 issue "pki.goog"</span><br><span class="line"></span><br><span class="line">Authoritative answers can be found from:</span><br></pre></td></tr></tbody></table></figure>
+
+<p>​                                                                                Querying: ANY Existing Records查询：任何现有记录                </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ dig any google.com @8.8.8.8</span><br><span class="line"></span><br><span class="line">; &lt;&lt;&gt;&gt; DiG 9.16.1-Ubuntu &lt;&lt;&gt;&gt; any google.com @8.8.8.8</span><br><span class="line">;; global options: +cmd</span><br><span class="line">;; Got answer:</span><br><span class="line">;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 49154</span><br><span class="line">;; flags: qr rd ra; QUERY: 1, ANSWER: 22, AUTHORITY: 0, ADDITIONAL: 1</span><br><span class="line"></span><br><span class="line">;; OPT PSEUDOSECTION:</span><br><span class="line">; EDNS: version: 0, flags:; udp: 512</span><br><span class="line">;; QUESTION SECTION:</span><br><span class="line">;google.com.                    IN      ANY</span><br><span class="line"></span><br><span class="line">;; ANSWER SECTION:</span><br><span class="line">google.com.             249     IN      A       142.250.184.206</span><br><span class="line">google.com.             249     IN      AAAA    2a00:1450:4001:830::200e</span><br><span class="line">google.com.             549     IN      MX      10 aspmx.l.google.com.</span><br><span class="line">google.com.             3549    IN      TXT     "apple-domain-verification=30afIBcvSuDV2PLX"</span><br><span class="line">google.com.             3549    IN      TXT     "facebook-domain-verification=22rm551cu4k0ab0bxsw536tlds4h95"</span><br><span class="line">google.com.             549     IN      MX      20 alt1.aspmx.l.google.com.</span><br><span class="line">google.com.             3549    IN      TXT     "docusign=1b0a6754-49b1-4db5-8540-d2c12664b289"</span><br><span class="line">google.com.             3549    IN      TXT     "v=spf1 include:_spf.google.com ~all"</span><br><span class="line">google.com.             3549    IN      TXT     "globalsign-smime-dv=CDYX+XFHUw2wml6/Gb8+59BsH31KzUr6c1l2BPvqKX8="</span><br><span class="line">google.com.             3549    IN      TXT     "google-site-verification=wD8N7i1JTNTkezJ49swvWW48f8_9xveREV4oB-0Hf5o"</span><br><span class="line">google.com.             9       IN      SOA     ns1.google.com. dns-admin.google.com. 403730046 900 900 1800 60</span><br><span class="line">google.com.             21549   IN      NS      ns1.google.com.</span><br><span class="line">google.com.             21549   IN      NS      ns3.google.com.</span><br><span class="line">google.com.             549     IN      MX      50 alt4.aspmx.l.google.com.</span><br><span class="line">google.com.             3549    IN      TXT     "docusign=05958488-4752-4ef2-95eb-aa7ba8a3bd0e"</span><br><span class="line">google.com.             549     IN      MX      30 alt2.aspmx.l.google.com.</span><br><span class="line">google.com.             21549   IN      NS      ns2.google.com.</span><br><span class="line">google.com.             21549   IN      NS      ns4.google.com.</span><br><span class="line">google.com.             549     IN      MX      40 alt3.aspmx.l.google.com.</span><br><span class="line">google.com.             3549    IN      TXT     "MS=E4A68B9AB2BB9670BCE15412F62916164C0B20BB"</span><br><span class="line">google.com.             3549    IN      TXT     "google-site-verification=TV9-DBe4R80X4v0M4U_bd_J9cpOJM0nikft0jAgjmsQ"</span><br><span class="line">google.com.             21549   IN      CAA     0 issue "pki.goog"</span><br><span class="line"></span><br><span class="line">;; Query time: 16 msec</span><br><span class="line">;; SERVER: 8.8.8.8#53(8.8.8.8)</span><br><span class="line">;; WHEN: Mo Okt 18 16:15:22 CEST 2021</span><br><span class="line">;; MSG SIZE  rcvd: 922</span><br></pre></td></tr></tbody></table></figure>
+
+<p>最近的<a target="_blank" rel="noopener" href="https://tools.ietf.org/html/rfc8482">RFC 8482</a>规定废除<code>ANY</code> DNS请求。因此，我们可能无法从DNS服务器收到对我们的<code>ANY</code>请求的响应，也无法获得对上述RFC 8482的引用。      </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ dig any cloudflare.com @8.8.8.8</span><br><span class="line"></span><br><span class="line">; &lt;&lt;&gt;&gt; DiG 9.16.1-Ubuntu &lt;&lt;&gt;&gt; any cloudflare.com @8.8.8.8</span><br><span class="line">;; global options: +cmd</span><br><span class="line">;; Got answer:</span><br><span class="line">;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 22509</span><br><span class="line">;; flags: qr rd ra ad; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1</span><br><span class="line"></span><br><span class="line">;; OPT PSEUDOSECTION:</span><br><span class="line">; EDNS: version: 0, flags:; udp: 512</span><br><span class="line">;; QUESTION SECTION:</span><br><span class="line">;cloudflare.com.                        IN      ANY</span><br><span class="line"></span><br><span class="line">;; ANSWER SECTION:</span><br><span class="line">cloudflare.com.         2747    IN      HINFO   "RFC8482" ""</span><br><span class="line">cloudflare.com.         2747    IN      RRSIG   HINFO 13 2 3789 20211019145905 20211017125905 34505 cloudflare.com. 4/Bq8xUN96SrOhuH0bj2W6s2pXRdv5L5NWsgyTAGLAjEwwEF4y4TQuXo yGtvD3B13jr5KhdXo1VtrLLMy4OR8Q==</span><br><span class="line"></span><br><span class="line">;; Query time: 16 msec</span><br><span class="line">;; SERVER: 8.8.8.8#53(8.8.8.8)</span><br><span class="line">;; WHEN: Mo Okt 18 16:16:27 CEST 2021</span><br><span class="line">;; MSG SIZE  rcvd: 174</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="Querying-TXT-Records"><a href="#Querying-TXT-Records" class="headerlink" title="Querying: TXT Records"></a>Querying: TXT Records</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ export TARGET="facebook.com"</span><br><span class="line">mikannse7@htb[/htb]$ nslookup -query=TXT $TARGET</span><br><span class="line"></span><br><span class="line">Server:		1.1.1.1</span><br><span class="line">Address:	1.1.1.1#53</span><br><span class="line"></span><br><span class="line">Non-authoritative answer:</span><br><span class="line">facebook.com	text = "v=spf1 redirect=_spf.facebook.com"</span><br><span class="line">facebook.com	text = "google-site-verification=A2WZWCNQHrGV_TWwKh6KHY90tY0SHZo_RnyMJoDaG0s"</span><br><span class="line">facebook.com	text = "google-site-verification=wdH5DTJTc9AYNwVunSVFeK0hYDGUIEOGb-RReU6pJlY"</span><br><span class="line"></span><br><span class="line">Authoritative answers can be found from:</span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ dig txt facebook.com @1.1.1.1</span><br><span class="line"></span><br><span class="line">; &lt;&lt;&gt;&gt; DiG 9.16.1-Ubuntu &lt;&lt;&gt;&gt; txt facebook.com @1.1.1.1</span><br><span class="line">;; global options: +cmd</span><br><span class="line">;; Got answer:</span><br><span class="line">;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 63771</span><br><span class="line">;; flags: qr rd ra; QUERY: 1, ANSWER: 3, AUTHORITY: 0, ADDITIONAL: 1</span><br><span class="line"></span><br><span class="line">;; OPT PSEUDOSECTION:</span><br><span class="line">; EDNS: version: 0, flags:; udp: 1232</span><br><span class="line">;; QUESTION SECTION:</span><br><span class="line">;facebook.com.                  IN      TXT</span><br><span class="line"></span><br><span class="line">;; ANSWER SECTION:</span><br><span class="line">facebook.com.           86400   IN      TXT     "v=spf1 redirect=_spf.facebook.com"</span><br><span class="line">facebook.com.           7200    IN      TXT     "google-site-verification=A2WZWCNQHrGV_TWwKh6KHY90tY0SHZo_RnyMJoDaG0s"</span><br><span class="line">facebook.com.           7200    IN      TXT     "google-site-verification=wdH5DTJTc9AYNwVunSVFeK0hYDGUIEOGb-RReU6pJlY"</span><br><span class="line"></span><br><span class="line">;; Query time: 24 msec</span><br><span class="line">;; SERVER: 1.1.1.1#53(1.1.1.1)</span><br><span class="line">;; WHEN: Mo Okt 18 16:17:46 CEST 2021</span><br><span class="line">;; MSG SIZE  rcvd: 249</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="标签：MX-Records"><a href="#标签：MX-Records" class="headerlink" title="标签：MX Records"></a>标签：MX Records</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ export TARGET="facebook.com"</span><br><span class="line">mikannse7@htb[/htb]$ nslookup -query=MX $TARGET</span><br><span class="line"></span><br><span class="line">Server:		1.1.1.1</span><br><span class="line">Address:	1.1.1.1#53</span><br><span class="line"></span><br><span class="line">Non-authoritative answer:</span><br><span class="line">facebook.com	mail exchanger = 10 smtpin.vvv.facebook.com.</span><br><span class="line"></span><br><span class="line">Authoritative answers can be found from:</span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ dig mx facebook.com @1.1.1.1</span><br><span class="line"></span><br><span class="line">; &lt;&lt;&gt;&gt; DiG 9.16.1-Ubuntu &lt;&lt;&gt;&gt; mx facebook.com @1.1.1.1</span><br><span class="line">;; global options: +cmd</span><br><span class="line">;; Got answer:</span><br><span class="line">;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 9392</span><br><span class="line">;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1</span><br><span class="line"></span><br><span class="line">;; OPT PSEUDOSECTION:</span><br><span class="line">; EDNS: version: 0, flags:; udp: 1232</span><br><span class="line">;; QUESTION SECTION:</span><br><span class="line">;facebook.com.                  IN      MX</span><br><span class="line"></span><br><span class="line">;; ANSWER SECTION:</span><br><span class="line">facebook.com.           3600    IN      MX      10 smtpin.vvv.facebook.com.</span><br><span class="line"></span><br><span class="line">;; Query time: 40 msec</span><br><span class="line">;; SERVER: 1.1.1.1#53(1.1.1.1)</span><br><span class="line">;; WHEN: Mo Okt 18 16:18:22 CEST 2021</span><br><span class="line">;; MSG SIZE  rcvd: 68</span><br></pre></td></tr></tbody></table></figure>
+
+<p>到目前为止，我们已经使用<code>A</code>和<code>NS</code>命令收集了<code>MX</code>、<code>CNAME</code>、<code>nslookup</code>和<code>dig</code>记录。组织在互联网上获得IP地址，但他们并不总是他们的所有者。他们可能依赖于<code>ISP</code>s和托管提供商，这些提供商将较小的网络块出租给他们。</p>
+<p>我们可以将通过nslookup收集的一些结果与whois数据库结合联合收割机，以确定我们的目标组织是否使用主机提供商。这个组合看起来像下面的例子：</p>
+<h4 id="Nslookup"><a href="#Nslookup" class="headerlink" title="Nslookup"></a>Nslookup</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ export TARGET="facebook.com"</span><br><span class="line">mikannse7@htb[/htb]$ nslookup $TARGET</span><br><span class="line"></span><br><span class="line">Server:		1.1.1.1</span><br><span class="line">Address:	1.1.1.1#53</span><br><span class="line"></span><br><span class="line">Non-authoritative answer:</span><br><span class="line">Name:	facebook.com</span><br><span class="line">Address: 157.240.199.35</span><br><span class="line">Name:	facebook.com</span><br><span class="line">Address: 2a03:2880:f15e:83:face:b00c:0:25de</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="WHOID"><a href="#WHOID" class="headerlink" title="WHOID"></a>WHOID</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ whois 157.240.199.35</span><br><span class="line"></span><br><span class="line">NetRange:       157.240.0.0 - 157.240.255.255</span><br><span class="line">CIDR:           157.240.0.0/16</span><br><span class="line">NetName:        THEFA-3</span><br><span class="line">NetHandle:      NET-157-240-0-0-1</span><br><span class="line">Parent:         NET157 (NET-157-0-0-0-0)</span><br><span class="line">NetType:        Direct Assignment</span><br><span class="line">OriginAS:</span><br><span class="line">Organization:   Facebook, Inc. (THEFA-3)</span><br><span class="line">RegDate:        2015-05-14</span><br><span class="line">Updated:        2015-05-14</span><br><span class="line">Ref:            https://rdap.arin.net/registry/ip/157.240.0.0</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">OrgName:        Facebook, Inc.</span><br><span class="line">OrgId:          THEFA-3</span><br><span class="line">Address:        1601 Willow Rd.</span><br><span class="line">City:           Menlo Park</span><br><span class="line">StateProv:      CA</span><br><span class="line">PostalCode:     94025</span><br><span class="line">Country:        US</span><br><span class="line">RegDate:        2004-08-11</span><br><span class="line">Updated:        2012-04-17</span><br><span class="line">Ref:            https://rdap.arin.net/registry/entity/THEFA-3</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">OrgAbuseHandle: OPERA82-ARIN</span><br><span class="line">OrgAbuseName:   Operations</span><br><span class="line">OrgAbusePhone:  +1-650-543-4800</span><br><span class="line">OrgAbuseEmail:  domain@facebook.com</span><br><span class="line">OrgAbuseRef:    https://rdap.arin.net/registry/entity/OPERA82-ARIN</span><br><span class="line"></span><br><span class="line">OrgTechHandle: OPERA82-ARIN</span><br><span class="line">OrgTechName:   Operations</span><br><span class="line">OrgTechPhone:  +1-650-543-4800</span><br><span class="line">OrgTechEmail:  domain@facebook.com</span><br><span class="line">OrgTechRef:    https://rdap.arin.net/registry/entity/OPERA82-ARIN</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="Passive-Subdomain-Enumeration"><a href="#Passive-Subdomain-Enumeration" class="headerlink" title="Passive Subdomain Enumeration"></a>Passive Subdomain Enumeration</h2><p>子域名枚举是指映射域名中所有可用的子域名。它增加了我们的攻击面，并可能发现隐藏的管理后端面板或内联网Web应用程序，网络管理员希望使用“模糊安全”策略来隐藏这些应用程序。在这一点上，我们将只使用第三方服务或公开可用的信息执行被动子域枚举。尽管如此，我们将扩大我们收集的信息在未来的活动子域枚举活动。</p>
+<h3 id="VirusTotal"><a href="#VirusTotal" class="headerlink" title="VirusTotal"></a>VirusTotal</h3><p>VirusTotal维护其DNS复制服务，该服务是通过保留用户访问他们提供的URL时所做的DNS解析来开发的。要接收有关域名的信息，请在搜索栏中键入域名，然后单击“关系”选项卡。</p>
+<p><img src="https://academy.hackthebox.com/storage/modules/144/virustotal.png" alt="image"></p>
+<h3 id="证书"><a href="#证书" class="headerlink" title="证书"></a>证书</h3><p>我们可以用来提取子域的另一个有趣的信息来源是SSL/TLS证书。主要原因是证书透明性（CT），该项目要求证书颁发机构（CA）颁发的每个SSL/TLS证书都发布在可公开访问的日志中。</p>
+<p>我们将学习如何使用两个主要资源检查CT日志，以发现目标组织的其他域名和子域：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://censys.io/">https://censys.io</a></li>
+<li><a target="_blank" rel="noopener" href="https://crt.sh/">https://crt.sh</a></li>
+</ul>
+<p>我们可以导航到<a target="_blank" rel="noopener" href="https://search.censys.io/certificates%E6%88%96https://crt.sh%E5%B9%B6%E5%BC%95%E5%85%A5%E7%9B%AE%E6%A0%87%E7%BB%84%E7%BB%87%E7%9A%84%E5%9F%9F%E5%90%8D%EF%BC%8C%E4%BB%A5%E5%BC%80%E5%A7%8B%E5%8F%91%E7%8E%B0%E6%96%B0%E7%9A%84%E5%AD%90%E5%9F%9F%E3%80%82">https://search.censys.io/certificates或https://crt.sh并引入目标组织的域名，以开始发现新的子域。</a></p>
+<p><img src="https://academy.hackthebox.com/storage/modules/144/censys_facebook.png" alt="image"></p>
+<p>​                                                                                                                                                   </p>
+<p><img src="https://academy.hackthebox.com/storage/modules/144/crt_facebook.png" alt="img"></p>
+<p>虽然该网站很好，但我们希望将这些信息组织起来，并能够将其与整个信息收集过程中发现的其他来源联合收割机结合起来。让我们对目标网站执行一个curl请求，请求一个JSON输出，因为这对我们来说更易于管理。我们可以通过以下命令来实现：</p>
+<h4 id="证书透明度"><a href="#证书透明度" class="headerlink" title="证书透明度"></a>证书透明度</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ export TARGET="facebook.com"</span><br><span class="line">mikannse7@htb[/htb]$ curl -s "https://crt.sh/?q=${TARGET}&amp;output=json" | jq -r '.[] | "\(.name_value)\n\(.common_name)"' | sort -u &gt; "${TARGET}_crt.sh.txt"       </span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ head -n20 facebook.com_crt.sh.txt</span><br><span class="line"></span><br><span class="line">*.adtools.facebook.com</span><br><span class="line">*.ak.facebook.com</span><br><span class="line">*.ak.fbcdn.net</span><br><span class="line">*.alpha.facebook.com</span><br><span class="line">*.assistant.facebook.com</span><br><span class="line">*.beta.facebook.com</span><br><span class="line">*.channel.facebook.com</span><br><span class="line">*.cinyour.facebook.com</span><br><span class="line">*.cinyourrc.facebook.com</span><br><span class="line">*.connect.facebook.com</span><br><span class="line">*.cstools.facebook.com</span><br><span class="line">*.ctscan.facebook.com</span><br><span class="line">*.dev.facebook.com</span><br><span class="line">*.dns.facebook.com</span><br><span class="line">*.extern.facebook.com</span><br><span class="line">*.extools.facebook.com</span><br><span class="line">*.f--facebook.com</span><br><span class="line">*.facebook.com</span><br><span class="line">*.facebookcorewwwi.onion</span><br><span class="line">*.facebookmail.com</span><br></pre></td></tr></tbody></table></figure>
+
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>curl -s</code></td>
+<td>以最小的输出发出请求。</td>
+</tr>
+<tr>
+<td><code>https://crt.sh/?q=&lt;DOMAIN&gt;&amp;output=json</code></td>
+<td>请求json输出。</td>
+</tr>
+<tr>
+<td><code>jq -r '.[]' "\(.name_value)\n\(.common_name)"'</code> <code>curl -s</code></td>
+<td>处理json输出，每行打印证书的名称值和公共名称。</td>
+</tr>
+<tr>
+<td><code>sort -u</code> <code>curl -s</code></td>
+<td>对所提供的输出进行精确排序并删除重复项。</td>
+</tr>
+</tbody></table>
+<p>我们还可以通过以下方式使用OpenSSL对目标手动执行此操作： </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ export TARGET="facebook.com"</span><br><span class="line">mikannse7@htb[/htb]$ export PORT="443"</span><br><span class="line">mikannse7@htb[/htb]$ openssl s_client -ign_eof 2&gt;/dev/null &lt;&lt;&lt;$'HEAD / HTTP/1.0\r\n\r' -connect "${TARGET}:${PORT}" | openssl x509 -noout -text -in - | grep 'DNS' | sed -e 's|DNS:|\n|g' -e 's|^\*.*||g' | tr -d ',' | sort -u</span><br><span class="line"></span><br><span class="line">*.facebook.com</span><br><span class="line">*.facebook.net</span><br><span class="line">*.fbcdn.net</span><br><span class="line">*.fbsbx.com</span><br><span class="line">*.m.facebook.com</span><br><span class="line">*.messenger.com</span><br><span class="line">*.xx.fbcdn.net</span><br><span class="line">*.xy.fbcdn.net</span><br><span class="line">*.xz.fbcdn.net</span><br><span class="line">facebook.com</span><br><span class="line">messenger.com</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="自动化被动子域枚举"><a href="#自动化被动子域枚举" class="headerlink" title="自动化被动子域枚举"></a>自动化被动子域枚举</h3><p>我们已经学会了如何从目标组织获取有用的信息，如子域、命名模式、备用TLD、IP范围等，使用第三方服务，而不直接与其基础设施交互或依赖自动化工具。现在，我们将学习如何使用工具和以前获得的信息枚举子域。</p>
+<h4 id="TheHarvester"><a href="#TheHarvester" class="headerlink" title="TheHarvester"></a>TheHarvester</h4><p><a target="_blank" rel="noopener" href="https://github.com/laramies/theHarvester">TheHarvester</a>是一个简单易用但功能强大且有效的工具，用于早期渗透测试和红队参与。我们可以用它来收集信息，以帮助识别公司的攻击面。该工具从各种公共数据源收集<code>emails</code>、<code>names</code>、<code>subdomains</code>、<code>IP addresses</code>和<code>URLs</code>，用于被动信息收集。现在，我们将使用以下模块：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a target="_blank" rel="noopener" href="http://www.baidu.com/">Baidu</a> <a target="_blank" rel="noopener" href="http://www.baidu.com/">百度</a></td>
+<td>百度搜索引擎。</td>
+</tr>
+<tr>
+<td><code>Bufferoverun</code> <code>curl -s</code></td>
+<td>Uses data from Rapid7’s Project Sonar - <a target="_blank" rel="noopener" href="http://www.rapid7.com/research/project-sonar/">www.rapid7.com/research/project-sonar/</a> 使用Rapid 7的Project Sonar数据-<a target="_blank" rel="noopener" href="http://www.rapid7.com/research/project-sonar/">www.rapid7.com/research/project-sonar/</a></td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://crt.sh/">Crtsh</a></td>
+<td>Comodo Certificate search.Comodo证书搜索。</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://hackertarget.com/">Hackertarget</a> <a target="_blank" rel="noopener" href="https://hackertarget.com/">黑客目标</a></td>
+<td>在线漏洞扫描器和网络智能帮助组织。</td>
+</tr>
+<tr>
+<td><code>Otx</code> <code>curl -s</code></td>
+<td>AlienVault Open Threat Exchange - <a target="_blank" rel="noopener" href="https://otx.alienvault.com/">https://otx.alienvault.com</a> AlienVault Open Threat Exchange -<a target="_blank" rel="noopener" href="https://otx.alienvault.com/">https：//otx.alienvault.com</a></td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://rapiddns.io/">Rapiddns</a></td>
+<td>DNS查询工具，使查询子域或网站使用相同的IP容易。</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://github.com/aboul3la/Sublist3r">Sublist3r</a></td>
+<td>用于渗透测试的快速子域枚举工具</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="http://www.threatcrowd.org/">Threatcrowd</a> <a target="_blank" rel="noopener" href="http://www.threatcrowd.org/">威胁人群</a></td>
+<td>开源威胁情报。</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://www.threatminer.org/">Threatminer</a></td>
+<td>威胁情报的数据挖掘。</td>
+</tr>
+<tr>
+<td><code>Trello</code> <code>curl -s</code></td>
+<td>搜索Trello boards（使用Google搜索）</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://urlscan.io/">Urlscan</a></td>
+<td>一个沙盒的网页，是一个网址和网站扫描器。</td>
+</tr>
+<tr>
+<td><code>Vhost</code> <code>curl -s</code></td>
+<td>Bing虚拟主机搜索。</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://www.virustotal.com/gui/home/search">Virustotal</a></td>
+<td>域名搜索。</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://www.zoomeye.org/">Zoomeye</a></td>
+<td>中国版的Shodan</td>
+</tr>
+</tbody></table>
+<p>为了实现自动化，我们将创建一个名为sources.txt的文件，其中包含以下内容。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ cat sources.txt</span><br><span class="line"></span><br><span class="line">baidu</span><br><span class="line">bufferoverun</span><br><span class="line">crtsh</span><br><span class="line">hackertarget</span><br><span class="line">otx</span><br><span class="line">projecdiscovery</span><br><span class="line">rapiddns</span><br><span class="line">sublist3r</span><br><span class="line">threatcrowd</span><br><span class="line">trello</span><br><span class="line">urlscan</span><br><span class="line">vhost</span><br><span class="line">virustotal</span><br><span class="line">zoomeye</span><br></pre></td></tr></tbody></table></figure>
+
+<p>TheHarvester                </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ export TARGET="facebook.com"</span><br><span class="line">mikannse7@htb[/htb]$ cat sources.txt | while read source; do theHarvester -d "${TARGET}" -b $source -f "${source}_${TARGET}";done</span><br><span class="line"></span><br><span class="line">&lt;SNIP&gt;</span><br><span class="line">*******************************************************************</span><br><span class="line">*  _   _                                            _             *</span><br><span class="line">* | |_| |__   ___    /\  /\__ _ _ ____   _____  ___| |_ ___ _ __  *</span><br><span class="line">* | __|  _ \ / _ \  / /_/ / _` | '__\ \ / / _ \/ __| __/ _ \ '__| *</span><br><span class="line">* | |_| | | |  __/ / __  / (_| | |   \ V /  __/\__ \ ||  __/ |    *</span><br><span class="line">*  \__|_| |_|\___| \/ /_/ \__,_|_|    \_/ \___||___/\__\___|_|    *</span><br><span class="line">*                                                                 *</span><br><span class="line">* theHarvester 4.0.0                                              *</span><br><span class="line">* Coded by Christian Martorella                                   *</span><br><span class="line">* Edge-Security Research                                          *</span><br><span class="line">* cmartorella@edge-security.com                                   *</span><br><span class="line">*                                                                 *</span><br><span class="line">*******************************************************************</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[*] Target: facebook.com</span><br><span class="line"></span><br><span class="line">[*] Searching Urlscan.</span><br><span class="line"></span><br><span class="line">[*] ASNS found: 29</span><br><span class="line">--------------------</span><br><span class="line">AS12578</span><br><span class="line">AS13335</span><br><span class="line">AS13535</span><br><span class="line">AS136023</span><br><span class="line">AS14061</span><br><span class="line">AS14618</span><br><span class="line">AS15169</span><br><span class="line">AS15817</span><br><span class="line"></span><br><span class="line">&lt;SNIP&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>当这个过程完成时，我们可以提取所有找到的子域，并通过以下命令对其进行排序：</p>
+<p>TheHarvester                </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ cat *.json | jq -r '.hosts[]' 2&gt;/dev/null | cut -d':' -f 1 | sort -u &gt; "${TARGET}_theHarvester.txt"</span><br></pre></td></tr></tbody></table></figure>
+
+<p>现在我们可以通过以下方式合并所有被动侦察文件：</p>
+<p>TheHarvester                </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ cat facebook.com_*.txt | sort -u &gt; facebook.com_subdomains_passive.txt</span><br><span class="line">mikannse7@htb[/htb]$ cat facebook.com_subdomains_passive.txt | wc -l</span><br><span class="line"></span><br><span class="line">11947</span><br></pre></td></tr></tbody></table></figure>
+
+<p>到目前为止，我们已经成功地找到了11947个合并被动侦察结果文件的子域。这里需要注意的是，还有更多的方法可以被动地找到子域。例如，在<a target="_blank" rel="noopener" href="https://academy.hackthebox.com/course/preview/osint-corporate-recon">OSINT：Corporate Recon</a>模块中显示了更多的可能性。</p>
+<h2 id="被动基础设施识别"><a href="#被动基础设施识别" class="headerlink" title="被动基础设施识别"></a>被动基础设施识别</h2><p><a target="_blank" rel="noopener" href="https://www.netcraft.com/">Netcraft</a>可以为我们提供有关服务器的信息，甚至不需要与它们进行交互，从被动信息收集的角度来看，这是很有价值的。 我们可以通过访问<code>https://sitereport.netcraft.com</code>并输入目标域来使用该服务。                                                                              </p>
+<p><img src="https://academy.hackthebox.com/storage/modules/144/netcraft_facebook.png" alt="img"></p>
+<p>我们可以从报告中观察到一些有趣的细节：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Background</code></td>
+<td>有关域的一般信息，包括Netcraft爬虫首次看到它的日期。</td>
+</tr>
+<tr>
+<td><code>Network</code></td>
+<td>有关netblock所有者、托管公司、名称服务器等的信息。</td>
+</tr>
+<tr>
+<td><code>Hosting history</code></td>
+<td>使用的最新IP、Web服务器和目标操作系统。</td>
+</tr>
+</tbody></table>
+<p>我们需要特别注意使用的最新IP。有时我们可以在Web服务器被放置在负载均衡器、Web应用程序防火墙或IDS之后之前从Web服务器中发现实际的IP地址，如果配置允许，我们可以直接连接到它。这种技术可能会干扰或改变我们未来的测试活动。</p>
+<h3 id="Wayback-Machine"><a href="#Wayback-Machine" class="headerlink" title="Wayback Machine"></a>Wayback Machine</h3><p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Internet_Archive">互联网档案馆</a>是一个美国数字图书馆，提供免费的数字化材料，包括网站，通过其网络爬虫自动收集。</p>
+<p>我们可以使用<a target="_blank" rel="noopener" href="http://web.archive.org/">Wayback Machine</a>访问这些网站的几个版本，以找到可能在源代码或文件中有有趣注释的旧版本。此工具可用于在某个时间点查找网站的旧版本。让我们以一个运行WordPress的网站为例。在使用手动方法和自动化工具评估它时，我们可能找不到任何有趣的东西，所以我们使用Wayback Machine搜索它，并找到一个使用特定（现在易受攻击）插件的版本。返回到网站的当前版本，我们发现插件没有被正确删除，仍然可以通过<code>wp-content</code>目录访问。然后，我们可以利用它来获得主机上的远程代码执行和一个不错的赏金。</p>
+<p><img src="https://academy.hackthebox.com/storage/modules/144/wayback1.png" alt="image"></p>
+<p>我们可以检查2005年12月1日捕获的<code>facebook.com</code>的第一个版本之一，这很有趣，也许会给我们一种怀旧的感觉，但对我们作为安全研究人员来说也非常有用。</p>
+<p><img src="https://academy.hackthebox.com/storage/modules/144/wayback2.png" alt="img"></p>
+<p>我们还可以使用waybackurls工具来检查Wayback Machine保存的URL并查找特定的关键字。如果我们在主机上正确设置了<code>Go</code>，我们可以按如下方式安装该工具：               </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ go install github.com/tomnomnom/waybackurls@latest</span><br></pre></td></tr></tbody></table></figure>
+
+<p>要从域中获取抓取的URL列表及其获取日期，我们可以将<code>-dates</code>开关添加到我们的命令中，如下所示：                                                       </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ waybackurls -dates https://facebook.com &gt; waybackurls.txt</span><br><span class="line">mikannse7@htb[/htb]$ cat waybackurls.txt</span><br><span class="line"></span><br><span class="line">2018-05-20T09:46:07Z http://www.facebook.com./</span><br><span class="line">2018-05-20T10:07:12Z https://www.facebook.com/</span><br><span class="line">2018-05-20T10:18:51Z http://www.facebook.com/#!/pages/Welcome-Baby/143392015698061?ref=tsrobots.txt</span><br><span class="line">2018-05-20T10:19:19Z http://www.facebook.com/</span><br><span class="line">2018-05-20T16:00:13Z http://facebook.com</span><br><span class="line">2018-05-21T22:12:55Z https://www.facebook.com</span><br><span class="line">2018-05-22T15:14:09Z http://www.facebook.com</span><br><span class="line">2018-05-22T17:34:48Z http://www.facebook.com/#!/Syerah?v=info&amp;ref=profile/robots.txt</span><br><span class="line">2018-05-23T11:03:47Z http://www.facebook.com/#!/Bin595</span><br><span class="line"></span><br><span class="line">&lt;SNIP&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>如果我们想访问特定的资源，我们需要将URL放在搜索菜单中，并导航到快照创建的日期。如前所述，Wayback Machine可以是一个方便的工具，不应该被忽视。它很可能会让我们发现被遗忘的资产、页面等，这可能导致发现缺陷。</p>
+<h1 id="Active-Information-Gathering"><a href="#Active-Information-Gathering" class="headerlink" title="Active Information Gathering"></a>Active Information Gathering</h1><h2 id="主动基础设施识别"><a href="#主动基础设施识别" class="headerlink" title="主动基础设施识别"></a>主动基础设施识别</h2><p>Web应用程序的基础设施是保持其运行并允许其运行的基础设施。Web服务器直接参与任何Web应用程序的操作。其中最受欢迎的是Apache，Nginx和Microsoft IIS等。</p>
+<p>如果我们发现了目标应用程序背后的Web服务器，它可以让我们给予一个很好的想法，什么操作系统运行在后端服务器上。例如，如果我们发现正在运行的IIS版本，我们可以通过将IIS版本映射回默认安装的Windows版本来推断正在使用的Windows操作系统版本。一些默认安装是：</p>
+<ul>
+<li>IIS 6.0: Windows Server 2003</li>
+<li>IIS 7.0-8.5: Windows Server 2008 / Windows Server 2008R2</li>
+<li>IIS 10.0 (v1607-v1709): Windows Server 2016</li>
+<li>IIS 10.0 (v1809-): Windows Server 2019</li>
+</ul>
+<p>虽然这在处理Windows时通常是正确的，但我们不能确定Linux或基于BSD的发行版是否正确，因为它们可以在Nginx或Apache中运行不同的Web服务器版本。这种技术可能会干扰或改变我们未来的测试活动。然而，如果我们处理Web服务器，我们将无法在HTML或JS中找到有关服务器的任何指纹。</p>
+<h3 id="Web-Servers-Web-Server"><a href="#Web-Servers-Web-Server" class="headerlink" title="Web Servers Web Server"></a>Web Servers Web Server</h3><p>我们需要从Web服务器中发现尽可能多的信息，以了解其功能，这可能会影响未来的测试。例如，URL重写功能、负载平衡、服务器上使用的脚本引擎或<code>Intrusion detection system</code>（<code>IDS</code>）可能会妨碍我们的一些测试活动。</p>
+<p>要识别Web服务器版本，我们可以做的第一件事是查看响应头。</p>
+<h4 id="HTTP-Headers"><a href="#HTTP-Headers" class="headerlink" title="HTTP Headers"></a>HTTP Headers</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ curl -I "http://${TARGET}"</span><br><span class="line"></span><br><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Date: Thu, 23 Sep 2021 15:10:42 GMT</span><br><span class="line">Server: Apache/2.4.25 (Debian)</span><br><span class="line">X-Powered-By: PHP/7.3.5</span><br><span class="line">Link: &lt;http://192.168.10.10/wp-json/&gt;; rel="https://api.w.org/"</span><br><span class="line">Content-Type: text/html; charset=UTF-8</span><br></pre></td></tr></tbody></table></figure>
+
+<p>在响应报头中对Web服务器进行指纹识别时，还需要考虑其他特征。这些措施是：</p>
+<ul>
+<li>X-Powered-By header：这个header可以告诉我们Web应用正在使用什么。我们可以看到像PHP、ASP.NET、JSP等值。</li>
+<li>Cookie：Cookie是另一个有吸引力的价值，因为每种技术默认都有自己的Cookie。一些默认的cookie值是：<ul>
+<li>.NET：<code>ASPSESSIONID&lt;RANDOM&gt;=&lt;COOKIE_VALUE&gt;</code></li>
+<li>PHP: <code>PHPSESSID=&lt;COOKIE_VALUE&gt;</code> </li>
+<li>JAVA: <code>JSESSION=&lt;COOKIE_VALUE&gt;</code></li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ curl -I http://${TARGET}</span><br><span class="line"></span><br><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Host: randomtarget.com</span><br><span class="line">Date: Thu, 23 Sep 2021 15:12:21 GMT</span><br><span class="line">Connection: close</span><br><span class="line">X-Powered-By: PHP/7.4.21</span><br><span class="line">Set-Cookie: PHPSESSID=gt02b1pqla35cvmmb2bcli96ml; path=/ </span><br><span class="line">Expires: Thu, 19 Nov 1981 08:52:00 GMT</span><br><span class="line">Cache-Control: no-store, no-cache, must-revalidate</span><br><span class="line">Pragma: no-cache</span><br><span class="line">Content-type: text/html; charset=UTF-8</span><br></pre></td></tr></tbody></table></figure>
+
+<p>其他可用的工具通过探测它们并将它们的响应与签名数据库进行比较来分析常见的Web服务器特征，以猜测Web服务器版本，安装的模块和启用的服务等信息。其中一些工具是：</p>
+<p><a target="_blank" rel="noopener" href="https://www.morningstarsecurity.com/research/whatweb">Whatweb</a>认可Web技术，包括内容管理系统（CMS）、博客平台、统计/分析软件包、JavaScript库、Web服务器和嵌入式设备。我们建议通过<code>whatweb</code>阅读<code>whatweb -h</code>帮助菜单，以了解可用选项，如攻击级别控制或详细输出。在本例中，我们将通过<code>-a</code>标志使用侵略级别3，并通过<code>-v</code>使用详细输出。</p>
+<h4 id="WhatWeb"><a href="#WhatWeb" class="headerlink" title="WhatWeb"></a>WhatWeb</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ whatweb -a3 https://www.facebook.com -v</span><br><span class="line"></span><br><span class="line">WhatWeb report for https://www.facebook.com</span><br><span class="line">Status    : 200 OK</span><br><span class="line">Title     : &lt;None&gt;</span><br><span class="line">IP        : 31.13.92.36</span><br><span class="line">Country   : IRELAND, IE</span><br><span class="line"></span><br><span class="line">Summary   : Strict-Transport-Security[max-age=15552000; preload], PasswordField[pass], Script[text/javascript], X-XSS-Protection[0], HTML5, X-Frame-Options[DENY], Meta-Refresh-Redirect[/?_fb_noscript=1], UncommonHeaders[x-fb-rlafr,x-content-type-options,x-fb-debug,alt-svc]</span><br><span class="line"></span><br><span class="line">Detected Plugins:</span><br><span class="line">[ HTML5 ]</span><br><span class="line">	HTML version 5, detected by the doctype declaration</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[ Meta-Refresh-Redirect ]</span><br><span class="line">	Meta refresh tag is a deprecated URL element that can be</span><br><span class="line">	used to optionally wait x seconds before reloading the</span><br><span class="line">	current page or loading a new page. More info:</span><br><span class="line">	https://secure.wikimedia.org/wikipedia/en/wiki/Meta_refresh</span><br><span class="line"></span><br><span class="line">	String       : /?_fb_noscript=1</span><br><span class="line"></span><br><span class="line">[ PasswordField ]</span><br><span class="line">	find password fields</span><br><span class="line"></span><br><span class="line">	String       : pass (from field name)</span><br><span class="line"></span><br><span class="line">[ Script ]</span><br><span class="line">	This plugin detects instances of script HTML elements and</span><br><span class="line">	returns the script language/type.</span><br><span class="line"></span><br><span class="line">	String       : text/javascript</span><br><span class="line"></span><br><span class="line">[ Strict-Transport-Security ]</span><br><span class="line">	Strict-Transport-Security is an HTTP header that restricts</span><br><span class="line">	a web browser from accessing a website without the security</span><br><span class="line">	of the HTTPS protocol.</span><br><span class="line"></span><br><span class="line">	String       : max-age=15552000; preload</span><br><span class="line"></span><br><span class="line">[ UncommonHeaders ]</span><br><span class="line">	Uncommon HTTP server headers. The blacklist includes all</span><br><span class="line">	the standard headers and many non standard but common ones.</span><br><span class="line">	Interesting but fairly common headers should have their own</span><br><span class="line">	plugins, eg. x-powered-by, server and x-aspnet-version.</span><br><span class="line">	Info about headers can be found at www.http-stats.com</span><br><span class="line"></span><br><span class="line">	String       : x-fb-rlafr,x-content-type-options,x-fb-debug,alt-svc (from headers)</span><br><span class="line"></span><br><span class="line">[ X-Frame-Options ]</span><br><span class="line">	This plugin retrieves the X-Frame-Options value from the</span><br><span class="line">	HTTP header. - More Info:</span><br><span class="line">	http://msdn.microsoft.com/en-us/library/cc288472%28VS.85%29.</span><br><span class="line">	aspx</span><br><span class="line"></span><br><span class="line">	String       : DENY</span><br><span class="line"></span><br><span class="line">[ X-XSS-Protection ]</span><br><span class="line">	This plugin retrieves the X-XSS-Protection value from the</span><br><span class="line">	HTTP header. - More Info:</span><br><span class="line">	http://msdn.microsoft.com/en-us/library/cc288472%28VS.85%29.</span><br><span class="line">	aspx</span><br><span class="line"></span><br><span class="line">	String       : 0</span><br><span class="line"></span><br><span class="line">HTTP Headers:</span><br><span class="line">	HTTP/1.1 200 OK</span><br><span class="line">	Vary: Accept-Encoding</span><br><span class="line">	Content-Encoding: gzip</span><br><span class="line">	x-fb-rlafr: 0</span><br><span class="line">	Pragma: no-cache</span><br><span class="line">	Cache-Control: private, no-cache, no-store, must-revalidate</span><br><span class="line">	Expires: Sat, 01 Jan 2000 00:00:00 GMT</span><br><span class="line">	X-Content-Type-Options: nosniff</span><br><span class="line">	X-XSS-Protection: 0</span><br><span class="line">	X-Frame-Options: DENY</span><br><span class="line">	Strict-Transport-Security: max-age=15552000; preload</span><br><span class="line">	Content-Type: text/html; charset="utf-8"</span><br><span class="line">	X-FB-Debug: r2w+sMJ7lVrMjS/ETitC6cNpJXma0r3fbt0rIlnTPAfQqTc+U4PQopVL7sR/6YA/ZKRkqP1wMPoFdUfMBP1JSA==</span><br><span class="line">	Date: Wed, 06 Oct 2021 09:04:27 GMT</span><br><span class="line">	Alt-Svc: h3=":443"; ma=3600, h3-29=":443"; ma=3600,h3-27=":443"; ma=3600</span><br><span class="line">	Connection: close</span><br><span class="line"></span><br><span class="line">WhatWeb report for https://www.facebook.com/?_fb_noscript=1</span><br><span class="line">Status    : 200 OK</span><br><span class="line">Title     : &lt;None&gt;</span><br><span class="line">IP        : 31.13.92.36</span><br><span class="line">Country   : IRELAND, IE</span><br><span class="line"></span><br><span class="line">Summary   : Cookies[noscript], Strict-Transport-Security[max-age=15552000; preload], PasswordField[pass], Script[text/javascript], X-XSS-Protection[0], HTML5, X-Frame-Options[DENY], UncommonHeaders[x-fb-rlafr,x-content-type-options,x-fb-debug,alt-svc]</span><br><span class="line"></span><br><span class="line">Detected Plugins:</span><br><span class="line">[ Cookies ]</span><br><span class="line">	Display the names of cookies in the HTTP headers. The</span><br><span class="line">	values are not returned to save on space.</span><br><span class="line"></span><br><span class="line">	String       : noscript</span><br><span class="line"></span><br><span class="line">[ HTML5 ]</span><br><span class="line">	HTML version 5, detected by the doctype declaration</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[ PasswordField ]</span><br><span class="line">	find password fields</span><br><span class="line"></span><br><span class="line">	String       : pass (from field name)</span><br><span class="line"></span><br><span class="line">[ Script ]</span><br><span class="line">	This plugin detects instances of script HTML elements and</span><br><span class="line">	returns the script language/type.</span><br><span class="line"></span><br><span class="line">	String       : text/javascript</span><br><span class="line"></span><br><span class="line">[ Strict-Transport-Security ]</span><br><span class="line">	Strict-Transport-Security is an HTTP header that restricts</span><br><span class="line">	a web browser from accessing a website without the security</span><br><span class="line">	of the HTTPS protocol.</span><br><span class="line"></span><br><span class="line">	String       : max-age=15552000; preload</span><br><span class="line"></span><br><span class="line">[ UncommonHeaders ]</span><br><span class="line">	Uncommon HTTP server headers. The blacklist includes all</span><br><span class="line">	the standard headers and many non standard but common ones.</span><br><span class="line">	Interesting but fairly common headers should have their own</span><br><span class="line">	plugins, eg. x-powered-by, server and x-aspnet-version.</span><br><span class="line">	Info about headers can be found at www.http-stats.com</span><br><span class="line"></span><br><span class="line">	String       : x-fb-rlafr,x-content-type-options,x-fb-debug,alt-svc (from headers)</span><br><span class="line"></span><br><span class="line">[ X-Frame-Options ]</span><br><span class="line">	This plugin retrieves the X-Frame-Options value from the</span><br><span class="line">	HTTP header. - More Info:</span><br><span class="line">	http://msdn.microsoft.com/en-us/library/cc288472%28VS.85%29.</span><br><span class="line">	aspx</span><br><span class="line"></span><br><span class="line">	String       : DENY</span><br><span class="line"></span><br><span class="line">[ X-XSS-Protection ]</span><br><span class="line">	This plugin retrieves the X-XSS-Protection value from the</span><br><span class="line">	HTTP header. - More Info:</span><br><span class="line">	http://msdn.microsoft.com/en-us/library/cc288472%28VS.85%29.</span><br><span class="line">	aspx</span><br><span class="line"></span><br><span class="line">	String       : 0</span><br><span class="line"></span><br><span class="line">HTTP Headers:</span><br><span class="line">	HTTP/1.1 200 OK</span><br><span class="line">	Vary: Accept-Encoding</span><br><span class="line">	Content-Encoding: gzip</span><br><span class="line">	Set-Cookie: noscript=1; path=/; domain=.facebook.com; secure</span><br><span class="line">	x-fb-rlafr: 0</span><br><span class="line">	Pragma: no-cache</span><br><span class="line">	Cache-Control: private, no-cache, no-store, must-revalidate</span><br><span class="line">	Expires: Sat, 01 Jan 2000 00:00:00 GMT</span><br><span class="line">	X-Content-Type-Options: nosniff</span><br><span class="line">	X-XSS-Protection: 0</span><br><span class="line">	X-Frame-Options: DENY</span><br><span class="line">	Strict-Transport-Security: max-age=15552000; preload</span><br><span class="line">	Content-Type: text/html; charset="utf-8"</span><br><span class="line">	X-FB-Debug: 7bEryjJ3tsTb/ap562d5L6KUJyJJ3bJh9XoamIo2lCVrX4cK/VAGbLx7muaAwnyobVm9myC3fQ+CXJqkk0eacg==</span><br><span class="line">	Date: Wed, 06 Oct 2021 09:04:31 GMT</span><br><span class="line">	Alt-Svc: h3=":443"; ma=3600, h3-29=":443"; ma=3600,h3-27=":443"; ma=3600</span><br><span class="line">	Connection: close</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们还希望将<a target="_blank" rel="noopener" href="https://www.wappalyzer.com/">Wappalyzer</a>安装为浏览器扩展。它具有与Whatweb类似的功能，但结果会在导航目标URL时显示。</p>
+<p><img src="https://academy.hackthebox.com/storage/modules/144/wappalyzer_facebook.png" alt="image"></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/EnableSecurity/wafw00f">WafW00f</a>是一个Web应用程序防火墙（<code>WAF</code>）指纹识别工具，它发送请求并分析响应，以确定安全解决方案是否到位。我们可以使用以下命令安装它：</p>
+<h4 id="Installing-WafW00f"><a href="#Installing-WafW00f" class="headerlink" title="Installing WafW00f"></a>Installing WafW00f</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ sudo apt install wafw00f -y</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们可以使用<code>-a</code>这样的选项来检查所有可能的WAF，而不是在第一次匹配时停止扫描，通过<code>-i</code>标志从输入文件中读取目标，或者使用<code>-p</code>选项代理请求。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ wafw00f -v https://www.tesla.com</span><br><span class="line"></span><br><span class="line">                   ______</span><br><span class="line">                  /      \</span><br><span class="line">                 (  Woof! )</span><br><span class="line">                  \  ____/                      )</span><br><span class="line">                  ,,                           ) (_</span><br><span class="line">             .-. -    _______                 ( |__|</span><br><span class="line">            ()``; |==|_______)                .)|__|</span><br><span class="line">            / ('        /|\                  (  |__|</span><br><span class="line">        (  /  )        / | \                  . |__|</span><br><span class="line">         \(_)_))      /  |  \                   |__|</span><br><span class="line"></span><br><span class="line">                    ~ WAFW00F : v2.1.0 ~</span><br><span class="line">    The Web Application Firewall Fingerprinting Toolkit</span><br><span class="line"></span><br><span class="line">[*] Checking https://www.tesla.com</span><br><span class="line">[+] The site https://www.tesla.com is behind CacheWall (Varnish) WAF.</span><br><span class="line">[~] Number of requests: 2</span><br></pre></td></tr></tbody></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://github.com/michenriksen/aquatone">Aquatone</a>是一种跨多台主机自动和可视化检查网站的工具，通过扫描可配置端口列表、使用无头Chrome浏览器访问网站并进行屏幕截图，可以方便地快速获得基于HTTP的攻击表面的概述。这很有帮助，尤其是在处理庞大的子域列表时。在Parrot Linux中，默认情况下不会安装<code>Aquatone</code>，因此我们需要通过以下命令进行安装。</p>
+<h4 id="安装Aquatone"><a href="#安装Aquatone" class="headerlink" title="安装Aquatone"></a>安装Aquatone</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ sudo apt install golang chromium-driver</span><br><span class="line">mikannse7@htb[/htb]$ go get github.com/michenriksen/aquatone</span><br><span class="line">mikannse7@htb[/htb]$ export PATH="$PATH":"$HOME/go/bin"</span><br></pre></td></tr></tbody></table></figure>
+
+<p>在此之后，我们需要探索一些选择：</p>
+<h4 id="Aquatone-Options"><a href="#Aquatone-Options" class="headerlink" title="Aquatone Options"></a>Aquatone Options</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ aquatone --help</span><br><span class="line"></span><br><span class="line">Usage of aquatone:</span><br><span class="line">  -chrome-path string</span><br><span class="line">    	Full path to the Chrome/Chromium executable to use. By default, aquatone will search for Chrome or Chromium</span><br><span class="line">  -debug</span><br><span class="line">    	Print debugging information</span><br><span class="line">  -http-timeout int</span><br><span class="line">    	Timeout in miliseconds for HTTP requests (default 3000)</span><br><span class="line">  -nmap</span><br><span class="line">    	Parse input as Nmap/Masscan XML</span><br><span class="line">  -out string</span><br><span class="line">    	Directory to write files to (default ".")</span><br><span class="line">  -ports string</span><br><span class="line">    	Ports to scan on hosts. Supported list aliases: small, medium, large, xlarge (default "80,443,8000,8080,8443")</span><br><span class="line">  -proxy string</span><br><span class="line">    	Proxy to use for HTTP requests</span><br><span class="line">  -resolution string</span><br><span class="line">    	screenshot resolution (default "1440,900")</span><br><span class="line">  -save-body</span><br><span class="line">    	Save response bodies to files (default true)</span><br><span class="line">  -scan-timeout int</span><br><span class="line">    	Timeout in miliseconds for port scans (default 100)</span><br><span class="line">  -screenshot-timeout int</span><br><span class="line">    	Timeout in miliseconds for screenshots (default 30000)</span><br><span class="line">  -session string</span><br><span class="line">    	Load Aquatone session file and generate HTML report</span><br><span class="line">  -silent</span><br><span class="line">    	Suppress all output except for errors</span><br><span class="line">  -template-path string</span><br><span class="line">    	Path to HTML template to use for report</span><br><span class="line">  -threads int</span><br><span class="line">    	Number of concurrent threads (default number of logical CPUs)</span><br><span class="line">  -version</span><br><span class="line">    	Print current Aquatone version</span><br></pre></td></tr></tbody></table></figure>
+
+<p>现在，是时候在我们的子域列表中使用<code>cat</code>并通过以下方式将命令传递给<code>aquatone</code>了：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ cat facebook_aquatone.txt | aquatone -out ./aquatone -screenshot-timeout 1000</span><br><span class="line"></span><br><span class="line">aquatone v1.7.0 started at 2021-10-06T10:14:42+01:00</span><br><span class="line"></span><br><span class="line">Targets    : 30</span><br><span class="line">Threads    : 2</span><br><span class="line">Ports      : 80, 443, 8000, 8080, 8443</span><br><span class="line">Output dir : aquatone</span><br><span class="line"></span><br><span class="line">edge-star-shv-01-cdg2.facebook.com: port 80 open</span><br><span class="line">edge-extern-shv-01-waw1.facebook.com: port 80 open</span><br><span class="line">whatsapp-chatd-edge-shv-01-ams4.facebook.com: port 80 open</span><br><span class="line">edge-secure-shv-01-ham3.facebook.com: port 80 open</span><br><span class="line">sv-se.facebook.com: port 80 open</span><br><span class="line">ko.facebook.com: port 80 open</span><br><span class="line">whatsapp-chatd-msgr-mini-edge-shv-01-lis1.facebook.com: port 80 open</span><br><span class="line">synthetic-e2e-elbprod-sli-shv-01-otp1.facebook.com: port 80 open</span><br><span class="line">edge-star-shv-01-cdg2.facebook.com: port 443 open</span><br><span class="line">edge-extern-shv-01-waw1.facebook.com: port 443 open</span><br><span class="line">whatsapp-chatd-edge-shv-01-ams4.facebook.com: port 443 open</span><br><span class="line">http://edge-star-shv-01-cdg2.facebook.com/: 200 OK</span><br><span class="line">http://edge-extern-shv-01-waw1.facebook.com/: 200 OK</span><br><span class="line">edge-secure-shv-01-ham3.facebook.com: port 443 open</span><br><span class="line">ondemand-edge-shv-01-cph2.facebook.com: port 443 open</span><br><span class="line">sv-se.facebook.com: port 443 open</span><br><span class="line">http://edge-secure-shv-01-ham3.facebook.com/: 200 OK</span><br><span class="line">ko.facebook.com: port 443 open</span><br><span class="line">whatsapp-chatd-msgr-mini-edge-shv-01-lis1.facebook.com: port 443 open</span><br><span class="line">http://sv-se.facebook.com/: 200 OK</span><br><span class="line">http://ko.facebook.com/: 200 OK</span><br><span class="line">synthetic-e2e-elbprod-sli-shv-01-otp1.facebook.com: port 443 open</span><br><span class="line">http://synthetic-e2e-elbprod-sli-shv-01-otp1.facebook.com/: 400 default_vip_400</span><br><span class="line">https://edge-star-shv-01-cdg2.facebook.com/: 200 OK</span><br><span class="line">https://edge-extern-shv-01-waw1.facebook.com/: 200 OK</span><br><span class="line">http://edge-star-shv-01-cdg2.facebook.com/: screenshot timed out</span><br><span class="line">http://edge-extern-shv-01-waw1.facebook.com/: screenshot timed out</span><br><span class="line">https://edge-secure-shv-01-ham3.facebook.com/: 200 OK</span><br><span class="line">https://sv-se.facebook.com/: 200 OK</span><br><span class="line">https://ko.facebook.com/: 200 OK</span><br><span class="line">http://edge-secure-shv-01-ham3.facebook.com/: screenshot timed out</span><br><span class="line">http://sv-se.facebook.com/: screenshot timed out</span><br><span class="line">http://ko.facebook.com/: screenshot timed out</span><br><span class="line">https://synthetic-e2e-elbprod-sli-shv-01-otp1.facebook.com/: 400 default_vip_400</span><br><span class="line">http://synthetic-e2e-elbprod-sli-shv-01-otp1.facebook.com/: screenshot successful</span><br><span class="line">https://edge-star-shv-01-cdg2.facebook.com/: screenshot timed out</span><br><span class="line">https://edge-extern-shv-01-waw1.facebook.com/: screenshot timed out</span><br><span class="line">https://edge-secure-shv-01-ham3.facebook.com/: screenshot timed out</span><br><span class="line">https://sv-se.facebook.com/: screenshot timed out</span><br><span class="line">https://ko.facebook.com/: screenshot timed out</span><br><span class="line">https://synthetic-e2e-elbprod-sli-shv-01-otp1.facebook.com/: screenshot successful</span><br><span class="line">Calculating page structures... done</span><br><span class="line">Clustering similar pages... done</span><br><span class="line">Generating HTML report... done</span><br><span class="line"></span><br><span class="line">Writing session file...Time:</span><br><span class="line"> - Started at  : 2021-10-06T10:14:42+01:00</span><br><span class="line"> - Finished at : 2021-10-06T10:15:01+01:00</span><br><span class="line"> - Duration    : 19s</span><br><span class="line"></span><br><span class="line">Requests:</span><br><span class="line"> - Successful : 12</span><br><span class="line"> - Failed     : 5</span><br><span class="line"></span><br><span class="line"> - 2xx : 10</span><br><span class="line"> - 3xx : 0</span><br><span class="line"> - 4xx : 2</span><br><span class="line"> - 5xx : 0</span><br><span class="line"></span><br><span class="line">Screenshots:</span><br><span class="line"> - Successful : 2</span><br><span class="line"> - Failed     : 10</span><br><span class="line"></span><br><span class="line">Wrote HTML report to: aquatone/aquatone_report.html</span><br></pre></td></tr></tbody></table></figure>
+
+<p>当它完成时，我们将有一个名为<code>aquatone_report.html</code>的文件，我们可以在其中看到屏幕截图，确定的技术，服务器响应头和HTML。</p>
+<p><img src="https://academy.hackthebox.com/storage/modules/144/aquatone.png" alt="image"></p>
+<h2 id="Active-Subdomain-Enumeration"><a href="#Active-Subdomain-Enumeration" class="headerlink" title="Active Subdomain Enumeration"></a>Active Subdomain Enumeration</h2><p>我们可以执行主动子域枚举，探测由目标组织或我们之前确定的第三方DNS服务器管理的基础设施。在这种情况下，产生的流量可能会导致我们的侦察活动被发现。</p>
+<h3 id="ZoneTransfers"><a href="#ZoneTransfers" class="headerlink" title="ZoneTransfers"></a>ZoneTransfers</h3><p>区域转移是辅助DNS服务器从主DNS服务器接收信息并更新信息的方式。主从方法用于在域中组织DNS服务器，从DNS服务器从主DNS接收更新的DNS信息。主DNS服务器应配置为启用从辅助（从属）DNS服务器的区域传输，尽管这可能配置错误。</p>
+<p>例如，我们将使用<a target="_blank" rel="noopener" href="https://hackertarget.com/zone-transfer/">https：//hackertarget.com/zone-transfer/</a>服务和<code>zonetransfer.me</code>域来了解通过这种技术可以获得的信息。</p>
+<p><img src="https://academy.hackthebox.com/storage/modules/144/zonetransfer.png" alt="image"></p>
+<p>手动方法将是以下命令集：</p>
+<h4 id="1-识别服务器"><a href="#1-识别服务器" class="headerlink" title="1.识别服务器"></a>1.识别服务器</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ nslookup -type=NS zonetransfer.me</span><br><span class="line"></span><br><span class="line">Server:		10.100.0.1</span><br><span class="line">Address:	10.100.0.1#53</span><br><span class="line"></span><br><span class="line">Non-authoritative answer:</span><br><span class="line">zonetransfer.me	nameserver = nsztm2.digi.ninja.</span><br><span class="line">zonetransfer.me	nameserver = nsztm1.digi.ninja.</span><br></pre></td></tr></tbody></table></figure>
+
+<ol>
+<li>使用<code>-type=any</code>和<code>-query=AXFR</code>参数执行区域传输</li>
+</ol>
+<h4 id="2-测试ANY和AXFR区域传输"><a href="#2-测试ANY和AXFR区域传输" class="headerlink" title="2.测试ANY和AXFR区域传输"></a>2.测试ANY和AXFR区域传输</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ nslookup -type=any -query=AXFR zonetransfer.me nsztm1.digi.ninja</span><br><span class="line"></span><br><span class="line">Server:		nsztm1.digi.ninja</span><br><span class="line">Address:	81.4.108.41#53</span><br><span class="line"></span><br><span class="line">zonetransfer.me</span><br><span class="line">	origin = nsztm1.digi.ninja</span><br><span class="line">	mail addr = robin.digi.ninja</span><br><span class="line">	serial = 2019100801</span><br><span class="line">	refresh = 172800</span><br><span class="line">	retry = 900</span><br><span class="line">	expire = 1209600</span><br><span class="line">	minimum = 3600</span><br><span class="line">zonetransfer.me	hinfo = "Casio fx-700G" "Windows XP"</span><br><span class="line">zonetransfer.me	text = "google-site-verification=tyP28J7JAUHA9fw2sHXMgcCC0I6XBmmoVi04VlMewxA"</span><br><span class="line">zonetransfer.me	mail exchanger = 0 ASPMX.L.GOOGLE.COM.</span><br><span class="line">zonetransfer.me	mail exchanger = 10 ALT1.ASPMX.L.GOOGLE.COM.</span><br><span class="line">zonetransfer.me	mail exchanger = 10 ALT2.ASPMX.L.GOOGLE.COM.</span><br><span class="line">zonetransfer.me	mail exchanger = 20 ASPMX2.GOOGLEMAIL.COM.</span><br><span class="line">zonetransfer.me	mail exchanger = 20 ASPMX3.GOOGLEMAIL.COM.</span><br><span class="line">zonetransfer.me	mail exchanger = 20 ASPMX4.GOOGLEMAIL.COM.</span><br><span class="line">zonetransfer.me	mail exchanger = 20 ASPMX5.GOOGLEMAIL.COM.</span><br><span class="line">Name:	zonetransfer.me</span><br><span class="line">Address: 5.196.105.14</span><br><span class="line">zonetransfer.me	nameserver = nsztm1.digi.ninja.</span><br><span class="line">zonetransfer.me	nameserver = nsztm2.digi.ninja.</span><br><span class="line">_acme-challenge.zonetransfer.me	text = "6Oa05hbUJ9xSsvYy7pApQvwCUSSGgxvrbdizjePEsZI"</span><br><span class="line">_sip._tcp.zonetransfer.me	service = 0 0 5060 www.zonetransfer.me.</span><br><span class="line">14.105.196.5.IN-ADDR.ARPA.zonetransfer.me	name = www.zonetransfer.me.</span><br><span class="line">asfdbauthdns.zonetransfer.me	afsdb = 1 asfdbbox.zonetransfer.me.</span><br><span class="line">Name:	asfdbbox.zonetransfer.me</span><br><span class="line">Address: 127.0.0.1</span><br><span class="line">asfdbvolume.zonetransfer.me	afsdb = 1 asfdbbox.zonetransfer.me.</span><br><span class="line">Name:	canberra-office.zonetransfer.me</span><br><span class="line">Address: 202.14.81.230</span><br><span class="line">cmdexec.zonetransfer.me	text = "; ls"</span><br><span class="line">contact.zonetransfer.me	text = "Remember to call or email Pippa on +44 123 4567890 or pippa@zonetransfer.me when making DNS changes"</span><br><span class="line">Name:	dc-office.zonetransfer.me</span><br><span class="line">Address: 143.228.181.132</span><br><span class="line">Name:	deadbeef.zonetransfer.me</span><br><span class="line">Address: dead:beaf::</span><br><span class="line">dr.zonetransfer.me	loc = 53 20 56.558 N 1 38 33.526 W 0.00m 1m 10000m 10m</span><br><span class="line">DZC.zonetransfer.me	text = "AbCdEfG"</span><br><span class="line">email.zonetransfer.me	naptr = 1 1 "P" "E2U+email" "" email.zonetransfer.me.zonetransfer.me.</span><br><span class="line">Name:	email.zonetransfer.me</span><br><span class="line">Address: 74.125.206.26</span><br><span class="line">Hello.zonetransfer.me	text = "Hi to Josh and all his class"</span><br><span class="line">Name:	home.zonetransfer.me</span><br><span class="line">Address: 127.0.0.1</span><br><span class="line">Info.zonetransfer.me	text = "ZoneTransfer.me service provided by Robin Wood - robin@digi.ninja. See http://digi.ninja/projects/zonetransferme.php for more information."</span><br><span class="line">internal.zonetransfer.me	nameserver = intns1.zonetransfer.me.</span><br><span class="line">internal.zonetransfer.me	nameserver = intns2.zonetransfer.me.</span><br><span class="line">Name:	intns1.zonetransfer.me</span><br><span class="line">Address: 81.4.108.41</span><br><span class="line">Name:	intns2.zonetransfer.me</span><br><span class="line">Address: 167.88.42.94</span><br><span class="line">Name:	office.zonetransfer.me</span><br><span class="line">Address: 4.23.39.254</span><br><span class="line">Name:	ipv6actnow.org.zonetransfer.me</span><br><span class="line">Address: 2001:67c:2e8:11::c100:1332</span><br><span class="line">Name:	owa.zonetransfer.me</span><br><span class="line">Address: 207.46.197.32</span><br><span class="line">robinwood.zonetransfer.me	text = "Robin Wood"</span><br><span class="line">rp.zonetransfer.me	rp = robin.zonetransfer.me. robinwood.zonetransfer.me.</span><br><span class="line">sip.zonetransfer.me	naptr = 2 3 "P" "E2U+sip" "!^.*$!sip:customer-service@zonetransfer.me!" .</span><br><span class="line">sqli.zonetransfer.me	text = "' or 1=1 --"</span><br><span class="line">sshock.zonetransfer.me	text = "() { :]}; echo ShellShocked"</span><br><span class="line">staging.zonetransfer.me	canonical name = www.sydneyoperahouse.com.</span><br><span class="line">Name:	alltcpportsopen.firewall.test.zonetransfer.me</span><br><span class="line">Address: 127.0.0.1</span><br><span class="line">testing.zonetransfer.me	canonical name = www.zonetransfer.me.</span><br><span class="line">Name:	vpn.zonetransfer.me</span><br><span class="line">Address: 174.36.59.154</span><br><span class="line">Name:	www.zonetransfer.me</span><br><span class="line">Address: 5.196.105.14</span><br><span class="line">xss.zonetransfer.me	text = "'&gt;&lt;script&gt;alert('Boo')&lt;/script&gt;"</span><br><span class="line">zonetransfer.me</span><br><span class="line">	origin = nsztm1.digi.ninja</span><br><span class="line">	mail addr = robin.digi.ninja</span><br><span class="line">	serial = 2019100801</span><br><span class="line">	refresh = 172800</span><br><span class="line">	retry = 900</span><br><span class="line">	expire = 1209600</span><br><span class="line">	minimum = 3600</span><br></pre></td></tr></tbody></table></figure>
+
+<p>如果我们成功地为某个域执行了区域转移，则无需继续枚举此特定域，因为这将提取所有可用信息。</p>
+<h3 id="Gobuster"><a href="#Gobuster" class="headerlink" title="Gobuster"></a>Gobuster</h3><p>Gobuster是一个我们可以用来执行子域枚举的工具。模式选项对我们来说特别有趣，因为我们已经从被动信息收集中了解了一些命名约定，我们可以使用这些信息来发现遵循相同模式的新子域。</p>
+<p>我们可以使用<a target="_blank" rel="noopener" href="https://github.com/danielmiessler/SecLists">Seclists</a>仓库中的单词列表沿着<code>gobuster</code>，如果我们正在寻找模式中的单词而不是数字。请记住，在被动子域枚举活动中，我们发现了一个模式<code>lert-api-shv-{NUMBER}-sin6.facebook.com</code>。我们可以使用此模式来发现其他子域。第一步是用以前发现的模式创建一个patterns.txt文件，例如：</p>
+<h4 id="GoBuster-patterns-txt"><a href="#GoBuster-patterns-txt" class="headerlink" title="GoBuster - patterns.txt"></a>GoBuster - patterns.txt</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">lert-api-shv-{GOBUSTER}-sin6</span><br><span class="line">atlas-pp-shv-{GOBUSTER}-sin6</span><br></pre></td></tr></tbody></table></figure>
+
+<p>下一步是使用<code>gobuster</code>模块启动<code>dns</code>，指定以下选项：</p>
+<ul>
+<li><code>dns</code>：启动DNS模块</li>
+<li><code>-q</code>: Don’t print the banner and other noise.</li>
+<li><code>-r</code>：使用自定义DNS服务器</li>
+<li><code>-d</code>：目标域名</li>
+<li><code>-p</code>：模式文件的路径</li>
+<li><code>-w</code>：单词列表的路径</li>
+<li><code>-o</code>：输出文件</li>
+</ul>
+<p>在我们的情况下，这将是命令。</p>
+<h4 id="Gobuster-DNS"><a href="#Gobuster-DNS" class="headerlink" title="Gobuster - DNS"></a>Gobuster - DNS</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ export TARGET="facebook.com"</span><br><span class="line">mikannse7@htb[/htb]$ export NS="d.ns.facebook.com"</span><br><span class="line">mikannse7@htb[/htb]$ export WORDLIST="numbers.txt"</span><br><span class="line">mikannse7@htb[/htb]$ gobuster dns -q -r "${NS}" -d "${TARGET}" -w "${WORDLIST}" -p ./patterns.txt -o "gobuster_${TARGET}.txt"</span><br><span class="line"></span><br><span class="line">Found: lert-api-shv-01-sin6.facebook.com</span><br><span class="line">Found: atlas-pp-shv-01-sin6.facebook.com</span><br><span class="line">Found: atlas-pp-shv-02-sin6.facebook.com</span><br><span class="line">Found: atlas-pp-shv-03-sin6.facebook.com</span><br><span class="line">Found: lert-api-shv-03-sin6.facebook.com</span><br><span class="line">Found: lert-api-shv-02-sin6.facebook.com</span><br><span class="line">Found: lert-api-shv-04-sin6.facebook.com</span><br><span class="line">Found: atlas-pp-shv-04-sin6.facebook.com</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="Virtual-Hosts"><a href="#Virtual-Hosts" class="headerlink" title="Virtual Hosts"></a>Virtual Hosts</h2><p>虚拟主机（<code>vHost</code>）是一种允许多个网站托管在一台服务器上的功能。如果您有许多网站，并且不想经历为每个网站设置新Web服务器的耗时（和昂贵）过程，这是一个很好的解决方案。想象一下，必须为同一页面的移动的和桌面版本设置不同的Web服务器。有两种方法可以配置虚拟主机：</p>
+<ul>
+<li><code>IP</code>-based virtual hosting</li>
+<li><code>Name</code>-based virtual hosting</li>
+</ul>
+<h4 id="IP-based-Virtual-Hosting"><a href="#IP-based-Virtual-Hosting" class="headerlink" title="IP-based Virtual Hosting"></a>IP-based Virtual Hosting</h4><p>对于此类型，主机可以具有多个网络接口。可以在主机的每个网络接口上配置多个IP地址或接口别名。在主机上运行的服务器或虚拟服务器可以绑定到一个或多个IP地址。这意味着不同的服务器可以在此主机上的不同IP地址下寻址。从客户端的角度来看，服务器是相互独立的。</p>
+<h4 id="Name-based-Virtual-Hosting"><a href="#Name-based-Virtual-Hosting" class="headerlink" title="Name-based Virtual Hosting"></a>Name-based Virtual Hosting</h4><p>在应用程序级别区分请求服务的域。例如，多个域名（如<code>admin.inlanefreight.htb</code>和<code>backup.inlanefreight.htb</code>）可以引用同一个IP。在服务器内部，这些文件使用不同的文件夹进行分离和区分。在这个例子中，在Linux服务器上，vHost <code>admin.inlanefreight.htb</code>可以指向文件夹<code>/var/www/admin</code>。对于<code>backup.inlanefreight.htb</code>，文件夹名称将进行调整，可能看起来像<code>/var/www/backup</code>。</p>
+<p>在我们的子域发现活动中，我们看到一些子域具有相同的IP地址，这些子域可以是虚拟主机，或者在某些情况下，位于代理后面的不同服务器。</p>
+<p>假设我们在内部pentest中识别了一个位于<code>192.168.10.10</code>的Web服务器，它使用以下命令显示了一个默认网站。是否存在任何虚拟主机？  </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ curl -s http://192.168.10.10</span><br><span class="line"></span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">&lt;title&gt;Welcome to nginx!&lt;/title&gt;</span><br><span class="line">&lt;style&gt;</span><br><span class="line">    body {</span><br><span class="line">        width: 35em;</span><br><span class="line">        margin: 0 auto;</span><br><span class="line">        font-family: Tahoma, Verdana, Arial, sans-serif;</span><br><span class="line">    }</span><br><span class="line">&lt;/style&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;h1&gt;Welcome to nginx!&lt;/h1&gt;</span><br><span class="line">&lt;p&gt;If you see this page, the nginx web server is successfully installed and</span><br><span class="line">working. Further configuration is required.&lt;/p&gt;</span><br><span class="line"></span><br><span class="line">&lt;p&gt;For online documentation and support please refer to</span><br><span class="line">&lt;a href="http://nginx.org/"&gt;nginx.org&lt;/a&gt;.&lt;br/&gt;</span><br><span class="line">Commercial support is available at</span><br><span class="line">&lt;a href="http://nginx.com/"&gt;nginx.com&lt;/a&gt;.&lt;/p&gt;</span><br><span class="line"></span><br><span class="line">&lt;p&gt;&lt;em&gt;Thank you for using nginx.&lt;/em&gt;&lt;/p&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>让我们创建一个<code>cURL</code>请求，发送一个在<code>HOST</code>头中收集信息时识别的域。我们可以这样做：            </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ curl -s http://192.168.10.10 -H "Host: randomtarget.com"</span><br><span class="line"></span><br><span class="line">&lt;html&gt;</span><br><span class="line">    &lt;head&gt;</span><br><span class="line">        &lt;title&gt;Welcome to randomtarget.com!&lt;/title&gt;</span><br><span class="line">    &lt;/head&gt;</span><br><span class="line">    &lt;body&gt;</span><br><span class="line">        &lt;h1&gt;Success! The randomtarget.com server block is working!&lt;/h1&gt;</span><br><span class="line">    &lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>现在，我们可以通过使用可能的vhost名称的字典文件（例如Pwnbox上的<code>/opt/useful/SecLists/Discovery/DNS/namelist.txt</code>）并检查Content-Length头来查找任何差异来自动执行此操作。</p>
+<h4 id="vHosts-List"><a href="#vHosts-List" class="headerlink" title="vHosts List"></a>vHosts List</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">app</span><br><span class="line">blog</span><br><span class="line">dev-admin</span><br><span class="line">forum</span><br><span class="line">help</span><br><span class="line">m</span><br><span class="line">my</span><br><span class="line">shop</span><br><span class="line">some</span><br><span class="line">store</span><br><span class="line">support</span><br><span class="line">www</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="vHost-Fuzzing"><a href="#vHost-Fuzzing" class="headerlink" title="vHost Fuzzing"></a>vHost Fuzzing</h4><figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ cat ./vhosts | while read vhost;do echo "\n********\nFUZZING: ${vhost}\n********";curl -s -I http://192.168.10.10 -H "HOST: ${vhost}.randomtarget.com" | grep "Content-Length: ";done</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">********</span><br><span class="line">FUZZING: app</span><br><span class="line">********</span><br><span class="line">Content-Length: 612</span><br><span class="line"></span><br><span class="line">********</span><br><span class="line">FUZZING: blog</span><br><span class="line">********</span><br><span class="line">Content-Length: 612</span><br><span class="line"></span><br><span class="line">********</span><br><span class="line">FUZZING: dev-admin</span><br><span class="line">********</span><br><span class="line">Content-Length: 120</span><br><span class="line"></span><br><span class="line">********</span><br><span class="line">FUZZING: forum</span><br><span class="line">********</span><br><span class="line">Content-Length: 612</span><br><span class="line"></span><br><span class="line">********</span><br><span class="line">FUZZING: help</span><br><span class="line">********</span><br><span class="line">Content-Length: 612</span><br><span class="line"></span><br><span class="line">********</span><br><span class="line">FUZZING: m</span><br><span class="line">********</span><br><span class="line">Content-Length: 612</span><br><span class="line"></span><br><span class="line">********</span><br><span class="line">FUZZING: my</span><br><span class="line">********</span><br><span class="line">Content-Length: 612</span><br><span class="line"></span><br><span class="line">********</span><br><span class="line">FUZZING: shop</span><br><span class="line">********</span><br><span class="line">Content-Length: 612</span><br><span class="line"></span><br><span class="line">********</span><br><span class="line">FUZZING: some</span><br><span class="line">********</span><br><span class="line">Content-Length: 195</span><br><span class="line"></span><br><span class="line">********</span><br><span class="line">FUZZING: store</span><br><span class="line">********</span><br><span class="line">Content-Length: 612</span><br><span class="line"></span><br><span class="line">********</span><br><span class="line">FUZZING: support</span><br><span class="line">********</span><br><span class="line">Content-Length: 612</span><br><span class="line"></span><br><span class="line">********</span><br><span class="line">FUZZING: www</span><br><span class="line">********</span><br><span class="line">Content-Length: 185</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们已经成功识别了一个名为<code>dev-admin</code>的虚拟主机，我们可以使用<code>cURL</code>请求访问它。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ curl -s http://192.168.10.10 -H "Host: dev-admin.randomtarget.com"</span><br><span class="line"></span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line"></span><br><span class="line">&lt;h1&gt;Randomtarget.com Admin Website&lt;/h1&gt;</span><br><span class="line"></span><br><span class="line">&lt;p&gt;You shouldn't be here!&lt;/p&gt;</span><br><span class="line"></span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="Automating-Virtual-Hosts-Discovery"><a href="#Automating-Virtual-Hosts-Discovery" class="headerlink" title="Automating Virtual Hosts Discovery"></a>Automating Virtual Hosts Discovery</h3><p>我们可以对一个小的虚拟主机列表使用这种手动方法，但如果我们有一个广泛的列表，它就不可行了。使用<a target="_blank" rel="noopener" href="https://github.com/ffuf/ffuf">ffuf</a>，我们可以根据响应中的参数加快处理和滤波。让我们复制我们对ffuf所做的相同过程，但首先，让我们看看它的一些选项。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">MATCHER OPTIONS:</span><br><span class="line">  -mc                 Match HTTP status codes, or "all" for everything. (default: 200,204,301,302,307,401,403,405)</span><br><span class="line">  -ml                 Match amount of lines in response</span><br><span class="line">  -mr                 Match regexp</span><br><span class="line">  -ms                 Match HTTP response size</span><br><span class="line">  -mw                 Match amount of words in response</span><br><span class="line"></span><br><span class="line">FILTER OPTIONS:</span><br><span class="line">  -fc                 Filter HTTP status codes from response. Comma separated list of codes and ranges</span><br><span class="line">  -fl                 Filter by amount of lines in response. Comma separated list of line counts and ranges</span><br><span class="line">  -fr                 Filter regexp</span><br><span class="line">  -fs                 Filter HTTP response size. Comma separated list of sizes and ranges</span><br><span class="line">  -fw                 Filter by amount of words in response. Comma separated list of word counts and ranges</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们可以根据不同的选项匹配或过滤响应。每次我们在<code>HOST</code>头中发出无效的虚拟主机时，Web服务器都会响应默认的静态网站。我们可以使用filter by size <code>-fs</code>选项来丢弃默认响应，因为它总是具有相同的大小。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ ffuf -w ./vhosts -u http://192.168.10.10 -H "HOST: FUZZ.randomtarget.com" -fs 612</span><br><span class="line"></span><br><span class="line">        /'___\  /'___\           /'___\</span><br><span class="line">       /\ \__/ /\ \__/  __  __  /\ \__/</span><br><span class="line">       \ \ ,__\\ \ ,__\/\ \/\ \ \ \ ,__\</span><br><span class="line">        \ \ \_/ \ \ \_/\ \ \_\ \ \ \ \_/</span><br><span class="line">         \ \_\   \ \_\  \ \____/  \ \_\</span><br><span class="line">          \/_/    \/_/   \/___/    \/_/</span><br><span class="line"></span><br><span class="line">       v1.1.0-git</span><br><span class="line">________________________________________________</span><br><span class="line"></span><br><span class="line"> :: Method           : GET</span><br><span class="line"> :: URL              : http://192.168.10.10</span><br><span class="line"> :: Wordlist         : FUZZ: ./vhosts</span><br><span class="line"> :: Header           : Host: FUZZ.randomtarget.com</span><br><span class="line"> :: Follow redirects : false</span><br><span class="line"> :: Calibration      : false</span><br><span class="line"> :: Timeout          : 10</span><br><span class="line"> :: Threads          : 40</span><br><span class="line"> :: Matcher          : Response status: 200,204,301,302,307,401,403,405</span><br><span class="line"> :: Filter           : Response size: 612</span><br><span class="line">________________________________________________</span><br><span class="line"></span><br><span class="line">dev-admin               [Status: 200, Size: 120, Words: 7, Lines: 12]</span><br><span class="line">www                     [Status: 200, Size: 185, Words: 41, Lines: 9]</span><br><span class="line">some                    [Status: 200, Size: 195, Words: 41, Lines: 9]</span><br><span class="line">:: Progress: [12/12] :: Job [1/1] :: 0 req/sec :: Duration: [0:00:00] :: Errors: 0 ::</span><br></pre></td></tr></tbody></table></figure>
+
+<p>where:其中：</p>
+<ul>
+<li><code>-w</code>: Path to our wordlist</li>
+<li><code>-u</code>: URL we want to fuzz</li>
+<li><code>-H "HOST: FUZZ.randomtarget.com"</code>: This is the <code>HOST</code> Header, and the word <code>FUZZ</code> will be used as the fuzzing point.</li>
+<li><code>-fs 612</code>: Filter responses with a size of 612, default response size in this case.</li>
+</ul>
+<h2 id="Crawling"><a href="#Crawling" class="headerlink" title="Crawling"></a>Crawling</h2><p>抓取网站是系统的或自动的过程，探索一个网站，列出所有的资源遇到沿着。它向我们展示了我们正在审计的网站的结构，以及我们将在未来测试的攻击面的概述。我们使用抓取过程来找到尽可能多的网页和子目录属于一个网站尽可能。</p>
+<h3 id="ZAP"><a href="#ZAP" class="headerlink" title="ZAP"></a>ZAP</h3><p><a target="_blank" rel="noopener" href="https://www.zaproxy.org/">Zed Attack Proxy</a>（<code>ZAP</code>）是一个开源Web代理，属于<a target="_blank" rel="noopener" href="https://owasp.org/">Open Web Application Security Project</a>（<code>OWASP</code>）。它允许我们对Web应用程序执行手动和自动安全测试。使用它作为代理服务器将使我们能够拦截和操纵所有通过它的流量。</p>
+<p>我们可以在下面的步骤中使用蜘蛛功能。打开ZAP，在右上角打开浏览器。</p>
+<p><img src="https://academy.hackthebox.com/storage/modules/144/zap1.png" alt="image"></p>
+<p>在地址栏中写入网站，并使用左侧菜单中的第一个条目将其添加到范围中。</p>
+<p><img src="https://academy.hackthebox.com/storage/modules/144/zap2.png" alt="image"></p>
+<p>返回ZAP窗口，右键单击目标网站，单击攻击菜单，然后单击蜘蛛图标。</p>
+<p><img src="https://academy.hackthebox.com/storage/modules/144/zap3.png" alt="image"></p>
+<p>一旦进程完成，我们就可以看到蜘蛛进程发现的资源。</p>
+<p><img src="https://academy.hackthebox.com/storage/modules/144/zap4.png" alt="image"></p>
+<p>ZAP的一个方便的功能是内置的模糊和手动请求编辑器。我们可以发送任何请求给他们，手动修改它，或者通过右键单击请求并使用菜单“用请求编辑器打开/重新发送.或者“警察…“点击攻击菜单。</p>
+<p><img src="https://academy.hackthebox.com/storage/modules/144/zap5.png" alt="image"></p>
+<p><img src="https://academy.hackthebox.com/storage/modules/144/zap6.png" alt="image"></p>
+<p>ZAP有很好<a target="_blank" rel="noopener" href="https://www.zaproxy.org/docs/desktop/start/">的文档</a>，可以帮助您快速使用它。有关ZAP的更详细研究，请查看HTB Academy上的<a target="_blank" rel="noopener" href="https://academy.hackthebox.com/course/preview/using-web-proxies">使用Web代理模块</a>。</p>
+<h3 id="FFuF"><a href="#FFuF" class="headerlink" title="FFuF"></a>FFuF</h3><p>ZAP蜘蛛模块只枚举它在链接和表单中找到的资源，但它可能会遗漏重要信息，如隐藏文件夹或备份文件。</p>
+<p>我们可以使用<a target="_blank" rel="noopener" href="https://github.com/ffuf/ffuf">ffuf</a>来发现我们无法通过简单浏览网站来发现的文件和文件夹。我们所需要做的就是用一个文件夹名称列表启动<code>ffuf</code>，并指示它递归地查看它们。                                                             </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ ffuf -recursion -recursion-depth 1 -u http://192.168.10.10/FUZZ -w /opt/useful/SecLists/Discovery/Web-Content/raft-small-directories-lowercase.txt</span><br><span class="line"></span><br><span class="line">        /'___\  /'___\           /'___\</span><br><span class="line">       /\ \__/ /\ \__/  __  __  /\ \__/</span><br><span class="line">       \ \ ,__\\ \ ,__\/\ \/\ \ \ \ ,__\</span><br><span class="line">        \ \ \_/ \ \ \_/\ \ \_\ \ \ \ \_/</span><br><span class="line">         \ \_\   \ \_\  \ \____/  \ \_\</span><br><span class="line">          \/_/    \/_/   \/___/    \/_/</span><br><span class="line"></span><br><span class="line">       v1.1.0-git</span><br><span class="line">________________________________________________</span><br><span class="line"></span><br><span class="line"> :: Method           : GET</span><br><span class="line"> :: URL              : http://192.168.10.10/FUZZ</span><br><span class="line"> :: Wordlist         : FUZZ: /opt/useful/SecLists/Discovery/Web-Content/raft-small-directories-lowercase.txt</span><br><span class="line"> :: Follow redirects : false</span><br><span class="line"> :: Calibration      : false</span><br><span class="line"> :: Timeout          : 10</span><br><span class="line"> :: Threads          : 40</span><br><span class="line"> :: Matcher          : Response status: 200,204,301,302,307,401,403,405</span><br><span class="line">________________________________________________</span><br><span class="line"></span><br><span class="line">wp-admin                [Status: 301, Size: 317, Words: 20, Lines: 10]</span><br><span class="line">[INFO] Adding a new job to the queue: http://192.168.10.10/wp-admin/FUZZ</span><br><span class="line"></span><br><span class="line">wp-includes             [Status: 301, Size: 320, Words: 20, Lines: 10]</span><br><span class="line">[INFO] Adding a new job to the queue: http://192.168.10.10/wp-includes/FUZZ</span><br><span class="line"></span><br><span class="line">wp-content              [Status: 301, Size: 319, Words: 20, Lines: 10]</span><br><span class="line">[INFO] Adding a new job to the queue: http://192.168.10.10/wp-content/FUZZ</span><br><span class="line"></span><br><span class="line">admin                   [Status: 302, Size: 0, Words: 1, Lines: 1]</span><br><span class="line">login                   [Status: 302, Size: 0, Words: 1, Lines: 1]</span><br><span class="line">feed                    [Status: 301, Size: 0, Words: 1, Lines: 1]</span><br><span class="line">[INFO] Adding a new job to the queue: http://192.168.10.10/feed/FUZZ</span><br><span class="line">...</span><br></pre></td></tr></tbody></table></figure>
+
+<ul>
+<li><code>-recursion</code>：激活递归扫描。</li>
+<li><code>-recursion-depth</code>：指定要扫描的最大深度。</li>
+<li><code>-u</code>：我们的目标URL，<code>FUZZ</code>将是注入点。</li>
+<li><code>-w</code>：我们的单词列表路径。</li>
+</ul>
+<p>我们可以在图片中看到<code>ffuf</code>如何为每个检测到的文件夹创建新作业。对于目标服务器来说，此任务可能非常耗费资源。如果网站响应速度比平时慢，我们可以使用<code>-rate</code>参数降低请求速率。</p>
+<p><a target="_blank" rel="noopener" href="https://academy.hackthebox.com/course/preview/attacking-web-applications-with-ffuf">使用Ffuf攻击Web应用</a>程序模块更深入地介绍了<code>ffuf</code>的用法，并展示了本模块中教授的许多技术。</p>
+<h3 id="Sensitive-Information-Disclosure"><a href="#Sensitive-Information-Disclosure" class="headerlink" title="Sensitive Information Disclosure"></a>Sensitive Information Disclosure</h3><p>这是典型的Web服务器和Web应用程序来处理它需要的功能文件。但是，通常会找到可能包含重要信息或凭据的备份或未引用文件。备份或未引用的文件可以通过创建快照、文件的不同版本或在Web开发人员不知情的情况下从文本编辑器生成。我们可以在SecLists的<code>raft-[ small | medium | large ]-extensions.txt</code>文件中找到一些常见扩展名列表。</p>
+<p>我们将联合收割机结合我们以前发现的一些文件夹，常见扩展名列表，以及从网站上提取的一些单词，看看我们是否能找到一些不应该在那里的东西。第一步是用以下文件夹名创建一个文件，并将其保存为<code>folders.txt</code>。                                                                   </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">wp-admin</span><br><span class="line">wp-content</span><br><span class="line">wp-includes</span><br></pre></td></tr></tbody></table></figure>
+
+<p>接下来，我们将使用<a target="_blank" rel="noopener" href="https://github.com/digininja/CeWL">CeWL</a>从网站中提取一些关键字。我们将指示该工具提取最小长度为5个字符的单词<code>-m5</code>，将其转换为单词<code>--lowercase</code>并将其保存到名为wordlist.txt的文件<code>-w &lt;FILE&gt;</code>中：                                                                 </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ cewl -m5 --lowercase -w wordlist.txt http://192.168.10.10</span><br></pre></td></tr></tbody></table></figure>
+
+<p>下一步将是联合收割机在ffuf的一切，看看我们是否可以找到一些多汁的信息。为此，我们将在<code>ffuf</code>中使用以下参数：</p>
+<ul>
+<li><code>-w</code>：我们通过逗号分隔单词列表，并为它们添加别名，以便稍后将它们作为模糊点注入</li>
+<li><code>-u</code>：我们的目标URL与模糊点。</li>
+</ul>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ ffuf -w ./folders.txt:FOLDERS,./wordlist.txt:WORDLIST,./extensions.txt:EXTENSIONS -u http://192.168.10.10/FOLDERS/WORDLISTEXTENSIONS</span><br><span class="line"></span><br><span class="line">        /'___\  /'___\           /'___\</span><br><span class="line">       /\ \__/ /\ \__/  __  __  /\ \__/</span><br><span class="line">       \ \ ,__\\ \ ,__\/\ \/\ \ \ \ ,__\</span><br><span class="line">        \ \ \_/ \ \ \_/\ \ \_\ \ \ \ \_/</span><br><span class="line">         \ \_\   \ \_\  \ \____/  \ \_\</span><br><span class="line">          \/_/    \/_/   \/___/    \/_/</span><br><span class="line"></span><br><span class="line">       v1.1.0-git</span><br><span class="line">________________________________________________</span><br><span class="line"></span><br><span class="line"> :: Method           : GET</span><br><span class="line"> :: URL              : http://192.168.10.10/FOLDERS/WORDLISTEXTENSIONS</span><br><span class="line"> :: Wordlist         : FOLDERS: ./folders.txt</span><br><span class="line"> :: Wordlist         : WORDLIST: ./wordlist.txt</span><br><span class="line"> :: Wordlist         : EXTENSIONS: ./extensions.txt</span><br><span class="line"> :: Follow redirects : false</span><br><span class="line"> :: Calibration      : false</span><br><span class="line"> :: Timeout          : 10</span><br><span class="line"> :: Threads          : 40</span><br><span class="line"> :: Matcher          : Response status: 200,204,301,302,307,401,403,405</span><br><span class="line">________________________________________________</span><br><span class="line"></span><br><span class="line">[Status: 200, Size: 8, Words: 1, Lines: 2]</span><br><span class="line">    * EXTENSIONS: ~</span><br><span class="line">    * FOLDERS: wp-content</span><br><span class="line">    * WORDLIST: secret</span><br><span class="line"></span><br><span class="line">[Status: 200, Size: 0, Words: 1, Lines: 1]</span><br><span class="line">    * FOLDERS: wp-includes</span><br><span class="line">    * WORDLIST: comment</span><br><span class="line">    * EXTENSIONS: .php</span><br><span class="line"></span><br><span class="line">[Status: 302, Size: 0, Words: 1, Lines: 1]</span><br><span class="line">    * FOLDERS: wp-admin</span><br><span class="line">    * WORDLIST: comment</span><br><span class="line">    * EXTENSIONS: .php</span><br><span class="line"></span><br><span class="line">...</span><br></pre></td></tr></tbody></table></figure>
+
+<p>​                                                                                                </p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">mikannse7@htb[/htb]$ curl http://192.168.10.10/wp-content/secret~</span><br><span class="line"></span><br><span class="line">Oooops!</span><br></pre></td></tr></tbody></table></figure>
+
+<p>通过这种方法，我们成功地找到了一个秘密文件。</p>
+<h1 id="Skills-Assessment"><a href="#Skills-Assessment" class="headerlink" title="Skills Assessment"></a>Skills Assessment</h1></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://mikannse.space">Mikannse</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://mikannse.space/2023/11/15/Information%20Gathering%20-%20Web%20EditionHTB/">http://mikannse.space/2023/11/15/Information Gathering - Web EditionHTB/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://mikannse.space" target="_blank">MikannseのSekai</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%BD%91%E5%AE%89/">网安</a><a class="post-meta__tags" href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a><a class="post-meta__tags" href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">渗透测试</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/11/17/Cross-Site%20Scripting%20(XSS)HTB/" title="Cross-Site Scripting (XSS)HTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Cross-Site Scripting (XSS)HTB</div></div></a></div><div class="next-post pull-right"><a href="/2023/11/11/Stack-BasedBufferOverflowsonLinuxx86HTB/" title="Stack-BasedBufferOverflowsonLinuxx86HTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Stack-BasedBufferOverflowsonLinuxx86HTB</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2023/11/17/Cross-Site%20Scripting%20(XSS)HTB/" title="Cross-Site Scripting (XSS)HTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-17</div><div class="title">Cross-Site Scripting (XSS)HTB</div></div></a></div><div><a href="/2023/10/24/HackingWordPressHTB/" title="HackingWordPressHTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-10-24</div><div class="title">HackingWordPressHTB</div></div></a></div><div><a href="/2023/11/07/IntroToAssemblyShellcodingANDSkill/" title="IntroToAssemblyShellcodingANDSkillHTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-07</div><div class="title">IntroToAssemblyShellcodingANDSkillHTB</div></div></a></div><div><a href="/2023/11/04/IntroToAssemblyArchANDAssembDebugger/" title="IntroToAssemblyArchANDAssembDebuggerHTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-04</div><div class="title">IntroToAssemblyArchANDAssembDebuggerHTB</div></div></a></div><div><a href="/2023/10/28/IntroductiontoBashScriptingHTB/" title="IntroductiontoBashScriptingHTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-10-28</div><div class="title">IntroductiontoBashScriptingHTB</div></div></a></div><div><a href="/2023/11/05/IntroToAssemblyBasicInstructionsANDFunctions/" title="IntroToAssemblyBasicInstructionsANDFunctionsHTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-05</div><div class="title">IntroToAssemblyBasicInstructionsANDFunctionsHTB</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Mikannse</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">274</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mikannse/mikannse.github.io"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">暂时没有公告QAQ</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%A2%AB%E5%8A%A8%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">1.</span> <span class="toc-text">被动信息收集</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#WHOIS"><span class="toc-number">1.1.</span> <span class="toc-text">WHOIS</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DNS"><span class="toc-number">1.2.</span> <span class="toc-text">DNS</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFDNS%EF%BC%9F"><span class="toc-number">1.2.1.</span> <span class="toc-text">什么是DNS？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Nslookup-amp-DIG"><span class="toc-number">1.2.2.</span> <span class="toc-text">Nslookup &amp; DIG</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Querying-A-Records"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">Querying: A Records</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2%EF%BC%9A%E5%AD%90%E5%9F%9F%E7%9A%84%E8%AE%B0%E5%BD%95"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">查询：子域的记录</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2%EF%BC%9AIP%E5%9C%B0%E5%9D%80%E7%9A%84PTR%E8%AE%B0%E5%BD%95"><span class="toc-number">1.2.2.3.</span> <span class="toc-text">查询：IP地址的PTR记录</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2%EF%BC%9A%E4%BB%BB%E4%BD%95%E7%8E%B0%E6%9C%89%E8%AE%B0%E5%BD%95"><span class="toc-number">1.2.2.4.</span> <span class="toc-text">查询：任何现有记录</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Querying-TXT-Records"><span class="toc-number">1.2.2.5.</span> <span class="toc-text">Querying: TXT Records</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A0%87%E7%AD%BE%EF%BC%9AMX-Records"><span class="toc-number">1.2.2.6.</span> <span class="toc-text">标签：MX Records</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Nslookup"><span class="toc-number">1.2.2.7.</span> <span class="toc-text">Nslookup</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#WHOID"><span class="toc-number">1.2.2.8.</span> <span class="toc-text">WHOID</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Passive-Subdomain-Enumeration"><span class="toc-number">1.3.</span> <span class="toc-text">Passive Subdomain Enumeration</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#VirusTotal"><span class="toc-number">1.3.1.</span> <span class="toc-text">VirusTotal</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%81%E4%B9%A6"><span class="toc-number">1.3.2.</span> <span class="toc-text">证书</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AF%81%E4%B9%A6%E9%80%8F%E6%98%8E%E5%BA%A6"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">证书透明度</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%8A%A8%E5%8C%96%E8%A2%AB%E5%8A%A8%E5%AD%90%E5%9F%9F%E6%9E%9A%E4%B8%BE"><span class="toc-number">1.3.3.</span> <span class="toc-text">自动化被动子域枚举</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#TheHarvester"><span class="toc-number">1.3.3.1.</span> <span class="toc-text">TheHarvester</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A2%AB%E5%8A%A8%E5%9F%BA%E7%A1%80%E8%AE%BE%E6%96%BD%E8%AF%86%E5%88%AB"><span class="toc-number">1.4.</span> <span class="toc-text">被动基础设施识别</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Wayback-Machine"><span class="toc-number">1.4.1.</span> <span class="toc-text">Wayback Machine</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Active-Information-Gathering"><span class="toc-number">2.</span> <span class="toc-text">Active Information Gathering</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BB%E5%8A%A8%E5%9F%BA%E7%A1%80%E8%AE%BE%E6%96%BD%E8%AF%86%E5%88%AB"><span class="toc-number">2.1.</span> <span class="toc-text">主动基础设施识别</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Web-Servers-Web-Server"><span class="toc-number">2.1.1.</span> <span class="toc-text">Web Servers Web Server</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#HTTP-Headers"><span class="toc-number">2.1.1.1.</span> <span class="toc-text">HTTP Headers</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#WhatWeb"><span class="toc-number">2.1.1.2.</span> <span class="toc-text">WhatWeb</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Installing-WafW00f"><span class="toc-number">2.1.1.3.</span> <span class="toc-text">Installing WafW00f</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E8%A3%85Aquatone"><span class="toc-number">2.1.1.4.</span> <span class="toc-text">安装Aquatone</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Aquatone-Options"><span class="toc-number">2.1.1.5.</span> <span class="toc-text">Aquatone Options</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Active-Subdomain-Enumeration"><span class="toc-number">2.2.</span> <span class="toc-text">Active Subdomain Enumeration</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ZoneTransfers"><span class="toc-number">2.2.1.</span> <span class="toc-text">ZoneTransfers</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E8%AF%86%E5%88%AB%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="toc-number">2.2.1.1.</span> <span class="toc-text">1.识别服务器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E6%B5%8B%E8%AF%95ANY%E5%92%8CAXFR%E5%8C%BA%E5%9F%9F%E4%BC%A0%E8%BE%93"><span class="toc-number">2.2.1.2.</span> <span class="toc-text">2.测试ANY和AXFR区域传输</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Gobuster"><span class="toc-number">2.2.2.</span> <span class="toc-text">Gobuster</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#GoBuster-patterns-txt"><span class="toc-number">2.2.2.1.</span> <span class="toc-text">GoBuster - patterns.txt</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Gobuster-DNS"><span class="toc-number">2.2.2.2.</span> <span class="toc-text">Gobuster - DNS</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Virtual-Hosts"><span class="toc-number">2.3.</span> <span class="toc-text">Virtual Hosts</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#IP-based-Virtual-Hosting"><span class="toc-number">2.3.0.1.</span> <span class="toc-text">IP-based Virtual Hosting</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Name-based-Virtual-Hosting"><span class="toc-number">2.3.0.2.</span> <span class="toc-text">Name-based Virtual Hosting</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#vHosts-List"><span class="toc-number">2.3.0.3.</span> <span class="toc-text">vHosts List</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#vHost-Fuzzing"><span class="toc-number">2.3.0.4.</span> <span class="toc-text">vHost Fuzzing</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Automating-Virtual-Hosts-Discovery"><span class="toc-number">2.3.1.</span> <span class="toc-text">Automating Virtual Hosts Discovery</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Crawling"><span class="toc-number">2.4.</span> <span class="toc-text">Crawling</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ZAP"><span class="toc-number">2.4.1.</span> <span class="toc-text">ZAP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#FFuF"><span class="toc-number">2.4.2.</span> <span class="toc-text">FFuF</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Sensitive-Information-Disclosure"><span class="toc-number">2.4.3.</span> <span class="toc-text">Sensitive Information Disclosure</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Skills-Assessment"><span class="toc-number">3.</span> <span class="toc-text">Skills Assessment</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/11/pwncollegeAssembly30/" title="pwncollegeAssembly30">pwncollegeAssembly30</a><time datetime="2024-10-10T17:05:42.000Z" title="发表于 2024-10-11 01:05:42">2024-10-11</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/09/pwncollege%E6%B1%87%E7%BC%96%E5%85%A5%E9%97%A8/" title="pwncollege汇编入门">pwncollege汇编入门</a><time datetime="2024-10-09T14:39:52.000Z" title="发表于 2024-10-09 22:39:52">2024-10-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/05/Git%E9%80%9F%E6%88%90/" title="Git速成">Git速成</a><time datetime="2024-10-05T04:57:08.000Z" title="发表于 2024-10-05 12:57:08">2024-10-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/03/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%BA%8C)%E4%B9%8BVulnHubCorrosion2/" title="打靶记录(一六二)之VulnHubCorrosion2">打靶记录(一六二)之VulnHubCorrosion2</a><time datetime="2024-10-03T09:24:11.000Z" title="发表于 2024-10-03 17:24:11">2024-10-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/02/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%B8%80)%E4%B9%8BVulnHubDrippingBlues1/" title="打靶记录(一六一)之VulnHubDrippingBlues1">打靶记录(一六一)之VulnHubDrippingBlues1</a><time datetime="2024-10-02T05:16:28.000Z" title="发表于 2024-10-02 13:16:28">2024-10-02</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2024 By Mikannse</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function loadDisqus () {
+  const disqus_config = function () {
+    this.page.url = 'http://mikannse.space/2023/11/15/Information%20Gathering%20-%20Web%20EditionHTB/'
+    this.page.identifier = '/2023/11/15/Information%20Gathering%20-%20Web%20EditionHTB/'
+    this.page.title = 'Information Gathering - Web EditionHTB'
+  }
+
+  const disqusReset = () => {
+    DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addModeChange('disqus', disqusReset)
+
+  if (window.DISQUS) disqusReset()
+  else {
+    (function() { 
+      var d = document, s = d.createElement('script');
+      s.src = 'https://.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  }
+}
+
+if ('Valine' === 'Disqus' || !true) {
+  if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+  else loadDisqus()
+} else {
+  function loadOtherComment () {
+    loadDisqus()
+  }
+}
+</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
