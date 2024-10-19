@@ -1,0 +1,529 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>WiresharkTheBasics | MikannseのSekai</title><meta name="author" content="Mikannse"><meta name="copyright" content="Mikannse"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="IntroductionWireshark 是一款开源、跨平台的网络数据包分析工具，能够嗅探和调查实时流量并检查数据包捕获 (PCAP)。它通常被用作最好的数据包分析工具之一。在本课程中，我们将了解 Wireshark 的基础知识并使用它来执行基本的数据包分析。 Tool Overview﻿Use Cases Wireshark 是目前最强大的流量分析工具之一。它有多种用途：  检测和排除网络问题">
+<meta property="og:type" content="article">
+<meta property="og:title" content="WiresharkTheBasics">
+<meta property="og:url" content="http://mikannse.space/2024/10/18/WiresharkTheBasics/index.html">
+<meta property="og:site_name" content="MikannseのSekai">
+<meta property="og:description" content="IntroductionWireshark 是一款开源、跨平台的网络数据包分析工具，能够嗅探和调查实时流量并检查数据包捕获 (PCAP)。它通常被用作最好的数据包分析工具之一。在本课程中，我们将了解 Wireshark 的基础知识并使用它来执行基本的数据包分析。 Tool Overview﻿Use Cases Wireshark 是目前最强大的流量分析工具之一。它有多种用途：  检测和排除网络问题">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg">
+<meta property="article:published_time" content="2024-10-18T15:08:04.000Z">
+<meta property="article:modified_time" content="2024-10-18T15:11:11.924Z">
+<meta property="article:author" content="Mikannse">
+<meta property="article:tag" content="工具">
+<meta property="article:tag" content="笔记">
+<meta property="article:tag" content="溯源取证">
+<meta property="article:tag" content="流量分析">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg"><link rel="shortcut icon" href="/img/icon.jpg"><link rel="canonical" href="http://mikannse.space/2024/10/18/WiresharkTheBasics/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Mikannse","link":"链接: ","source":"来源: MikannseのSekai","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'WiresharkTheBasics',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: undefined,
+  isToc: true,
+  postUpdate: '2024-10-18 23:11:11'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">285</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="MikannseのSekai"><span class="site-name">MikannseのSekai</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">WiresharkTheBasics</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-10-18T15:08:04.000Z" title="发表于 2024-10-18 23:08:04">2024-10-18</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-10-18T15:11:11.924Z" title="更新于 2024-10-18 23:11:11">2024-10-18</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BD%91%E5%AE%89/">网安</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">4.5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>13分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="WiresharkTheBasics"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>Wireshark 是一款开源、跨平台的网络数据包分析工具，能够嗅探和调查实时流量并检查数据包捕获 (PCAP)。它通常被用作最好的数据包分析工具之一。在本课程中，我们将了解 Wireshark 的基础知识并使用它来执行基本的数据包分析。</p>
+<h1 id="Tool-Overview"><a href="#Tool-Overview" class="headerlink" title="Tool Overview"></a>Tool Overview</h1><p>﻿<strong>Use Cases</strong></p>
+<p>Wireshark 是目前最强大的流量分析工具之一。它有多种用途：</p>
+<ul>
+<li>检测和排除网络问题，例如网络负载故障点和拥塞。</li>
+<li>检测安全异常，例如恶意主机、异常端口使用和可疑流量。</li>
+<li>调查和了解协议详细信息，例如响应代码和有效负载数据。</li>
+</ul>
+<p><strong>注意：</strong>Wireshark 不是入侵检测系统 (IDS)。它只允许分析师发现和深入调查数据包。它也不会修改数据包；它会读取数据包。因此，检测任何异常或网络问题高度依赖于分析师的知识和调查技能。</p>
+<p><strong>GUI 和数据</strong></p>
+<p>Wireshark GUI 打开时会显示一个一体化页面，可帮助用户以多种方式调查流量。乍一看，有五个部分非常突出。</p>
+<table>
+<thead>
+<tr>
+<th><strong>工具栏</strong></th>
+<th>主工具栏包含多个菜单和快捷方式，用于数据包嗅探和处理，包括过滤、排序、汇总、导出和合并。</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>显示过滤栏</strong></td>
+<td>主要查询和过滤部分。</td>
+</tr>
+<tr>
+<td><strong>最近的文件</strong></td>
+<td>最近调查的文件列表。您可以双击调用列出的文件。</td>
+</tr>
+<tr>
+<td><strong>捕获过滤器和接口</strong></td>
+<td>捕获过滤器和可用的嗅探点（网络接口）。网络接口是计算机和网络之间的连接点。软件连接（例如 lo、eth0 和 ens33）启用网络硬件。</td>
+</tr>
+<tr>
+<td><strong>状态栏</strong></td>
+<td>工具状态、配置文件和数字数据包信息。</td>
+</tr>
+</tbody></table>
+<p>下图显示了 Wireshark 的主窗口。表中说明的部分已突出显示。现在打开 Wireshark 并完成演练。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/0a96b128d88d49f28e4b537b63bcfd3b.png" alt="Wireshark - GUI"><strong>Loading PCAP Files</strong></p>
+<p>上图显示的是Wireshark的空界面。唯一可用的信息是最近处理的“http1.cap”文件。让我们加载该文件并查看Wireshark的详细数据包介绍。请注意，您也可以使用<strong>“文件”</strong>菜单，拖放文件或双击文件来加载pcap。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/409e59f9a93d6a027b0041b968aae7a4.png" alt="Wireshark - load pcaps"></p>
+<p>现在，我们可以看到已处理的文件名、数据包的详细数量和数据包详细信息。数据包详细信息显示在三个不同的窗格中，使我们能够以不同的格式发现它们。</p>
+<table>
+<thead>
+<tr>
+<th><strong>数据包列表窗格</strong></th>
+<th>每个数据包的摘要（源地址和目标地址、协议和数据包信息）。您可以单击列表选择一个数据包进行进一步调查。选择数据包后，详细信息将显示在其他面板中。</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>数据包详细信息窗格</strong></td>
+<td>所选数据包的详细协议细分。</td>
+</tr>
+<tr>
+<td><strong>数据包字节窗格</strong></td>
+<td>所选数据包的十六进制和解码的 ASCII 表示。它根据详细信息窗格中单击的部分突出显示数据包字段。</td>
+</tr>
+</tbody></table>
+<p><strong>为数据包着色</strong></p>
+<p>除了快速数据包信息外，Wireshark 还根据不同条件和协议的顺序为数据包着色，以快速发现捕获中的异常和协议（这解释了为什么给定的屏幕截图中几乎所有内容都是绿色的）。通过查看数据包信息，您可以准确找到分析过程中要查找的内容。您可以使用显示过滤器创建自定义颜色规则来发现感兴趣的事件，我们将在下一节中介绍这些规则。现在让我们关注默认设置，并了解如何查看和使用所表示的数据详细信息。</p>
+<p>Wireshark 有两种数据包着色方法：仅在程序会话期间可用的临时规则和保存在首选项文件（配置文件）下并可用于下一个程序会话的永久规则。您可以使用“右键单击菜单”或<strong>“查看 –&gt; 着色规则”</strong>菜单来创建永久着色规则。<strong>“着色数据包列表”</strong>菜单可激活/停用着色规则。临时数据包着色是通过“右键单击菜单”或<strong>“查看 –&gt; 对话过滤器”</strong>菜单完成的，这将在任务 5 中介绍。</p>
+<p>默认永久着色如下所示。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/782c1d38f4502636cb2a8228e7675c9f.png" alt="Wireshark - packet colours"></p>
+<p><strong>Traffic Sniffing</strong></p>
+<p>您可以使用蓝色的<strong>“鲨鱼按钮”</strong>启动网络嗅探（捕获流量），红色按钮将停止嗅探，绿色按钮将重新启动嗅探过程。状态栏还将提供使用的嗅探接口和收集到的数据包数量。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/a9ccd9cd2acd72480a4674ca576a4a51.png" alt="Wireshark - traffic sniffing"></p>
+<p><strong>Merge PCAP Files</strong></p>
+<p>Wireshark 可以将两个 pcap 文件合并为一个文件。您可以使用 <strong>“文件 –&gt; 合并”</strong> 菜单路径将 pcap 与已处理的文件合并。当您选择第二个文件时，Wireshark 将显示所选文件中的数据包总数。单击“打开”后，它会将现有 pcap 文件与所选文件合并并创建一个新的 pcap 文件。请注意，您需要在处理“合并”的 pcap 文件之前保存它。</p>
+<details open="" style="box-sizing: border-box; margin: 0px; padding: 0px;"><summary style="box-sizing: border-box; margin: 0px; padding: 0px; cursor: pointer;"><b style="box-sizing: border-box; margin: 0px; padding: 0px;">See image</b></summary><div style="box-sizing: border-box; margin: 0px; padding: 0px; text-align: center;"><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/bbc3f7938f8d3086953d5b0342422019.png" alt="Wireshark - merge pcaps" style="box-sizing: border-box; margin: 0px; padding: 0px; max-width: 100%; height: auto !important;"><br style="box-sizing: border-box; margin: 0px; padding: 0px;"></div></details>
+
+<p><strong>View File Details</strong></p>
+<p>了解文件详细信息很有帮助。尤其是在处理多个 pcap 文件时，有时您需要了解并调用文件详细信息（文件哈希、捕获时间、捕获文件注释、接口和统计信息）来识别文件、对其进行分类和优先排序。您可以通过以下方式查看详细信息：“<strong>统计信息 –&gt; 捕获文件属性”</strong> 或单击窗口左下角的“pcap 图标”。</p>
+<details open="" style="box-sizing: border-box; margin: 0px; padding: 0px;"><summary style="box-sizing: border-box; margin: 0px; padding: 0px; cursor: pointer;"><b style="box-sizing: border-box; margin: 0px; padding: 0px;">See image</b></summary><div style="box-sizing: border-box; margin: 0px; padding: 0px; text-align: center;"><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/1ccc88dc2b66e935f2f382387ce3c0ec.png" alt="Wireshark - file details " style="box-sizing: border-box; margin: 0px; padding: 0px; max-width: 100%; height: auto !important;"><br style="box-sizing: border-box; margin: 0px; padding: 0px;"></div></details>
+
+<h1 id="Packet-Dissection"><a href="#Packet-Dissection" class="headerlink" title="Packet Dissection"></a>Packet Dissection</h1><p><strong>数据包解析</strong></p>
+<p>数据包解析也称为协议解析，通过解码可用的协议和字段来调查数据包详细信息。Wireshark 支持解析大量协议，您也可以编写自己的解析脚本。您可以在 <a target="_blank" rel="noopener" href="https://github.com/boundary/wireshark/blob/master/doc/README.dissector"><strong>此处</strong></a> 找到有关解析的更多详细信息。</p>
+<p><strong>注意：</strong>本节介绍 Wireshark 如何使用 OSI 层来分解数据包以及如何使用这些层进行分析。希望您已经具备 OSI 模型及其工作原理的背景知识。</p>
+<p><strong>数据包详细信息</strong></p>
+<p>您可以单击数据包列表窗格中的数据包以打开其详细信息（双击将在新窗口中打开详细信息）。根据 OSI 模型，数据包由 5 到 7 层组成。我们将在示例捕获的 HTTP 数据包中介绍所有这些层。下图显示查看数据包编号 27。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/a09f80da3fd63b32e47842d93ead7db5.png" alt="Wireshark - packet details"></p>
+<p>每次单击一个详细信息时，它将突出显示数据包字节窗格中的相应部分。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/31f45c8e0e06d874d3826752839270df.png" alt="Wireshark - packet bytes"></p>
+<p>让我们仔细查看一下详细信息窗格。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/22a21052465fedc91fc4d1ec3beb6bd6.png" alt="Wireshark - packet details"></p>
+<p>我们可以看到数据包的七个不同层：帧/数据包、源 [MAC]、源 [IP]、协议、协议错误、应用程序协议和应用程序数据。下面我们将更详细地介绍这些层。</p>
+<p><strong>帧（第 1 层）：</strong>这将向您显示您正在查看的帧/数据包以及特定于 OSI 模型物理层的详细信息。</p>
+<details open="" style="box-sizing: border-box; margin: 0px; padding: 0px; color: rgb(21, 28, 43); font-family: &quot;Source Sans Pro&quot;, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><summary style="box-sizing: border-box; margin: 0px; padding: 0px; cursor: pointer;">See image</summary><div style="box-sizing: border-box; margin: 0px; padding: 0px; text-align: center;"><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/9d23e2081fa68e7d6f602aa8b0d316d9.png" alt="Wireshark - layer 1" style="box-sizing: border-box; margin: 0px; padding: 0px; max-width: 100%; height: auto !important;"><br style="box-sizing: border-box; margin: 0px; padding: 0px;"></div></details>
+
+<p><strong>源 [MAC]（第 2 层）：</strong>这将向您显示来自 OSI 模型数据链路层的源和目标 MAC 地址。</p>
+<details open="" style="box-sizing: border-box; margin: 0px; padding: 0px; color: rgb(21, 28, 43); font-family: &quot;Source Sans Pro&quot;, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><summary style="box-sizing: border-box; margin: 0px; padding: 0px; cursor: pointer;">See image</summary><div style="box-sizing: border-box; margin: 0px; padding: 0px; text-align: center;"><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/cd06b372ae6338348ff521afb4c7243f.png" alt="Wireshark - layer 2" style="box-sizing: border-box; margin: 0px; padding: 0px; max-width: 100%; height: auto !important;"><br style="box-sizing: border-box; margin: 0px; padding: 0px;"></div></details>
+
+<p><strong>源 [IP]（第 3 层）：</strong>这将向您显示来自 OSI 模型网络层的源和目标 IPv4 地址。</p>
+<details open="" style="box-sizing: border-box; margin: 0px; padding: 0px; color: rgb(21, 28, 43); font-family: &quot;Source Sans Pro&quot;, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><summary style="box-sizing: border-box; margin: 0px; padding: 0px; cursor: pointer;">See image</summary><div style="box-sizing: border-box; margin: 0px; padding: 0px; text-align: center;"><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/d71eb4efc8d48a968a3e078045bd1511.png" alt="Wireshark - layer 3" style="box-sizing: border-box; margin: 0px; padding: 0px; max-width: 100%; height: auto !important;"><br style="box-sizing: border-box; margin: 0px; padding: 0px;"></div></details>
+
+<p><strong>协议（第 4 层）：</strong>这将向您显示所用协议（UDP/TCP）以及源端口和目标端口的详细信息；来自 OSI 模型的传输层。</p>
+<details open="" style="box-sizing: border-box; margin: 0px; padding: 0px; color: rgb(21, 28, 43); font-family: &quot;Source Sans Pro&quot;, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><summary style="box-sizing: border-box; margin: 0px; padding: 0px; cursor: pointer;">See image</summary><div style="box-sizing: border-box; margin: 0px; padding: 0px; text-align: center;"><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/c373f8492470524a8f01fded43856a27.png" alt="Wireshark - layer 4" style="box-sizing: border-box; margin: 0px; padding: 0px; max-width: 100%; height: auto !important;"><br style="box-sizing: border-box; margin: 0px; padding: 0px;"></div></details>
+
+<p><strong>协议错误</strong>：第四层的延续显示需要重新组装的 TCP 特定段。</p>
+<details open="" style="box-sizing: border-box; margin: 0px; padding: 0px; color: rgb(21, 28, 43); font-family: &quot;Source Sans Pro&quot;, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><summary style="box-sizing: border-box; margin: 0px; padding: 0px; cursor: pointer;">See image</summary><div style="box-sizing: border-box; margin: 0px; padding: 0px; text-align: center;"><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/23bbe6ae6e8168cd0662998ff444b067.png" alt="Wireshark - protocol error" style="box-sizing: border-box; margin: 0px; padding: 0px; max-width: 100%; height: auto !important;"><br style="box-sizing: border-box; margin: 0px; padding: 0px;"></div></details>
+
+<p><strong>应用协议（第 5 层）：</strong>这将显示所用协议的具体详细信息，例如 HTTP、FTP 和 SMB。来自 OSI 模型的应用层。</p>
+<details open="" style="box-sizing: border-box; margin: 0px; padding: 0px; color: rgb(21, 28, 43); font-family: &quot;Source Sans Pro&quot;, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><summary style="box-sizing: border-box; margin: 0px; padding: 0px; cursor: pointer;">See image</summary><div style="box-sizing: border-box; margin: 0px; padding: 0px; text-align: center;"><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/879aea2816018d27769fc8490e4af51b.png" alt="Wireshark - layer 5" style="box-sizing: border-box; margin: 0px; padding: 0px; max-width: 100%; height: auto !important;"><br style="box-sizing: border-box; margin: 0px; padding: 0px;"></div></details>
+
+<p><strong>应用程序数据</strong>：第五层的扩展可以显示特定于应用程序的数据。</p>
+<details open="" style="box-sizing: border-box; margin: 0px; padding: 0px; color: rgb(21, 28, 43); font-family: &quot;Source Sans Pro&quot;, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><summary style="box-sizing: border-box; margin: 0px; padding: 0px; cursor: pointer;">See image</summary><div style="box-sizing: border-box; margin: 0px; padding: 0px; text-align: center;"><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/c2d9c3ce498c6f9044413b68df287c14.png" alt="Wireshark - application data" style="box-sizing: border-box; margin: 0px; padding: 0px; max-width: 100%; height: auto !important;"><br style="box-sizing: border-box; margin: 0px; padding: 0px;"></div></details>
+
+<p>了解了一般数据包是由什么组成的，下面我们来了解一下各种应用协议以及它们的具体细节。</p>
+<h1 id="Packet-Navigation"><a href="#Packet-Navigation" class="headerlink" title="Packet Navigation"></a>Packet Navigation</h1><p><strong>Packet Numbers</strong></p>
+<p>Wireshark 计算所调查数据包的数量并为每个数据包分配一个唯一编号。这有助于大型捕获的分析过程，并可轻松返回事件的特定点。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/d52507e87088deb1597042d50900eef0.png" alt="Wireshark - packet numbers"></p>
+<p><strong>Go to Packet</strong></p>
+<p>数据包编号不仅有助于计算数据包总数，还可以使查找/调查特定数据包变得更加容易。此功能不仅可以在数据包之间上下导航；它还提供帧内数据包跟踪并查找对话特定部分中的下一个数据包。您可以使用<strong>“Go”</strong>菜单和工具栏来查看特定数据包。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/cdb1e1d12c63fc831c7d94db634bbe0d.png" alt="Wireshark - go to packet"></p>
+<p><strong>Find Packets</strong></p>
+<p>除了数据包编号，Wireshark 还可以通过数据包内容查找数据包。您可以使用<strong>“编辑 –&gt; 查找数据包”</strong>菜单在数据包中搜索感兴趣的特定事件。这有助于分析师和管理员找到特定的入侵模式或故障踪迹。</p>
+<p>查找数据包有两个关键点。第一点是了解输入类型。此功能接受四种类型的输入（显示过滤器、十六进制、字符串和正则表达式）。字符串和正则表达式搜索是最常用的搜索类型。搜索不区分大小写，但您可以通过单击单选按钮在搜索中设置区分大小写。</p>
+<p>第二点是选择搜索字段。您可以在三个窗格（数据包列表、数据包详细信息和数据包字节）中进行搜索，了解每个窗格中可用的信息对于查找感兴趣的事件非常重要。例如，如果您尝试在数据包详细信息窗格中查找可用的信息并在数据包列表窗格中进行搜索，Wireshark 不会找到它，即使它存在。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/c8811df8ea0fa2b70fa90831d1ec9278.png" alt="Wireshark - find packets"></p>
+<p><strong>Mark Packets</strong></p>
+<p>标记数据包是另一个对分析师有用的功能。您可以通过标记来查找/指向特定数据包以进行进一步调查。它可以帮助分析师指出感兴趣的事件或从捕获中导出特定数据包。您可以使用<strong>“编辑”</strong>或“右键单击”菜单来标记/取消标记数据包。</p>
+<p>无论原始颜色代表连接类型如何，标记的数据包都将显示为黑色。请注意，标记的数据包信息在每个文件会话中都会更新，因此关闭捕获文件后标记的数据包将丢失。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/2c290f2f3c7b07223c86cd066751d19b.png" alt="Wireshark - mark packets"></p>
+<p><strong>Packet Comments</strong></p>
+<p>与数据包标记类似，注释也是对分析师有用的另一个功能。您可以为特定数据包添加注释，这将有助于进一步调查或提醒并指出其他层分析师的重要/可疑点。与数据包标记不同，注释可以保留在捕获文件中，直到操作员将其删除。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/844bedc49bdd7dcaf26861a9cd2658fd.png" alt="Wireshark - packet comments"></p>
+<p><strong>Export Packets</strong></p>
+<p>捕获文件可以在单个文件中包含数千个数据包。如前所述，Wireshark 不是 IDS，因此有时需要从文件中分离出特定的数据包并深入挖掘以解决事件。此功能可帮助分析师共享唯一可疑的数据包（确定的范围）。因此，分析过程中不会包含冗余信息。您可以使用<strong>“文件”</strong>菜单导出数据包。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/86daa70b6cb8b93cb11535787222fb26.png" alt="Wireshark - export packets"></p>
+<p><strong>Export Objects (Files)</strong></p>
+<p>Wireshark 可以提取通过网络传输的文件。对于安全分析师来说，发现共享文件并保存以供进一步调查至关重要。导出对象仅适用于选定协议的流（DICOM、HTTP、IMF、SMB 和 TFTP）。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/16c22447c36bff2e415ea75a764854c8.png" alt="Wireshark - export objects"></p>
+<p><strong>Time Display Format</strong></p>
+<p>Wireshark 会列出捕获的数据包，因此调查默认流程并非总是最佳选择。默认情况下，Wireshark 以“自捕获开始以来的秒数”显示时间，常见用法是使用 UTC 时间显示格式以获得更好的视图。您可以使用<strong>“查看 –&gt; 时间显示格式”</strong>菜单来更改时间显示格式。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/53bb9769af677eede39a3ec9e1b368a3.png" alt="img"></p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/d2333318ff4df99df252c6ee1c236619.png" alt="Wireshark - time display format"></p>
+<p><strong>Expert Info</strong></p>
+<p>Wireshark 还可以检测协议的特定状态，以帮助分析师轻松发现可能的异常和问题。请注意，这些只是建议，并且始终存在误报/漏报的可能性。专家信息可以提供一组三种不同严重程度的类别。详细信息如下表所示。</p>
+<table>
+<thead>
+<tr>
+<th><strong>严重程度</strong></th>
+<th><strong>颜色</strong></th>
+<th><strong>信息</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Chat</strong></td>
+<td><strong>蓝色</strong></td>
+<td>有关通常工作流程的信息。</td>
+</tr>
+<tr>
+<td><strong>Note</strong></td>
+<td><strong>青色</strong></td>
+<td>值得注意的事件，例如应用程序错误代码。</td>
+</tr>
+<tr>
+<td><strong>Warn</strong></td>
+<td><strong>黄色</strong></td>
+<td>警告，例如不寻常的错误代码或问题陈述。</td>
+</tr>
+<tr>
+<td><strong>Error</strong></td>
+<td><strong>红色</strong></td>
+<td>问题，例如格式错误的数据包。</td>
+</tr>
+</tbody></table>
+<p>下表列出了经常遇到的信息组。您可以参考 Wireshark 的官方文档以获取有关专家信息条目的更多信息。</p>
+<table>
+<thead>
+<tr>
+<th><strong>组</strong></th>
+<th><strong>信息</strong></th>
+<th><strong>组</strong></th>
+<th><strong>信息</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>校验和</strong></td>
+<td>校验和错误。</td>
+<td><strong>弃用</strong></td>
+<td>弃用的协议使用。</td>
+</tr>
+<tr>
+<td><strong>注释</strong></td>
+<td>数据包注释检测。</td>
+<td><strong>格式错误</strong></td>
+<td>格式错误的数据包检测。</td>
+</tr>
+</tbody></table>
+<p>您可以使用状态栏中的<strong>“左下角部分”</strong>或<strong>“分析 –&gt; 专家信息”</strong>菜单通过对话框查看所有可用的信息条目。它将显示数据包编号、摘要、组协议和总发生次数。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/31917b6f1e846d3383218cabf1c07caf.png" alt="Wireshark - expert info"></p>
+<h1 id="Packet-Filtering"><a href="#Packet-Filtering" class="headerlink" title="Packet Filtering"></a>Packet Filtering</h1><p>﻿﻿<strong>Packet Filtering</strong></p>
+<p>Wireshark 拥有强大的过滤引擎，可帮助分析师缩小流量范围并专注于感兴趣的事件。Wireshark 有两种过滤方法：捕获和显示过滤器。捕获过滤器用于仅“捕获”对所用过滤器有效的数据包。显示过滤器用于“查看”对所用过滤器有效的数据包。我们将在下一节讨论这些过滤器的区别和高级用法。现在让我们关注显示过滤器的基本用法，这将首先帮助分析师。</p>
+<p>过滤器是为 Wireshark 官方协议参考中提供的协议设计的特定查询。虽然过滤器只是调查感兴趣事件的选项，但有两种不同的方法可以过滤流量并从捕获文件中去除噪音。第一种使用查询，第二种使用右键单击菜单。Wireshark 提供了强大的 GUI，对于不想为基本任务编写查询的分析师来说，有一条黄金法则：“如果您可以单击它，您就可以过滤和复制它”。</p>
+<p><strong>应用为过滤器</strong></p>
+<p>这是过滤流量的最基本方法。在调查捕获文件时，您可以单击要过滤的字段，然后使用“右键菜单”或“分析”菜单来过滤特定值。应用过滤器后，Wireshark 将生成所需的过滤器查询，应用它，根据您的选择显示数据包，并从数据包列表窗格中隐藏未选择的数据包。请注意，总数据包数和显示的数据包数始终显示在状态栏上。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/463abd0a5cad55831b54a37c17092505.png" alt="Wireshark - apply as filter"></p>
+<p><strong>Conversation filter</strong> </p>
+<p>当您使用“应用为过滤器”选项时，您将仅过滤数据包的单个实体。此选项是调查数据包中特定值的好方法。但是，假设您想通过关注 IP 地址和端口号来调查特定数据包编号和所有链接数据包。在这种情况下，“对话过滤器”选项可帮助您仅查看相关数据包并轻松隐藏其余数据包。您可以使用“右键菜单”或“<strong>分析 –&gt; 对话过滤器</strong>”菜单来过滤对话。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/6b31a8581e560286aee74fb9a608dfc9.png" alt="Wireshark - conversation filter"></p>
+<p><strong>Colourise Conversation</strong></p>
+<p>此选项与“对话过滤器”类似，但有一个区别。它突出显示链接的数据包而不应用显示过滤器并减少查看的数据包数量。此选项与“着色规则”选项配合使用，广告会更改数据包颜色而不考虑先前应用的颜色规则。您可以使用“右键菜单”或<strong>“查看 –&gt; 着色对话”</strong>菜单单击即可为链接的数据包着色。请注意，您可以使用<strong>“查看 –&gt; 着色对话 –&gt; 重置着色”</strong>菜单撤消此操作。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/b7a7ce6afa9c421e6bfaebac719d348c.png" alt="Wireshark - colourise conversation"></p>
+<p><strong>Prepare as Filter</strong> </p>
+<p>与“应用为过滤器”类似，此选项可帮助分析师使用“右键单击”菜单创建显示过滤器。但是，与前一个模型不同，此模型不会在选择后应用过滤器。它会将所需的查询添加到窗格中，并等待执行命令（输入）或使用“右键单击”菜单中的<strong>“.. 和/或..”</strong> 选择另一个过滤选项。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/0291e6095277eaebf8f9a8f8df0f1ec6.png" alt="Wireshark - prepare as filter"></p>
+<p><strong>Apply as Column</strong></p>
+<p>默认情况下，数据包列表窗格提供有关每个数据包的基本信息。您可以使用“右键菜单”或**“分析 **–&gt;<strong>应用为列”</strong> 菜单将列添加到数据包列表窗格。单击某个值并将其应用为列后，它将显示在数据包列表窗格中。此功能可帮助分析师检查捕获文件中可用数据包中特定值/字段的外观。您可以通过单击数据包列表窗格顶部来启用/禁用数据包列表窗格中显示的列。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/8eac68abb9c10fccce114f6ad803a5dd.png" alt="Wireshark - apply as column"></p>
+<p><strong>Follow Stream</strong></p>
+<p>Wireshark 以数据包部分大小显示所有内容。但是，可以重建流并查看应用程序级别呈现的原始流量。根据协议，流可帮助分析师重新创建应用程序级数据并了解感兴趣的事件。还可以查看未加密的协议数据，如用户名、密码和其他传输数据。</p>
+<p>您可以使用“右键菜单”或<strong>“分析</strong> <strong>–&gt; 跟踪 TCP/UDP/HTTP 流”</strong>菜单来跟踪流量流。流显示在单独的对话框中；来自服务器的数据包以蓝色突出显示，来自客户端的数据包以红色突出显示。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/d578e89a1f4a526fb8ede6fdf1a5f1b5.png" alt="Wireshark - follow stream"></p>
+<p>一旦您跟踪某个流，Wireshark 就会自动创建并应用所需的过滤器来查看特定流。请记住，一旦应用过滤器，查看的数据包数量就会发生变化。您需要使用位于显示过滤器栏右上方的“<strong>X</strong> <strong>按钮</strong>”来删除显示过滤器并查看捕获文件中所有可用的数据包。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://mikannse.space">Mikannse</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://mikannse.space/2024/10/18/WiresharkTheBasics/">http://mikannse.space/2024/10/18/WiresharkTheBasics/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://mikannse.space" target="_blank">MikannseのSekai</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%B7%A5%E5%85%B7/">工具</a><a class="post-meta__tags" href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a><a class="post-meta__tags" href="/tags/%E6%BA%AF%E6%BA%90%E5%8F%96%E8%AF%81/">溯源取证</a><a class="post-meta__tags" href="/tags/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90/">流量分析</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/10/18/WiresharkPacketOperations/" title="WiresharkPacketOperations"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">WiresharkPacketOperations</div></div></a></div><div class="next-post pull-right"><a href="/2024/10/18/THMWireshark101/" title="THMWireshark101"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">THMWireshark101</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/10/18/THMWireshark101/" title="THMWireshark101"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-18</div><div class="title">THMWireshark101</div></div></a></div><div><a href="/2024/10/18/WiresharkPacketOperations/" title="WiresharkPacketOperations"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-18</div><div class="title">WiresharkPacketOperations</div></div></a></div><div><a href="/2024/10/19/WiresharkTrafficAnalysis/" title="WiresharkTrafficAnalysis"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-19</div><div class="title">WiresharkTrafficAnalysis</div></div></a></div><div><a href="/2024/10/17/THMAutopsy/" title="THMAutopsy"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-17</div><div class="title">THMAutopsy</div></div></a></div><div><a href="/2024/06/18/TSharkTheBasicsTHM/" title="TSharkTheBasicsTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-06-18</div><div class="title">TSharkTheBasicsTHM</div></div></a></div><div><a href="/2024/10/05/Git%E9%80%9F%E6%88%90/" title="Git速成"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-05</div><div class="title">Git速成</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Mikannse</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">285</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mikannse/mikannse.github.io"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">暂时没有公告QAQ</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Introduction"><span class="toc-number">1.</span> <span class="toc-text">Introduction</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Tool-Overview"><span class="toc-number">2.</span> <span class="toc-text">Tool Overview</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Packet-Dissection"><span class="toc-number">3.</span> <span class="toc-text">Packet Dissection</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Packet-Navigation"><span class="toc-number">4.</span> <span class="toc-text">Packet Navigation</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Packet-Filtering"><span class="toc-number">5.</span> <span class="toc-text">Packet Filtering</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/19/WiresharkTrafficAnalysis/" title="WiresharkTrafficAnalysis">WiresharkTrafficAnalysis</a><time datetime="2024-10-19T07:21:45.000Z" title="发表于 2024-10-19 15:21:45">2024-10-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/18/WiresharkPacketOperations/" title="WiresharkPacketOperations">WiresharkPacketOperations</a><time datetime="2024-10-18T15:53:56.000Z" title="发表于 2024-10-18 23:53:56">2024-10-18</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/18/WiresharkTheBasics/" title="WiresharkTheBasics">WiresharkTheBasics</a><time datetime="2024-10-18T15:08:04.000Z" title="发表于 2024-10-18 23:08:04">2024-10-18</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/18/THMWireshark101/" title="THMWireshark101">THMWireshark101</a><time datetime="2024-10-18T06:32:17.000Z" title="发表于 2024-10-18 14:32:17">2024-10-18</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/18/THMWindowsFundamentals3/" title="THMWindowsFundamentals3">THMWindowsFundamentals3</a><time datetime="2024-10-17T17:15:14.000Z" title="发表于 2024-10-18 01:15:14">2024-10-18</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2024 By Mikannse</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function loadDisqus () {
+  const disqus_config = function () {
+    this.page.url = 'http://mikannse.space/2024/10/18/WiresharkTheBasics/'
+    this.page.identifier = '/2024/10/18/WiresharkTheBasics/'
+    this.page.title = 'WiresharkTheBasics'
+  }
+
+  const disqusReset = () => {
+    DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addModeChange('disqus', disqusReset)
+
+  if (window.DISQUS) disqusReset()
+  else {
+    (function() { 
+      var d = document, s = d.createElement('script');
+      s.src = 'https://.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  }
+}
+
+if ('Valine' === 'Disqus' || !true) {
+  if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+  else loadDisqus()
+} else {
+  function loadOtherComment () {
+    loadDisqus()
+  }
+}
+</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

@@ -1,0 +1,903 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>WiresharkTrafficAnalysis | MikannseのSekai</title><meta name="author" content="Mikannse"><meta name="copyright" content="Mikannse"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="Introduction在这个房间里，我们将介绍使用 Wireshark 进行流量分析和检测可疑活动的技术和要点。请注意，这是 Wireshark 三室中的第三个也是最后一个房间，建议在开始这个房间之前先访问下面列出的前两个房间，练习和复习您的 Wireshark 技能。  Wireshark：基础知识 Wireshark：数据包操作  在前两个房间里，我们介绍了如何使用 Wireshark 并进">
+<meta property="og:type" content="article">
+<meta property="og:title" content="WiresharkTrafficAnalysis">
+<meta property="og:url" content="http://mikannse.space/2024/10/19/WiresharkTrafficAnalysis/index.html">
+<meta property="og:site_name" content="MikannseのSekai">
+<meta property="og:description" content="Introduction在这个房间里，我们将介绍使用 Wireshark 进行流量分析和检测可疑活动的技术和要点。请注意，这是 Wireshark 三室中的第三个也是最后一个房间，建议在开始这个房间之前先访问下面列出的前两个房间，练习和复习您的 Wireshark 技能。  Wireshark：基础知识 Wireshark：数据包操作  在前两个房间里，我们介绍了如何使用 Wireshark 并进">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg">
+<meta property="article:published_time" content="2024-10-19T07:21:45.000Z">
+<meta property="article:modified_time" content="2024-10-19T07:22:58.786Z">
+<meta property="article:author" content="Mikannse">
+<meta property="article:tag" content="工具">
+<meta property="article:tag" content="笔记">
+<meta property="article:tag" content="溯源取证">
+<meta property="article:tag" content="流量分析">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg"><link rel="shortcut icon" href="/img/icon.jpg"><link rel="canonical" href="http://mikannse.space/2024/10/19/WiresharkTrafficAnalysis/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Mikannse","link":"链接: ","source":"来源: MikannseのSekai","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'WiresharkTrafficAnalysis',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: undefined,
+  isToc: true,
+  postUpdate: '2024-10-19 15:22:58'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">285</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="MikannseのSekai"><span class="site-name">MikannseのSekai</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">WiresharkTrafficAnalysis</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-10-19T07:21:45.000Z" title="发表于 2024-10-19 15:21:45">2024-10-19</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-10-19T07:22:58.786Z" title="更新于 2024-10-19 15:22:58">2024-10-19</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BD%91%E5%AE%89/">网安</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">8.3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>27分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="WiresharkTrafficAnalysis"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>在这个房间里，我们将介绍使用 Wireshark 进行流量分析和检测可疑活动的技术和要点。请注意，这是 Wireshark 三室中的第三个也是最后一个房间，建议在开始这个房间之前先访问下面列出的前两个房间，练习和复习您的 Wireshark 技能。</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://tryhackme.com/room/wiresharkthebasics"><strong>Wireshark：基础知识</strong></a></li>
+<li><a target="_blank" rel="noopener" href="https://tryhackme.com/room/wiresharkpacketoperations"><strong>Wireshark：数据包操作</strong></a></li>
+</ul>
+<p>在前两个房间里，我们介绍了如何使用 Wireshark 并进行数据包级搜索。现在，是时候调查和关联数据包级信息以查看网络流量中的大局，例如检测异常和恶意活动。对于安全分析师来说，通过应用分析师的知识和工具功能来阻止和理解数据包中传播的信息至关重要。这个房间将通过综合分析师知识和 Wireshark 功能来调查数据包级别的详细信息，以检测特定情况下的异常和奇怪情况。</p>
+<h1 id="Nmap-Scans"><a href="#Nmap-Scans" class="headerlink" title="Nmap Scans"></a>Nmap Scans</h1><p><strong>Nmap Scans</strong></p>
+<p>Nmap 是一种行业标准工具，用于映射网络、识别活动主机和发现服务。由于它是最常用的网络扫描工具之一，安全分析师应该识别用它创建的网络模式。本节将介绍如何识别最常见的 Nmap 扫描类型。</p>
+<ul>
+<li>TCP 连接扫描</li>
+<li>SYN 扫描</li>
+<li>UDP 扫描</li>
+</ul>
+<p>了解 Nmap 扫描的工作原理对于发现网络上的扫描活动至关重要。但是，如果不使用正确的过滤器，就不可能了解扫描详细信息。以下是用于探测网络上的 Nmap 扫描行为的基本过滤器。</p>
+<p><strong>TCP 标志简介。</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>注释</strong></th>
+<th><strong>Wireshark 过滤器</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>全局搜索。</td>
+<td><code>tcp</code> <code>udp</code></td>
+</tr>
+<tr>
+<td>仅 SYN 标志。设置了 SYN 标志。其余位不重要。</td>
+<td><code>tcp.flags == 2</code> <code>tcp.flags.syn == 1</code></td>
+</tr>
+<tr>
+<td>仅设置了 ACK 标志。其余位不重要。</td>
+<td><code>tcp.flags == 16</code> <code>tcp.flags.ack == 1</code></td>
+</tr>
+<tr>
+<td>仅设置了 SYN、ACK 标志。SYN 和 ACK。其余位不重要。</td>
+<td><code>tcp.flags == 18</code> <code>(tcp.flags.syn == 1) and (tcp.flags.ack == 1)</code></td>
+</tr>
+<tr>
+<td>仅设置了 RST 标志。RST 标志。其余位不重要。</td>
+<td><code>tcp.flags == 4</code> <code>tcp.flags.reset == 1</code></td>
+</tr>
+<tr>
+<td>仅设置了 RST、ACK 标志。RST 和 ACK。其余位不重要。</td>
+<td><code>tcp.flags == 20</code> <code>(tcp.flags.reset == 1) and (tcp.flags.ack == 1)</code></td>
+</tr>
+<tr>
+<td>仅设置了 FIN 标志。其余位并不重要。</td>
+<td><code>tcp.flags == 1</code> <code>tcp.flags.fin == 1</code></td>
+</tr>
+</tbody></table>
+<p><strong>TCP 连接扫描</strong></p>
+<p><strong>TCP 连接扫描概述：</strong></p>
+<ul>
+<li>依赖于三次握手（需要完成握手过程）。</li>
+<li>通常使用 <code>nmap -sT</code> 命令进行。</li>
+<li>由非特权用户使用（非 root 用户的唯一选项）。</li>
+<li>通常具有大于 1024 字节的窗口大小，因为请求由于协议的性质需要一些数据。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><strong>打开 TCP 端口</strong></th>
+<th><strong>打开 TCP 端口</strong></th>
+<th><strong>关闭的 TCP 端口</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SYN –&gt;&lt;– SYN, ACKACK –&gt;</td>
+<td>SYN –&gt;&lt;– SYN, ACKACK –&gt;RST, ACK –&gt;</td>
+<td>SYN –&gt;&lt;– RST, ACK</td>
+</tr>
+</tbody></table>
+<p>下图展示了打开和关闭 TCP 端口的三次握手过程。图像和 pcap 样本被拆分，以便于调查并了解每个案例的细节。</p>
+<p><strong>Open TCP port (Connect):</strong></p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/500bb6902ef6b2edb515bb1828088d82.png" alt="Wireshark - tcp connect scan and open tcp port"></p>
+<p><strong>Closed TCP port (Connect):</strong></p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/c194773203502d659d72706aa93eae59.png" alt="Wireshark - tcp connect scan and closed tcp port"></p>
+<p>上图提供了孤立流量中的模式。但是，在大型捕获文件中发现给定的模式并不总是那么容易。因此，分析师需要使用通用过滤器来查看初始异常模式，然后更容易将注意力集中在特定的流量点上。给定的过滤器显示捕获文件中的 TCP Connect 扫描模式。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">tcp.flags.syn==1 and tcp.flags.ack==0 and tcp.window_size &gt; 1024</span><br></pre></td></tr></tbody></table></figure>
+
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/7025561839f99201724629fae1274f2d.png" alt="Wireshark - tcp connect scan pattern"></p>
+<p><strong>SYN Scans</strong></p>
+<p><strong>TCP SYN 扫描概述：</strong></p>
+<ul>
+<li>不依赖三次握手（无需完成握手过程）。</li>
+<li>通常使用 <code>nmap -sS</code> 命令进行。</li>
+<li>由特权用户使用。</li>
+<li>通常大小小于或等于 1024 字节，因为请求尚未完成并且不期望接收数据。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><strong>Open TCP Port</strong></th>
+<th><strong>Close TCP Port</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SYN –&gt;&lt;– SYN,ACKRST–&gt;</td>
+<td>SYN –&gt;&lt;– RST,ACK</td>
+</tr>
+</tbody></table>
+<p><strong>Open TCP port (SYN):</strong></p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/0dbf4e7b74ad99f7060241fc37d8d570.png" alt="Wireshark - tcp syn scan and open port"></p>
+<p><strong>Closed TCP port (SYN):</strong></p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/488115fed65b69aa95aa2677cf2ae800.png" alt="Wireshark - tcp syn scan and closed port"></p>
+<p>给定的过滤器在捕获文件中显示 TCP SYN 扫描模式。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">tcp.flags.syn==1 and tcp.flags.ack==0 and tcp.window_size &lt;= 1024</span><br></pre></td></tr></tbody></table></figure>
+
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/d033bde6ee753f070678cc56665d79fa.png" alt="Wireshark - tcp syn scan pattern"></p>
+<p><strong>UDP Scans</strong></p>
+<p><strong>UDP 扫描概述：</strong></p>
+<ul>
+<li>不需要握手过程</li>
+<li>打开端口时无提示</li>
+<li>关闭端口时出现 ICMP 错误消息</li>
+<li>通常使用 <code>nmap -sU</code> 命令进行。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><strong>Open UDP Port</strong></th>
+<th><strong>Closed UDP Port</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>UDP packet –&gt;</td>
+<td>UDP packet –&gt;ICMP Type 3, Code 3 message. (Destination unreachable, port unreachable)</td>
+</tr>
+</tbody></table>
+<p><strong>Closed (port no 69) and open (port no 68) UDP ports:</strong></p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/bb88ee3b05687c6ece165ab7e9fe12bf.png" alt="Wireshark - udp scan with open and closed ports"></p>
+<p>上图显示关闭的端口返回 ICMP 错误数据包。乍一看，没有提供有关错误的更多信息，那么分析师如何确定此错误消息属于哪里？ ICMP 错误消息使用原始请求作为封装数据来显示数据包的来源/原因。展开数据包详细信息窗格中的 ICMP 部分后，您将看到封装的数据和原始请求，如下图所示。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/0e63fe522554f08810d7d60b8a331ae7.png" alt="Wireshark - udp scan closed port and icmp packet encapsulation"></p>
+<p>给定的过滤器显示捕获文件中的 UDP 扫描模式。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">icmp.type==3 and icmp.code==3</span><br></pre></td></tr></tbody></table></figure>
+
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/626988e40598f6190c81f59ab3ff813c.png" alt="Wireshark - udp port scan pattern"></p>
+<h1 id="ARP-Poisoning-amp-Man-In-The-Middle"><a href="#ARP-Poisoning-amp-Man-In-The-Middle" class="headerlink" title="ARP Poisoning &amp; Man In The Middle!"></a>ARP Poisoning &amp; Man In The Middle!</h1><p><strong>ARP 中毒/欺骗（又称中间人攻击）</strong></p>
+<p><strong>ARP</strong> 协议或<strong>地址解析协议 (ARP</strong>) 是一种允许设备在网络上识别自己的技术。地址解析协议中毒（也称为 ARP 欺骗或中间人 (MITM) 攻击）是一种通过向默认网关发送恶意 ARP 数据包来干扰/操纵网络的攻击。最终目的是操纵<strong>“IP 到 MAC 地址表”</strong>并嗅探目标主机的流量。</p>
+<p>有多种工具可用于进行 ARP 攻击。但是，攻击的思维方式是静态的，因此只要了解 ARP 协议工作流程和 Wireshark 技能，就很容易检测到此类攻击。</p>
+<p><strong>ARP 分析概述：</strong></p>
+<ul>
+<li>在本地网络上工作</li>
+<li>启用 MAC 地址之间的通信</li>
+<li>不是安全协议</li>
+<li>不是可路由协议</li>
+<li>它没有身份验证功能</li>
+<li>常见模式是请求和响应、公告和免费数据包。</li>
+</ul>
+<p>在调查流量之前，让我们先查看一些合法和可疑的 ARP 数据包。合法请求类似于所示的图片：广播请求询问是否有任何可用主机使用 IP 地址，以及来自使用特定 IP 地址的主机的回复。</p>
+<table>
+<thead>
+<tr>
+<th><strong>注释</strong></th>
+<th><strong>Wireshark 过滤器</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>全局搜索</td>
+<td><code>arp</code></td>
+</tr>
+<tr>
+<td><strong>“ARP”</strong> 选项用于获取唾手可得的果实：操作码 1：ARP 请求。操作码 2：ARP 响应。<strong>搜索：</strong>Arp 扫描<strong>搜索：</strong>可能的 ARP 中毒检测<strong>搜索：</strong>可能的 ARP 泛洪检测：</td>
+<td><code>arp.opcode == 1</code>  <code>arp.opcode == 2</code> <code>arp.dst.hw_mac==00:00:00:00:00:00</code> <code>arp.duplicate-address-detected or arp.duplicate-address-frame</code>  <code>((arp) &amp;&amp; (arp.opcode== 1)) &amp;&amp; (arp.src.hw_mac == target-mac-address)</code></td>
+</tr>
+</tbody></table>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/ef02b6b0434491aea9eb6957c70c32d2.png" alt="Wireshark - arp request and reply"></p>
+<p>可疑情况意味着对特定 IP 地址有两个不同的 ARP 响应（冲突）。在这种情况下，Wireshark 的专家信息选项卡会警告分析师。但是，它只显示重复值的第二次出现以突出显示冲突。因此，从合法数据包中识别出恶意数据包是分析师的挑战。下图显示了可能的 IP 欺骗案例。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/7f0e92a248da129dda0593a299ecb368.png" alt="Wireshark - arp spoof"></p>
+<p>在这里，了解网络架构并检查特定时间范围内的流量有助于检测异常。作为分析师，您应该在进一步研究之前记下您的发现。这将帮助您组织起来，并更容易关联进一步的发现。查看给定的图片；存在冲突；以“b4”结尾的 MAC 地址使用“192.168.1.25”IP 地址制作了 ARP 请求，然后声称拥有“192.168.1.1”IP 地址。</p>
+<table>
+<thead>
+<tr>
+<th><strong>注释</strong></th>
+<th><strong>检测注释</strong></th>
+<th><strong>发现</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>可能的 IP 地址匹配。</td>
+<td>从 MAC 地址宣布的 1 个 IP 地址。</td>
+<td>MAC：00：0c：29：e2：18：b4IP：192.168.1.25</td>
+</tr>
+<tr>
+<td>可能的 ARP 欺骗尝试。</td>
+<td>2 个 MAC 地址声称拥有相同的 IP 地址 (192.168.1.1)。“192.168.1.1”IP 地址可能是网关地址。</td>
+<td>MAC1: 50:78:b3:f3​<span class="github-emoji"><span>💿</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f4bf.png?v8" aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span>f4 MAC 2: 00:0c:29:e2:18:b4</td>
+</tr>
+<tr>
+<td>可能存在 ARP 泛洪尝试。</td>
+<td>以“b4”结尾的 MAC 地址声称拥有不同的/新的 IP 地址。</td>
+<td>MAC：00:0c:29:e2:18:b4IP：192.168.1.1</td>
+</tr>
+</tbody></table>
+<p>让我们继续检查流量以发现任何其他异常。请注意，该案例被拆分为多个捕获文件，以便于调查。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/e02a42c9d4e3f17a94acbae4cacb6b65.png" alt="Wireshark - arp flood"></p>
+<p>此时，很明显存在异常。安全分析师不能忽略大量的 ARP 请求。这可能是恶意活动、扫描或网络问题。出现了一个新的异常；以“b4”结尾的 MAC 地址使用“192.168.1.25”IP 地址制作了多个 ARP 请求。让我们关注此异常的来源并扩展所做的笔记。</p>
+<table>
+<thead>
+<tr>
+<th><strong>注释</strong></th>
+<th><strong>检测注释</strong></th>
+<th><strong>发现</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>可能的 IP 地址匹配。</td>
+<td>从 MAC 地址宣布的 1 个 IP 地址。</td>
+<td>MAC：00：0c：29：e2：18：b4 IP：192.168.1.25</td>
+</tr>
+<tr>
+<td>可能的 ARP 欺骗尝试。</td>
+<td>2 个 MAC 地址声称拥有相同的 IP 地址 (192.168.1.1)。“192.168.1.1”IP 地址可能是网关地址。</td>
+<td>MAC1：50:78:b3:f3​<span class="github-emoji"><span>💿</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f4bf.png?v8" aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span>f4MAC 2：00:0c:29:e2:18:b4</td>
+</tr>
+<tr>
+<td>可能存在 ARP 欺骗尝试。</td>
+<td>以“b4”结尾的 MAC 地址声称拥有不同的/新的 IP 地址。</td>
+<td>MAC：00:0c:29:e2:18:b4IP：192.168.1.1</td>
+</tr>
+<tr>
+<td>可能存在 ARP 泛洪尝试。</td>
+<td>以“b4”结尾的 MAC 地址针对一系列 IP 地址构造了多个 ARP 请求。</td>
+<td>MAC：00:0c:29:e2:18:b4IP：192.168.1.xxx</td>
+</tr>
+</tbody></table>
+<p>到目前为止，很明显以“b4”结尾的 MAC 地址拥有“192.168.1.25”IP 地址，并针对一系列 IP 地址构造了可疑的 ARP 请求。它还声称拥有可能的网关地址。让我们关注其他协议，并在时间框架的以下部分中发现此异常的反映。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/f55ebc1632f6776e074dc29842221b48.png" alt="Wireshark - arp spoof mitm http view-1"></p>
+<p>存在 HTTP 流量，在 IP 级别上一切正常，因此与我们之前的发现没有任何关联信息。让我们将 MAC 地址添加为数据包列表窗格中的列，以揭示 IP 地址背后的通信。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/f885817e77449e6898ba3ede164723c4.png" alt="Wireshark - arp spoof mitm http view-2"></p>
+<p>又一个异常！以“b4”结尾的 MAC 地址是所有 HTTP 数据包的目的地！显然存在 MITM 攻击，攻击者是 MAC 地址以“b4”结尾的主机。链接到“192.168.1.12”IP 地址的所有流量都被转发到恶意主机。让我们在结束调查之前总结一下调查结果。</p>
+<table>
+<thead>
+<tr>
+<th><strong>检测说明</strong></th>
+<th><strong>发现</strong></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>IP 到 MAC 匹配。</td>
+<td>3 个 IP 到 MAC 地址匹配。</td>
+<td>MAC：00：0c：29：e2：18：b4 = IP：192.168.1.25MAC：50：78：b3：f3：cd：f4 = IP：192.1681.1MAC：00：0c：29：98：c7：a8 = IP：192.168.1.12</td>
+</tr>
+<tr>
+<td>攻击者</td>
+<td>攻击者使用 ARP 数据包制造噪音。</td>
+<td>MAC：00：0c：29：e2：18：b4 = IP：192.168.1.25</td>
+</tr>
+<tr>
+<td>路由器/网关</td>
+<td>网关地址。</td>
+<td>MAC：50：78：b3：f3：cd：f4 = IP：192.1681.1</td>
+</tr>
+<tr>
+<td>受害者</td>
+<td>攻击者嗅探受害者的所有流量。</td>
+<td>MAC：50：78：b3：f3：cd：f4 = IP：192.1681.12</td>
+</tr>
+</tbody></table>
+<p>在大型捕获文件中检测这些信息片段是一项挑战。然而，在现实生活中，您不会有可供调查的“定制数据”。因此，您需要具备分析师的思维方式、知识和工具技能来过滤和检测异常。</p>
+<p><strong>注意：</strong>在流量分析中，总是有可用的替代解决方案。解决方案类型和方法取决于分析师的知识和技能水平以及可用的数据源。</p>
+<h1 id="Identifying-Hosts-DHCP-NetBIOS-and-Kerberos"><a href="#Identifying-Hosts-DHCP-NetBIOS-and-Kerberos" class="headerlink" title="Identifying Hosts: DHCP, NetBIOS and Kerberos"></a>Identifying Hosts: DHCP, NetBIOS and Kerberos</h1><p><strong>识别主机</strong></p>
+<p>在调查入侵或恶意软件感染活动时，安全分析师应该知道如何识别网络上的主机，而不仅仅是 IP 到 MAC 地址匹配。最好的方法之一是识别网络上的主机和用户，以确定调查的起点，并列出与恶意流量/活动相关的主机和用户。</p>
+<p>通常，企业网络使用预定义的模式来命名用户和主机。虽然这使得了解和跟踪清单变得更容易，但它有好有坏。好的一面是通过查看名称很容易识别用户或主机。坏的一面是，对手很容易克隆该模式并驻留在企业网络中。有多种解决方案可以避免此类活动，但对于安全分析师来说，拥有主机和用户识别技能仍然是必不可少的。</p>
+<p>可用于主机和用户识别的协议：</p>
+<ul>
+<li>动态主机配置协议 (DHCP) 流量</li>
+<li>NetBIOS (NBNS) 流量</li>
+<li>Kerberos 流量</li>
+</ul>
+<p><strong>DHCP 分析</strong></p>
+<p><strong>DHCP</strong> 协议，或 <strong>动态主机配置</strong>协议 (DHCP)****，是负责管理自动 IP 地址和所需通信参数分配的技术。</p>
+<p><strong>DHCP 调查简介：</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>注意事项</strong></th>
+<th><strong>Wireshark 筛选器</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>全局搜索。</td>
+<td><code>dhcp</code> 或 <code>bootp</code></td>
+</tr>
+<tr>
+<td>筛选正确的 DHCP 数据包选项对于查找感兴趣的事件至关重要。 <strong>“DHCP 请求”</strong> 数据包包含主机名信息<strong>“DHCP ACK”</strong> 数据包表示已接受的请求<strong>“DHCP NAK”</strong> 数据包表示已拒绝的请求由于协议的性质，只有“选项 53”（请求类型）具有预定义的静态值。您应该首先过滤数据包类型，然后可以通过“应用为列”或使用“包含”和“匹配”等高级过滤器来过滤其余选项。</td>
+<td>Request: dhcp.option.dhcp == 3<br>ACK: dhcp.option.dhcp == 5<br>NAK: dhcp.option.dhcp == 6</td>
+</tr>
+<tr>
+<td><strong>“DHCP 请求”</strong> 选项用于获取唾手可得的成果：<strong>选项 12：</strong>主机名。<strong>选项 50：</strong>请求的 IP 地址。<strong>选项 51：</strong>请求的 IP 租用时间。<strong>选项 61：</strong>客户端的 MAC 地址。</td>
+<td><code>dhcp.option.hostname contains "keyword"</code></td>
+</tr>
+<tr>
+<td><strong>“DHCP ACK”</strong> 选项可帮助您轻松获取信息：<strong>选项 15：</strong>域名。<strong>选项 51：</strong>分配的 IP 租用时间。</td>
+<td><code>dhcp.option.domain_name contains "keyword"</code></td>
+</tr>
+<tr>
+<td><strong>“DHCP NAK”</strong> 选项可帮助您轻松获取信息：<strong>选项 56：</strong>消息（拒绝详细信息/原因）。</td>
+<td>由于消息可能因情况/情况而异，因此建议阅读消息而不是过滤它。这样，分析师可以通过了解事件情况来创建更可靠的假设/结果。</td>
+</tr>
+</tbody></table>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/7431eb9671e8ebb2a21d2ff9a08b2faa.png" alt="Wireshark - dhcp analysis"></p>
+<p><strong>NetBIOS (NBNS) Analysis</strong></p>
+<p><strong>NetBIOS</strong> 或 <strong>网络</strong>基本<strong>输入/输出</strong>系统是允许不同主机上的应用程序相互通信的技术。</p>
+<p><strong>NBNS 调查概述：</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>注释</strong></th>
+<th><strong>Wireshark 过滤器</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>全局搜索。</td>
+<td><code>nbns</code></td>
+</tr>
+<tr>
+<td><strong>“NBNS”</strong> 选项，用于获取唾手可得的成果：<strong>查询：</strong>查询详细信息。查询详细信息可能包含<strong>“名称、生存时间 (TTL) 和 IP 地址详细信息”</strong></td>
+<td><code>nbns.name contains "keyword"</code></td>
+</tr>
+</tbody></table>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/e12db620d6127ad299059e3626f083d7.png" alt="Wireshark - netbios analysis"></p>
+<p><strong>Kerberos Analysis</strong></p>
+<p><strong>Kerberos</strong> 是 Microsoft Windows 域的默认身份验证服务。它负责在不受信任的网络上对两台或多台计算机之间的服务请求进行身份验证。最终目的是安全地证明身份。</p>
+<p><strong>Kerberos 调查概述：</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>注意事项</strong></th>
+<th><strong>Wireshark 过滤器</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>全局搜索。</td>
+<td><code>kerberos</code></td>
+</tr>
+<tr>
+<td>用户帐户搜索：<strong>CNameString：</strong>用户名。<strong>注意：</strong>某些数据包可能在此字段中提供主机名信息。为避免这种混淆，请过滤 <strong>“$”</strong> 值。以 <strong>“$”</strong> 结尾的值是主机名，没有它的值是用户名。</td>
+<td><code>kerberos.CNameString contains "keyword"</code>  <code>kerberos.CNameString and !(kerberos.CNameString contains "$" )</code></td>
+</tr>
+<tr>
+<td><strong>“Kerberos”</strong> 选项可用于获取唾手可得的成果：<strong>pvno：</strong>协议版本。<strong>realm：</strong>生成的票证的域名。<strong>sname：</strong>生成的票证的服务和域名。<strong>addresses：</strong>客户端 IP 地址和 NetBIOS 名称。<strong>注意：</strong>“地址”信息仅在请求数据包中可用。</td>
+<td>kerberos.pvno == 5<br>kerberos.realm contains “.org” <br>kerberos.SNameString == “krbtg”</td>
+</tr>
+</tbody></table>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/9826985c3c3b9f582f7c7c5ed24f93d7.png" alt="Wireshark - kerberos analysis"></p>
+<h1 id="Tunneling-Traffic-DNS-and-ICMP"><a href="#Tunneling-Traffic-DNS-and-ICMP" class="headerlink" title="Tunneling Traffic: DNS and ICMP"></a>Tunneling Traffic: DNS and ICMP</h1><p><strong>Tunnelling Traffic: ICMP and DNS</strong> </p>
+<p>流量隧道（也称为<strong>“端口转发</strong>”）以安全的方式将数据/资源传输到网络段和区域。它可用于“互联网到私有网络”和“私有网络到互联网”的流量/方向。有一个封装过程来隐藏数据，因此传输的数据在这种情况下看起来很自然，但它包含私有数据包并安全地将它们传输到最终目的地。</p>
+<p>隧道提供匿名性和流量安全性。因此，它被企业网络广泛使用。然而，由于它提供了相当高的数据加密级别，攻击者使用隧道绕过安全边界，使用日常流量中使用的标准和可信协议，如 ICMP 和 DNS。因此，对于安全分析师来说，能够发现 ICMP 和 DNS 异常至关重要。</p>
+<p><strong>ICMP 分析</strong></p>
+<p>互联网控制消息协议 (ICMP) 旨在诊断和报告网络通信问题。它在错误报告和测试中被广泛使用。由于它是一种受信任的网络层协议，因此有时会用于拒绝服务 (DoS) 攻击；此外，攻击者还会将其用于数据泄露和 C2 隧道活动。</p>
+<p><strong>ICMP 分析概述：</strong></p>
+<p>通常，ICMP 隧道攻击是在恶意软件执行或漏洞利用后出现/开始的异常。由于 ICMP 数据包可以传输额外的数据负载，因此攻击者使用此部分来泄露数据并建立 C2 连接。它可能是 TCP、HTTP 或 SSH 数据。虽然 ICMP 协议提供了携带额外数据的绝佳机会，但它也有缺点。大多数企业网络会阻止自定义数据包或需要管理员权限才能创建自定义 ICMP 数据包。</p>
+<p>大量的 ICMP 流量或异常的数据包大小是 ICMP 隧道的指标。尽管如此，攻击者可以创建与常规 ICMP 数据包大小（64 字节）匹配的自定义数据包，因此检测这些隧道活动仍然很麻烦。但是，安全分析师应该了解正常和异常情况，以便发现可能的异常并将其上报以进行进一步分析。</p>
+<table>
+<thead>
+<tr>
+<th><strong>注释</strong></th>
+<th><strong>Wireshark 过滤器</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>全局搜索</td>
+<td><code>icmp</code></td>
+</tr>
+<tr>
+<td><strong>“ICMP”</strong> 选项用于获取唾手可得的成果：数据包长度。ICMP 目标地址。ICMP 有效负载中封装的协议标志。</td>
+<td><code>data.len &gt; 64 and icmp</code></td>
+</tr>
+</tbody></table>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/723f801adc6a95526c2cb39b7ddeee15.png" alt="Wireshark - icmp analysis"></p>
+<p><strong>DNS Analysis</strong> </p>
+<p>域名系统 (DNS) 旨在将 IP 域地址翻译/转换为 IP 地址。它也被称为互联网电话簿。由于它是 Web 服务的重要组成部分，因此被广泛使用和信任，因此经常被忽略。因此，攻击者将其用于数据泄露和 C2 活动。</p>
+<p><strong>DNS 分析概述：</strong></p>
+<p>与 ICMP 隧道类似，DNS 攻击是在恶意软件执行或漏洞利用后出现/开始的异常。攻击者创建（或已经拥有）域地址并将其配置为 C2 通道。恶意软件或利用后执行的命令将 DNS 查询发送到 C2 服务器。但是，这些查询比默认 DNS 查询更长，并且是为子域地址制作的。不幸的是，这些子域地址不是实际地址；它们是编码命令，如下所示：</p>
+<p><strong>“encoded-commands.maliciousdomain.com”</strong></p>
+<p>当此查询路由到 C2 服务器时，服务器会将实际的恶意命令发送到主机。由于 DNS 查询是网络活动的自然组成部分，因此这些数据包有可能无法被网络边界检测到。安全分析师应该知道如何调查 DNS 数据包长度和目标地址以发现这些异常。</p>
+<table>
+<thead>
+<tr>
+<th><strong>注释</strong></th>
+<th><strong>Wireshark 过滤器</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>全局搜索</td>
+<td><code>dns</code></td>
+</tr>
+<tr>
+<td><strong>“DNS”</strong> 选项，用于获取唾手可得的成果：查询长度。DNS 地址中的异常和非常规名称。带有编码子域地址的长 DNS 地址。已知模式，如 dnscat 和 dns2tcp。统计分析，如特定目标的异常 DNS 请求量。**!mdns:** 禁用本地链接设备查询。</td>
+<td>dns contains “dnscat”<br>dns.qry.name.len &gt; 15 and !mdns</td>
+</tr>
+</tbody></table>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/c11641f9df84faa040e2c6c11da08655.png" alt="Wireshark - dns analysis"></p>
+<h1 id="Cleartext-Protocol-Analysis-FTP"><a href="#Cleartext-Protocol-Analysis-FTP" class="headerlink" title="Cleartext Protocol Analysis: FTP"></a>Cleartext Protocol Analysis: FTP</h1><p><strong>明文协议分析</strong></p>
+<p>调查明文协议跟踪听起来很容易，但是当需要调查大型网络跟踪以进行事件分析和响应时，游戏就变了。正确的分析不仅仅是跟踪流和读取明文数据。对于安全分析师来说，从调查过程中创建统计数据和关键结果非常重要。正如前面在 Wireshark 房间系列开始时提到的，分析师应该具备完成此任务所需的网络知识和工具技能。让我们用 Wireshark 模拟明文协议调查！</p>
+<p><strong>FTP 分析</strong></p>
+<p>文件传输协议 (FTP) 旨在轻松传输文件，因此它注重简单性而不是安全性。因此，在不安全的环境中使用此协议可能会产生安全问题，例如：</p>
+<ul>
+<li>MITM 攻击</li>
+<li>凭据窃取和未经授权的访问</li>
+<li>网络钓鱼</li>
+<li>恶意软件植入</li>
+<li>数据泄露</li>
+</ul>
+<p><strong>FTP 分析简介：</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>注释</strong></th>
+<th><strong>Wireshark 过滤器</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>全局搜索</td>
+<td><code>ftp</code></td>
+</tr>
+<tr>
+<td><strong>“FTP”</strong>系列选项，用于获取唾手可得的成果：<strong>x1x系列：</strong>信息请求响应。<strong>x2x系列：</strong>连接消息。<strong>x3x系列：</strong>身份验证消息。<strong>注意：</strong>“200”表示命令成功。</td>
+<td><strong>—</strong></td>
+</tr>
+<tr>
+<td><strong>“x1x”</strong>系列选项，用于获取唾手可得的成果：<strong>211：</strong>系统状态。<strong>212：</strong>目录状态。<strong>213：</strong>文件状态</td>
+<td><code>ftp.response.code == 211</code></td>
+</tr>
+<tr>
+<td><strong>“x2x”</strong>系列选项，用于获取唾手可得的成果：<strong>220：</strong>服务就绪。<strong>227：</strong>进入被动模式。<strong>228：</strong>长被动模式。<strong>229：</strong>扩展被动模式。</td>
+<td><code>ftp.response.code == 227</code></td>
+</tr>
+<tr>
+<td><strong>“x3x”</strong>系列选项用于获取唾手可得的果实：<strong>230：</strong>用户登录。<strong>231：</strong>用户注销。<strong>331：</strong>有效用户名。<strong>430：</strong>无效的用户名或密码<strong>530：</strong>未登录，密码无效。</td>
+<td><code>ftp.response.code == 230</code></td>
+</tr>
+<tr>
+<td><strong>“FTP”</strong>命令用于获取唾手可得的果实：<strong>USER：</strong>用户名。<strong>PASS：</strong>密码。<strong>CWD：</strong>当前工作目录。<strong>LIST：</strong>列表。</td>
+<td><code>ftp.request.command == "USER"``ftp.request.command == "PASS"``ftp.request.arg == "password"</code></td>
+</tr>
+<tr>
+<td>获取唾手可得的果实的高级用法示例：<strong>暴力破解信号：</strong>列出失败的登录尝试。<strong>暴力破解信号：</strong>列出目标用户名。<strong>密码喷洒信号：</strong>列出静态密码的目标。</td>
+<td>ftp.response.code == 530<br>(ftp.response.code == 530) and (ftp.response.arg contains “username”)<br>(ftp.request.command == “PASS” ) and (ftp.request.arg == “password”)</td>
+</tr>
+</tbody></table>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/8287adaa075c737986e04d026f137e2e.png" alt="Wireshark - ftp analysis"></p>
+<h1 id="Cleartext-Protocol-Analysis-HTTP"><a href="#Cleartext-Protocol-Analysis-HTTP" class="headerlink" title="Cleartext Protocol Analysis: HTTP"></a>Cleartext Protocol Analysis: HTTP</h1><p><strong>HTTP 分析</strong></p>
+<p>超文本传输协议 (HTTP) 是一种基于明文的请求-响应和客户端-服务器协议。它是请求/提供网页的标准网络活动类型，默认情况下，它不会被任何网络边界阻止。由于未加密且是网络流量的主干，HTTP 是流量分析中必须了解的协议之一。借助 HTTP 分析可以检测到以下攻击：</p>
+<ul>
+<li>钓鱼页面</li>
+<li>网络攻击</li>
+<li>数据泄露</li>
+<li>命令和控制流量 (C2)</li>
+</ul>
+<p><strong>HTTP 分析简介：</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>注释</strong></th>
+<th><strong>Wireshark 过滤器</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>全局搜索<strong>注释：</strong>HTTP2 是 HTTP 协议的修订版，旨在提高性能和安全性。它支持二进制数据传输和请求与响应多路复用。</td>
+<td><code>http``http2</code></td>
+</tr>
+<tr>
+<td><strong>“HTTP</strong> 请求方法”** 用于获取唾手可得的成果：GETPOST请求：列出所有请求</td>
+<td><code>http.request.method == "GET"</code> <code>http.request.method == "POST"</code> <code>http.request</code></td>
+</tr>
+<tr>
+<td><strong>“HTTP</strong> 响应状态代码”** 用于获取唾手可得的成果：<strong>200 OK：请求成功。</strong>301 永久移动：资源被移动到新的 URL/路径（永久）。<strong>302 临时移动：资源被移动到新的 URL/路径（临时）。</strong>400 错误请求：服务器无法理解该请求。<strong>401 未授权：URL 需要授权（登录等）。</strong>403 禁止：无法访问请求的 URL。 <strong>404 未找到：</strong>服务器找不到请求的 URL。<strong>405 方法不允许：</strong>使用的方法不合适或被阻止。<strong>408 请求超时：</strong>请求等待时间超过服务器等待时间。<strong>500 内部服务器错误：</strong>请求未完成，意外错误。<strong>503 服务不可用：</strong>请求未完成服务器或服务已关闭。</td>
+<td><code>http.response.code == 200</code> <code>http.response.code == 401</code> <code>http.response.code == 403</code> <code>http.response.code == 404</code> <code>http.response.code == 405</code> <code>http.response.code == 503</code></td>
+</tr>
+<tr>
+<td>用于获取唾手可得的成果的<strong>“HTTP</strong> <strong>参数”</strong>：<strong>用户代理：</strong>Web 服务器应用程序的浏览器和操作系统标识。<strong>请求 URI：</strong>指向服务器请求的资源。 <strong>完整 *URI：</strong>完整的 URI 信息。*<strong>URI：</strong>统一资源标识符。</td>
+<td>http.user_agent contains “nmap”<br>http.request.uri contains “admin”<br>http.request.full_uri contains “admin”</td>
+</tr>
+<tr>
+<td>用于获取唾手可得的成果的<strong>“HTTP</strong> <strong>参数”</strong>：<strong>服务器：</strong>服务器服务名称。<strong>主机：</strong>服务器的主机名<strong>连接：</strong>连接状态。<strong>基于行的文本数据：</strong>服务器提供的明文数据。<strong>HTML 表单 URL 编码：</strong>Web 表单信息。</td>
+<td>http.server contains “apache”<br>http.host contains “keyword”<br>http.host == “keyword”<br>http.connection == “Keep-Alive”<br>data-text-lines contains “keyword”</td>
+</tr>
+</tbody></table>
+<p><strong>用户代理分析</strong></p>
+<p>当攻击者使用复杂的技术进行攻击时，他们会试图通过已知和受信任的协议留下类似于自然流量的痕迹。对于安全分析师来说，发现数据包中异常的迹象非常重要。“用户代理”字段是发现 HTTP 流量异常的重要资源之一。在某些情况下，攻击者成功修改了用户代理数据，这看起来非常自然。安全分析师不能仅依靠用户代理字段来发现异常。切勿将用户代理列入白名单，即使它看起来很自然。基于用户代理的异常/威胁检测/搜寻是需要检查的额外数据源，在出现明显异常时非常有用。如果您不确定某个值，可以进行网络搜索，使用默认和正常的用户代理信息验证您的发现（<a target="_blank" rel="noopener" href="https://developers.whatismybrowser.com/useragents/explore/"><strong>示例站点</strong></a>)。</p>
+<p><strong>用户代理分析概述：</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>注释</strong></th>
+<th><strong>Wireshark 过滤器</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>全局搜索。</td>
+<td><code>http.user_agent</code></td>
+</tr>
+<tr>
+<td>获取唾手可得的成果的<strong>研究成果</strong>：短时间内来自同一主机的不同用户代理信息。非标准和自定义用户代理信息。细微的拼写差异。<strong>（“Mozilla”与“Mozlilla”或“Mozlila”不同）</strong>用户代理字段中的审计工具信息，如 Nmap、Nikto、Wfuzz 和 sqlmap。用户代理字段中的有效负载数据。</td>
+<td>(http.user_agent contains “sqlmap”) or (http.user_agent contains “Nmap”) or (http.user_agent contains “Wfuzz”) or (http.user_agent contains “Nikto”)</td>
+</tr>
+</tbody></table>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/8c114d533e1914300bae23b19d3e6f40.png" alt="Wireshark - http user agent analysis"></p>
+<p><strong>Log4j Analysis</strong> </p>
+<p>适当的调查始于对要追踪的威胁和异常的事先研究。在启动 Wireshark 之前，让我们回顾一下有关“Log4j”攻击的已知信息。</p>
+<p><strong>Log4j 漏洞分析概述：</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>注释</strong></th>
+<th><strong>Wireshark 过滤器</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>抓住唾手可得的果实的<strong>研究成果</strong>：攻击以“POST”请求开始已知的明文模式：“<strong>jndi:ldap</strong>”和“<strong>Exploit.class</strong>”。</td>
+<td>http.request.method == “POST”<br>(ip contains “jndi”) or ( ip contains “Exploit”)<br>(frame contains “jndi”) or ( frame contains “Exploit”)<br>(http.user_agent contains “$”) or (http.user_agent contains “==”)</td>
+</tr>
+</tbody></table>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/8c3bc1fb4090582de2e36452de4d7d3a.png" alt="Wireshark - http log4j analysis"></p>
+<h1 id="Encrypted-Protocol-Analysis-Decrypting-HTTPS"><a href="#Encrypted-Protocol-Analysis-Decrypting-HTTPS" class="headerlink" title="Encrypted Protocol Analysis: Decrypting HTTPS"></a>Encrypted Protocol Analysis: Decrypting HTTPS</h1><p><strong>Decrypting HTTPS Traffic</strong></p>
+<p>在调查网络流量时，分析师经常会遇到加密流量。这是由于使用超文本传输协议安全 (HTTPS) 协议来增强安全性，以防范欺骗、嗅探和拦截攻击。HTTPS 使用 TLS 协议加密通信，因此如果没有加密/解密密钥对，就无法解密流量并查看传输的数据。由于此协议为传输敏感数据提供了良好的安全性，因此攻击者和恶意网站也使用 HTTPS。因此，安全分析师应该知道如何使用密钥文件解密加密流量并调查流量活动。</p>
+<p>由于 HTTP 流量是加密的，数据包将以不同的颜色显示。此外，协议和信息详细信息（实际 URL 地址和从服务器返回的数据）将不会完全可见。下面的第一张图片显示了使用 TLS 协议加密的 HTTP 数据包。第二张和第三张图片演示了在不使用密钥日志文件的情况下过滤 HTTP 数据包。</p>
+<p><strong>HTTPS 的其他信息</strong>：</p>
+<table>
+<thead>
+<tr>
+<th><strong>注释</strong></th>
+<th><strong>Wireshark 过滤器</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>用于获取低垂果实的<strong>“HTTPS</strong>参数”<strong>：</strong>请求<strong>：列出所有请求</strong>TLS**：全局 TLS 搜索TLS 客户端请求TLS 服务器响应本地简单服务发现协议 (SSDP)**注意：SSDP 是一种提供网络服务广告和发现的网络协议。</td>
+<td><code>http.request</code> <code>tls</code> <code>tls.handshake.type == 1</code> <code>tls.handshake.type == 2</code> <code>ssdp</code></td>
+</tr>
+</tbody></table>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/2558999240f7cc60cfb7588d434f9793.png" alt="Wireshark - https encrypted communication"></p>
+<p>与 TCP 三次握手过程类似，TLS 协议也有自己的握手过程。前两个步骤包含“客户端 Hello”和“服务器 Hello”消息。给定的过滤器在捕获文件中显示初始 hello 数据包。这些过滤器有助于发现哪些 IP 地址参与了 TLS 握手。</p>
+<ul>
+<li>客户端 Hello：<code>(http.request or tls.handshake.type == 1) and !(ssdp) </code></li>
+<li>服务器 Hello：<code>(http.request or tls.handshake.type == 2) and !(ssdp) </code></li>
+</ul>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/adad6bec8a257b67664167f52981f820.png" alt="Wireshark - tls client and server hello messages"></p>
+<p>加密密钥日志文件是一个文本文件，其中包含用于解密加密流量会话的唯一密钥对。当与启用 SSL/TLS 的网页建立连接时，这些密钥对会自动创建（每个会话）。由于这些过程都是在浏览器中完成的，因此您需要配置系统并使用合适的浏览器（Chrome 和 Firefox 支持此操作）将这些值保存为密钥日志文件。为此，您需要设置环境变量并创建 SSLKEYLOGFILE，浏览器会在您浏览网页时将密钥转储到此文件中。SSL/TLS 密钥对是在连接时为每个会话创建的，因此在流量捕获期间转储密钥非常重要。否则，无法创建/生成合适的密钥日志文件来解密捕获的流量。您可以使用“右键单击”菜单或<strong>“编辑 –&gt; 首选项 –&gt; 协议 –&gt; TLS”</strong>菜单来添加/删除密钥日志文件。</p>
+<p><strong>使用“右键单击”菜单添加密钥日志文件：</strong></p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/17b1557ea94f23b7a9c6851fddbd366b.png" alt="Wireshark - https adding keylogfile to decrypt https traffic step-1"></p>
+<p><strong>使用“编辑 –&gt; 首选项 –&gt; 协议 –&gt; TLS”</strong> <strong>菜单添加密钥日志文件：</strong></p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/7461f414bdc9926827dd54d57e7a8825.png" alt="Wireshark - https adding keylogfile to decrypt https traffic step-2"></p>
+<p><strong>使用/不使用密钥日志文件查看流量：</strong></p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/5df77f4b111b3ae5b7332456046a5ebc.png" alt="Wireshark - viewing the traffic with and without a key log file"></p>
+<p>上图显示使用密钥日志文件后可以看到流量详细信息。请注意，数据包详细信息和字节窗格以不同的格式提供数据以供调查。解密流量后，可以获得解压缩的标头信息和 HTTP2 数据包详细信息。根据数据包详细信息，您还可以获得以下数据格式：</p>
+<ul>
+<li>帧</li>
+<li>解密的 TLS</li>
+<li>解压缩的标头</li>
+<li>重新组装的 TCP</li>
+<li>重新组装的 SSL</li>
+</ul>
+<h1 id="Bonus-Hunt-Cleartext-Credentials"><a href="#Bonus-Hunt-Cleartext-Credentials" class="headerlink" title="Bonus: Hunt Cleartext Credentials!"></a>Bonus: Hunt Cleartext Credentials!</h1><p><strong>Bonus: Hunt Cleartext Credentials!</strong></p>
+<p>到目前为止，我们讨论了如何检查数据包中的特定情况并发现异常。正如第一个房间中提到的，Wireshark 不是 IDS，但它在专家信息下为某些情况提供了建议。但是，有时异常会复制合法流量，因此检测变得更加困难。例如，在明文凭证搜索案例中，很难发现多个凭证输入并确定是否存在暴力攻击或是否是标准用户输入了错误的凭证。</p>
+<p>由于所有内容都呈现在数据包级别，因此乍一看很难发现多个用户名/密码条目。当分析师可以将凭证条目视为列表时，检测时间将会减少。Wireshark 具有这样的功能，可帮助想要搜索明文凭证条目的分析师。</p>
+<p>一些 Wireshark 解析器（FTP、HTTP、IMAP、pop 和 SMTP）被编程为从捕获文件中提取明文密码。您可以使用<strong>“工具 –&gt; 凭据”</strong>菜单查看检测到的凭据。此功能仅在特定版本的 Wireshark（v3.1 及更高版本）后才有效。由于该功能仅适用于特定协议，因此建议进行手动检查，而不要完全依赖此功能来判断流量中是否存在明文凭据。</p>
+<p>一旦您使用该功能，它将打开一个新窗口并提供检测到的凭据。它将显示数据包编号、协议、用户名和其他信息。此窗口是可点击的；单击数据包编号将选择包含密码的数据包，单击用户名将选择包含用户名信息的数据包。附加部分会提示包含用户名的数据包编号。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/c8266feccc3836c97ed4fdbd81befc20.png" alt="Wireshark - credentials "></p>
+<h1 id="Bonus-Actionable-Results"><a href="#Bonus-Actionable-Results" class="headerlink" title="Bonus: Actionable Results!"></a>Bonus: Actionable Results!</h1><p><strong>奖励：可操作的结果！</strong></p>
+<p>您已经调查了流量、检测到异常并创建了进一步调查的注释。下一步是什么？并非每个案例调查都由众包团队进行。作为安全分析师，在某些情况下，您需要发现异常、确定来源并采取行动。Wireshark 不只是关于数据包详细信息；它可以帮助您创建只需单击几下即可实施的防火墙规则。您可以使用<strong>“工具 –&gt; 防火墙 ACL 规则”</strong>菜单创建防火墙规则。使用此功能后，它将打开一个新窗口并提供用于不同目的的规则组合（基于 IP、端口和 MAC 地址）。请注意，这些规则是为在外部防火墙接口上实施而生成的。</p>
+<p>目前，Wireshark 可以为以下对象创建规则：</p>
+<ul>
+<li>Netfilter (iptables)</li>
+<li>Cisco IOS（标准/扩展）</li>
+<li>IP 过滤器 (ipfilter)</li>
+<li>IPFirewall (ipfw)</li>
+<li>数据包过滤器 (pf)</li>
+<li>Windows 防火墙（netsh 新/旧格式）</li>
+</ul>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6131132af49360005df01ae3/room-content/448e790da3f31b8566547cd03804b282.png" alt="Wireshark - firewall acl rules "></p>
+<h1 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h1><p><strong>恭喜！</strong> 您刚刚完成了“Wireshark：流量分析”房间。</p>
+<p>在这个房间中，我们介绍了如何使用 Wireshark 检测异常并在数据包级别调查感兴趣的事件。现在，我们邀请您完成 Wireshark 挑战房间：<a target="_blank" rel="noopener" href="https://tryhackme.com/room/c2carnage"><strong>Carnage</strong></a>、**<a target="_blank" rel="noopener" href="https://tryhackme.com/r/room/warzoneone">Warzone 1</a>** 和 **<a target="_blank" rel="noopener" href="https://tryhackme.com/r/room/warzonetwo">Warzone 2</a>**。</p>
+<p>Wireshark 是启动网络安全调查的好工具。但是，它不足以阻止威胁。安全分析师应该具备 IDS/IPS 知识和扩展工具技能来检测和预防异常和威胁。随着攻击变得越来越复杂，使用多种工具和检测策略成为一种要求。以下房间将帮助您在网络流量分析和异常/威胁检测方面取得进步。</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://tryhackme.com/room/networkminer"><strong>NetworkMiner</strong></a></li>
+<li><a target="_blank" rel="noopener" href="https://tryhackme.com/room/snort"><strong>Snort</strong></a></li>
+<li><a target="_blank" rel="noopener" href="https://tryhackme.com/room/snortchallenges1"><strong>Snort Challenge - The Basics</strong></a></li>
+<li><a target="_blank" rel="noopener" href="https://tryhackme.com/room/snortchallenges2"><strong>Snort Challenge - Live Attacks</strong></a></li>
+<li><a target="_blank" rel="noopener" href="https://tryhackme.com/room/zeekbro"><strong>Zeek</strong></a></li>
+<li><a target="_blank" rel="noopener" href="https://tryhackme.com/room/zeekbroexercises"><strong>Zeek Exercises</strong></a></li>
+<li><a target="_blank" rel="noopener" href="https://tryhackme.com/room/brim"><strong>Brim</strong></a></li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://mikannse.space">Mikannse</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://mikannse.space/2024/10/19/WiresharkTrafficAnalysis/">http://mikannse.space/2024/10/19/WiresharkTrafficAnalysis/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://mikannse.space" target="_blank">MikannseのSekai</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%B7%A5%E5%85%B7/">工具</a><a class="post-meta__tags" href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a><a class="post-meta__tags" href="/tags/%E6%BA%AF%E6%BA%90%E5%8F%96%E8%AF%81/">溯源取证</a><a class="post-meta__tags" href="/tags/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90/">流量分析</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2024/10/18/WiresharkPacketOperations/" title="WiresharkPacketOperations"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">WiresharkPacketOperations</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/10/18/THMWireshark101/" title="THMWireshark101"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-18</div><div class="title">THMWireshark101</div></div></a></div><div><a href="/2024/10/18/WiresharkPacketOperations/" title="WiresharkPacketOperations"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-18</div><div class="title">WiresharkPacketOperations</div></div></a></div><div><a href="/2024/10/18/WiresharkTheBasics/" title="WiresharkTheBasics"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-18</div><div class="title">WiresharkTheBasics</div></div></a></div><div><a href="/2024/10/17/THMAutopsy/" title="THMAutopsy"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-17</div><div class="title">THMAutopsy</div></div></a></div><div><a href="/2024/06/18/TSharkTheBasicsTHM/" title="TSharkTheBasicsTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-06-18</div><div class="title">TSharkTheBasicsTHM</div></div></a></div><div><a href="/2024/10/05/Git%E9%80%9F%E6%88%90/" title="Git速成"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-05</div><div class="title">Git速成</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Mikannse</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">285</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mikannse/mikannse.github.io"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">暂时没有公告QAQ</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Introduction"><span class="toc-number">1.</span> <span class="toc-text">Introduction</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Nmap-Scans"><span class="toc-number">2.</span> <span class="toc-text">Nmap Scans</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ARP-Poisoning-amp-Man-In-The-Middle"><span class="toc-number">3.</span> <span class="toc-text">ARP Poisoning &amp; Man In The Middle!</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Identifying-Hosts-DHCP-NetBIOS-and-Kerberos"><span class="toc-number">4.</span> <span class="toc-text">Identifying Hosts: DHCP, NetBIOS and Kerberos</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Tunneling-Traffic-DNS-and-ICMP"><span class="toc-number">5.</span> <span class="toc-text">Tunneling Traffic: DNS and ICMP</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Cleartext-Protocol-Analysis-FTP"><span class="toc-number">6.</span> <span class="toc-text">Cleartext Protocol Analysis: FTP</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Cleartext-Protocol-Analysis-HTTP"><span class="toc-number">7.</span> <span class="toc-text">Cleartext Protocol Analysis: HTTP</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Encrypted-Protocol-Analysis-Decrypting-HTTPS"><span class="toc-number">8.</span> <span class="toc-text">Encrypted Protocol Analysis: Decrypting HTTPS</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Bonus-Hunt-Cleartext-Credentials"><span class="toc-number">9.</span> <span class="toc-text">Bonus: Hunt Cleartext Credentials!</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Bonus-Actionable-Results"><span class="toc-number">10.</span> <span class="toc-text">Bonus: Actionable Results!</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Conclusion"><span class="toc-number">11.</span> <span class="toc-text">Conclusion</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/19/WiresharkTrafficAnalysis/" title="WiresharkTrafficAnalysis">WiresharkTrafficAnalysis</a><time datetime="2024-10-19T07:21:45.000Z" title="发表于 2024-10-19 15:21:45">2024-10-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/18/WiresharkPacketOperations/" title="WiresharkPacketOperations">WiresharkPacketOperations</a><time datetime="2024-10-18T15:53:56.000Z" title="发表于 2024-10-18 23:53:56">2024-10-18</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/18/WiresharkTheBasics/" title="WiresharkTheBasics">WiresharkTheBasics</a><time datetime="2024-10-18T15:08:04.000Z" title="发表于 2024-10-18 23:08:04">2024-10-18</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/18/THMWireshark101/" title="THMWireshark101">THMWireshark101</a><time datetime="2024-10-18T06:32:17.000Z" title="发表于 2024-10-18 14:32:17">2024-10-18</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/18/THMWindowsFundamentals3/" title="THMWindowsFundamentals3">THMWindowsFundamentals3</a><time datetime="2024-10-17T17:15:14.000Z" title="发表于 2024-10-18 01:15:14">2024-10-18</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2024 By Mikannse</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function loadDisqus () {
+  const disqus_config = function () {
+    this.page.url = 'http://mikannse.space/2024/10/19/WiresharkTrafficAnalysis/'
+    this.page.identifier = '/2024/10/19/WiresharkTrafficAnalysis/'
+    this.page.title = 'WiresharkTrafficAnalysis'
+  }
+
+  const disqusReset = () => {
+    DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addModeChange('disqus', disqusReset)
+
+  if (window.DISQUS) disqusReset()
+  else {
+    (function() { 
+      var d = document, s = d.createElement('script');
+      s.src = 'https://.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  }
+}
+
+if ('Valine' === 'Disqus' || !true) {
+  if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+  else loadDisqus()
+} else {
+  function loadOtherComment () {
+    loadDisqus()
+  }
+}
+</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
