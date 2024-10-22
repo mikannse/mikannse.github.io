@@ -1,0 +1,429 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>VolatilityTHM | MikannseのSekai</title><meta name="author" content="Mikannse"><meta name="copyright" content="Mikannse"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="IntroductionVolatility 是一款免费的内存取证工具，由 Volatility Foundation 开发和维护，通常由蓝队中的恶意软件和 SOC 分析师使用，或作为其检测和监控解决方案的一部分。Volatility 用 Python 编写，由 Python 插件和模块组成，旨在以即插即用的方式分析内存转储。 Volatility 适用于 Windows、Linux 和 Mac">
+<meta property="og:type" content="article">
+<meta property="og:title" content="VolatilityTHM">
+<meta property="og:url" content="http://mikannse.space/2024/10/22/VolatilityTHM/index.html">
+<meta property="og:site_name" content="MikannseのSekai">
+<meta property="og:description" content="IntroductionVolatility 是一款免费的内存取证工具，由 Volatility Foundation 开发和维护，通常由蓝队中的恶意软件和 SOC 分析师使用，或作为其检测和监控解决方案的一部分。Volatility 用 Python 编写，由 Python 插件和模块组成，旨在以即插即用的方式分析内存转储。 Volatility 适用于 Windows、Linux 和 Mac">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg">
+<meta property="article:published_time" content="2024-10-22T15:45:27.000Z">
+<meta property="article:modified_time" content="2024-10-22T15:49:25.446Z">
+<meta property="article:author" content="Mikannse">
+<meta property="article:tag" content="笔记">
+<meta property="article:tag" content="溯源取证">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg"><link rel="shortcut icon" href="/img/icon.jpg"><link rel="canonical" href="http://mikannse.space/2024/10/22/VolatilityTHM/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Mikannse","link":"链接: ","source":"来源: MikannseのSekai","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'VolatilityTHM',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: undefined,
+  isToc: true,
+  postUpdate: '2024-10-22 23:49:25'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">288</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="MikannseのSekai"><span class="site-name">MikannseのSekai</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">VolatilityTHM</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-10-22T15:45:27.000Z" title="发表于 2024-10-22 23:45:27">2024-10-22</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-10-22T15:49:25.446Z" title="更新于 2024-10-22 23:49:25">2024-10-22</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BD%91%E5%AE%89/">网安</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">3.8k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>12分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="VolatilityTHM"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>Volatility 是一款免费的内存取证工具，由 Volatility Foundation 开发和维护，通常由蓝队中的恶意软件和 SOC 分析师使用，或作为其检测和监控解决方案的一部分。Volatility 用 Python 编写，由 Python 插件和模块组成，旨在以即插即用的方式分析内存转储。</p>
+<p>Volatility 适用于 Windows、Linux 和 Mac OS，完全用 Python 编写。</p>
+<p><img src="https://i.imgur.com/5uximLP.png" alt="Volatility logo"></p>
+<h1 id="Volatility-Overview"><a href="#Volatility-Overview" class="headerlink" title="Volatility Overview"></a>Volatility Overview</h1><p>来自 Volatility Foundation Wiki，“Volatility 是世界上使用最广泛的从易失性存储器 (RAM) 样本中提取数字工件的框架。提取技术完全独立于被调查的系统，但提供了对系统运行时状态的可见性。该框架旨在向人们介绍从易失性存储器样本中提取数字工件的技术和复杂性，并为进一步研究这一令人兴奋的研究领域提供平台。”</p>
+<p>Volatility 由多个插件共同构建，用于从内存转储中获取信息。要开始分析转储，您首先需要识别图像类型；有多种识别此信息的方法，我们将在后面的任务中进一步介绍。一旦您对图像类型和其他插件进行了分类，您就可以开始使用各种 Volatility 插件来分析转储，这将在本房间的后面进行深入介绍。</p>
+<p>由于 Volatility 完全独立于被调查的系统，因此可以完全分段，但可以全面了解系统的运行时状态。</p>
+<p>在撰写本文时，Volatility 有两个主要存储库；一个基于 Python 2 构建，另一个基于 Python 3 构建。对于此房间，我们建议使用基于 Python 3 构建的 Volatility3 版本。<a target="_blank" rel="noopener" href="https://github.com/volatilityfoundation/volatility3">https://github.com/volatilityfoundation/volatility3</a></p>
+<p>注意：阅读有关 Volatility 的博客文章和文章时，您可能会看到提到或使用 volatility2 语法，volatility3 中的所有语法都已更改，并且在此房间中，我们将使用 Volatility 插件语法的最新版本。</p>
+<h1 id="Installing-Volatility"><a href="#Installing-Volatility" class="headerlink" title="Installing Volatility"></a>Installing Volatility</h1><p>由于 Volatility 完全用 Python 编写，因此安装步骤和要求非常简单，并且适用于 Windows、Linux 和 Mac。如果您已经尝试在 Windows 和 Mac 上使用 Python，建议从 Linux 开始；但是，所有操作系统的工作方式都相同。</p>
+<p>如果您使用的是 TryHackMe 的 AttackBox，Volatility 已存在于盒子中，您可以跳过这些步骤并继续。</p>
+<p>下载时，您可以选择使用预打包的可执行文件（.whl 文件），它将以相同的方式工作并且不需要任何依赖项（仅限 Windows），或者您可以决定直接从 Python 运行它。</p>
+<p>要获取预打包的可执行文件，只需从其发布页面下载包含该应用程序的 zip 文件即可。 <a target="_blank" rel="noopener" href="https://github.com/volatilityfoundation/volatility3/releases/tag/v1.0.1">https://github.com/volatilityfoundation/volatility3/releases/tag/v1.0.1</a></p>
+<p>要从源代码开始运行项目，您需要先下载以下依赖项：<code>Python 3.5.3 或更高版本</code>和<code>Pefile 2017.8.1 或更高版本</code>。<a target="_blank" rel="noopener" href="https://pypi.org/project/pefile/">https://pypi.org/project/pefile/</a></p>
+<p>您还可以下载这些可选依赖项（推荐用于此房间）：<code>yara-python 3.8.0 或更高版本</code> <a target="_blank" rel="noopener" href="https://github.com/VirusTotal/yara-python">https://github.com/VirusTotal/yara-python</a> 和<code>capstone 3.0.0 或更高版本</code> <a target="_blank" rel="noopener" href="https://www.capstone-engine.org/download.html%E3%80%82">https://www.capstone-engine.org/download.html。</a></p>
+<p>对依赖项进行排序后，您可以从 GitHub 克隆存储库。</p>
+<p>使用的命令：<code>git clone https://github.com/volatilityfoundation/volatility3.git</code></p>
+<p>您现在已经安装了 Volatility！</p>
+<p>要测试您的安装，请使用帮助参数运行<code>vol.py</code>文件。</p>
+<p>使用的命令：<code>python3 vol.py -h</code></p>
+<p>需要注意的是，对于任何 Linux 或 Mac 内存文件，您都需要从 Volatility GitHub 下载符号文件。<a target="_blank" rel="noopener" href="https://github.com/volatilityfoundation/volatility3#symbol-tables">https://github.com/volatilityfoundation/volatility3#symbol-tables</a></p>
+<h1 id="Memory-Extraction"><a href="#Memory-Extraction" class="headerlink" title="Memory Extraction"></a>Memory Extraction</h1><p>提取内存转储可以通过多种方式执行，具体取决于调查要求。下面列出了一些可用于从裸机中提取内存的技术和工具。</p>
+<ul>
+<li>FTK Imager</li>
+<li>Redline</li>
+<li>DumpIt.exe</li>
+<li>win32dd.exe / win64dd.exe</li>
+<li>Memoryze</li>
+<li>FastDump</li>
+</ul>
+<p>在裸机主机上使用提取工具时，通常需要相当长的时间；如果时间紧迫，请在调查期间考虑到这一点。</p>
+<p>上面提到的大多数用于内存提取的工具都会输出 .raw 文件，但有一些例外，例如 Redline 可以使用自己的代理和会话结构。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5e73cca6ec4fcf1309f2df86/room-content/17eb1ceec9932bc5e445613ff5f5aa88.png" alt=" "></p>
+<p>对于虚拟机，可以通过从主机驱动器收集虚拟内存文件轻松收集内存文件。此文件可能会根据所使用的虚拟机管理程序而变化；下面列出了您可能遇到的一些虚拟机管理程序虚拟内存文件。</p>
+<ul>
+<li>VMWare - .vmem</li>
+<li>Hyper-V - .bin</li>
+<li>Parallels - .mem</li>
+<li>VirtualBox - .sav 文件 *<em>这只是部分内存文件</em></li>
+</ul>
+<p>尝试从裸机和虚拟机中提取或移动内存时请务必小心。</p>
+<h1 id="Plugins-Overview"><a href="#Plugins-Overview" class="headerlink" title="Plugins Overview"></a>Plugins Overview</h1><p>自从转换为 Python 3 以来，Volatility 的插件结构发生了相当大的变化。在以前的 Volatility 版本中，您需要识别与操作系统和主机版本完全相同的特定操作系统配置文件，这可能很难找到或与可能提供误报的插件一起使用。在 Volatility3 中，配置文件已被废弃，Volatility 将自动识别内存文件的主机和版本。</p>
+<p>插件的命名结构也发生了变化。在以前的 Volatility 版本中，命名约定只是插件的名称，并且适用于所有操作系统和配置文件。现在有了 Volatility3，您需要在指定要使用的插件之前指定操作系统，例如 <code>windows.info</code> 与 <code>linux.info</code>。这是因为不再有配置文件来区分插件的各种操作系统，因为每个操作系统的内存结构和操作都截然不同。请参阅下面的操作系统插件语法选项。</p>
+<ul>
+<li>.windows</li>
+<li>.linux</li>
+<li>.mac</li>
+</ul>
+<p>Volatility 和第三方插件都提供了几个插件；我们将只介绍 Volatility 提供的一小部分插件。</p>
+<p>要熟悉可用的插件，请使用帮助菜单。由于 Volatility3 目前正在积极开发中，因此与 Python 2 相比，插件列表仍然很短；但是，当前列表仍允许您根据需要进行所有分析。</p>
+<h1 id="Identifying-Image-Info-and-Profiles"><a href="#Identifying-Image-Info-and-Profiles" class="headerlink" title="Identifying Image Info and Profiles"></a>Identifying Image Info and Profiles</h1><p>默认情况下，Volatility 附带从 Windows XP 到 Windows 10 的所有现有 Windows 配置文件。</p>
+<p>如果您不知道提取内存转储的机器的确切版本和版本，则很难确定图像配置文件。在某些情况下，您可能会获得一个没有其他上下文的内存文件，您需要自己弄清楚从那里去哪里。在这种情况下，Volatility 会为您提供支持，并附带 <code>imageinfo</code> 插件。此插件将获取提供的内存转储并为其分配最佳操作系统配置文件列表。操作系统配置文件已在 Volatility3 中被弃用，因此如果使用 Volatility2，我们只需要担心识别配置文件；这使得分析内存转储变得容易得多。</p>
+<p>注意：<code>imageinfo</code> 并不总是正确的，并且根据提供的转储可能会有不同的结果；请谨慎使用并从提供的列表中测试多个配置文件。</p>
+<p>如果我们仍想从内存转储中获取有关主机正在运行的信息，我们可以使用以下三个插件 <code>windows.info</code> <code>linux.info</code> <code>mac.info</code>。此插件将从内存转储中提供有关主机的信息。</p>
+<p>语法：<code>python3 vol.py -f &lt;file&gt; windows.info</code></p>
+<h1 id="Listing-Processes-and-Connections"><a href="#Listing-Processes-and-Connections" class="headerlink" title="Listing Processes and Connections"></a>Listing Processes and Connections</h1><p>Volatility 中有五个不同的插件，它们允许您转储进程和网络连接，每个插件使用的技术各不相同。在此任务中，我们将讨论每个插件及其在对手使用的规避技术方面的优缺点。</p>
+<p>列出进程的最基本方法是使用 <code>pslist</code>；此插件将从双向链接列表中获取进程列表，该列表跟踪内存中的进程，相当于任务管理器中的进程列表。此插件的输出将包括所有当前进程和已终止进程及其退出时间。</p>
+<p>语法：<code>python3 vol.py -f &lt;file&gt; windows.pslist</code></p>
+<p>某些恶意软件（通常是 rootkit）会试图隐藏其进程，从而取消自身与列表的链接。通过取消自身与列表的链接，您在使用 <code>pslist</code> 时将不再看到它们的进程。为了对抗这种规避技术，我们可以使用 <code>psscan</code>；这种列出进程的技术将通过查找与 <code>_EPROCESS</code> 匹配的数据结构来定位进程。虽然这种技术可以帮助规避对策，但也可能导致误报。</p>
+<p>语法：<code>python3 vol.py -f &lt;file&gt; windows.psscan</code></p>
+<p>第三个进程插件 <code>pstree</code> 不提供任何其他特殊技术来帮助识别规避，如前两个插件；但是，此插件将根据其父进程 ID 列出所有进程，使用与 <code>pslist</code> 相同的方法。这对于分析师了解进程的完整情况以及提取时可能发生的情况很有用。</p>
+<p>语法：<code>python3 vol.py -f &lt;file&gt; windows.pstree</code></p>
+<p>现在我们知道如何识别进程，我们还需要一种方法来识别主机上提取时存在的网络连接。<code>netstat</code> 将尝试识别具有网络连接的所有内存结构。</p>
+<p>语法：<code>python3 vol.py -f &lt;file&gt; windows.netstat</code></p>
+<p>在 volatility3 的当前状态下，此命令可能非常不稳定，尤其是在旧 Windows 版本中。为了解决这个问题，您可以使用其他工具（如 bulk_extractor）从内存文件中提取 PCAP 文件。在某些情况下，这在您无法仅从 Volatility 识别的网络连接中是首选。<a target="_blank" rel="noopener" href="https://tools.kali.org/forensics/bulk-extractor">https://tools.kali.org/forensics/bulk-extractor</a></p>
+<p>我们将介绍的最后一个插件是 <code>dlllist</code>。此插件将列出提取时与进程相关的所有 DLL。一旦您进行了进一步的分析并且可以将输出过滤到特定的 DLL（这可能是您认为系统中存在的特定类型恶意软件的指标），这将特别有用。</p>
+<p>语法：<code>python3 vol.py -f &lt;file&gt; windows.dlllist</code></p>
+<h1 id="Volatility-Hunting-and-Detection-Capabilities"><a href="#Volatility-Hunting-and-Detection-Capabilities" class="headerlink" title="Volatility Hunting and Detection Capabilities"></a>Volatility Hunting and Detection Capabilities</h1><p>Volatility 提供了大量插件，可用于帮助您在系统内存中寻找恶意软件或其他异常时提高搜索和检测能力。</p>
+<p>建议您在阅读本节之前，对对手如何使用规避技术和各种恶意软件技术以及如何搜索和检测它们有一个基本的了解。</p>
+<p>我们将要讨论的第一个插件是“malfind”，它是在寻找代码注入时最有用的插件之一。此插件将尝试识别注入的进程及其 PID，以及偏移地址和受感染区域的十六进制、ASCII 和反汇编视图。该插件通过扫描堆并识别具有可执行位设置“RWE 或 RX”和/或磁盘上没有内存映射文件（无文件恶意软件）的进程来工作。</p>
+<p>根据“malfind”识别的内容，注入区域将发生变化。MZ 标头是 Windows 可执行文件的指示器。注入的区域也可以指向需要进一步分析的 shellcode。</p>
+<p>语法：<code>python3 vol.py -f &lt;file&gt; windows.malfind</code></p>
+<p>Volatility 还提供了将内存文件与 YARA 规则进行比较的功能。<code>yarascan</code> 将根据规则集搜索字符串、模式和复合规则。您可以使用 YARA 文件作为参数，也可以在命令行中列出规则。</p>
+<p>语法：<code>python3 vol.py -f &lt;file&gt; windows.yarascan</code></p>
+<p>还有其他插件可以被视为 Volatility 搜寻和检测功能的一部分；但是，我们将在下一个任务中介绍它们。</p>
+<h1 id="Advanced-Memory-Forensics"><a href="#Advanced-Memory-Forensics" class="headerlink" title="Advanced Memory Forensics"></a>Advanced Memory Forensics</h1><p>当您开始谈论系统对象以及恶意软件如何直接与系统交互时，高级内存取证可能会变得令人困惑，特别是如果您之前没有使用过某些技术（例如挂钩和驱动程序操纵）的情况下。在与高级对手打交道时，您可能会遇到恶意软件，大多数时候是 rootkit，它们会采用非常恶劣的规避措施，这将需要您作为分析师深入研究驱动程序、互斥锁和挂钩函数。许多模块可以帮助我们在此过程中进一步发现隐藏在内存中的恶意软件。</p>
+<p>我们将要寻找的第一个规避技术是挂钩；对手使用了五种挂钩方法，概述如下：</p>
+<ul>
+<li>SSDT 挂钩</li>
+<li>IRP 挂钩</li>
+<li>IAT 挂钩</li>
+<li>EAT 挂钩</li>
+<li>内联挂钩</li>
+</ul>
+<p>我们将只关注寻找 SSDT 挂钩，因为这是处理恶意软件规避时最常用的技术之一，也是与基本波动性插件一起使用的最容易的插件。</p>
+<p><code>ssdt</code> 插件将搜索挂钩并输出其结果。合法应用程序可以使用挂钩，因此，作为分析师，您需要确定哪些是恶意的。SSDT 挂钩的简要概述：<code>SSDT</code> 代表 <em>系统服务描述符表</em>；Windows 内核使用此表查找系统功能。攻击者可以挂钩到此表并修改指针以指向 rootkit 控制的位置。</p>
+<p><code>ssdt</code> 将转储数百个表条目；然后，您必须进一步分析输出或与基线进行比较。建议在调查初始入侵并将其作为主要调查的一部分后使用此插件。</p>
+<p>语法：<code>python3 vol.py -f &lt;file&gt; windows.ssdt</code></p>
+<p>攻击者还将使用恶意驱动程序文件作为逃避的一部分。Volatility 提供了两个插件来列出驱动程序。</p>
+<p><code>modules</code> 插件将转储已加载的内核模块列表；这在识别活动恶意软件时很有用。但是，如果恶意文件处于空闲等待或隐藏状态，此插件可能会错过它。</p>
+<p>最好在进一步调查并找到潜在指标作为搜索和过滤的输入后使用此插件。</p>
+<p>语法：<code>python3 vol.py -f &lt;file&gt; windows.modules</code></p>
+<p><code>driverscan</code> 插件将在提取时扫描系统中存在的驱动程序。此插件可以帮助识别内核中 <code>modules</code> 插件可能遗漏或隐藏的驱动程序文件。</p>
+<p>与上一个插件一样，再次建议在继续使用此插件之前进行事先调查。还建议在 <code>driverscan</code> 之前查看 <code>modules</code> 插件。</p>
+<p>语法：<code>python3 vol.py -f &lt;file&gt; windows.driverscan</code></p>
+<p>在大多数情况下，<code>driverscan</code> 不会出现任何输出；但是，如果您没有使用 <code>modules</code> 插件找到任何内容，尝试使用此插件会很有用。</p>
+<p>下面还列出了其他插件，它们在尝试寻找内存中的高级恶意软件时会有所帮助。</p>
+<ul>
+<li><code>modscan</code></li>
+<li><code>driverirp</code></li>
+<li><code>callbacks</code></li>
+<li><code>idt</code></li>
+<li><code>apihooks</code></li>
+<li><code>moddump</code></li>
+<li><code>handles</code></li>
+</ul>
+<p>注意：其中一些仅存在于 Volatility2 上或属于第三方插件的一部分。为了充分利用 Volatility，您可能需要转向一些第三方或自定义插件。</p>
+<h1 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h1><p>我们仅介绍了非常薄弱的一层内存取证知识，在分析 Windows、Mac 和 Linux 架构时，可以进行更深入的研究。如果您想深入了解内存取证知识，我建议您阅读：《内存取证艺术》。</p>
+<p>下面还有许多 wiki 和各种社区资源，可用于了解有关 Volatility 技术的更多信息。</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/volatilityfoundation/volatility/wiki">https://github.com/volatilityfoundation/volatility/wiki</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/volatilityfoundation/volatility/wiki/Volatility-Documentation-Projec">https://github.com/volatilityfoundation/volatility/wiki/Volatility-Documentation-Projec</a></li>
+<li><a target="_blank" rel="noopener" href="https://digital-forensics.sans.org/media/Poster-2015-Memory-Forensics.pdf">https://digital-forensics.sans.org/media/Poster-2015-Memory-Forensics.pdf</a></li>
+<li><a target="_blank" rel="noopener" href="https://eforensicsmag.com/finding-advanced-malware-using-volatility/">https://eforensicsmag.com/finding-advanced-malware-using-volatility/</a></li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://mikannse.space">Mikannse</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://mikannse.space/2024/10/22/VolatilityTHM/">http://mikannse.space/2024/10/22/VolatilityTHM/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://mikannse.space" target="_blank">MikannseのSekai</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a><a class="post-meta__tags" href="/tags/%E6%BA%AF%E6%BA%90%E5%8F%96%E8%AF%81/">溯源取证</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2024/10/22/WindowsForensics2THM/" title="WindowsForensics2THM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">WindowsForensics2THM</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/06/15/AdvancedSQLInjectionTHM/" title="AdvancedSQLInjectionTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-06-15</div><div class="title">AdvancedSQLInjectionTHM</div></div></a></div><div><a href="/2024/10/17/THMAutopsy/" title="THMAutopsy"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-17</div><div class="title">THMAutopsy</div></div></a></div><div><a href="/2024/10/18/THMWireshark101/" title="THMWireshark101THM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-18</div><div class="title">THMWireshark101THM</div></div></a></div><div><a href="/2024/06/18/TSharkTheBasicsTHM/" title="TSharkTheBasicsTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-06-18</div><div class="title">TSharkTheBasicsTHM</div></div></a></div><div><a href="/2024/10/21/WindowsForensics1THM/" title="WindowsForensics1THM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-21</div><div class="title">WindowsForensics1THM</div></div></a></div><div><a href="/2024/10/22/WindowsForensics2THM/" title="WindowsForensics2THM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-22</div><div class="title">WindowsForensics2THM</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Mikannse</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">288</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">70</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mikannse/mikannse.github.io"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">暂时没有公告QAQ</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Introduction"><span class="toc-number">1.</span> <span class="toc-text">Introduction</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Volatility-Overview"><span class="toc-number">2.</span> <span class="toc-text">Volatility Overview</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Installing-Volatility"><span class="toc-number">3.</span> <span class="toc-text">Installing Volatility</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Memory-Extraction"><span class="toc-number">4.</span> <span class="toc-text">Memory Extraction</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Plugins-Overview"><span class="toc-number">5.</span> <span class="toc-text">Plugins Overview</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Identifying-Image-Info-and-Profiles"><span class="toc-number">6.</span> <span class="toc-text">Identifying Image Info and Profiles</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Listing-Processes-and-Connections"><span class="toc-number">7.</span> <span class="toc-text">Listing Processes and Connections</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Volatility-Hunting-and-Detection-Capabilities"><span class="toc-number">8.</span> <span class="toc-text">Volatility Hunting and Detection Capabilities</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Advanced-Memory-Forensics"><span class="toc-number">9.</span> <span class="toc-text">Advanced Memory Forensics</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Conclusion"><span class="toc-number">10.</span> <span class="toc-text">Conclusion</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/22/VolatilityTHM/" title="VolatilityTHM">VolatilityTHM</a><time datetime="2024-10-22T15:45:27.000Z" title="发表于 2024-10-22 23:45:27">2024-10-22</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/22/WindowsForensics2THM/" title="WindowsForensics2THM">WindowsForensics2THM</a><time datetime="2024-10-22T14:02:55.000Z" title="发表于 2024-10-22 22:02:55">2024-10-22</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/21/WindowsForensics1THM/" title="WindowsForensics1THM">WindowsForensics1THM</a><time datetime="2024-10-21T13:01:43.000Z" title="发表于 2024-10-21 21:01:43">2024-10-21</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/19/WiresharkTrafficAnalysisTHM/" title="WiresharkTrafficAnalysisTHM">WiresharkTrafficAnalysisTHM</a><time datetime="2024-10-19T07:21:45.000Z" title="发表于 2024-10-19 15:21:45">2024-10-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/18/WiresharkPacketOperationsTHM/" title="WiresharkPacketOperationsTHM">WiresharkPacketOperationsTHM</a><time datetime="2024-10-18T15:53:56.000Z" title="发表于 2024-10-18 23:53:56">2024-10-18</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2024 By Mikannse</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function loadDisqus () {
+  const disqus_config = function () {
+    this.page.url = 'http://mikannse.space/2024/10/22/VolatilityTHM/'
+    this.page.identifier = '/2024/10/22/VolatilityTHM/'
+    this.page.title = 'VolatilityTHM'
+  }
+
+  const disqusReset = () => {
+    DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addModeChange('disqus', disqusReset)
+
+  if (window.DISQUS) disqusReset()
+  else {
+    (function() { 
+      var d = document, s = d.createElement('script');
+      s.src = 'https://.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  }
+}
+
+if ('Valine' === 'Disqus' || !true) {
+  if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+  else loadDisqus()
+} else {
+  function loadOtherComment () {
+    loadDisqus()
+  }
+}
+</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
