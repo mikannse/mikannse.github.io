@@ -1,0 +1,555 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>THMYara | MikannseのSekai</title><meta name="author" content="Mikannse"><meta name="copyright" content="Mikannse"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="Introduction简介 这个房间需要您了解基本的 Linux 知识，例如安装软件和用于系统常规导航的命令。此外，这个房间并非旨在测试您的知识或得分。它旨在鼓励您跟随并尝试您在这里学到的知识。 与往常一样，我希望您从这个房间中学到一些东西，即 Yara（又一个荒谬的缩写）的奇妙之处及其在当今信息安全中的重要性。Yara 由 Victor M. Alvarez (@plusvic) 和 @Vir">
+<meta property="og:type" content="article">
+<meta property="og:title" content="THMYara">
+<meta property="og:url" content="http://mikannse.space/2024/10/31/THMYara/index.html">
+<meta property="og:site_name" content="MikannseのSekai">
+<meta property="og:description" content="Introduction简介 这个房间需要您了解基本的 Linux 知识，例如安装软件和用于系统常规导航的命令。此外，这个房间并非旨在测试您的知识或得分。它旨在鼓励您跟随并尝试您在这里学到的知识。 与往常一样，我希望您从这个房间中学到一些东西，即 Yara（又一个荒谬的缩写）的奇妙之处及其在当今信息安全中的重要性。Yara 由 Victor M. Alvarez (@plusvic) 和 @Vir">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg">
+<meta property="article:published_time" content="2024-10-31T15:46:38.000Z">
+<meta property="article:modified_time" content="2024-10-31T15:58:05.988Z">
+<meta property="article:author" content="Mikannse">
+<meta property="article:tag" content="笔记">
+<meta property="article:tag" content="威胁分析">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg"><link rel="shortcut icon" href="/img/icon.jpg"><link rel="canonical" href="http://mikannse.space/2024/10/31/THMYara/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Mikannse","link":"链接: ","source":"来源: MikannseのSekai","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'THMYara',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: undefined,
+  isToc: true,
+  postUpdate: '2024-10-31 23:58:05'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">291</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">71</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="MikannseのSekai"><span class="site-name">MikannseのSekai</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">THMYara</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-10-31T15:46:38.000Z" title="发表于 2024-10-31 23:46:38">2024-10-31</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-10-31T15:58:05.988Z" title="更新于 2024-10-31 23:58:05">2024-10-31</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BD%91%E5%AE%89/">网安</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">5.2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>18分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="THMYara"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>简介</p>
+<p>这个房间需要您了解基本的 Linux 知识，例如安装软件和用于系统常规导航的命令。此外，这个房间并非旨在测试您的知识或得分。它旨在鼓励您跟随并尝试您在这里学到的知识。</p>
+<p>与往常一样，我希望您从这个房间中学到一些东西，即 Yara（<em>又一个荒谬的缩写</em>）的奇妙之处及其在当今信息安全中的重要性。Yara 由 Victor M. Alvarez (<a target="_blank" rel="noopener" href="https://twitter.com/plusvic">@plusvic</a>) 和 <a target="_blank" rel="noopener" href="https://twitter.com/virustotal">@VirusTotal</a> 开发。查看 GitHub 存储库 <a target="_blank" rel="noopener" href="https://github.com/virustotal/yara">此处</a>。</p>
+<h1 id="What-is-Yara"><a href="#What-is-Yara" class="headerlink" title="What is Yara?"></a>What is Yara?</h1><p>关于 Yara 的一切</p>
+<p><em>“恶意软件研究人员（以及其他所有人）的模式匹配瑞士军刀”（<a target="_blank" rel="noopener" href="https://virustotal.github.io/yara/">Virustotal.，2020</a>)</em></p>
+<p>有了这样一句恰当的引言，Yara 可以根据二进制和文本模式（例如文件中包含的十六进制和字符串）识别信息。</p>
+<p>规则用于标记这些模式。例如，Yara 规则经常被编写为根据文件呈现的特征（或模式）来确定文件是否是恶意的。字符串是编程语言的基本组成部分。应用程序使用字符串来存储文本等数据。</p>
+<p>例如，下面的代码片段在 Python 中打印“Hello World”。文本“Hello World”将存储为字符串。</p>
+<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="string">"Hello World!"</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>如果愿意，我们可以编写一个 Yara 规则，在操作系统的每个程序中搜索“hello world”。</p>
+<p>恶意软件为什么使用字符串？</p>
+<p>恶意软件就像我们的“Hello World”应用程序一样，使用字符串来存储文本数据。以下是各种恶意软件类型在字符串中存储的数据的几个示例：</p>
+<table>
+<thead>
+<tr>
+<th><strong>类型</strong></th>
+<th><strong>数据</strong></th>
+<th><strong>描述</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>勒索软件</td>
+<td><a target="_blank" rel="noopener" href="https://www.blockchain.com/btc/address/12t9YDPgwueZ9NyMgw519p7AA8isjr6SMw">12t9YDPgwueZ9NyMgw519p7AA8isjr6SMw</a></td>
+<td>用于支付赎金的比特币钱包</td>
+</tr>
+<tr>
+<td>僵尸网络</td>
+<td>12.34.56.7</td>
+<td>命令和控制 (C&amp;C) 服务器的 IP 地址</td>
+</tr>
+</tbody></table>
+<p>警告：恶意软件分析</p>
+<h1 id="Introduction-to-Yara-Rules"><a href="#Introduction-to-Yara-Rules" class="headerlink" title="Introduction to Yara Rules"></a>Introduction to Yara Rules</h1><p>您的第一条 Yara 规则</p>
+<p>Yara 用于规则的专有语言相当容易掌握，但很难掌握。这是因为您的规则的有效性取决于您对要搜索的模式的理解。</p>
+<p>使用 Yara 规则很简单。每个 <code>yara</code> 命令都需要两个参数才能有效，它们是：<br><strong>1)</strong> 我们创建的规则文件<br><strong>2)</strong> 要使用该规则的文件、目录或进程 ID 的名称。</p>
+<p>每条规则都必须有名称和条件。</p>
+<p>例如，如果我们想在目录“some directory”上使用“myrule.yar”，我们将使用以下命令：<br><code>yara myrule.yar somedirectory</code></p>
+<p>请注意，**.yar** 是所有 Yara 规则的标准文件扩展名。我们将在下面制定您可以制定的最基本的规则之一。</p>
+<ol>
+<li>通过 <code>touch somefile</code> 创建一个名为“<strong>somefile</strong>”的文件</li>
+<li>创建一个新文件并将其命名为“<strong>myfirstrule.yar</strong>”，如下所示：</li>
+</ol>
+<p>创建一个名为 somefile 的文件</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">cmnatic@thm:~$ touch somefile</span><br></pre></td></tr></tbody></table></figure>
+
+<p>创建名为 myfirstrule.yar 的文件</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">cmnatic@thm touch myfirstrule.yar</span><br></pre></td></tr></tbody></table></figure>
+
+<ol start="3">
+<li>使用文本编辑器（例如“nano”）打开“myfirstrule.yar”，输入以下代码片段并保存文件：</li>
+</ol>
+<figure class="highlight yaml"><table><tbody><tr><td class="code"><pre><span class="line"><span class="string">rule</span> <span class="string">examplerule</span> {</span><br><span class="line">        <span class="attr">condition:</span> <span class="literal">true</span></span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>使用 nano 将我们的第一个代码片段输入到“myfirstrule.yar”中</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">cmnatic@thm nano myfirstrule.yar   GNU nano 4.8 myfirstrule.yar Modified</span><br><span class="line">rule examplerule {</span><br><span class="line">        condition: true</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>此代码片段中规则的<strong>名称</strong>是<code>examplerule</code>，其中我们有一个条件 - 在这种情况下，<strong>条件</strong>是<code>condition</code>。如前所述，每个规则都需要名称和条件才能有效。此规则满足了这两个要求。</p>
+<p>简单来说，我们制定的规则通过<code>condition: true</code>检查我们指定的文件/目录/PID是否存在。如果文件确实存在，我们将得到<code>examplerule</code>的输出</p>
+<p>让我们在第一步中创建的文件<strong>“somefile”</strong>上尝试一下：<br><code>yara myfirstrule.yar somefile</code></p>
+<p>如果“somefile”存在，Yara 会说<code>examplerule</code>，因为模式已经满足 - 如下所示：</p>
+<p>验证我们的 examplerule 是否正确</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">cmnatic@thm:~$ yara myfirstrule.yar somefile </span><br><span class="line">examplerule somefile</span><br></pre></td></tr></tbody></table></figure>
+
+<p>如果文件不存在，Yara 将输出如下错误：</p>
+<p>Yara 抱怨文件不存在</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">cmnatic@thm:~$ yara myfirstrule.yar sometextfile</span><br><span class="line">error scanning sometextfile: could not open file</span><br></pre></td></tr></tbody></table></figure>
+
+<p>恭喜！您已制定第一条规则。</p>
+<h1 id="Expanding-on-Yara-Rules"><a href="#Expanding-on-Yara-Rules" class="headerlink" title="Expanding on Yara Rules"></a>Expanding on Yara Rules</h1><h2 id="Yara-Conditions-Continued…"><a href="#Yara-Conditions-Continued…" class="headerlink" title="Yara Conditions Continued…"></a>Yara Conditions Continued…</h2><p>检查文件是否存在并没有多大帮助。毕竟，我们可以自己弄清楚……使用更好的工具来完成这项工作。</p>
+<p>Yara 有一些条件，我鼓励您在闲暇时阅读。不过，我将在下面详细介绍一些条件并解释它们的用途。</p>
+<table>
+<thead>
+<tr>
+<th align="center">KeyWord</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Desc</td>
+</tr>
+<tr>
+<td align="center">Meta</td>
+</tr>
+<tr>
+<td align="center">Strings</td>
+</tr>
+<tr>
+<td align="center">Conditions</td>
+</tr>
+<tr>
+<td align="center">Weight</td>
+</tr>
+</tbody></table>
+<h2 id="Meta"><a href="#Meta" class="headerlink" title="Meta"></a>Meta</h2><p>Yara 规则的此部分由规则作者保留，用于描述信息。例如，您可以使用 desc（description 的缩写）来总结规则检查的内容。此部分中的任何内容都不会影响规则本身。与注释代码类似，总结规则很有用。</p>
+<h2 id="Strings"><a href="#Strings" class="headerlink" title="Strings"></a>Strings</h2><p>还记得我们在任务 2 中讨论过的字符串吗？好了，我们开始吧。您可以使用字符串在文件或程序中搜索特定文本或十六进制。例如，假设我们想在目录中搜索所有包含“Hello World！”的文件，我们将创建如下规则：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">rule helloworld_checker{</span><br><span class="line">	strings:</span><br><span class="line">		$hello_world = "Hello World!"</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们定义关键字 Strings，其中我们要搜索的字符串，即“Hello World！”存储在变量 $hello_world 中</p>
+<p>当然，我们需要一个条件来使规则有效。在此示例中，要使此字符串成为条件，我们需要使用变量的名称。在本例中为 $hello_world：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">rule helloworld_checker{</span><br><span class="line">	strings:</span><br><span class="line">		$hello_world = "Hello World!"</span><br><span class="line"></span><br><span class="line">	condition:</span><br><span class="line">		$hello_world</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>本质上，如果任何文件包含字符串“Hello World!”，则规则将匹配。但是，这实际上是说，只有找到“Hello World!”时才会匹配，而“hello world”或“HELLO WORLD”则不会匹配。</p>
+<p>为了解决这个问题，条件 any of them 允许搜索多个字符串，如下所示：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">rule helloworld_checker{</span><br><span class="line">	strings:</span><br><span class="line">		$hello_world = "Hello World!"</span><br><span class="line">		$hello_world_lowercase = "hello world"</span><br><span class="line">		$hello_world_uppercase = "HELLO WORLD"</span><br><span class="line"></span><br><span class="line">condition:</span><br><span class="line">	any of them</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>现在，任何包含以下字符串的文件：</p>
+<ol>
+<li>Hello World!</li>
+<li>hello world</li>
+<li>HELLO WORLD</li>
+</ol>
+<p>现在将触发规则。</p>
+<h2 id="Conditions"><a href="#Conditions" class="headerlink" title="Conditions"></a>Conditions</h2><p>我们已经使用了 true 和 any of them 条件。与常规编程非常相似，您可以使用以下运算符：</p>
+<blockquote>
+<p>&lt;= less than or equal to</p>
+<blockquote>
+<p>= more than or equal to<br>!= not equal to</p>
+</blockquote>
+</blockquote>
+<p>例如，下面的规则将执行以下操作：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">rule helloworld_checker{</span><br><span class="line">	strings:</span><br><span class="line">		$hello_world = "Hello World!"</span><br><span class="line">condition:</span><br><span class="line">    #hello_world &lt;= 10</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>该规则现在将：</p>
+<ol>
+<li>查找“Hello World！”字符串</li>
+<li>仅当“Hello World！”字符串出现次数小于或等于 10 次时，规则才匹配</li>
+</ol>
+<h2 id="Combining-keywords"><a href="#Combining-keywords" class="headerlink" title="Combining keywords"></a>Combining keywords</h2><p>此外，您还可以使用以下关键字：</p>
+<p>and<br>not<br>or </p>
+<p>组合多个条件。假设您想检查某个文件是否包含字符串且大小为特定值（在此示例中，我们检查的样本文件小于 &lt;10 kb 且包含“Hello World！”，您可以使用如下规则：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">rule helloworld_checker{</span><br><span class="line">	strings:</span><br><span class="line">		$hello_world = "Hello World!" </span><br><span class="line">        </span><br><span class="line">        condition:</span><br><span class="line">	        $hello_world and filesize &lt; 10KB </span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>只有当两个条件都为真时，规则才会匹配。举例来说：下面，我们在本例中创建的规则不匹配，因为虽然文件包含“Hello World！”，但文件大小大于 10KB：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">cmnatic@thm:~$ &lt;output intentionally left blank&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>但是，这次规则匹配，因为该文件既有“Hello World！”，又有小于 10KB 的文件大小。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">cmnatic@thm:~$ yara myfirstrule.yar mytextfile.txt</span><br><span class="line">helloworld_textfile_checker mytextfile.txt</span><br></pre></td></tr></tbody></table></figure>
+
+<p>记住红色框内的文本是我们规则的名称，绿色框内的文本是匹配的文件。</p>
+<h2 id="Anatomy-of-a-Yara-Rule"><a href="#Anatomy-of-a-Yara-Rule" class="headerlink" title="Anatomy of a Yara Rule"></a>Anatomy of a Yara Rule</h2><p><img src="https://miro.medium.com/max/875/1*gThGNPenpT-AS-gjr8JCtA.png"></p>
+<p>信息安全研究员“fr0gger_”最近创建了一个方便的备忘单，分解并可视化了 YARA 规则的元素（如上所示，所有图片均归他所有）。这是入门的绝佳参考点！</p>
+<h1 id="Yara-Modules"><a href="#Yara-Modules" class="headerlink" title="Yara Modules"></a>Yara Modules</h1><p>与其他库集成<br>诸如 Cuckoo Sandbox 或 Python 的 PE 模块之类的框架可让您将 Yara 规则的技术性提高十倍。</p>
+<p>Cuckoo<br>Cuckoo Sandbox 是一个自动化的恶意软件分析环境。此模块允许您根据从 Cuckoo Sandbox 发现的行为生成 Yara 规则。当此环境执行恶意软件时，您可以针对特定行为（例如运行时字符串等）创建规则。</p>
+<p>Python PE<br>Python 的 PE 模块允许您从 Windows 可移植可执行 (PE) 结构的各个部分和元素创建 Yara 规则。</p>
+<p>解释此结构超出了范围，因为它已在我的恶意软件介绍室中介绍。但是，此结构是 Windows 上所有可执行文件和 DLL 文件的标准格式。包括使用的编程库。</p>
+<p>检查 PE 文件的内容是恶意软件分析中的一项基本技术；这是因为无需逆向工程或执行样本就可以在很大程度上识别诸如加密或蠕虫之类的行为。</p>
+<h1 id="Other-tools-and-Yara"><a href="#Other-tools-and-Yara" class="headerlink" title="Other tools and Yara"></a>Other tools and Yara</h1><h2 id="Yara-Tools"><a href="#Yara-Tools" class="headerlink" title="Yara Tools"></a>Yara Tools</h2><p>了解如何创建自定义 Yara 规则很有用，但幸运的是，您不必从头开始创建许多规则即可开始使用 Yara 搜索邪恶。有大量 GitHub <a target="_blank" rel="noopener" href="https://github.com/InQuest/awesome-yara">资源</a>和开源工具（以及商业产品）可用于在搜索操作和/或事件响应活动中利用 Yara。</p>
+<h2 id="LOKI-What-not-who-is-Loki"><a href="#LOKI-What-not-who-is-Loki" class="headerlink" title="LOKI (What, not who, is Loki?)"></a>LOKI (What, not who, is Loki?)</h2><p>LOKI 是一款免费的开源 IOC（入侵指标）扫描器，由 Florian Roth 创建/编写。</p>
+<p>根据 GitHub 页面，检测基于 4 种方法：</p>
+<p>文件名 IOC 检查<br>Yara 规则检查（我们在这里）<br>哈希检查<br>C2 反向连接检查<br>LOKI 还可用于其他检查。有关完整概述，请参考 GitHub <a target="_blank" rel="noopener" href="https://github.com/Neo23x0/Loki/blob/master/README.md">自述文件</a>。</p>
+<p>LOKI 可在 Windows 和 Linux 系统上使用，可在<a target="_blank" rel="noopener" href="https://github.com/Neo23x0/Loki/releases">此处</a>下载。</p>
+<p>请注意，您不应在此房间使用此工具。</p>
+<p>显示 Loki 的帮助菜单</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">cmnatic@thm:~/Loki$ python3 loki.py -h</span><br><span class="line">usage: loki.py [-h] [-p path] [-s kilobyte] [-l log-file] [-r remote-loghost]</span><br><span class="line">               [-t remote-syslog-port] [-a alert-level] [-w warning-level]</span><br><span class="line">               [-n notice-level] [--allhds] [--alldrives] [--printall]</span><br><span class="line">               [--allreasons] [--noprocscan] [--nofilescan] [--vulnchecks]</span><br><span class="line">               [--nolevcheck] [--scriptanalysis] [--rootkit] [--noindicator]</span><br><span class="line">               [--dontwait] [--intense] [--csv] [--onlyrelevant] [--nolog]</span><br><span class="line">               [--update] [--debug] [--maxworkingset MAXWORKINGSET]</span><br><span class="line">               [--syslogtcp] [--logfolder log-folder] [--nopesieve]</span><br><span class="line">               [--pesieveshellc] [--python PYTHON] [--nolisten]</span><br><span class="line">               [--excludeprocess EXCLUDEPROCESS] [--force]</span><br><span class="line"></span><br><span class="line">Loki - Simple IOC Scanner</span><br><span class="line"></span><br><span class="line">optional arguments:</span><br><span class="line">  -h, --help            show this help message and exit</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="THOR-superhero-named-programs-for-a-superhero-blue-teamer"><a href="#THOR-superhero-named-programs-for-a-superhero-blue-teamer" class="headerlink" title="THOR (superhero named programs for a superhero blue teamer)"></a>THOR (superhero named programs for a superhero blue teamer)</h2><p>THOR Lite 是 Florian 最新的多平台 IOC 和 YARA 扫描器。它有适用于 Windows、Linux 和 macOS 的预编译版本。THOR Lite 的一个不错的功能是它的扫描节流功能，可以限制耗尽的 CPU 资源。如需更多信息和/或下载二进制文件，请从此处开始。您需要订阅他们的邮件列表才能获得二进制文件的副本。请注意，THOR 面向企业客户。THOR Lite 是免费版本。</p>
+<p>请注意，您不应在此房间中使用此工具。</p>
+<p>Displaying Thor Lite’s help menu</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">cmnatic@thm:~$ ./thor-lite-linux-64 -h</span><br><span class="line">Thor Lite</span><br><span class="line">APT Scanner</span><br><span class="line">Version 10.7.3 (2022-07-27 07:33:47)</span><br><span class="line">cc) Nextron Systems GmbH</span><br><span class="line">Lite Version</span><br><span class="line"></span><br><span class="line">&gt; Scan Options</span><br><span class="line">  -t, --template string      Process default scan parameters from this YAML file</span><br><span class="line">  -p, --path strings         Scan a specific file path. Define multiple paths by specifying this option multiple times. Append ':NOWALK' to the path for non-recursive scanning (default: only the system drive) (default [])</span><br><span class="line">      --allhds               (Windows Only) Scan all local hard drives (default: only the system drive)</span><br><span class="line">      --max_file_size uint   Max. file size to check (larger files are ignored). Increasing this limit will also increase memory usage of THOR. (default 30MB)</span><br><span class="line"></span><br><span class="line">&gt; Scan Modes</span><br><span class="line">      --quick     Activate a number of flags to speed up the scan at cost of some detection.</span><br><span class="line">                  This is equivalent to: --noeventlog --nofirewall --noprofiles --nowebdirscan --nologscan --noevtx --nohotfixes --nomft --lookback 3 --lookback-modules filescan</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="FENRIR-naming-convention-still-mythical-themed"><a href="#FENRIR-naming-convention-still-mythical-themed" class="headerlink" title="FENRIR (naming convention still mythical themed)"></a>FENRIR (naming convention still mythical themed)</h2><p>这是 Neo23x0 (Florian Roth) 创建的第三个工具。您猜对了；前两个工具已在上面列出。更新版本是为了解决其前身的问题而创建的，即必须满足要求才能运行。Fenrir 是一个 bash 脚本；它可以在任何能够运行 bash 的系统上运行（如今甚至包括 Windows）。</p>
+<p>请注意，您不应在此房间中使用此工具。</p>
+<p>Running Fenrir</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">cmnatic@thm-yara:~/tools$ ./fenrir.sh</span><br><span class="line">##############################################################</span><br><span class="line">    ____             _</span><br><span class="line">   / __/__ ___  ____(_)___</span><br><span class="line">  / _// -_) _ \/ __/ / __/</span><br><span class="line"> /_/  \__/_//_/_/ /_/_/</span><br><span class="line"> v0.9.0-log4shell</span><br><span class="line"></span><br><span class="line"> Simple Bash IOC Checker</span><br><span class="line"> Florian Roth, Dec 2021</span><br><span class="line">##############################################################</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="YAYA-Yet-Another-Yara-Automaton"><a href="#YAYA-Yet-Another-Yara-Automaton" class="headerlink" title="YAYA (Yet Another Yara Automaton)"></a>YAYA (Yet Another Yara Automaton)</h2><p>YAYA 由 EFF（电子前沿基金会）创建，并于 2020 年 9 月发布。根据其网站，“YAYA 是一款新的开源工具，可帮助研究人员管理多个 YARA 规则存储库。YAYA 首先导入一组高质量的 YARA 规则，然后让研究人员添加自己的规则、禁用特定规则集并运行文件扫描。”</p>
+<p>注意：目前，YAYA 只能在 Linux 系统上运行。</p>
+<p>Running YAYA</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">cmnatic@thm-yara:~/tools$ yaya</span><br><span class="line">YAYA - Yet Another Yara Automaton</span><br><span class="line">Usage:</span><br><span class="line">yaya [-h]  </span><br><span class="line">    -h print this help screen</span><br><span class="line">Commands:</span><br><span class="line">   update - update rulesets</span><br><span class="line">   edit - ban or remove rulesets</span><br><span class="line">   add - add a custom ruleset, located at </span><br><span class="line">   scan - perform a yara scan on the directory at </span><br></pre></td></tr></tbody></table></figure>
+
+<p>在下一节中，我们将进一步研究 LOKI……</p>
+<h1 id="Using-LOKI-and-its-Yara-rule-set"><a href="#Using-LOKI-and-its-Yara-rule-set" class="headerlink" title="Using LOKI and its Yara rule set"></a>Using LOKI and its Yara rule set</h1><h2 id="Using-LOKI"><a href="#Using-LOKI" class="headerlink" title="Using LOKI"></a>Using LOKI</h2><p>作为一名安全分析师，您可能需要研究各种威胁情报报告、博客文章等，并收集有关过去或现在在野使用的最新策略和技术的信息。通常在这些读数中，IOC（哈希、IP 地址、域名等）将被共享，以便可以创建规则来检测您环境中的这些威胁以及 Yara 规则。另一方面，您可能会发现自己遇到未知的情况，而您的安全工具堆栈无法/没有检测到。使用 Loki 等工具，您需要根据您的威胁情报收集或事件响应参与（取证）的发现添加自己的规则。</p>
+<p>如前所述，Loki 已经有一套 Yara 规则，我们可以从中受益并立即开始扫描端点上的邪恶。</p>
+<p>Loki 位于<code>tools</code>中。</p>
+<p>Listing the tools directory</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">cmnatic@thm-yara:~/tools$ ls</span><br><span class="line">Loki  yarGen</span><br></pre></td></tr></tbody></table></figure>
+
+<p>导航到“Loki”目录。运行“python loki.py -h”以查看可用的选项。</p>
+<p>如果您在自己的系统上运行 Loki，则应运行的第一个命令是“–update”。这将添加“signature-base”目录，Loki 使用该目录扫描已知恶意程序。此命令已在附加的 VM 中执行。</p>
+<p>列出 Loki signature-base 目录</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">cmnatic@thm-yara:~/tools/Loki/signature-base$ ls</span><br><span class="line">iocs  misc  yara</span><br></pre></td></tr></tbody></table></figure>
+
+<p>导航到“yara”目录。请随意检查 Loki 使用的不同 Yara 文件，以了解这些规则将寻找什么。</p>
+<p>要运行 Loki，您可以使用以下命令（请注意，我是在文件 1 目录中调用 Loki）</p>
+<p>指示 Loki 扫描可疑文件</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">cmnatic@thm-yara:~/suspicious-files/file1$ python ../../tools/Loki/loki.py -p .</span><br></pre></td></tr></tbody></table></figure>
+
+<p>场景：您是一家中型律师事务所的安全分析师。一位同事在您组织的 Web 服务器上发现了可疑文件。这些文件是在对公司网站进行更新时发现的。这些文件已复制到您的计算机进行分析。这些文件位于“可疑文件”目录中。使用 Loki 回答以下问题。</p>
+<h1 id="Creating-Yara-rules-with-yarGen"><a href="#Creating-Yara-rules-with-yarGen" class="headerlink" title="Creating Yara rules with yarGen"></a>Creating Yara rules with yarGen</h1><h2 id="Creating-Yara-rules-with-yarGen-1"><a href="#Creating-Yara-rules-with-yarGen-1" class="headerlink" title="Creating Yara rules with yarGen"></a>Creating Yara rules with yarGen</h2><p>从上一节中，我们意识到我们有一个 Loki 没有标记的文件。此时，我们无法在其他 Web 服务器上运行 Loki，因为如果文件 2 存在于任何 Web 服务器中，它将不会被检测到。</p>
+<p>我们需要创建一个 Yara 规则来检测我们环境中的这个特定 Web Shell。通常，这是在发生事件时所做的，事件是对组织产生负面影响的事件。</p>
+<p>我们可以手动打开文件并尝试筛选一行又一行的代码，以找到可以在我们新创建的 Yara 规则中使用的可能的字符串。</p>
+<p>让我们检查一下这个特定文件有多少行。您可以运行以下命令：<code>strings &lt;file name&gt; | wc -l</code>。</p>
+<p>Using wc to count the amount of lines in the file</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">cmnatic@thm-yara:~/suspicious-files/file2$ strings 1ndex.php | wc -l</span><br><span class="line">3580</span><br></pre></td></tr></tbody></table></figure>
+
+<p>如果您尝试手动逐行检查每个字符串，您很快就会意识到这是一项艰巨的任务。</p>
+<p>Catting the output of 1ndex.php</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">if(res=='error'){</span><br><span class="line">$('.ulProgress'+ulType+i).html('( failed )');</span><br><span class="line">}</span><br><span class="line">else{</span><br><span class="line">$('.ulRes'+ulType+i).html(res);</span><br><span class="line">}</span><br><span class="line">loading_stop();</span><br><span class="line">},</span><br><span class="line">error: function(){</span><br><span class="line">loading_stop();</span><br><span class="line">$('.ulProgress'+ulType+i).html('( failed )');</span><br><span class="line">$('.ulProgress'+ulType+i).removeClass('ulProgress'+ulType+i);</span><br><span class="line">$('.ulFilename'+ulType+i).removeClass('ulFilename'+ulType+i);</span><br><span class="line">}</span><br><span class="line">});</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line">function ul_go(ulType){</span><br><span class="line">ulFile = (ulType=='comp')? $('.ulFileComp'):$('.ulFileUrl');</span><br><span class="line">ulResult = (ulType=='comp')? $('.ulCompResult'):$('.ulUrlResult');</span><br><span class="line">ulResult.html('');</span><br><span class="line"></span><br><span class="line">ulFile.each(function(i){</span><br><span class="line">if(((ulType=='comp')&amp;&amp;this.files[0])||((ulType=='url')&amp;&amp;(this.value!=''))){</span><br><span class="line">file = (ulType=='comp')? this.files[0]: this.value;</span><br><span class="line">filename = (ulType=='comp')? file.name: file.substring(file.lastIndexOf('/')+1);</span><br><span class="line"></span><br><span class="line">ulSaveTo = (ulType=='comp')? $('.ulSaveToComp')[i].value:$('.ulSaveToUrl')[i].value;</span><br><span class="line">ulFilename = (ulType=='comp')? $('.ulFilenameComp')[i].value:$('.ulFilenameUrl')[i].value;</span><br><span class="line"></span><br><span class="line">--snippet cropped for brevity--</span><br></pre></td></tr></tbody></table></figure>
+
+<p>幸运的是，我们可以使用 <a target="_blank" rel="noopener" href="https://github.com/Neo23x0/yarGen">yarGen</a>（是的，Florian Roth 创建的另一个工具）来帮助我们完成这项任务。</p>
+<p>什么是 yarGen？yarGen 是 YARA 规则的生成器。</p>
+<p>来自 README - “主要原则是从恶意软件文件中找到的字符串创建 yara 规则，同时删除所有也出现在 goodware 文件中的字符串。因此，yarGen 包含一个大型 goodware 字符串和操作码数据库作为 ZIP 存档，必须在第一次使用前提取。”</p>
+<p>导航到工具内的 yarGen 目录。如果您在自己的系统上运行 yarGen，则需要先通过运行以下命令来更新它：python3 yarGen.py –update。</p>
+<p>这将从在线存储库更新 good-opcodes 和 good-strings DB。此更新将需要几分钟。</p>
+<p>成功更新后，您将在输出末尾看到以下消息。</p>
+<p>Updating yarGen</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">cmnatic@thm-yara:~/tools/yarGen$ python3 yarGen.py --update</span><br><span class="line">------------------------------------------------------------------------</span><br><span class="line">                   _____</span><br><span class="line">    __ _____ _____/ ___/__ ___</span><br><span class="line">   / // / _ `/ __/ (_ / -_) _ \</span><br><span class="line">   \_, /\_,_/_/  \___/\__/_//_/</span><br><span class="line">  /___/  Yara Rule Generator</span><br><span class="line">         Florian Roth, July 2020, Version 0.23.3</span><br><span class="line"></span><br><span class="line">  Note: Rules have to be post-processed</span><br><span class="line">  See this post for details: https://medium.com/@cyb3rops/121d29322282</span><br><span class="line">------------------------------------------------------------------------</span><br><span class="line">Downloading good-opcodes-part1.db from https://www.bsk-consulting.de/yargen/good-opcodes-part1.db ...</span><br></pre></td></tr></tbody></table></figure>
+
+<p>要使用 yarGen 为文件 2 生成 Yara 规则，可以运行以下命令：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">python3 yarGen.py -m /home/cmnatic/suspicious-files/file2 --excludegood -o /home/cmnatic/suspicious-files/file2.yar </span><br></pre></td></tr></tbody></table></figure>
+
+<p>上述参数的简要说明：</p>
+<p><code>-m</code> 是要为其生成规则的文件的路径</p>
+<p><code>--excludegood</code> 强制排除所有 goodware 字符串（这些字符串是在合法软件中找到的，可能会增加误报）</p>
+<p><code>-o</code> 您要输出 Yara 规则的位置和名称</p>
+<p>如果一切顺利，您应该会看到以下输出。</p>
+<p>使用 yarGen 为 file2 生成规则</p>
+<pre><code>       [=] Generated 1 SIMPLE rules.
+       [=] All rules written to /home/cmnatic/suspicious-files/file2.yar
+       [+] yarGen run finished
+</code></pre>
+<p>通常，您会检查 Yara 规则并删除您认为可能产生误报的任何字符串。对于本练习，我们将保留生成的 Yara 规则并测试 Yara 是否会标记文件 2。</p>
+<p>注意：为协助此操作而创建的另一个工具称为 yarAnalyzer（您猜对了 - 由 Florian Roth 创建）。我们不会在本房间中检查该工具，但您应该阅读它，特别是如果您决定开始创建自己的 Yara 规则。</p>
+<p>关于创建 Yara 规则和使用 yarGen 的进一步阅读：</p>
+<p><a target="_blank" rel="noopener" href="https://www.bsk-consulting.de/2015/02/16/write-simple-sound-yara-rules/">https://www.bsk-consulting.de/2015/02/16/write-simple-sound-yara-rules/</a><br><a target="_blank" rel="noopener" href="https://www.bsk-consulting.de/2015/10/17/how-to-write-simple-but-sound-yara-rules-part-2/">https://www.bsk-consulting.de/2015/10/17/how-to-write-simple-but-sound-yara-rules-part-2/</a><br><a target="_blank" rel="noopener" href="https://www.bsk-consulting.de/2016/04/15/how-to-write-simple-but-sound-yara-rules-part-3/">https://www.bsk-consulting.de/2016/04/15/how-to-write-simple-but-sound-yara-rules-part-3/</a></p>
+<h1 id="Valhalla"><a href="#Valhalla" class="headerlink" title="Valhalla"></a>Valhalla</h1><h2 id="Valhalla-1"><a href="#Valhalla-1" class="headerlink" title="Valhalla"></a>Valhalla</h2><p>“Valhalla” 是一个由 <a target="_blank" rel="noopener" href="https://www.nextron-systems.com/valhalla/">Nextron-Systems</a>（呃，Florian Roth）创建和托管的在线 Yara 源。现在，您应该知道 Florian 为社区创建这些工具投入了大量的时间和精力。也许我们应该把它称为 Florian Roth 房间。（哈哈）</p>
+<p>根据网站，“Valhalla 利用数千条手工制作的高质量 YARA 规则来增强您的检测能力。”</p>
+<p><img src="https://assets.tryhackme.com/additional/yara/yara13.png"></p>
+<p>从上图可以看出，我们可以根据关键字、标签、ATT&amp;CK 技术、sha256 或规则名称进行搜索。</p>
+<p>注意：有关 ATT&amp;CK 的更多信息，请访问 <a target="_blank" rel="noopener" href="https://tryhackme.com/room/mitre">MITRE</a> 房间。</p>
+<p>看看提供给我们的数据，让我们检查下面屏幕截图中的规则：</p>
+<p><img src="https://assets.tryhackme.com/additional/yara/yara14.png"></p>
+<p>我们获得了规则的名称、简要说明、有关规则的更多信息的参考链接以及规则日期。</p>
+<p>请随意查看一些规则以熟悉 Valhalla 的实用性。学习该产品的最佳方式是直接开始。</p>
+<p>从我们的场景中可以看出，此时，您知道这两个文件是相关的。即使 Loki 将文件归类为可疑文件，但您内心知道它们是恶意的。因此，您使用 yarGen 创建了 Yara 规则以在其他 Web 服务器上检测它。但让我们进一步假装您不懂代码（仅供参考 - 并非所有安全专业人员都知道如何编写代码/脚本或阅读它）。您需要对这些文件进行进一步研究，以获得从网络中删除这些文件的批准。</p>
+<p>是时候使用 Valhalla 进行一些威胁情报收集了……</p>
+<h1 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h1><p>在这个房间里，我们探索了 Yara、如何使用 Yara，并手动创建了基本的 Yara 规则。我们还探索了各种开源工具，以便立即开始使用 Yara 规则来检测端点上的邪恶行为。</p>
+<p>通过房间场景，您应该了解（作为蓝队成员）如果我们依赖此类工具，需要知道如何有效地创建 Yara 规则。商业产品虽然并不完美，但其 Yara 规则集将比开源产品丰富得多。商业和开源产品都允许您添加 Yara 规则以进一步扩展其检测威胁的能力。</p>
+<p>如果不清楚，文件 2 未被检测到的原因是 Yara 规则不在 Loki 用于检测黑客工具（Web Shell）的 Yara 文件中，尽管该黑客工具已经存在多年，甚至被归因于至少一个民族国家。Yara 规则存在于 Loki 的商业变体中，即 Thor。</p>
+<p>Yara 和 Yara 规则可以做更多的事情。我们鼓励您在闲暇时进一步探索此工具。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://mikannse.space">Mikannse</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://mikannse.space/2024/10/31/THMYara/">http://mikannse.space/2024/10/31/THMYara/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://mikannse.space" target="_blank">MikannseのSekai</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a><a class="post-meta__tags" href="/tags/%E5%A8%81%E8%83%81%E5%88%86%E6%9E%90/">威胁分析</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2024/10/28/THMMITRE/" title="THMMITRE"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">THMMITRE</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/07/19/CSS%E9%9A%8F%E6%89%8B%E8%AE%B0/" title="CSS随手记"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-19</div><div class="title">CSS随手记</div></div></a></div><div><a href="/2024/06/15/AdvancedSQLInjectionTHM/" title="AdvancedSQLInjectionTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-06-15</div><div class="title">AdvancedSQLInjectionTHM</div></div></a></div><div><a href="/2024/03/14/ContainerVulnerabilitiesTHM/" title="ContainerVulnerabilitiesTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-03-14</div><div class="title">ContainerVulnerabilitiesTHM</div></div></a></div><div><a href="/2024/10/05/Git%E9%80%9F%E6%88%90/" title="Git速成"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-05</div><div class="title">Git速成</div></div></a></div><div><a href="/2023/11/17/Cross-Site%20Scripting%20(XSS)HTB/" title="Cross-Site Scripting (XSS)HTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-17</div><div class="title">Cross-Site Scripting (XSS)HTB</div></div></a></div><div><a href="/2024/07/11/HMVLabsTemperanceX11-20/" title="HMVLabsTemperanceX11-20"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-11</div><div class="title">HMVLabsTemperanceX11-20</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Mikannse</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">291</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">71</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mikannse/mikannse.github.io"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">暂时没有公告QAQ</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Introduction"><span class="toc-number">1.</span> <span class="toc-text">Introduction</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#What-is-Yara"><span class="toc-number">2.</span> <span class="toc-text">What is Yara?</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Introduction-to-Yara-Rules"><span class="toc-number">3.</span> <span class="toc-text">Introduction to Yara Rules</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Expanding-on-Yara-Rules"><span class="toc-number">4.</span> <span class="toc-text">Expanding on Yara Rules</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Yara-Conditions-Continued%E2%80%A6"><span class="toc-number">4.1.</span> <span class="toc-text">Yara Conditions Continued…</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Meta"><span class="toc-number">4.2.</span> <span class="toc-text">Meta</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Strings"><span class="toc-number">4.3.</span> <span class="toc-text">Strings</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Conditions"><span class="toc-number">4.4.</span> <span class="toc-text">Conditions</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Combining-keywords"><span class="toc-number">4.5.</span> <span class="toc-text">Combining keywords</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Anatomy-of-a-Yara-Rule"><span class="toc-number">4.6.</span> <span class="toc-text">Anatomy of a Yara Rule</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Yara-Modules"><span class="toc-number">5.</span> <span class="toc-text">Yara Modules</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Other-tools-and-Yara"><span class="toc-number">6.</span> <span class="toc-text">Other tools and Yara</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Yara-Tools"><span class="toc-number">6.1.</span> <span class="toc-text">Yara Tools</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#LOKI-What-not-who-is-Loki"><span class="toc-number">6.2.</span> <span class="toc-text">LOKI (What, not who, is Loki?)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#THOR-superhero-named-programs-for-a-superhero-blue-teamer"><span class="toc-number">6.3.</span> <span class="toc-text">THOR (superhero named programs for a superhero blue teamer)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#FENRIR-naming-convention-still-mythical-themed"><span class="toc-number">6.4.</span> <span class="toc-text">FENRIR (naming convention still mythical themed)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#YAYA-Yet-Another-Yara-Automaton"><span class="toc-number">6.5.</span> <span class="toc-text">YAYA (Yet Another Yara Automaton)</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Using-LOKI-and-its-Yara-rule-set"><span class="toc-number">7.</span> <span class="toc-text">Using LOKI and its Yara rule set</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Using-LOKI"><span class="toc-number">7.1.</span> <span class="toc-text">Using LOKI</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Creating-Yara-rules-with-yarGen"><span class="toc-number">8.</span> <span class="toc-text">Creating Yara rules with yarGen</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Creating-Yara-rules-with-yarGen-1"><span class="toc-number">8.1.</span> <span class="toc-text">Creating Yara rules with yarGen</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Valhalla"><span class="toc-number">9.</span> <span class="toc-text">Valhalla</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Valhalla-1"><span class="toc-number">9.1.</span> <span class="toc-text">Valhalla</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Conclusion"><span class="toc-number">10.</span> <span class="toc-text">Conclusion</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/31/THMYara/" title="THMYara">THMYara</a><time datetime="2024-10-31T15:46:38.000Z" title="发表于 2024-10-31 23:46:38">2024-10-31</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/28/THMMITRE/" title="THMMITRE">THMMITRE</a><time datetime="2024-10-28T06:13:32.000Z" title="发表于 2024-10-28 14:13:32">2024-10-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/26/VolatilityCheatSheet/" title="VolatilityCheatSheet">VolatilityCheatSheet</a><time datetime="2024-10-26T11:44:13.000Z" title="发表于 2024-10-26 19:44:13">2024-10-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/22/VolatilityTHM/" title="VolatilityTHM">VolatilityTHM</a><time datetime="2024-10-22T15:45:27.000Z" title="发表于 2024-10-22 23:45:27">2024-10-22</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/22/WindowsForensics2THM/" title="WindowsForensics2THM">WindowsForensics2THM</a><time datetime="2024-10-22T14:02:55.000Z" title="发表于 2024-10-22 22:02:55">2024-10-22</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2024 By Mikannse</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function loadDisqus () {
+  const disqus_config = function () {
+    this.page.url = 'http://mikannse.space/2024/10/31/THMYara/'
+    this.page.identifier = '/2024/10/31/THMYara/'
+    this.page.title = 'THMYara'
+  }
+
+  const disqusReset = () => {
+    DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addModeChange('disqus', disqusReset)
+
+  if (window.DISQUS) disqusReset()
+  else {
+    (function() { 
+      var d = document, s = d.createElement('script');
+      s.src = 'https://.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  }
+}
+
+if ('Valine' === 'Disqus' || !true) {
+  if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+  else loadDisqus()
+} else {
+  function loadOtherComment () {
+    loadDisqus()
+  }
+}
+</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
