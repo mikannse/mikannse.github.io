@@ -1,0 +1,438 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>THMBasicStaticAnalysis | MikannseのSekai</title><meta name="author" content="Mikannse"><meta name="copyright" content="Mikannse"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="Introduction在本模块的前几个房间中，我们学习了计算机架构和汇编语言的基础知识。虽然这些主题是学习恶意软件分析的基本构建块，但我们将从这个房间开始分析恶意软件。 先决条件在开始这个房间之前，建议您完成以下房间。  恶意软件分析简介 x86 汇编速成课程 x86 架构概述  学习目标分析恶意软件的第一步通常是在不运行它的情况下查看其属性。这种分析称为静态分析，因为恶意软件是静态的并且没有运">
+<meta property="og:type" content="article">
+<meta property="og:title" content="THMBasicStaticAnalysis">
+<meta property="og:url" content="http://mikannse.space/2024/11/02/THMBasicStaticAnalysis/index.html">
+<meta property="og:site_name" content="MikannseのSekai">
+<meta property="og:description" content="Introduction在本模块的前几个房间中，我们学习了计算机架构和汇编语言的基础知识。虽然这些主题是学习恶意软件分析的基本构建块，但我们将从这个房间开始分析恶意软件。 先决条件在开始这个房间之前，建议您完成以下房间。  恶意软件分析简介 x86 汇编速成课程 x86 架构概述  学习目标分析恶意软件的第一步通常是在不运行它的情况下查看其属性。这种分析称为静态分析，因为恶意软件是静态的并且没有运">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg">
+<meta property="article:published_time" content="2024-11-02T15:39:05.000Z">
+<meta property="article:modified_time" content="2024-11-04T01:30:51.609Z">
+<meta property="article:author" content="Mikannse">
+<meta property="article:tag" content="笔记">
+<meta property="article:tag" content="威胁分析">
+<meta property="article:tag" content="逆向">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg"><link rel="shortcut icon" href="/img/icon.jpg"><link rel="canonical" href="http://mikannse.space/2024/11/02/THMBasicStaticAnalysis/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Mikannse","link":"链接: ","source":"来源: MikannseのSekai","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'THMBasicStaticAnalysis',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: undefined,
+  isToc: true,
+  postUpdate: '2024-11-04 09:30:51'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">295</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">72</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="MikannseのSekai"><span class="site-name">MikannseのSekai</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">THMBasicStaticAnalysis</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-11-02T15:39:05.000Z" title="发表于 2024-11-02 23:39:05">2024-11-02</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-11-04T01:30:51.609Z" title="更新于 2024-11-04 09:30:51">2024-11-04</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BD%91%E5%AE%89/">网安</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">7.5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>25分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="THMBasicStaticAnalysis"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>在本模块的前几个房间中，我们学习了计算机架构和汇编语言的基础知识。虽然这些主题是学习恶意软件分析的基本构建块，但我们将从这个房间开始分析恶意软件。</p>
+<h2 id="先决条件"><a href="#先决条件" class="headerlink" title="先决条件"></a>先决条件</h2><p>在开始这个房间之前，建议您完成以下房间。</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="http://tryhackme.com/jr/intromalwareanalysis">恶意软件分析简介</a></li>
+<li><a target="_blank" rel="noopener" href="https://tryhackme.com/room/x86assemblycrashcourse">x86 汇编速成课程</a></li>
+<li><a target="_blank" rel="noopener" href="https://tryhackme.com/room/x8664arch">x86 架构概述</a></li>
+</ul>
+<h2 id="学习目标"><a href="#学习目标" class="headerlink" title="学习目标"></a>学习目标</h2><p>分析恶意软件的第一步通常是在不运行它的情况下查看其属性。这种分析称为静态分析，因为恶意软件是静态的并且没有运行。我们将在这个房间中介绍基本的静态分析。特别是，我们将介绍以下主题。</p>
+<ul>
+<li>恶意软件分析实验室设置</li>
+<li>在恶意软件中搜索字符串</li>
+<li>通过哈希对恶意软件进行指纹识别</li>
+<li>基于签名的检测机制</li>
+<li>从 PE 标头中提取有用信息</li>
+</ul>
+<p>事不宜迟，让我们继续下一个任务，了解如何设置恶意软件分析实验室。</p>
+<h1 id="Lab-Setup"><a href="#Lab-Setup" class="headerlink" title="Lab Setup"></a>Lab Setup</h1><h2 id="Basic-precautions-for-malware-analysis"><a href="#Basic-precautions-for-malware-analysis" class="headerlink" title="Basic precautions for malware analysis:"></a>Basic precautions for malware analysis:</h2><p>在分析恶意软件之前，必须了解恶意软件通常具有破坏性。这意味着在分析恶意软件时，很有可能破坏正在分析的环境。这种损害可能是永久性的，消除这种损害可能比分析恶意软件所付出的努力还要多。因此，创建一个能够承受恶意软件破坏性的实验室设置是必要的。</p>
+<h2 id="虚拟机："><a href="#虚拟机：" class="headerlink" title="虚拟机："></a>虚拟机：</h2><p>用于恶意软件分析的实验室设置需要能够保存机器的状态（快照）并在需要时恢复到该状态。因此，机器已准备好安装所有必需的工具，并且其状态已保存。在分析该机器中的恶意软件后，将其恢复到安装所有工具的干净状态。此活动可确保在干净的环境中分析每个恶意软件，并且在分析后，机器可以恢复而不会造成任何持续损坏。</p>
+<p>虚拟机为恶意软件分析提供了理想的媒介。用于创建和使用虚拟机的一些著名软件包括 <a target="_blank" rel="noopener" href="https://www.virtualbox.org/">Oracle VirtualBox</a> 和 <a target="_blank" rel="noopener" href="https://www.vmware.com/products/workstation-pro.html">VMWare Workstation</a>。这些应用程序可以创建快照并在需要时恢复到快照，使其非常适合我们的恶意软件分析工作。简而言之，以下步骤描述了虚拟机在恶意软件分析中的使用情况。</p>
+<ol>
+<li>创建一个新的虚拟机并安装新的操作系统</li>
+<li>通过在其中安装所有必需的分析工具来设置机器</li>
+<li>拍摄机器快照</li>
+<li>复制/下载虚拟机内的恶意软件样本并进行分析</li>
+<li>分析完成后将机器恢复到快照</li>
+</ol>
+<p>遵循这些步骤可确保您的虚拟机在分析新恶意软件时不会被以前的恶意软件样本的残留物污染。它还确保您不必为每次分析一次又一次地安装工具。选择要安装在恶意软件分析虚拟机中的工具也可能很麻烦。可以使用预装了工具的免费恶意软件分析虚拟机来简化此任务。让我们回顾一下安全研究人员最常用的一些恶意软件分析虚拟机。</p>
+<h3 id="FLARE-VM"><a href="#FLARE-VM" class="headerlink" title="FLARE VM:"></a>FLARE VM:<img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/61306d87a330ed00419e22e7/room-content/c5c7241a9184faaabde284b87d473c77.png" alt="An image showing the logo of FLARE VM"></h3><p>FLARE VM 是一款基于 Windows 的 VM，非常适合恶意软件分析，由 Mandiant（前身为 FireEye）创建。它包含一些社区最喜欢的恶意软件分析工具。此外，它也是可自定义的，即您可以将任何自己的工具安装到 VM 中。FLARE VM 与 Windows 7 和 Windows 10 兼容。有关已安装在 VM 中的工具列表和安装步骤，您可以访问 VM 的 <a target="_blank" rel="noopener" href="https://github.com/mandiant/flare-vm">GitHub 页面</a> 或 <a target="_blank" rel="noopener" href="https://www.mandiant.com/resources/blog/flare-vm-update">Mandiant 博客</a>。由于它是基于 Windows 的 VM，因此它可以对基于 Windows 的恶意软件进行动态分析。</p>
+<p>FLARE VM 的一个实例连接到此房间以执行实际任务。在继续执行下一个任务之前，请单击此任务右上角的“启动机器”按钮启动机器。附加的虚拟机在桌面上有一个名为 mal 的目录，其中包含我们将针对该房间进行分析的恶意软件样本。</p>
+<h3 id="REMnux"><a href="#REMnux" class="headerlink" title="REMnux:"></a>REMnux:<img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/61306d87a330ed00419e22e7/room-content/b28f543ea8d0643096516dbf5a63cced.png" alt="An image showing the logo of Remnux VM"></h3><p>REMnux 代表  <strong>R</strong>everse <strong>E</strong>ngineering <strong>M</strong>alware Li<strong>nux</strong>。它是一款基于 Linux 的恶意软件分析发行版，由 Lenny Zeltser 于 2010 年创建。后来，更多人加入了团队，对发行版进行了改进。与 FLARE VM 一样，它预装了一些最流行的逆向工程和恶意软件分析工具。它可以帮助分析师节省时间，否则他们将花费时间识别、搜索和安装所需的工具。安装和文档等详细信息可以在 <a target="_blank" rel="noopener" href="https://github.com/REMnux">GitHub</a> 或发行版的 <a target="_blank" rel="noopener" href="https://remnux.org/">网站</a> 上找到。作为一款基于 Linux 的发行版，它不能用于对基于 Windows 的恶意软件进行动态分析。REMnux 之前曾在恶意软件分析入门室中使用，也将在即将开设的房间中使用。</p>
+<h1 id="String-search"><a href="#String-search" class="headerlink" title="String search"></a>String search</h1><p>在 <a target="_blank" rel="noopener" href="https://tryhackme.com/room/intromalwareanalysis">恶意软件分析简介</a> 房间中，我们发现搜索字符串是恶意软件分析的第一步。字符串搜索通过识别可疑恶意软件样本中存在的重要字符串片段，为恶意软件分析师提供有用的信息。要了解有关字符串的更多信息，我们可以查看 <a target="_blank" rel="noopener" href="https://tryhackme.com/room/malstrings">此房间</a> 专用于字符串。</p>
+<h2 id="字符串搜索的工作原理："><a href="#字符串搜索的工作原理：" class="headerlink" title="字符串搜索的工作原理："></a>字符串搜索的工作原理：</h2><p>字符串搜索查看恶意软件样本中的二进制数据，无论其文件类型如何，并识别 ASCII 或 Unicode 字符序列后跟空字符。无论在哪里找到这样的序列，它都会将其报告为字符串。这可能会引发一个问题，即并非所有看起来像 ASCII 或 Unicode 字符的二进制数据序列都是实际的字符串，这是正确的。许多字节序列可以满足上述标准，但不是有用的字符串；相反，它们可能包括内存地址、汇编指令等。因此，字符串搜索会导致许多误报 (FP)。这些 FP 在我们的字符串搜索的输出中显示为垃圾，应将其忽略。分析师需要识别有用的字符串并忽略其余字符串。</p>
+<h2 id="寻找什么？"><a href="#寻找什么？" class="headerlink" title="寻找什么？"></a>寻找什么？</h2><p>由于分析师必须识别实际感兴趣的字符串并将其与垃圾区分开来，因此在执行字符串搜索时知道要寻找什么是很好的。虽然可以在字符串搜索中挖掘出很多有用的信息，但以下工件可以用作妥协指标 (IOC) 并证明更有用。</p>
+<ul>
+<li>Windows 函数和 API，如 SetWindowsHook、CreateProcess、InternetOpen 等。它们提供有关恶意软件可能功能的信息</li>
+<li>IP 地址、URL 或域可以提供有关可能的 C2 通信的信息。使用字符串搜索找到了 Wannacry 恶意软件的 killswitch 域</li>
+<li>各种字符串，例如比特币地址、用于消息框的文本等。此信息有助于为进一步的恶意软件分析设置上下文</li>
+</ul>
+<h2 id="基本字符串搜索："><a href="#基本字符串搜索：" class="headerlink" title="基本字符串搜索："></a>基本字符串搜索：</h2><p>在 <a target="_blank" rel="noopener" href="https://tryhackme.com/room/intromalwareanalysis">恶意软件分析简介</a> 房间中，我们了解了 <code>strings</code> 实用程序，它预装在 Linux 机器中，可用于基本字符串搜索。同样，FLARE VM 附带一个 Windows 实用程序 <code>strings.exe</code>，可执行相同的任务。此 Windows 字符串实用程序是 Sysinternals 套件的一部分，Sysinternals 套件是 Microsoft 发布的一组工具，用于分析 Windows 机器的不同方面。有关字符串实用程序的详细信息，请参阅 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/sysinternals/downloads/strings">Microsoft 文档</a>。字符串实用程序预装在连接到此房间的 FLARE VM 中。命令行字符串实用程序的优点在于它可以将字符串转储到文件中以供进一步分析。在附加的 VM 中，执行以下命令将在二进制文件中执行基本字符串搜索。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\Users\Administrator\Desktop&gt;strings &lt;path to binary&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>FLARE VM 中包含的其他几个工具可用于字符串搜索。例如，CyberChef（桌面&gt; FLARE&gt; 实用程序&gt; Cyberchef）也有一个用于基本字符串搜索的方法。PEstudio（桌面&gt; FLARE&gt; 实用程序&gt; pestudio）也提供了一个字符串搜索实用程序。PEstudio 还提供了有关字符串的一些其他信息，例如，编码、字符串的大小、在二进制文件中发现字符串的偏移量，以及猜测字符串与什么相关的提示。它还有一个黑名单列，可将字符串与某些签名进行匹配。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/61306d87a330ed00419e22e7/room-content/515900e121ff6b875d52b20fbe12c573.png" alt="An image showing the interface of the tool PEStudio"></p>
+<p>上面的 PEstudio 截图显示了 PEstudio 在恶意软件样本中找到的字符串。这可以通过在 PEstudio 中加载 PE 文件后在左侧窗格中选择字符串来完成。此处的黑名单显示了一堆 Windows API 调用，PEstudio 将其标记为可能用于恶意进程。您可以使用 <a target="_blank" rel="noopener" href="https://malapi.io/">MalAPI</a> 或 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/search/?scope=Desktop&amp;terms=queryperformancecounter">MSDN</a> 等资源了解这些 API。</p>
+<h2 id="模糊字符串："><a href="#模糊字符串：" class="headerlink" title="模糊字符串："></a>模糊字符串：</h2><p>搜索字符串通常是恶意软件分析中最有效的第一步之一。正如 <a target="_blank" rel="noopener" href="https://www.wired.com/2017/05/accidental-kill-switch-slowed-fridays-massive-ransomware-attack/">Wannacry 案例</a> 中所见，有效使用字符串搜索通常可以破坏恶意软件的传播和感染。恶意软件作者知道这一点，并且不希望简单的字符串搜索阻止他们的恶意活动。因此，他们部署了混淆恶意软件中字符串的技术。恶意软件作者使用多种技术来混淆其代码的关键部分。这些技术通常会使字符串搜索无效，即我们在搜索字符串时找不到太多信息。</p>
+<p>Mandiant（当时的 FireEye）推出了 FLOSS 来解决这个问题，它是 <strong>F</strong>ireEye <strong>L</strong>abs <strong>O</strong>bfuscated <strong>S</strong>tring <strong>S</strong>olver 的缩写。FLOSS 使用多种技术来反混淆和提取使用字符串搜索无法找到的字符串。FLOSS 可以提取的字符串类型及其工作原理可在 <a target="_blank" rel="noopener" href="https://www.mandiant.com/resources/blog/automatically-extracting-obfuscated-strings">Mandiant 的博客文章</a> 中找到。</p>
+<p>要执行 FLOSS，请打开命令提示符并导航到桌面目录。从那里，使用以下命令。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\Users\Administrator\Desktop&gt;floss -h</span><br></pre></td></tr></tbody></table></figure>
+
+<p>此命令将打开 FLOSS 的帮助页面。我们可以使用以下命令使用 FLOSS 在二进制文件中搜索混淆的字符串。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\Users\Administrator\Desktop&gt;floss --no-static-strings &lt;path to binary&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>请记住，该命令可能需要一些时间来执行，并且在生成结果之前您可能会看到一些错误消息。</p>
+<h1 id="Fingerprinting-malware"><a href="#Fingerprinting-malware" class="headerlink" title="Fingerprinting malware"></a>Fingerprinting malware</h1><p>在分析恶意软件时，通常需要识别独特的恶意软件并将它们彼此区分开来。文件名不能用于此目的，因为它们很容易被复制并且可能会造成混淆。此外，文件名也很容易更改。指纹机上使用指纹识别自身的漏洞图像因此，哈希函数用于唯一地识别恶意软件样本。哈希函数以任意长度的文件/数据作为输入，并根据文件内容创建固定长度的唯一输出。此过程是不可逆的，因为您无法使用哈希重新创建文件的内容。哈希函数具有非常低的概率（几乎为零），两个文件具有不同的内容但哈希值相同。只要文件的内容保持不变，哈希就保持不变。但是，即使内容略有变化也会导致不同的哈希值。可能需要注意的是，文件名不是内容的一部分；因此，更改文件名不会影响文件的哈希值。</p>
+<p>除了识别文件外，哈希还用于存储密码以验证用户身份。在恶意软件分析中，哈希文件可用于识别唯一的恶意软件、在不同的恶意软件存储库和数据库中搜索此恶意软件，并作为入侵指标 (IOC)。</p>
+<h2 id="Commonly-used-methods-of-calculating-File-hashes"><a href="#Commonly-used-methods-of-calculating-File-hashes" class="headerlink" title="Commonly used methods of calculating File hashes:"></a>Commonly used methods of calculating File hashes:</h2><p>为了识别文件，需要对整个文件进行哈希处理。有多种方法可以获取哈希值。最常用的方法是：</p>
+<ul>
+<li>Md5sum</li>
+<li>Sha1sum</li>
+<li>Sha256sum</li>
+</ul>
+<p>前两种类型的哈希值现在被认为是不安全的或容易受到碰撞攻击（当两个或多个输入产生相同的哈希值时）。尽管这些哈希函数发生碰撞攻击的可能性不大，但仍然有可能。因此，sha256sum 目前被认为是计算文件哈希值最安全的方法。在附加的 VM 中，我们可以看到多个实用程序为我们计算文件哈希值。</p>
+<h2 id="使用哈希查找相似文件："><a href="#使用哈希查找相似文件：" class="headerlink" title="使用哈希查找相似文件："></a>使用哈希查找相似文件：</h2><p>哈希函数帮助恶意软件分析师的另一种情况是使用哈希识别相似文件。我们已经确定，即使文件内容发生轻微变化也会导致不同的哈希值。但是，某些类型的哈希可以帮助识别不同文件之间的相似性。让我们了解其中的一些。</p>
+<h2 id="Imphash："><a href="#Imphash：" class="headerlink" title="Imphash："></a>Imphash：</h2><p>imphash 代表“导入哈希”。导入是可执行文件从其他文件或动态链接库 (DLL) 导入的函数。imphash 是恶意软件样本导入的函数调用/库的哈希值，以及这些库在样本中的出现顺序。这有助于识别来自同一威胁组织或执行类似活动的样本。有关 Imphash 的更多详细信息，请参阅 Mandiant 的<a target="_blank" rel="noopener" href="https://www.mandiant.com/resources/blog/tracking-malware-import-hashing">博客</a>。</p>
+<p>我们可以使用 PEstudio 计算样本的 Imphash。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/61306d87a330ed00419e22e7/room-content/a6b2943792824c6d9f4af73930aaf927.png"></p>
+<p>任何以相同顺序导入的恶意软件样本都会具有相同的 imphash。这有助于识别类似的样本。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/61306d87a330ed00419e22e7/room-content/bd5faa050d85c40c8b79bbb4581ce2eb.png"></p>
+<p>在上面的 <a target="_blank" rel="noopener" href="https://bazaar.abuse.ch/browse.php?search=imphash:756fdea446bc618b4804509775306c0d">Malware Bazaar</a> 截图中，所有这些样本都具有相同的 imphash。我们可以看到，所有这些样本都被归类为同一恶意软件家族。我们可以看到它们的 sha256 哈希值差异很大，并没有提供任何有关它们相似性的信息。然而，相同的 imphash 帮助我们识别它们可能属于同一个家族。</p>
+<h2 id="模糊哈希-x2F-SSDEEP"><a href="#模糊哈希-x2F-SSDEEP" class="headerlink" title="模糊哈希/SSDEEP:"></a>模糊哈希/SSDEEP:</h2><p>另一种识别类似恶意软件的方法是通过模糊哈希。模糊哈希是上下文触发分段哈希 (CTPH)。此哈希是通过将文件分成几部分并计算不同部分的哈希值来计算的。此方法会创建具有相似字节序列的多个输入，即使整个文件可能不同。有关 SSDEEP 的更多信息，请访问此<a target="_blank" rel="noopener" href="https://ssdeep-project.github.io/ssdeep/index.html">链接</a>。</p>
+<p>可以在附加的 VM 中使用多个实用程序来计算 ssdeep，例如 CyberChef。但是，ssdeep 实用程序已放置在桌面上以使其更容易。以下命令显示该实用程序的帮助菜单。</p>
+<p>使用 ssdeep 查找类似文件</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\Users\Administrator\Desktop&gt;ssdeep-2.14.1\ssdeep.exe -h</span><br><span class="line">ssdeep version 2.14.1 by Jesse Kornblum and the ssdeep Project</span><br><span class="line">For copyright information, see man page or README.TXT.</span><br><span class="line"></span><br><span class="line">Usage: ssdeep [-m file] [-k file] [-dpgvrsblcxa] [-t val] [-h|-V] [FILES]</span><br><span class="line">-m - Match FILES against known hashes in file</span><br><span class="line">-k - Match signatures in FILES against signatures in file</span><br><span class="line">-d - Directory mode, compare all files in a directory</span><br><span class="line">-p - Pretty matching mode. Similar to -d but includes all matches</span><br><span class="line">-g - Cluster matches together</span><br><span class="line">-v - Verbose mode. Displays filename as its being processed</span><br><span class="line">-r - Recursive mode</span><br><span class="line">-s - Silent mode; all errors are suppressed</span><br><span class="line">-b - Uses only the bare name of files; all path information omitted</span><br><span class="line">-l - Uses relative paths for filenames</span><br><span class="line">-c - Prints output in CSV format</span><br><span class="line">-x - Compare FILES as signature files</span><br><span class="line">-a - Display all matches, regardless of score</span><br><span class="line">-t - Only displays matches above the given threshold</span><br><span class="line">-h - Display this help message</span><br><span class="line">-V - Display version number and exit</span><br><span class="line"></span><br><span class="line">FLARE Sun 09/18/2022 17:28:35.11</span><br><span class="line">C:\Users\Administrator\Desktop&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>让我们计算附加虚拟机中 mal 目录中所有样本的哈希值。</p>
+<p>Calculating ssdeep</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\Users\Administrator\Desktop&gt;ssdeep-2.14.1\ssdeep.exe mal\*</span><br><span class="line">ssdeep,1.1--blocksize:hash:hash,filename</span><br><span class="line">3072:C3twbyJdvGwRCf/swDQheOAmN4hMRl37G:8EacOAmN6C,"C:\Users\Administrator\Desktop\mal\1"</span><br><span class="line">768:fMjB/JpMfHDWqpuXDvod3UmQmv4acY2GS2C9xjwhU:UFQlpSDvoJrbvUfGS2q,"C:\Users\Administrator\Desktop\mal\2"</span><br><span class="line">1536:C3tvICAqw8IKVn2wJk0c8PoYJvGwRCwAL6pILgl7vBIQtCnDkbZ3eOAmV2u4hnnM:C3twbyJdvGwRCf/swDQheOAmN4hM,"C:\Users\Administrator\Desktop\mal\3"</span><br><span class="line">24576:u7DtlSDAlZvEFZhbS7buPPcedeHP5XLnkO3hGL8Siw9zVZprY8fWg5r11O:8OKVizL3cvtkO3hmVVZBYu5r1M,"C:\Users\Administrator\Desktop\mal\4"</span><br><span class="line">12288:z+IIs67xrXWxgxMdplNGvIcGZwwDVHJXuDzKYzIE5P/XiS6lYSz8uahDtbNL6WTW:z+PsGlsFGgcQDJJQ,"C:\Users\Administrator\Desktop\mal\5"</span><br><span class="line">24576:UCsTPcqE9S7tdODN+6ybJVCy2pvZHGOzPBjRj4AFsb:UCO7tsp+6ybJVChpRjvs,"C:\Users\Administrator\Desktop\mal\6"</span><br><span class="line"></span><br><span class="line">FLARE Sun 09/18/2022 17:41:12.38</span><br><span class="line">C:\Users\Administrator\Desktop&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们可以根据需要尝试帮助文件中显示的其他选项。当我们有了 ssdeep 哈希时，我们可以将这些哈希匹配在一起以识别相似的文件。如果我们有大量数据，这有助于我们识别相似的文件。上面提供的文档链接有非常好的使用示例。以下终端窗口显示了与我们的用例相关的示例之一以匹配文件。为此，我们可以使用 -d 运算符。-r 运算符以递归方式运行 ssdeep 实用程序，-l 运算符输出文件的相对路径。</p>
+<p>Finding matching files using ssdeep</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\Users\Administrator\Desktop&gt;ssdeep-2.14.1\ssdeep -l -r -d Incoming Outgoing Trash</span><br><span class="line">Outgoing/Corporate Espionage/Our Budget.doc matches Incoming/Budget 2007.doc (99)</span><br><span class="line">Outgoing/Personnel Mayhem/Your Buddy Makes More Than You.doc matches Incoming/Salaries.doc (45)</span><br><span class="line">Trash/DO NOT DISTRIBUTE.doc matches Outgoing/Plan for Hostile Takeover.doc (88)</span><br><span class="line"></span><br><span class="line">FLARE Sun 09/18/2022 17:41:12.38</span><br><span class="line">C:\Users\Administrator\Desktop&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>结果显示相互匹配的文件。末尾括号中的数字是文件匹配的百分比。</p>
+<h1 id="Signature-based-detection"><a href="#Signature-based-detection" class="headerlink" title="Signature-based detection"></a>Signature-based detection</h1><p>在上一个任务中，我们了解了哈希如何识别相同的文件。我们还发现，即使只是更改文件中的单个字节数据，哈希也会发生变化，以及 imphash 和 ssdeep 等特定哈希如何帮助我们识别文件相似性。虽然使用 imphash 或 ssdeep 可以识别某些文件是否相似，但有时我们只需要识别文件是否包含感兴趣的信息。哈希不是执行此任务的理想工具。</p>
+<h2 id="签名："><a href="#签名：" class="headerlink" title="签名："></a>签名：</h2><p>显示计算机显示屏的图像，其中显示随机数字和字母。放大镜用于在一个地方放大显示，拼出单词“恶意软件”<br>签名是一种识别特定文件是否具有特定类型内容的方法。我们可以将签名视为可能在文件中找到的模式。此模式通常是文件中的字节序列，带有或不带有有关其位置的任何上下文。安全研究人员经常使用签名来识别文件中的模式、识别文件是否为恶意文件以及识别可疑行为和恶意软件家族。</p>
+<h2 id="Yara-规则："><a href="#Yara-规则：" class="headerlink" title="Yara 规则："></a>Yara 规则：</h2><p>Yara 规则是一种基于签名的规则。它被誉为恶意软件研究人员的模式匹配瑞士军刀。Yara 可以根据二进制和文本模式识别信息，例如文件中包含的十六进制和字符串。如果您感兴趣，TryHackMe 有一个专门的 Yara 规则<a target="_blank" rel="noopener" href="https://tryhackme.com/room/yara">空间</a>。</p>
+<p>安全社区发布了一个开源 Yara <a target="_blank" rel="noopener" href="https://github.com/Yara-Rules/rules">规则库</a>，我们可以根据需要使用它。在分析恶意软件时，我们可以使用此库来挖掘社区的集体智慧。但是，在使用这些规则时，请记住，有些规则可能取决于上下文。其他一些规则可能仅用于识别也可能是非恶意的模式。因此，仅仅因为规则命中并不意味着该文件是恶意的。为了更好地理解，请阅读特定规则的文档，以确定以最佳方式应用该规则的用例。</p>
+<h2 id="专有签名-防病毒扫描："><a href="#专有签名-防病毒扫描：" class="headerlink" title="专有签名 - 防病毒扫描："></a>专有签名 - 防病毒扫描：</h2><p>除了开源签名之外，防病毒公司还花费大量资源来创建专有签名。这些专有签名的优势在于，由于它们必须进行商业销售，因此误报（FP，当签名命中非恶意文件时）的可能性较小。但是，这可能会导致一些误报（FN，当恶意文件未命中任何签名时）。</p>
+<p>防病毒扫描有助于高度可靠地识别文件是否为恶意文件。防病毒软件通常会提及文件命中的签名，这可能暗示了文件的功能。但是，我们必须注意，尽管他们尽了最大努力，但市场上的每种 AV 产品都有一些 FP 和一些 FN。因此，在分析恶意软件时，明智的做法是从多种产品中得出结论。 <a target="_blank" rel="noopener" href="https://www.virustotal.com/gui/home/upload">Virustotal</a> 网站使我们的这项任务变得更容易，除了一些非常有用的信息外，我们还可以在这里找到来自 60 多家 AV 供应商的文件评价。我们还在恶意软件分析简介室中谈到了这个主题。请记住，如果您正在分析敏感文件，最好在 Virustotal 或其他扫描网站上搜索其哈希值，而不是上传文件本身。这样做是为了避免在互联网上泄露敏感信息并让老练的攻击者知道您正在分析他们的恶意软件。</p>
+<p>由于我们已经在 Yara 室详细介绍了 Yara 规则，并在恶意软件分析简介室介绍了 Virustotal 扫描，因此我们不会在这里再次介绍它们。但是，FLARE VM 还有另一个非常酷的工具可用于签名扫描。</p>
+<h2 id="Capa："><a href="#Capa：" class="headerlink" title="Capa："></a>Capa：</h2><p>Capa 是 Mandiant 创建的另一个开源工具。此工具有助于识别 PE 文件中的功能。 Capa 读取文件并尝试根据文件中存在的签名（例如导入、字符串、互斥体和其他工件）识别文件的行为。有关 Capa 背景的更多详细信息，我们可以访问其 <a target="_blank" rel="noopener" href="https://github.com/mandiant/capa">Github 页面</a> 或 Mandiant 介绍 Capa 的 <a target="_blank" rel="noopener" href="https://www.mandiant.com/resources/blog/capa-automatically-identify-malware-capabilities">博客文章</a>。</p>
+<p>使用 Capa 很简单。在命令提示符下，我们只需将 capa 指向我们要对其运行的文件即可。</p>
+<p><code>C:\Users\Administrator\Desktop&gt;capa mal.exe</code></p>
+<p><code>-h</code> 运算符显示详细选项。</p>
+<p>Capa</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\Users\Administrator\Desktop&gt;capa -h</span><br><span class="line">usage: capa.exe [-h] [--version] [-v] [-vv] [-d] [-q] [--color {auto,always,never}] [-f {auto,pe,sc32,sc64,freeze}] [-b {vivisect,smda}] [-r RULES] [-t TAG] [-j] sample</span><br><span class="line"></span><br><span class="line">The FLARE team's open-source tool to identify capabilities in executable files.</span><br><span class="line"></span><br><span class="line">positional arguments:</span><br><span class="line">  sample                path to sample to analyze</span><br><span class="line"></span><br><span class="line">optional arguments:</span><br><span class="line">  -h, --help            show this help message and exit</span><br><span class="line">  --version             show program's version number and exit</span><br><span class="line">  -v, --verbose         enable verbose result document (no effect with --json)</span><br><span class="line">  -vv, --vverbose       enable very verbose result document (no effect with --json)</span><br><span class="line">  -d, --debug           enable debugging output on STDERR</span><br><span class="line">  -q, --quiet           disable all output but errors</span><br><span class="line">  --color {auto,always,never}</span><br><span class="line">                        enable ANSI color codes in results, default: only during interactive session</span><br><span class="line">  -f {auto,pe,sc32,sc64,freeze}, --format {auto,pe,sc32,sc64,freeze}</span><br><span class="line">                        select sample format, auto: (default) detect file type automatically, pe: Windows PE file, sc32: 32-bit shellcode, sc64: 64-bit shellcode, freeze: features</span><br><span class="line">                        previously frozen by capa</span><br><span class="line">  -b {vivisect,smda}, --backend {vivisect,smda}</span><br><span class="line">                        select the backend to use</span><br><span class="line">  -r RULES, --rules RULES</span><br><span class="line">                        path to rule file or directory, use embedded rules by default</span><br><span class="line">  -t TAG, --tag TAG     filter on rule meta field values</span><br><span class="line">  -j, --json            emit JSON instead of text</span><br><span class="line"></span><br><span class="line">By default, capa uses a default set of embedded rules.</span><br><span class="line">You can see the rule set here:</span><br><span class="line">  https://github.com/fireeye/capa-rules</span><br><span class="line"></span><br><span class="line">To provide your own rule set, use the `-r` flag:</span><br><span class="line">  capa  --rules /path/to/rules  suspicious.exe</span><br><span class="line">  capa  -r      /path/to/rules  suspicious.exe</span><br><span class="line"></span><br><span class="line">examples:</span><br><span class="line">  identify capabilities in a binary</span><br><span class="line">    capa suspicious.exe</span><br><span class="line"></span><br><span class="line">  identify capabilities in 32-bit shellcode, see `-f` for all supported formats</span><br><span class="line">    capa -f sc32 shellcode.bin</span><br><span class="line"></span><br><span class="line">  report match locations</span><br><span class="line">    capa -v suspicious.exe</span><br><span class="line"></span><br><span class="line">  report all feature match details</span><br><span class="line">    capa -vv suspicious.exe</span><br><span class="line"></span><br><span class="line">  filter rules by meta fields, e.g. rule name or namespace</span><br><span class="line">    capa -t "create TCP socket" suspicious.exe</span><br><span class="line"></span><br><span class="line">FLARE Sun 09/18/2022 18:10:17.58</span><br><span class="line">C:\Users\Administrator\Desktop&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们可以通过针对 Desktop\mal 目录中的二进制文件运行 capa 来测试它。请注意，capa 可能需要一些时间才能完成分析。示例输出如下。</p>
+<p>Capa example</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">C:\Users\Administrator\Desktop&gt;capa mal\1</span><br><span class="line">loading : 100%|████████████████████████████████████████████████████████████| 485/485 [00:00&lt;00:00, 1552.05     rules/s]</span><br><span class="line">matching: 100%|██████████████████████████████████████████████████████████████| 288/288 [00:12&lt;00:00, 22.23 functions/s]</span><br><span class="line">+------------------------+------------------------------------------------------------------------------------+</span><br><span class="line">| md5                    | 6548eec09f4d8bc6514bee3e5452541c                                                   |</span><br><span class="line">| sha1                   | 7be46c62d975949fdd6777530940cf6435e8cb90                                           |</span><br><span class="line">| sha256                 | 6ec74cc0a9b5697efd3f4cc4d3a21d9ffe6e0187b770990df8743fbf4f3b2518                   |</span><br><span class="line">| path                   | mal\1                                                                              |</span><br><span class="line">+------------------------+------------------------------------------------------------------------------------+</span><br><span class="line"></span><br><span class="line">+------------------------+------------------------------------------------------------------------------------+</span><br><span class="line">| ATT&amp;CK Tactic          | ATT&amp;CK Technique                                                                   |</span><br><span class="line">|------------------------+------------------------------------------------------------------------------------|</span><br><span class="line">| DEFENSE EVASION        | Obfuscated Files or Information::Indicator Removal from Tools [T1027.005]          |</span><br><span class="line">|                        | Obfuscated Files or Information [T1027]                                            |</span><br><span class="line">| DISCOVERY              | Application Window Discovery [T1010]                                               |</span><br><span class="line">|                        | System Information Discovery [T1082]                                               |</span><br><span class="line">| EXECUTION              | Command and Scripting Interpreter [T1059]                                          |</span><br><span class="line">|                        | Shared Modules [T1129]                                                             |</span><br><span class="line">+------------------------+------------------------------------------------------------------------------------+</span><br><span class="line"></span><br><span class="line">+-----------------------------+-------------------------------------------------------------------------------+</span><br><span class="line">| MBC Objective               | MBC Behavior                                                                  |</span><br><span class="line">|-----------------------------+-------------------------------------------------------------------------------|</span><br><span class="line">| ANTI-STATIC ANALYSIS        | Disassembler Evasion::Argument Obfuscation [B0012.001]                        |</span><br><span class="line">| CRYPTOGRAPHY                | Encrypt Data::RC4 [C0027.009]                                                 |</span><br><span class="line">|                             | Generate Pseudo-random Sequence::RC4 PRGA [C0021.004]                         |</span><br><span class="line">| FILE SYSTEM                 | Delete File [C0047]                                                           |</span><br><span class="line">|                             | Read File [C0051]                                                             |</span><br><span class="line">|                             | Write File [C0052]                                                            |</span><br><span class="line">| OPERATING SYSTEM            | Console [C0033]                                                               |</span><br><span class="line">| PROCESS                     | Allocate Thread Local Storage [C0040]                                         |</span><br><span class="line">|                             | Set Thread Local Storage Value [C0041]                                        |</span><br><span class="line">|                             | Terminate Process [C0018]                                                     |</span><br><span class="line">+-----------------------------+-------------------------------------------------------------------------------+</span><br><span class="line"></span><br><span class="line">+------------------------------------------------------+------------------------------------------------------+</span><br><span class="line">| CAPABILITY                                           | NAMESPACE                                            |</span><br><span class="line">|------------------------------------------------------+------------------------------------------------------|</span><br><span class="line">| contain obfuscated stackstrings                      | anti-analysis/obfuscation/string/stackstring         |</span><br><span class="line">| encrypt data using RC4 PRGA                          | data-manipulation/encryption/rc4                     |</span><br><span class="line">| contains PDB path                                    | executable/pe/pdb                                    |</span><br><span class="line">| contain a resource (.rsrc) section                   | executable/pe/section/rsrc                           |</span><br><span class="line">| accept command line arguments                        | host-interaction/cli                                 |</span><br><span class="line">| manipulate console                                   | host-interaction/console                             |</span><br><span class="line">| query environment variable                           | host-interaction/environment-variable                |</span><br><span class="line">| delete file                                          | host-interaction/file-system/delete                  |</span><br><span class="line">| read file                                            | host-interaction/file-system/read                    |</span><br><span class="line">| write file (2 matches)                               | host-interaction/file-system/write                   |</span><br><span class="line">| enumerate gui resources                              | host-interaction/gui                                 |</span><br><span class="line">| get disk information                                 | host-interaction/hardware/storage                    |</span><br><span class="line">| get hostname                                         | host-interaction/os/hostname                         |</span><br><span class="line">| get thread local storage value (3 matches)           | host-interaction/process                             |</span><br><span class="line">| set thread local storage value (2 matches)           | host-interaction/process                             |</span><br><span class="line">| terminate process (5 matches)                        | host-interaction/process/terminate                   |</span><br><span class="line">| link function at runtime (8 matches)                 | linking/runtime-linking                              |</span><br><span class="line">| link many functions at runtime                       | linking/runtime-linking                              |</span><br><span class="line">| parse PE exports (2 matches)                         | load-code/pe                                         |</span><br><span class="line">| parse PE header (4 matches)                          | load-code/pe                                         |</span><br><span class="line">+------------------------------------------------------+------------------------------------------------------+</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">FLARE Sun 09/18/2022 18:34:13.15</span><br><span class="line">C:\Users\Administrator\Desktop&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们可以看到，Capa 已根据 MITRE ATT&amp;CK 框架和 <a target="_blank" rel="noopener" href="https://github.com/MBCProject/mbc-markdown">恶意软件行为目录 (MBC)</a> 映射了已识别的功能。在最后一张表中，我们可以看到匹配签名的功能以及针对这些功能找到匹配项的签名数量。如我们所见，它还告诉我们样本中是否存在混淆的堆栈字符串，这使我们能够确定对样本运行 FLOSS 是否有帮助。要了解有关样本的更多信息，我们可以使用 -v 或 -vv 运算符，它们将以详细或非常详细的模式向我们显示结果，识别我们可能找到所述功能的地址。</p>
+<h1 id="Leveraging-the-PE-header"><a href="#Leveraging-the-PE-header" class="headerlink" title="Leveraging the PE header"></a>Leveraging the PE header</h1><p>到目前为止，我们在本室中介绍了无论恶意软件的文件类型如何都能起作用的技术。但是，这些技术有点不靠谱，因为它们并不总是能为我们提供有关恶意软件的确定性信息。PE 标头提供了样本的更多确定性特征，这告诉我们有关样本的更多信息。</p>
+<h2 id="PE-标头："><a href="#PE-标头：" class="headerlink" title="PE 标头："></a>PE 标头：</h2><p>我们运行的程序通常以可执行文件格式存储。这些文件是可移植的，因为它们可以带到具有相同操作系统和依赖项的任何系统，并且它们将在该系统上执行相同的任务。因此，这些文件称为可移植可执行文件（PE 文件）。PE 文件由存储在磁盘上的一系列位组成。此序列采用特定格式。初始位定义 PE 文件的特征并解释如何读取其余数据。PE 文件的初始部分称为 PE 标头。</p>
+<p>FLARE VM 中的几个工具可以帮助我们分析 PE 标头。PEStudio 就是其中之一。我们已经在之前的任务中熟悉了 PEStudio，因此在本任务中我们也会使用它。</p>
+<p>PE 标头包含丰富的信息，这些信息对恶意软件分析非常有用。我们将在 <a target="_blank" rel="noopener" href="https://tryhackme.com/room/dissectingpeheaders">解剖 PE 标头</a> 房间中详细了解这些数据。但是，我们可以从 PE 标头中获取以下信息作为概述。</p>
+<h3 id="链接库、导入和函数："><a href="#链接库、导入和函数：" class="headerlink" title="链接库、导入和函数："></a>链接库、导入和函数：</h3><p>PE 文件不包含执行所有任务所需的所有代码。它通常会重用库中的代码，这些库通常由 Microsoft 作为 Windows 操作系统的一部分提供。通常，PE 文件会导入这些库中的某些函数。PE 标头包含有关 PE 文件使用的库以及它从这些库中导入的函数的信息。这些信息非常有用。恶意软件分析师可以查看 PE 文件导入的库和函数，并大致了解恶意软件样本的功能。例如，如果恶意软件样本导入了 CreateProcessA 函数，我们可以假设该样本将创建一个新进程。</p>
+<p>同样，其他函数可以提供有关样本的更多信息。但是，必须注意的是，仅通过查看 PE 标头，我们无法知道调用这些函数的上下文。我们需要深入研究这一点，我们将在接下来的内容中介绍。</p>
+<p>PEStudio 在右侧窗格中有一个库选项，选择后，它会向我们显示 PE 文件将使用的库。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/61306d87a330ed00419e22e7/room-content/92c68509a63ef0222bfe5034500c8ff0.png" alt="A screenshot of PEStudio utility highlighting the libraries imported by the opened file"></p>
+<p>下面的函数选项显示了从这些库导入的函数。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/61306d87a330ed00419e22e7/room-content/4287e575d2ddfdb4acb4b525dca17824.png" alt="A screenshot of PEStudio utility highlighting the functions called by the opened file"></p>
+<h3 id="识别打包的可执行文件："><a href="#识别打包的可执行文件：" class="headerlink" title="识别打包的可执行文件："></a>识别打包的可执行文件：</h3><p>正如我们目前所见，静态分析会泄露大量可用于对付恶意软件的信息。恶意软件作者认为这是一个问题。因此，他们经常不遗余力地阻止分析。他们这样做的方法之一是将原始样本打包在 shell 类型的代码中，从而混淆实际恶意软件样本的属性。这种技术称为打包，生成的 PE 文件称为打包的 PE 文件。打包大大降低了我们目前所了解的一些恶意软件分析技术的有效性。例如，如果我们尝试在打包的可执行文件中搜索字符串，由于打包，我们可能找不到任何有用的东西。同样，使用 ssdeep 搜索类似样本可能会返回更多使用相同打包程序打包的样本，而不是行为上与目标样本相似的样本。由于恶意软件样本被打包，某些签名也可能被规避。</p>
+<p>正如我们将在即将到来的 <a target="_blank" rel="noopener" href="https://tryhackme.com/room/dissectingpeheaders">剖析 PE 标头</a> 房间中看到的那样，我们可以通过分析恶意软件样本的 PE 标头来识别加壳的可执行文件。PE 标头包含重要信息，例如节数、不同节的权限、节的大小等。这些信息可以为我们提供线索，帮助我们识别恶意软件样本是否加壳，如果是，则识别哪种类型的加壳程序加壳了可执行文件。</p>
+<h1 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h1><p>这就是我们基本的静态分析室。到目前为止，我们已经了解了以下内容：</p>
+<ul>
+<li>恶意软件分析的实验室设置</li>
+<li>搜索字符串和混淆字符串</li>
+<li>使用哈希对恶意软件进行指纹识别并使用 imphash 和 ssdeep 识别类似样本</li>
+<li>使用基于签名的检测，如 Yara 和 Capa</li>
+<li>从 PE 标头识别工件</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://mikannse.space">Mikannse</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://mikannse.space/2024/11/02/THMBasicStaticAnalysis/">http://mikannse.space/2024/11/02/THMBasicStaticAnalysis/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://mikannse.space" target="_blank">MikannseのSekai</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a><a class="post-meta__tags" href="/tags/%E5%A8%81%E8%83%81%E5%88%86%E6%9E%90/">威胁分析</a><a class="post-meta__tags" href="/tags/%E9%80%86%E5%90%91/">逆向</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/11/04/THMAdvancedStaticAnalysis/" title="THMAdvancedStaticAnalysis"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">THMAdvancedStaticAnalysis</div></div></a></div><div class="next-post pull-right"><a href="/2024/11/02/THMWindowsInternals/" title="THMWindowsInternals"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">THMWindowsInternals</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/11/04/THMAdvancedStaticAnalysis/" title="THMAdvancedStaticAnalysis"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-11-04</div><div class="title">THMAdvancedStaticAnalysis</div></div></a></div><div><a href="/2024/11/02/THMIntrotoMalwareAnalysis/" title="THMIntrotoMalwareAnalysis"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-11-02</div><div class="title">THMIntrotoMalwareAnalysis</div></div></a></div><div><a href="/2024/10/31/THMYara/" title="THMYara"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-31</div><div class="title">THMYara</div></div></a></div><div><a href="/2024/06/15/AdvancedSQLInjectionTHM/" title="AdvancedSQLInjectionTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-06-15</div><div class="title">AdvancedSQLInjectionTHM</div></div></a></div><div><a href="/2024/07/19/CSS%E9%9A%8F%E6%89%8B%E8%AE%B0/" title="CSS随手记"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-19</div><div class="title">CSS随手记</div></div></a></div><div><a href="/2024/03/14/ContainerVulnerabilitiesTHM/" title="ContainerVulnerabilitiesTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-03-14</div><div class="title">ContainerVulnerabilitiesTHM</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Mikannse</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">295</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">72</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mikannse/mikannse.github.io"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">暂时没有公告QAQ</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Introduction"><span class="toc-number">1.</span> <span class="toc-text">Introduction</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%88%E5%86%B3%E6%9D%A1%E4%BB%B6"><span class="toc-number">1.1.</span> <span class="toc-text">先决条件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%A6%E4%B9%A0%E7%9B%AE%E6%A0%87"><span class="toc-number">1.2.</span> <span class="toc-text">学习目标</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Lab-Setup"><span class="toc-number">2.</span> <span class="toc-text">Lab Setup</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Basic-precautions-for-malware-analysis"><span class="toc-number">2.1.</span> <span class="toc-text">Basic precautions for malware analysis:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%99%9A%E6%8B%9F%E6%9C%BA%EF%BC%9A"><span class="toc-number">2.2.</span> <span class="toc-text">虚拟机：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#FLARE-VM"><span class="toc-number">2.2.1.</span> <span class="toc-text">FLARE VM:</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#REMnux"><span class="toc-number">2.2.2.</span> <span class="toc-text">REMnux:</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#String-search"><span class="toc-number">3.</span> <span class="toc-text">String search</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%90%9C%E7%B4%A2%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%EF%BC%9A"><span class="toc-number">3.1.</span> <span class="toc-text">字符串搜索的工作原理：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%BB%E6%89%BE%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">3.2.</span> <span class="toc-text">寻找什么？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%90%9C%E7%B4%A2%EF%BC%9A"><span class="toc-number">3.3.</span> <span class="toc-text">基本字符串搜索：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E7%B3%8A%E5%AD%97%E7%AC%A6%E4%B8%B2%EF%BC%9A"><span class="toc-number">3.4.</span> <span class="toc-text">模糊字符串：</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Fingerprinting-malware"><span class="toc-number">4.</span> <span class="toc-text">Fingerprinting malware</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Commonly-used-methods-of-calculating-File-hashes"><span class="toc-number">4.1.</span> <span class="toc-text">Commonly used methods of calculating File hashes:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E5%93%88%E5%B8%8C%E6%9F%A5%E6%89%BE%E7%9B%B8%E4%BC%BC%E6%96%87%E4%BB%B6%EF%BC%9A"><span class="toc-number">4.2.</span> <span class="toc-text">使用哈希查找相似文件：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Imphash%EF%BC%9A"><span class="toc-number">4.3.</span> <span class="toc-text">Imphash：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E7%B3%8A%E5%93%88%E5%B8%8C-x2F-SSDEEP"><span class="toc-number">4.4.</span> <span class="toc-text">模糊哈希&#x2F;SSDEEP:</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Signature-based-detection"><span class="toc-number">5.</span> <span class="toc-text">Signature-based detection</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AD%BE%E5%90%8D%EF%BC%9A"><span class="toc-number">5.1.</span> <span class="toc-text">签名：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Yara-%E8%A7%84%E5%88%99%EF%BC%9A"><span class="toc-number">5.2.</span> <span class="toc-text">Yara 规则：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%93%E6%9C%89%E7%AD%BE%E5%90%8D-%E9%98%B2%E7%97%85%E6%AF%92%E6%89%AB%E6%8F%8F%EF%BC%9A"><span class="toc-number">5.3.</span> <span class="toc-text">专有签名 - 防病毒扫描：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Capa%EF%BC%9A"><span class="toc-number">5.4.</span> <span class="toc-text">Capa：</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Leveraging-the-PE-header"><span class="toc-number">6.</span> <span class="toc-text">Leveraging the PE header</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#PE-%E6%A0%87%E5%A4%B4%EF%BC%9A"><span class="toc-number">6.1.</span> <span class="toc-text">PE 标头：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%93%BE%E6%8E%A5%E5%BA%93%E3%80%81%E5%AF%BC%E5%85%A5%E5%92%8C%E5%87%BD%E6%95%B0%EF%BC%9A"><span class="toc-number">6.1.1.</span> <span class="toc-text">链接库、导入和函数：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%86%E5%88%AB%E6%89%93%E5%8C%85%E7%9A%84%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6%EF%BC%9A"><span class="toc-number">6.1.2.</span> <span class="toc-text">识别打包的可执行文件：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Conclusion"><span class="toc-number">7.</span> <span class="toc-text">Conclusion</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/11/04/THMAdvancedStaticAnalysis/" title="THMAdvancedStaticAnalysis">THMAdvancedStaticAnalysis</a><time datetime="2024-11-04T01:28:47.000Z" title="发表于 2024-11-04 09:28:47">2024-11-04</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/11/02/THMBasicStaticAnalysis/" title="THMBasicStaticAnalysis">THMBasicStaticAnalysis</a><time datetime="2024-11-02T15:39:05.000Z" title="发表于 2024-11-02 23:39:05">2024-11-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/11/02/THMWindowsInternals/" title="THMWindowsInternals">THMWindowsInternals</a><time datetime="2024-11-02T14:08:53.000Z" title="发表于 2024-11-02 22:08:53">2024-11-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/11/02/THMIntrotoMalwareAnalysis/" title="THMIntrotoMalwareAnalysis">THMIntrotoMalwareAnalysis</a><time datetime="2024-11-02T04:24:01.000Z" title="发表于 2024-11-02 12:24:01">2024-11-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/31/THMYara/" title="THMYara">THMYara</a><time datetime="2024-10-31T15:46:38.000Z" title="发表于 2024-10-31 23:46:38">2024-10-31</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2024 By Mikannse</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function loadDisqus () {
+  const disqus_config = function () {
+    this.page.url = 'http://mikannse.space/2024/11/02/THMBasicStaticAnalysis/'
+    this.page.identifier = '/2024/11/02/THMBasicStaticAnalysis/'
+    this.page.title = 'THMBasicStaticAnalysis'
+  }
+
+  const disqusReset = () => {
+    DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addModeChange('disqus', disqusReset)
+
+  if (window.DISQUS) disqusReset()
+  else {
+    (function() { 
+      var d = document, s = d.createElement('script');
+      s.src = 'https://.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  }
+}
+
+if ('Valine' === 'Disqus' || !true) {
+  if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+  else loadDisqus()
+} else {
+  function loadOtherComment () {
+    loadDisqus()
+  }
+}
+</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
