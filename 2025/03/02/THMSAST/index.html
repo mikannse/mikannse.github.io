@@ -1,0 +1,531 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>THMSAST | MikannseのSekai</title><meta name="author" content="Mikannse"><meta name="copyright" content="Mikannse"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="Introduction在这个房间里，我们将研究静态应用程序安全测试 (SAST)，它是在应用程序开发生命周期中用于检测漏洞的众多工具之一。我们将研究它的优点和缺点，以及它如何补充其他方法，以确保应用程序在开发早期的安全。 学习目标  了解如何应用 SAST 来查找实际应用程序中的弱点。 了解使用 SAST 的利弊。 熟悉如何在开发生命周期中实施 SAST。  房间先决条件 在继续这个房间之前，熟">
+<meta property="og:type" content="article">
+<meta property="og:title" content="THMSAST">
+<meta property="og:url" content="https://blog.mikannse.cn/2025/03/02/THMSAST/index.html">
+<meta property="og:site_name" content="MikannseのSekai">
+<meta property="og:description" content="Introduction在这个房间里，我们将研究静态应用程序安全测试 (SAST)，它是在应用程序开发生命周期中用于检测漏洞的众多工具之一。我们将研究它的优点和缺点，以及它如何补充其他方法，以确保应用程序在开发早期的安全。 学习目标  了解如何应用 SAST 来查找实际应用程序中的弱点。 了解使用 SAST 的利弊。 熟悉如何在开发生命周期中实施 SAST。  房间先决条件 在继续这个房间之前，熟">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg">
+<meta property="article:published_time" content="2025-03-01T17:49:48.000Z">
+<meta property="article:modified_time" content="2025-03-01T17:50:25.295Z">
+<meta property="article:author" content="Mikannse">
+<meta property="article:tag" content="笔记">
+<meta property="article:tag" content="DevSecOps">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg"><link rel="shortcut icon" href="/img/icon.jpg"><link rel="canonical" href="https://blog.mikannse.cn/2025/03/02/THMSAST/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Mikannse","link":"链接: ","source":"来源: MikannseのSekai","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'THMSAST',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: undefined,
+  isToc: true,
+  postUpdate: '2025-03-02 01:50:25'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">314</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">74</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="MikannseのSekai"><span class="site-name">MikannseのSekai</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">THMSAST</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-03-01T17:49:48.000Z" title="发表于 2025-03-02 01:49:48">2025-03-02</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-03-01T17:50:25.295Z" title="更新于 2025-03-02 01:50:25">2025-03-02</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BD%91%E5%AE%89/">网安</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">7.1k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>24分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="THMSAST"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>在这个房间里，我们将研究静态应用程序安全测试 (SAST)，它是在应用程序开发生命周期中用于检测漏洞的众多工具之一。我们将研究它的优点和缺点，以及它如何补充其他方法，以确保应用程序在开发早期的安全。</p>
+<p>学习目标</p>
+<ul>
+<li>了解如何应用 SAST 来查找实际应用程序中的弱点。</li>
+<li>了解使用 SAST 的利弊。</li>
+<li>熟悉如何在开发生命周期中实施 SAST。</li>
+</ul>
+<p>房间先决条件</p>
+<p>在继续这个房间之前，熟悉 Web 漏洞非常重要，如 <a target="_blank" rel="noopener" href="https://tryhackme.com/room/owasptop102021">OWASP Top 10</a> 和 <a target="_blank" rel="noopener" href="https://tryhackme.com/room/owaspapisecuritytop105w">OWASP API Top 10</a> 房间中所示。掌握一些软件开发生命周期各个阶段的基本知识也是可取的，因此，如有需要，请随时查看 <a target="_blank" rel="noopener" href="https://tryhackme.com/room/sdlc">SDLC 室</a>。</p>
+<h1 id="Code-Review"><a href="#Code-Review" class="headerlink" title="Code Review"></a>Code Review</h1><p>开发安全应用程序的方法之一是通过称为代码审查的过程频繁测试代码是否存在安全漏洞。代码审查包括查看应用程序的源代码，使用白盒方法搜索可能的漏洞。通过访问代码，审查者可以保证更大程度地覆盖应用程序的功能，并减少查找错误所需的时间。</p>
+<p>如果不加以处理，在开发过程早期引入的漏洞将传播到项目结束时，而解决漏洞将更加费力且成本更高。代码审查将尝试尽早发现此类漏洞，因为这些漏洞更容易修复。</p>
+<p>手动与自动代码审查</p>
+<p>为了获得最佳结果，代码审查通常通过手动分析和自动工具的组合来完成。这两种方法都有优点，在决定开发生命周期的每个阶段哪种方法最好时需要考虑这些优点。</p>
+<p>一方面，手动代码审查的优势在于人工评估代码，这可以进行彻底的分析并获得更精确的结果。但是，由于应用程序通常有成千上万行代码，因此这项任务很快就会让审查者感到不堪重负，导致他们因疲劳而错过一些漏洞。</p>
+<p>另一方面，自动化工具擅长几乎立即发现常见漏洞，为审查者节省了大量时间。无论代码库的大小如何，自动化工具也能始终如一地执行，因此只要它们有预定义的规则来匹配漏洞，它们就不会像人类那样错过漏洞。如果工具没有为特定类型的漏洞配置规则，它们很可能会错过这些规则。</p>
+<p>另一个需要比较的重要方面是成本。人工审查的成本通常更高，因为审查者必须花费大量时间通过代码追踪漏洞。自动化工具几乎可以立即执行分析。</p>
+<p>出于这些原因，您通常希望在开发生命周期的早期运行自动化测试，以较低的成本处理所有容易实现的问题，并定期或在实现重要项目目标时进行人工审查，以处理自动化工具可能无法检测到的复杂漏洞。</p>
+<h1 id="Manual-Code-Review"><a href="#Manual-Code-Review" class="headerlink" title="Manual Code Review"></a>Manual Code Review</h1><p>在开始介绍 SAST 工具之前，我们将了解手动核心审查通常是如何执行的，因为这将使我们更容易理解 SAST 工具如何查看代码。</p>
+<p>在此任务中，我们的目标是在简单应用程序的源代码中找到 SQL 注入漏洞。该应用程序还有其他漏洞，但我们将专注于一种类型的漏洞，以了解传统代码审查是如何进行的，以及这些步骤如何映射到 SAST 工具使用的分析技术。</p>
+<p>在继续之前，请按下此任务附带的绿色 <strong>启动机器</strong> 按钮，确保您的虚拟机正在运行。虚拟机正在拆分视图中启动。如果看不到机器，请按下此房间右上角的蓝色 <strong>显示拆分视图</strong> 按钮。</p>
+<p>对于此任务，我们将使用的代码可以在 <code>/home/ubuntu/Desktop/simple-webapp/</code> 中找到</p>
+<p>搜索不安全函数</p>
+<p>审查代码的第一步是识别正在使用的潜在不安全函数。由于我们正在寻找 SQL 注入，因此我们应该关注可用于向数据库发送原始查询的任何函数。由于我们的代码使用 PHP 和 MySQL，因此以下是一些通常用于发送 MySQL 查询的函数：</p>
+<table>
+<thead>
+<tr>
+<th>数据库引擎</th>
+<th>函数</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>MySQL</td>
+<td>mysqli_query() mysql_query() mysqli_prepare() query() prepare()</td>
+</tr>
+</tbody></table>
+<p>手动搜索此类函数实例的一种直接方法是使用 grep 递归检查我们项目的所有文件。例如，要搜索 <code>mysqli_query()</code> 的实例，请转到项目的基目录并运行以下命令：</p>
+<p>Linux</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">user@machine$ cd /home/ubuntu/Desktop/simple-webapp/html/</span><br><span class="line"></span><br><span class="line">user@machine$ grep -r -n 'mysqli_query('</span><br><span class="line">  db.php:18: $result = mysqli_query($conn, $query);</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>-r</code> 选项告诉 grep 递归搜索当前目录下的所有文件，而 <code>-n</code> 选项表示我们希望 grep 告诉我们找到模式的行号。在上面的终端输出中，我们可以看到在行 <code>18</code> 上发现了一个 <code>mysqli_query()</code> 实例。</p>
+<p>我们已经确定了可能导致 SQL 注入的一行。但是，仅通过查看该行，我们无法确定是否存在漏洞。</p>
+<p>了解上下文</p>
+<p>让我们打开 <code>db.php</code> 来分析 <code>mysqli_query()</code> 函数周围的上下文，看看我们是否能更好地了解它的使用方式：</p>
+<figure class="highlight php"><table><tbody><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">db_query</span>(<span class="params"><span class="variable">$conn</span>, <span class="variable">$query</span></span>)</span>{</span><br><span class="line">    <span class="variable">$result</span> = <span class="title function_ invoke__">mysqli_query</span>(<span class="variable">$conn</span>, <span class="variable">$query</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$result</span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这里我们可以看到 <code>mysqli_query()</code> 被包装到 <code>db_query()</code> 函数中，并且 <code>$query</code> 参数直接传递而无需修改。函数嵌套到其他函数中是很常见的，因此仅仅分析函数的本地上下文有时不足以确定是否存在漏洞。我们现在需要在整个代码中跟踪 <code>db_query()</code> 函数的使用情况，以识别潜在的漏洞。</p>
+<p>跟踪用户对潜在漏洞函数的输入</p>
+<p>我们可以再次使用 grep 来搜索 <code>db_query()</code> 的使用情况：</p>
+<p>Linux</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">user@machine$ grep -rn 'db_query('</span><br><span class="line">    hidden-panel.php:7:$result = db_query($conn, $sql);</span><br><span class="line">    hidden-panel.php:20:$result2 = db_query($conn, $sql2);</span><br><span class="line">    hidden-panel.php:23:$result3 = db_query($conn, $sql3);</span><br><span class="line">    db.php:17:function db_query($conn, $query){</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这里我们在“hidden-panel.php”上找到了三种“db_query()”的用法。再次，我们可以分析每个调用的上下文，从第 7 行的调用开始：</p>
+<figure class="highlight php"><table><tbody><tr><td class="code"><pre><span class="line"><span class="variable">$sql</span> = <span class="string">"SELECT id, firstname, lastname FROM MyGuests WHERE id="</span>.<span class="variable">$_GET</span>[<span class="string">'guest_id'</span>];</span><br><span class="line"><span class="variable">$result</span> = <span class="title function_ invoke__">db_query</span>(<span class="variable">$conn</span>, <span class="variable">$sql</span>);</span><br></pre></td></tr></tbody></table></figure>
+
+<p>恭喜您找到 SQL 注入！通过 GET 方法传入 <code>guest_id</code> 参数的任何内容都将连接到原始 SQL 查询，而不会进行任何输入清理，从而使攻击者能够更改查询。</p>
+<p>如果我们对 <code>db_query()</code> 的其他两种用法执行类似的过程，我们将得到以下代码：</p>
+<figure class="highlight php"><table><tbody><tr><td class="code"><pre><span class="line"><span class="variable">$sql2</span> = <span class="string">"SELECT id, logtext FROM logs WHERE id='"</span>.<span class="title function_ invoke__">preg_replace</span>(<span class="string">'/[^a-z0-9A-Z"]/'</span>, <span class="string">""</span>, <span class="variable">$_GET</span>[<span class="string">'log_id'</span>]). <span class="string">"'"</span>;</span><br><span class="line"><span class="variable">$result2</span> = <span class="title function_ invoke__">db_query</span>(<span class="variable">$conn</span>, <span class="variable">$sql2</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable">$sql3</span> = <span class="string">"SELECT id, name FROM asciiart WHERE id="</span>.<span class="title function_ invoke__">preg_replace</span>(<span class="string">"/[^0-9]/"</span>, <span class="string">""</span>, <span class="variable">$_GET</span>[<span class="string">'art_id'</span>], <span class="number">1</span>);</span><br><span class="line"><span class="variable">$result3</span> = <span class="title function_ invoke__">db_query</span>(<span class="variable">$conn</span>, <span class="variable">$sql3</span>);</span><br></pre></td></tr></tbody></table></figure>
+
+<p>同样，我们将一些 GET 参数连接到 SQL 查询中。这会给我们留下这样一种印象：我们又发现了两个漏洞。不过，在这两种情况下，GET 参数都通过 <code>preg_replace()</code> 进行清理，使用不同的正则表达式将任何不允许的字符替换为空字符串。要确定这些代码行是否存在漏洞，我们需要评估现有的过滤器是否允许 SQL 注入通过。</p>
+<p>对 <code>$sql2</code> 的查询通过一个过滤器，该过滤器只允许字母数字或双引号字符。虽然双引号似乎是 SQLi 的可能载体，但在这种情况下它们并不构成威胁，因为 SQL 语句将通过 <code>$_GET['log_id']</code> 传递的字符串括在单引号 (‘) 之间。由于攻击者无法逃脱 SQL 语句中的字符串，因此我们可以确定此行不存在漏洞。</p>
+<p><code>$sql3</code> 上的查询更加严格，只允许通过 <code>$_GET['art_id']</code> 传递数字字符。但是，请注意，<code>preg_replace()</code> 函数在调用时将第三个参数设置为“1”。如果我们参考 <a target="_blank" rel="noopener" href="https://www.php.net/manual/en/function.preg-replace.php">函数手册页</a>，我们将了解到第三个参数表示要进行的最大替换次数。由于它设置为 1，因此只有第一个非数字字符将被替换为空字符串。任何其他字符都将通过而不被替换，从而启用 SQL 注入。此行确实存在漏洞。</p>
+<p>足够的手动审查</p>
+<p>我们已经使用手动代码审查来识别应用程序中的两个 SQL 注入点。虽然示例应用程序非常简单，但实际应用程序有更多的代码行。跟踪潜在易受攻击函数的每个实例将更加复杂。到目前为止，应该很明显，手动审查大型代码库很快就会成为一项繁琐的任务。现在，我们将使用 SAST 工具为我们执行相同的分析，并分析它们的性能。</p>
+<p>奖励练习</p>
+<p>使用手动代码审查来查找所提供项目中的其他类型的漏洞。以下问题将指导您完成此过程。</p>
+<h1 id="Automated-Code-Review"><a href="#Automated-Code-Review" class="headerlink" title="Automated Code Review"></a>Automated Code Review</h1><p>静态应用程序安全测试</p>
+<p>静态应用程序安全测试 (SAST) 是指使用自动化工具进行代码分析。其目的不是取代手动代码审查，而是提供一种简单的方法来自动执行简单的代码检查，以便在开发过程中快速发现漏洞，而无需专业人员。</p>
+<p>SAST 是对其他技术（如动态应用程序安全测试 (DAST) 或软件组合分析 (SCA)）的补充，以在开发生命周期内提供应用程序安全的整体方法。与任何其他技术一样，SAST 也有其优点和缺点，我们需要注意：</p>
+<table>
+<thead>
+<tr>
+<th><strong>优点：</strong>它不需要目标应用程序的运行实例。它提供了对应用程序功能的良好覆盖。与其他动态技术相比，它的运行速度更快。SAST 工具可以准确报告代码中的漏洞位置。易于集成到您的 CI/CD 管道中。</th>
+<th><strong>缺点：</strong>应用程序的源代码并不总是可用的（第三方应用程序）。容易出现误报。无法识别本质上是动态的漏洞。SAST 工具大多是特定于语言的。它们只能检查它们知道的语言。</th>
+</tr>
+</thead>
+</table>
+<p>SAST 内部原理</p>
+<p>虽然每个 SAST 工具都不同，但大多数工具都会执行两个主要任务：</p>
+<ol>
+<li><p><strong>将代码转换为抽象模型</strong>：SAST 工具通常会提取源代码并生成抽象表示以供进一步分析。大多数 SAST 工具将使用抽象语法树 (AST) 表示代码，但某些工具可能具有其他等效的专有结构。这样可以更轻松地以独立于所用编程语言的方式进行代码分析。此步骤对于后续分析至关重要，因为任何未正确转换为 AST 的编程语言特性都可能无法有效地分析安全问题。</p>
+</li>
+<li><p><strong>分析抽象模型的安全问题</strong>：将使用不同的分析技术来搜索代码模型中的潜在漏洞。</p>
+</li>
+</ol>
+<p>在这个房间中，我们不会详细介绍代码建模，因为您不必从用户的角度来处理它。相反，我们将重点介绍 SAST 工具常用的不同分析技术：</p>
+<table>
+<thead>
+<tr>
+<th><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/7c3d17f4c1cb81950fe4a9f056e03dba.png" alt="Semantic Analysis"></th>
+<th><strong>语义分析</strong>：这种分析可以比作在进行手动代码审查时对潜在不安全函数的 grepping。它旨在发现与本地环境中使用潜在不安全代码有关的缺陷。例如，搜索对 <code>mysqli_query()</code> 的调用，其中 GET 或 POST 参数直接连接到查询字符串中：<code>mysqli_query($db, "SELECT * from users where username=".$_GET['username'])</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/fb294ccfe9bbd914c21a174e64f13213.png" alt="Dataflow Analysis"></td>
+<td><strong>数据流分析：</strong>在某些情况下，可能会使用存在潜在危险的函数，但仅通过分析函数调用周围的本地上下文无法确定是否存在漏洞。例如，一个定义如下的函数：<code>function db_query($conn, $query){ $result = mysqli_query($conn, $query); return $result; }</code>通过查看函数的代码，很难判断是否存在任何漏洞。在这种情况下，仅分析对危险函数的调用的本地上下文是不够的。数据流分析将跟踪信息如何从用户可以操纵的输入流向潜在易受攻击的函数，就像我们手动分析提供的应用程序代码时所做的那样。在数据流分析术语中，数据输入将被称为<strong>源</strong>，潜在易受攻击的函数将被称为<strong>接收器</strong>。如果数据未经清理就从源流向接收器，则存在漏洞。回到<code>db_query()</code>函数，数据流分析必须找到它的所有用法并追溯以查看是否有任何受污染的输入（源）被发送给它，最终成为<code>mysqli_query()</code>（接收器）执行的查询的一部分。<img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/aa9389c3ba8aaadd6ed4ce84025f818d.png" alt="Dataflow Graph"></td>
+</tr>
+<tr>
+<td><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/1747a47ae9ed1257e9a2e83cf51940bd.png" alt="Control Flow Analysis"></td>
+<td><strong>控制流分析：</strong>分析代码中的操作顺序，以查找竞争条件、未初始化变量的使用或资源泄漏。例如，查看以下 Java 代码：String cmd = System.getProperty(“cmd”); cmd = cmd.trim();如果未定义 <code>cmd</code> 属性，则对 <code>System.getProperty()</code> 的调用将返回 NULL。从 NULL 变量调用 trim 方法将在运行时引发异常。</td>
+</tr>
+<tr>
+<td><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/8e1238f36efec1e0d531a1b3fb422d7e.png" alt="Structural Analysis"></td>
+<td><strong>结构分析：</strong>分析每种编程语言的特定代码结构。这包括在声明类时遵循最佳实践、评估可能永远不会执行的代码块（死代码）、正确使用 try/catch 块以及与使用不安全加密材料（弱密钥或 IV）相关的其他问题。以下是结构分析可以检测到的代码的简单示例：<code>$options = array('private_key_bits' =&gt; 1024, 'private_key_type' =&gt; OPENSSL_KEYTYPE_RSA); $res = openssl_pkey_new($options);</code>在这种情况下，我们有一个密钥大小为 1024 的 RSA 实现，按照今天的标准，这被认为是不够的。</td>
+</tr>
+<tr>
+<td><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/66518f2330b41f5fcab67b49daae3fc4.png" alt="Configuration Analysis"></td>
+<td><strong>配置分析：</strong>搜索应用程序配置缺陷，而不是代码本身。例如，在 Internet 信息服务下运行的应用程序将有一个名为“web.config”的配置文件，PHP 会将其所有配置选项保存在一个名为“php.ini”的文件中，大多数应用程序都会使用一些配置文件。通过检查配置，该工具将识别可能的改进。以下是 PHP 中两个配置指令的示例，它们可能会对 SAST 工具发出警报，因为它们为 RFI、SSRF 或其他攻击媒介提供了便利：<code>allow_url_include = On allow_url_fopen = On</code></td>
+</tr>
+</tbody></table>
+<p>值得注意的是，并非每个 SAST 工具都会实现我们讨论的所有分析技术，但最好将它们作为参考来比较现有的不同解决方案。</p>
+<h1 id="Rechecking-our-Application-with-SAST-Tools"><a href="#Rechecking-our-Application-with-SAST-Tools" class="headerlink" title="Rechecking our Application with SAST Tools"></a>Rechecking our Application with SAST Tools</h1><p>现在我们知道了 SAST 工具的工作原理，我们准备使用其中的一些工具。我们将使用一个简单的 PHP 应用程序作为此任务的目标。您可以在桌面上的 <code>simple-webapp</code> 文件夹中找到该应用程序的代码。</p>
+<p>使用 Psalm 重新检查我们的应用程序</p>
+<p>我们将首先使用 <strong>Psalm（PHP 静态分析 Linting Machine）</strong>，这是一个用于分析 PHP 代码的简单工具。该工具已作为应用程序项目的一部分安装，因此您无需安装它，但如果需要，您可以在 <a target="_blank" rel="noopener" href="https://psalm.dev/docs/running_psalm/installation/">Psalm 的在线文档</a> 上找到安装说明。</p>
+<p>打开终端并转到项目的目录。您将在项目的根目录中找到一个 psalm.xml 文件。这是 Psalm 的配置文件，它应该如下所示：</p>
+<figure class="highlight xml"><table><tbody><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">"1.0"</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">psalm</span></span></span><br><span class="line"><span class="tag">    <span class="attr">errorLevel</span>=<span class="string">"3"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">resolveFromConfigFile</span>=<span class="string">"true"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns</span>=<span class="string">"https://getpsalm.org/schema/config"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xsi:schemaLocation</span>=<span class="string">"https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">findUnusedBaselineEntry</span>=<span class="string">"true"</span></span></span><br><span class="line"><span class="tag">&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">projectFiles</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">directory</span> <span class="attr">name</span>=<span class="string">"html/"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">ignoreFiles</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">directory</span> <span class="attr">name</span>=<span class="string">"vendor"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">ignoreFiles</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">projectFiles</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">psalm</span>&gt;</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们不会深入介绍配置选项，但在这里您可以看到 <code>errorLevel</code> 参数，它表示 Psalm 在报告问题时的严格程度。值越低，报告的问题越多。还有一个名为 <code>projectFiles</code> 的部分，其中指示要扫描的文件。对于此项目，只会扫描 html 目录，而供应商目录将被忽略（因为我们不想测试第三方依赖项）。</p>
+<p>设置配置文件后，您可以在项目目录中使用以下命令运行 Psalm：</p>
+<p>Linux</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">user@machine$ cd /home/ubuntu/Desktop/simple-webapp/</span><br><span class="line">user@machine$ ./vendor/bin/psalm --no-cache</span><br><span class="line"></span><br><span class="line">ERROR: TypeDoesNotContainType - html/hidden-panel.php:10:5 - Operand of type 0 is always falsy (see https://psalm.dev/056)</span><br><span class="line">  if ($result-&gt;num_rows = 0) {</span><br></pre></td></tr></tbody></table></figure>
+
+<p>默认情况下，Psalm 只会对代码运行一些结构分析，并向我们显示需要注意的编程错误。在前面的例子中，Psalm 报告 <code>if</code> 子句的条件始终为 <code>false</code>。在这种情况下，程序员错误地使用了赋值运算符（<code>=</code>）而不是比较运算符（<code>==</code>）。由于赋值运算符始终返回分配的值（在本例中为 <code>0</code>），因此条件将始终计算为 false（在 PHP 中，<code>0</code> 将自动转换为 <code>false</code>）。</p>
+<p>默认测试将搜索变量类型、变量初始化和其他安全编码模式的问题。虽然这些问题不是漏洞，但 Psalm 会提出建议，以便您的代码遵循编码最佳实践，这是避免运行时错误的一个好开始。</p>
+<p>Psalm 还提供了使用 <code>--taint-analysis</code> 标志对我们的代码运行数据流分析的可能性。此命令的输出将更加有趣，因为它将精确定位可能的安全问题。命令的输出将如下所示：</p>
+<p>Linux</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">user@machine$ cd /home/ubuntu/Desktop/simple-webapp/</span><br><span class="line">user@machine$ ./vendor/bin/psalm --no-cache --taint-analysis</span><br><span class="line"></span><br><span class="line">ERROR: TaintedInclude - html/view.php:22:9 - Detected tainted code passed to include or similar (see https://psalm.dev/251)</span><br><span class="line">  $_GET</span><br><span class="line">    &lt;no known location&gt;</span><br><span class="line"></span><br><span class="line">  $_GET['img'] - html/view.php:22:28</span><br><span class="line">include('./gallery-files/'.$_GET['img']);</span><br><span class="line"></span><br><span class="line">  concat - html/view.php:22:9</span><br><span class="line">include('./gallery-files/'.$_GET['img']);</span><br></pre></td></tr></tbody></table></figure>
+
+<p>对于报告的每个错误，Psalm 都会向您显示从源（“$_GET”）到接收器函数（“include()”）的完整数据流跟踪。这里我们有一个典型的本地文件包含 (LFI) 漏洞，因为 GET 参数“img”直接连接到传递给“include()”函数的文件名中。</p>
+<p>从安全角度来看，数据流分析通常会获得最有趣的发现。但是，其他结构性发现同样重要，即使它们不会直接转化为可利用的漏洞。结构性缺陷通常会导致难以跟踪的业务逻辑错误或应用中的一些不可预测的行为。</p>
+<p>处理误报和误报</p>
+<p>无论您使用哪种 SAST 工具，错误总是存在的。作为快速提醒，我们通常会关注以下两种错误类型：</p>
+<ul>
+<li><strong>误报：</strong>该工具报告代码中不存在的漏洞。</li>
+<li><strong>漏报</strong>：该工具不会报告代码中存在的漏洞。</li>
+</ul>
+<p>这些错误可能是因为该工具无法正确评估目标代码而出现的，但如果我们作为用户没有正确使用该工具，这些错误也会出现。</p>
+<p>举一个简单的例子，当我们之前手动检查代码时，我们发现了三个可能的 SQL 注入实例。尽管如此，我们还是丢弃了其中一个，因为字符过滤正在有效地应用于它，留下两个确认的 SQL 注入漏洞。如果我们检查 Psalm 的输出，我们会注意到只报告了一个 SQL 注入实例（第一个在 <code>hidden-panel.php</code> 的 <code>6-7</code> 行中）：</p>
+<p>Linux</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">user@machine$ ./vendor/bin/psalm --no-cache --taint-analysis</span><br><span class="line"></span><br><span class="line">ERROR: TaintedSql - html/db.php:18:32 - Detected tainted SQL (see https://psalm.dev/244)</span><br><span class="line">  $_GET</span><br><span class="line">    &lt;no known location&gt;</span><br><span class="line"></span><br><span class="line">  $_GET['guest_id'] - html/hidden-panel.php:6:65</span><br><span class="line">$sql = "SELECT id, firstname, lastname FROM MyGuests WHERE id=".$_GET['guest_id'];</span><br><span class="line"></span><br><span class="line">  concat - html/hidden-panel.php:6:8</span><br><span class="line">$sql = "SELECT id, firstname, lastname FROM MyGuests WHERE id=".$_GET['guest_id'];</span><br></pre></td></tr></tbody></table></figure>
+
+<p>作为一个实验，让我们注释掉 hidden-pannel.php 中的第 6 行和第 7 行，看看会发生什么：</p>
+<figure class="highlight php"><table><tbody><tr><td class="code"><pre><span class="line"><span class="comment">// $sql = "SELECT id, firstname, lastname FROM MyGuests WHERE id=".$_GET['guest_id'];</span></span><br><span class="line"><span class="comment">// $result = db_query($conn, $sql);</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>理论上，我们不应该再有报告 TaintedSQL 实例的错误。但是，如果我们再次执行 Psalm，它现在将报告与其他两个 SQL 查询之一相对应的不同 TaintedSQL 错误：</p>
+<p>Linux</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">user@machine$ ./vendor/bin/psalm --no-cache --taint-analysis</span><br><span class="line"></span><br><span class="line">ERROR: TaintedSql - html/db.php:18:32 - Detected tainted SQL (see https://psalm.dev/244)</span><br><span class="line">  $_GET</span><br><span class="line">    &lt;no known location&gt;</span><br><span class="line"></span><br><span class="line">  $_GET['log_id'] - html/hidden-panel.php:19:87</span><br><span class="line">$sql2 = "SELECT id, logtext FROM logs WHERE id='".preg_replace('/[^a-z0-9A-Z"]/', "", $_GET['log_id']). "'";</span><br><span class="line"></span><br><span class="line">  call to preg_replace - html/hidden-panel.php:19:87</span><br><span class="line">$sql2 = "SELECT id, logtext FROM logs WHERE id='".preg_replace('/[^a-z0-9A-Z"]/', "", $_GET['log_id']). "'";</span><br></pre></td></tr></tbody></table></figure>
+
+<p>现在，您可能想知道为什么 Psalm 没有第一次检测到此漏洞。如果您检查两个错误的第一行，就可以找到原因。两者都显示 <code>db.php</code> 的第 18 行是问题的根源。对于 Psalm，这两个漏洞是相同的，并且与您在 <code>db.php</code> 的第 18 行调用 <code>mysqli_query()</code> 的方式有关。换句话说，Psalm 希望您在那里应用修复，因为它不明白代码将 <code>db_query()</code> 定义为任何数据库查询的包装器。</p>
+<p>在继续之前，请确保取消注释 <code>hidden-panel.php</code> 中的第 6-7 行：</p>
+<figure class="highlight php"><table><tbody><tr><td class="code"><pre><span class="line"><span class="variable">$sql</span> = <span class="string">"SELECT id, firstname, lastname FROM MyGuests WHERE id="</span>.<span class="variable">$_GET</span>[<span class="string">'guest_id'</span>];</span><br><span class="line"><span class="variable">$result</span> = <span class="title function_ invoke__">db_query</span>(<span class="variable">$conn</span>, <span class="variable">$sql</span>);</span><br></pre></td></tr></tbody></table></figure>
+
+<p>为了更好地帮助 Psalm 了解情况，我们可以使用一些<strong>注释</strong>来提供更多上下文。我们可以指定 <code>db_query()</code> 应被视为接收器，因此如果任何受污染的输入通过 <code>$query</code> 参数到达该函数，我们就会收到错误。为此，在 <code>db.php</code> 中的 <code>db_query()</code> 函数定义顶部添加以下注释：</p>
+<figure class="highlight php"><table><tbody><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@psalm</span>-taint-sink sql $query</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@psalm</span>-taint-specialize</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">db_query</span>(<span class="params"><span class="variable">$conn</span>, <span class="variable">$query</span></span>)</span>{</span><br><span class="line">    <span class="variable">$result</span> = <span class="title function_ invoke__">mysqli_query</span>(<span class="variable">$conn</span>, <span class="variable">$query</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$result</span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>@psalm-taint-sink</code> 注释告诉 Psalm 检查 <code>$query</code> 参数中是否存在类型为 <code>sql</code> 的受污染输入。现在，每次受污染输入到达 <code>db_query()</code> 时，Psalm 都会发出 TaintedSQL 错误。</p>
+<p>我们还需要添加 <code>@psalm-taint-specialize</code> 注释来告诉 Psalm 每次调用该函数都应被视为一个单独的问题，并且该函数的污染程度完全取决于它收到的输入。这样，我们将分别得到这两个问题。</p>
+<p>重新运行 Psalm 后，我们现在应该可以按预期获得所有 TaintedSQL 错误实例：</p>
+<p>Linux</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">user@machine$ ./vendor/bin/psalm --no-cache --taint-analysis</span><br><span class="line"></span><br><span class="line">ERROR: TaintedSql - html/db.php:21:26 - Detected tainted SQL (see https://psalm.dev/244)</span><br><span class="line">  $_GET</span><br><span class="line">    &lt;no known location&gt;</span><br><span class="line"></span><br><span class="line">  $_GET['guest_id'] - html/hidden-panel.php:6:65</span><br><span class="line">$sql = "SELECT id, firstname, lastname FROM MyGuests WHERE id=".$_GET['guest_id'];</span><br><span class="line"></span><br><span class="line">  concat - html/hidden-panel.php:6:8</span><br><span class="line">$sql = "SELECT id, firstname, lastname FROM MyGuests WHERE id=".$_GET['guest_id'];</span><br><span class="line"></span><br><span class="line">  $sql - html/hidden-panel.php:6:1</span><br><span class="line">$sql = "SELECT id, firstname, lastname FROM MyGuests WHERE id=".$_GET['guest_id'];</span><br><span class="line"></span><br><span class="line">  call to db_query - html/hidden-panel.php:7:27</span><br><span class="line">$result = db_query($conn, $sql);</span><br><span class="line"></span><br><span class="line">ERROR: TaintedSql - html/db.php:21:26 - Detected tainted SQL (see https://psalm.dev/244)</span><br><span class="line">  $_GET</span><br><span class="line">    &lt;no known location&gt;</span><br><span class="line"></span><br><span class="line">  $_GET['log_id'] - html/hidden-panel.php:19:87</span><br><span class="line">$sql2 = "SELECT id, logtext FROM logs WHERE id='".preg_replace('/[^a-z0-9A-Z"]/', "", $_GET['log_id']). "'";</span><br><span class="line"></span><br><span class="line">  call to preg_replace - html/hidden-panel.php:19:87</span><br><span class="line">$sql2 = "SELECT id, logtext FROM logs WHERE id='".preg_replace('/[^a-z0-9A-Z"]/', "", $_GET['log_id']). "'";</span><br><span class="line"></span><br><span class="line">  preg_replace#3 - html/hidden-panel.php:19:87</span><br><span class="line">$sql2 = "SELECT id, logtext FROM logs WHERE id='".preg_replace('/[^a-z0-9A-Z"]/', "", $_GET['log_id']). "'";</span><br><span class="line"></span><br><span class="line">  preg_replace - vendor/vimeo/psalm/stubs/CoreGenericFunctions.phpstub:1182:10</span><br><span class="line">function preg_replace($pattern, $replacement, $subject, int $limit = -1, &amp;$count = null) {}</span><br><span class="line"></span><br><span class="line">  concat - html/hidden-panel.php:19:9</span><br><span class="line">$sql2 = "SELECT id, logtext FROM logs WHERE id='".preg_replace('/[^a-z0-9A-Z"]/', "", $_GET['log_id']). "'";</span><br><span class="line"></span><br><span class="line">  concat - html/hidden-panel.php:19:9</span><br><span class="line">$sql2 = "SELECT id, logtext FROM logs WHERE id='".preg_replace('/[^a-z0-9A-Z"]/', "", $_GET['log_id']). "'";</span><br><span class="line"></span><br><span class="line">  $sql2 - html/hidden-panel.php:19:1</span><br><span class="line">$sql2 = "SELECT id, logtext FROM logs WHERE id='".preg_replace('/[^a-z0-9A-Z"]/', "", $_GET['log_id']). "'";</span><br><span class="line"></span><br><span class="line">  call to db_query - html/hidden-panel.php:20:28</span><br><span class="line">$result2 = db_query($conn, $sql2);</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>注意：</strong>您将收到重复前一个错误的第三个错误。这是因为 <code>mysqli_query</code> 仍被视为有效接收器（Psalm 有一个内置的默认接收器列表），因此您仍然应该将原始警报置于新警报之上。</p>
+<p>最后，如果您将 Psalm 的结果与我们的手动审查进行比较，您应该注意到结果中存在一些差异：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Manual Review</th>
+<th>Psalm Review</th>
+<th>Verdict</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>$sql</td>
+<td>Vulnerable</td>
+<td>Vulnerable</td>
+<td>OK</td>
+</tr>
+<tr>
+<td>$sql2</td>
+<td>Not Vulnerable</td>
+<td>Vulnerable</td>
+<td>False Positive</td>
+</tr>
+<tr>
+<td>$sql3</td>
+<td>Vulnerable</td>
+<td>Not Vulnerable</td>
+<td>False Negative</td>
+</tr>
+</tbody></table>
+<p>使用 SAST 工具时，总会存在一定程度的误报和漏报。与任何其他工具一样，您必须手动检查报告以查找任何错误。SAST 是手动审核的绝佳补充，但绝不能将其视为其替代品。</p>
+<h1 id="SAST-in-the-Development-Cycle"><a href="#SAST-in-the-Development-Cycle" class="headerlink" title="SAST in the Development Cycle"></a>SAST in the Development Cycle</h1><p>SAST 是开发生命周期中最早出现的工具之一。它通常在编码阶段实施，因为使用它不需要有功能性应用程序。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/8d4c2f1e6b6b61d8e13d8e0c4597773e.png" alt="SAST in the Development Cycle"></p>
+<p>根据具体情况，SAST 可以采用以下方式之一实现：</p>
+<ul>
+<li><strong>CI/CD 集成</strong>：每次发出拉取请求或合并时，SAST 工具都会检查代码是否存在漏洞。检查拉取请求可确保进行合并的代码至少经过了基本的安全检查。在某些情况下，与检查每个拉取请求相比，仅在合并时执行 SAST 扫描可能有助于防止开发管道速度变慢，因为它避免让所有开发人员等待完整的 SAST 扫描。</li>
+<li><strong>IDE 集成</strong>：SAST 工具可以集成到开发人员最喜欢的 IDE 中，而不必等待拉取请求或合并发生。这样，可以尽早修复代码，从而节省项目时间。</li>
+</ul>
+<p>请注意，您可能希望 SAST 在开发人员的 IDE 和您的 CI/CD 管道上运行，这将是有效的。例如，IDE 工具可以运行基本的结构检查并执行安全编码指南，而 CI/CD 集成可能会运行更耗时的数据流/污点分析。请记住，您的具体设置将取决于每个项目的要求，团队应仔细评估。</p>
+<p>如果您想了解如何将安全工具集成到 CI/CD 管道中，请查看 <a target="_blank" rel="noopener" href="https://tryhackme.com/room/dastzap">DAST 房间 </a>，获取将 DAST 工具集成到 Jenkins 管道的示例。使用 SAST 工具的过程非常相似，因此我们不会在此重复。</p>
+<p>在 IDE 中集成 SAST</p>
+<p>您的虚拟机已安装 VS Code 编辑器，并已配置为使用几个 SAST 工具：</p>
+<ul>
+<li><strong>Psalm：</strong>我们一直使用的工具支持 IDE 集成，方法是直接从 <a target="_blank" rel="noopener" href="https://marketplace.visualstudio.com/items?itemName=getpsalm.psalm-vscode-plugin">Visual Studio Marketplace</a> 将 Psalm 插件安装到 VS Code 中。此插件将实时检查您输入的任何内容，并直接在您的代码中显示与控制台版本相同的警报。污点分析将不可用，因此您只能看到在基本 Psalm 分析中报告的结构问题。</li>
+<li><strong>Semgrep：</strong> 另一个可以直接从 <a target="_blank" rel="noopener" href="https://marketplace.visualstudio.com/items?itemName=Semgrep.semgrep">Visual Studio Marketplace</a> 安装到 VS Code 中的 SAST 工具。与 Psalm 一样，它会直接在您的代码中显示内联警报。Semgrep 甚至允许我们在需要时构建自定义规则。您可以在项目目录内的 <code>semgrep-rules</code> 目录中检查为此项目加载的规则。有关如何构建 Semgrep 规则的细节将留待以后讨论，所以现在不用担心。您可以在目录中检查规则，但这不是本讨论所需的。</li>
+</ul>
+<p>这两种工具的工作方式类似，直接在代码中内联显示检测到的任何问题。唯一值得注意的区别是，Semgrep 会在您启动 VS Code 时运行，并向您显示它在所有文件上检测到的问题，而 Psalm 只会向您显示与您当前正在编辑的文件相关的问题。插件会将以下信息添加到您的 IDE 屏幕：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/0409daf7cdf144dfaa3e9f1e4ab2fcb9.png" alt="SAST in VS Code"></p>
+<p>对于检测到问题的每一行，您可以通过将鼠标指针悬停在其上来获取更多信息。以下是将鼠标指针悬停在“login.php”第 46 行上时会得到的信息：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/9b3cd323e1ef63bac1c9dab83171827f.png" alt="Inline Problems in VS Code"></p>
+<p>您还可以通过单击 VS Code 屏幕底部的错误指示器来检查完整的问题列表：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/a879e9d06f657dbfd45dcc874dc3c91f.png" alt="Problems Panel"></p>
+<p>使用 IDE 检查问题可以让您作为开发人员编写出更清晰的代码，从而大大提高最终应用程序的整体安全性。</p>
+<p>使用 IDE 中的两种工具，在任务结束时回答问题。</p>
+<h1 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h1><p>SAST 是我们可以用来在应用程序开发过程中提高其安全性的众多技术之一。我们已经展示了如何使用 Psalm（众多可用的 SAST 工具之一），以及与手动审核相比，它为我们节省了多少时间。与任何其他自动化工具一样，手动验证结果至关重要，因为可能会报告误报。</p>
+<p>请务必查看 <a target="_blank" rel="noopener" href="https://tryhackme.com/room/dastzap">DAST 室</a>，了解动态分析如何补充 SAST 以加强您的安全开发流程。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://blog.mikannse.cn">Mikannse</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://blog.mikannse.cn/2025/03/02/THMSAST/">https://blog.mikannse.cn/2025/03/02/THMSAST/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://blog.mikannse.cn" target="_blank">MikannseのSekai</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a><a class="post-meta__tags" href="/tags/DevSecOps/">DevSecOps</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2025/02/28/THMDependencyManagement/" title="THMDependencyManagement"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">THMDependencyManagement</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2025/02/28/THMDependencyManagement/" title="THMDependencyManagement"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-02-28</div><div class="title">THMDependencyManagement</div></div></a></div><div><a href="/2024/07/19/CSS%E9%9A%8F%E6%89%8B%E8%AE%B0/" title="CSS随手记"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-19</div><div class="title">CSS随手记</div></div></a></div><div><a href="/2024/06/15/AdvancedSQLInjectionTHM/" title="AdvancedSQLInjectionTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-06-15</div><div class="title">AdvancedSQLInjectionTHM</div></div></a></div><div><a href="/2024/03/14/ContainerVulnerabilitiesTHM/" title="ContainerVulnerabilitiesTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-03-14</div><div class="title">ContainerVulnerabilitiesTHM</div></div></a></div><div><a href="/2024/10/05/Git%E9%80%9F%E6%88%90/" title="Git速成"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-05</div><div class="title">Git速成</div></div></a></div><div><a href="/2024/07/11/HMVLabsTemperanceX11-20/" title="HMVLabsTemperanceX11-20"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-11</div><div class="title">HMVLabsTemperanceX11-20</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Mikannse</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">314</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">74</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mikannse/mikannse.github.io"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">暂时没有公告QAQ</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Introduction"><span class="toc-number">1.</span> <span class="toc-text">Introduction</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Code-Review"><span class="toc-number">2.</span> <span class="toc-text">Code Review</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Manual-Code-Review"><span class="toc-number">3.</span> <span class="toc-text">Manual Code Review</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Automated-Code-Review"><span class="toc-number">4.</span> <span class="toc-text">Automated Code Review</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Rechecking-our-Application-with-SAST-Tools"><span class="toc-number">5.</span> <span class="toc-text">Rechecking our Application with SAST Tools</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#SAST-in-the-Development-Cycle"><span class="toc-number">6.</span> <span class="toc-text">SAST in the Development Cycle</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Conclusion"><span class="toc-number">7.</span> <span class="toc-text">Conclusion</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/03/02/THMSAST/" title="THMSAST">THMSAST</a><time datetime="2025-03-01T17:49:48.000Z" title="发表于 2025-03-02 01:49:48">2025-03-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/28/THMDependencyManagement/" title="THMDependencyManagement">THMDependencyManagement</a><time datetime="2025-02-28T12:59:01.000Z" title="发表于 2025-02-28 20:59:01">2025-02-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/03/25-1%E6%9D%82%E8%B0%88/" title="25-1杂谈">25-1杂谈</a><time datetime="2025-02-03T04:48:34.000Z" title="发表于 2025-02-03 12:48:34">2025-02-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/01/15/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%B9%9D)%E4%B9%8BVulnHubSNAKEOIL/" title="打靶记录(一六九)之VulnHubSNAKEOIL">打靶记录(一六九)之VulnHubSNAKEOIL</a><time datetime="2025-01-15T08:34:34.000Z" title="发表于 2025-01-15 16:34:34">2025-01-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/01/15/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E5%85%AB)%E4%B9%8BVulnHubEvilbox/" title="打靶记录(一六八)之VulnHubEvilbox">打靶记录(一六八)之VulnHubEvilbox</a><time datetime="2025-01-15T06:41:28.000Z" title="发表于 2025-01-15 14:41:28">2025-01-15</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2025 By Mikannse</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function loadDisqus () {
+  const disqus_config = function () {
+    this.page.url = 'https://blog.mikannse.cn/2025/03/02/THMSAST/'
+    this.page.identifier = '/2025/03/02/THMSAST/'
+    this.page.title = 'THMSAST'
+  }
+
+  const disqusReset = () => {
+    DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addModeChange('disqus', disqusReset)
+
+  if (window.DISQUS) disqusReset()
+  else {
+    (function() { 
+      var d = document, s = d.createElement('script');
+      s.src = 'https://.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  }
+}
+
+if ('Valine' === 'Disqus' || !true) {
+  if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+  else loadDisqus()
+} else {
+  function loadOtherComment () {
+    loadDisqus()
+  }
+}
+</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
