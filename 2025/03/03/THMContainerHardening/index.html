@@ -1,0 +1,583 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>THMContainerHardening | MikannseのSekai</title><meta name="author" content="Mikannse"><meta name="copyright" content="Mikannse"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="Introduction到目前为止，本模块已向您介绍了 Docker 的基础知识以及与容器相关的潜在漏洞。本房间将向您介绍保护容器的各种方法。 学习目标  保护 Docker 守护进程以防止未经授权的交互。 正确分配容器的权限（功能）。 防止有故障或恶意的容器耗尽系统。 利用 Seccomp 和 AppArmor 等安全功能来定义容器与操作系统的行为方式。 通过检查 Docker 映像是否存在漏洞">
+<meta property="og:type" content="article">
+<meta property="og:title" content="THMContainerHardening">
+<meta property="og:url" content="https://blog.mikannse.cn/2025/03/03/THMContainerHardening/index.html">
+<meta property="og:site_name" content="MikannseのSekai">
+<meta property="og:description" content="Introduction到目前为止，本模块已向您介绍了 Docker 的基础知识以及与容器相关的潜在漏洞。本房间将向您介绍保护容器的各种方法。 学习目标  保护 Docker 守护进程以防止未经授权的交互。 正确分配容器的权限（功能）。 防止有故障或恶意的容器耗尽系统。 利用 Seccomp 和 AppArmor 等安全功能来定义容器与操作系统的行为方式。 通过检查 Docker 映像是否存在漏洞">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg">
+<meta property="article:published_time" content="2025-03-03T06:59:56.000Z">
+<meta property="article:modified_time" content="2025-03-03T07:05:33.762Z">
+<meta property="article:author" content="Mikannse">
+<meta property="article:tag" content="笔记">
+<meta property="article:tag" content="运维">
+<meta property="article:tag" content="DevSecOps">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg"><link rel="shortcut icon" href="/img/icon.jpg"><link rel="canonical" href="https://blog.mikannse.cn/2025/03/03/THMContainerHardening/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Mikannse","link":"链接: ","source":"来源: MikannseのSekai","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'THMContainerHardening',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: undefined,
+  isToc: true,
+  postUpdate: '2025-03-03 15:05:33'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">315</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">74</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="MikannseのSekai"><span class="site-name">MikannseのSekai</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">THMContainerHardening</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-03-03T06:59:56.000Z" title="发表于 2025-03-03 14:59:56">2025-03-03</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-03-03T07:05:33.762Z" title="更新于 2025-03-03 15:05:33">2025-03-03</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BD%91%E5%AE%89/">网安</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">5.5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>19分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="THMContainerHardening"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>到目前为止，本模块已向您介绍了 Docker 的基础知识以及与容器相关的潜在漏洞。本房间将向您介绍保护容器的各种方法。</p>
+<p>学习目标</p>
+<ul>
+<li>保护 Docker 守护进程以防止未经授权的交互。</li>
+<li>正确分配容器的权限（功能）。</li>
+<li>防止有故障或恶意的容器耗尽系统。</li>
+<li>利用 Seccomp 和 AppArmor 等安全功能来定义容器与操作系统的行为方式。</li>
+<li>通过检查 Docker 映像是否存在漏洞来养成良好的卫生习惯 - 实施检查代码是否存在漏洞的框架和工具。</li>
+</ul>
+<p>先决条件</p>
+<p>为了完成本房间，您必须熟悉 Docker 的各个组件。我强烈建议在继续之前完成 <a target="_blank" rel="noopener" href="https://tryhackme.com/room/introtodockerk8pdqk">Docker 简介</a> 房间。</p>
+<h1 id="Protecting-the-Docker-Daemon"><a href="#Protecting-the-Docker-Daemon" class="headerlink" title="Protecting the Docker Daemon"></a>Protecting the Docker Daemon</h1><p>您可能还记得 <a target="_blank" rel="noopener" href="https://tryhackme.com/room/containervulnerabilitiesDG">容器漏洞</a> 房间中提到，Docker 守护程序负责处理请求，例如管理容器以及将图像拉取或上传到 Docker 注册表。Docker 可以远程管理，并且通常在 CI（持续集成）和 CD（持续开发）管道中完成。例如，在另一台主机上的容器中推送和运行新代码以检查错误。</p>
+<p>如果攻击者可以与 Docker 守护程序交互，他们就可以与容器和图像交互。例如，他们启动自己的（恶意）容器或访问运行具有敏感信息（例如数据库）的应用程序的容器。</p>
+<p>默认情况下，Docker 守护程序不会暴露给网络，必须手动配置。但是，暴露 Docker 守护程序是一种常见做法（尤其是在 CI/CD 管道等云环境中）。</p>
+<p>实施安全通信和身份验证方法（例如下面列出的方法）对于防止未经授权访问 Docker 守护程序非常重要。</p>
+<p>SSH</p>
+<p>开发人员可以使用 SSH 身份验证与运行 Docker 的其他设备进行交互。为此，Docker 使用可以视为配置文件的上下文。这些配置文件允许开发人员保存和交换其他设备的配置。例如，开发人员可能有一个用于开发的 Docker 设备上下文，以及另一个用于生产的 Docker 设备上下文。</p>
+<p><strong>注意：</strong>您必须具有对远程设备的 SSH 访问权限，并且您在远程设备上的用户帐户必须具有执行 Docker 命令的权限。</p>
+<p>作为开发人员，您需要在设备上创建 Docker 上下文。请参阅下面的代码片段以在 Docker 中创建上下文。</p>
+<p>创建新的 Docker 上下文</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">client@thm:~# docker context create</span><br><span class="line">--docker host=ssh://myuser@remotehost</span><br><span class="line">--description="Development Environment" </span><br><span class="line">development-environment-host </span><br><span class="line"></span><br><span class="line">Successfully created context "development-environment-host"</span><br></pre></td></tr></tbody></table></figure>
+
+<p>完成后，您可以切换到此上下文，其中所有与 Docker 相关的命令现在都将在远程主机上执行。</p>
+<p>使用我们新创建的 Docker 上下文</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">cmnatic@thm:~# docker context use development-environment-host</span><br><span class="line"></span><br><span class="line">Current context is now "development-environment-host"</span><br></pre></td></tr></tbody></table></figure>
+
+<p>要退出此上下文并使用您自己的 Docker 引擎，您可以通过 <code>docker context use default</code> 恢复为“默认”。</p>
+<p><strong>注意：</strong>这并不完全安全。例如，弱 SSH 密码可能导致攻击者能够进行身份验证。强烈建议使用强密码。下面列出了一些强密码提示：</p>
+<ul>
+<li>大量字符（即 12-22+）</li>
+<li>特殊字符，如 !、@、#、$</li>
+<li>大写字母和数字不时出现（即 sUp3rseCreT!PaSSw0rd!）</li>
+</ul>
+<p>Docker 上下文允许您直接通过 SSH 与 Docker 守护程序交互，这是一种安全且加密的通信方式。</p>
+<p>TLS 加密</p>
+<p>Docker 守护程序也可以使用 HTTP/S 进行交互。例如，如果 Web 服务或应用程序要与远程设备上的 Docker 交互，这将非常有用。</p>
+<p>为了安全地执行此操作，我们可以利用加密协议 TLS 来加密设备之间发送的数据。在 TLS 模式下配置时，Docker 将仅接受已针对您希望远程执行 Docker 命令的设备签名的设备的远程命令。</p>
+<p><strong>注意</strong>：创建和管理 TLS 证书超出了本房间的范围，因为您通常需要考虑诸如环境的到期日期和加密强度等因素。创建证书后，您可以告诉 Docker 使用生成的证书在 TLS 模式下运行。</p>
+<p>在您发出命令的主机（服务器）上：</p>
+<p>在 TLS 模式下运行 Docker</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">server@thm:~# dockerd --tlsverify --tlscacert=myca.pem --tlscert=myserver-cert.pem --tlskey=myserver-key.pem -H=0.0.0.0:2376</span><br></pre></td></tr></tbody></table></figure>
+
+<p>在您发出命令的主机（客户端）上：</p>
+<p>告诉 Docker（本地）使用 TLS 进行身份验证</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">client@thm:~# docker --tlsverify --tlscacert=myca.pem --tlscert=client-cert.pem --tlskey=client-key.pem -H=SERVERIP:2376 info</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>注意</strong>：请务必记住，这并不能保证安全。例如，任何拥有有效证书和私钥的人都可以成为“受信任”的设备。我在下表中解释了生成 TLS 证书和密钥时使用的参数：</p>
+<table>
+<thead>
+<tr>
+<th><strong>Argument</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>--tlscacert</code></td>
+<td>此参数指定证书颁发机构的证书。证书颁发机构是颁发用于识别设备的证书的受信任实体。</td>
+</tr>
+<tr>
+<td><code>--tlscert</code></td>
+<td>此参数指定用于识别设备的证书。</td>
+</tr>
+<tr>
+<td><code>--tlskey</code></td>
+<td>此参数指定用于解密发送到设备的通信的私钥。</td>
+</tr>
+</tbody></table>
+<h1 id="Implementing-Control-Groups"><a href="#Implementing-Control-Groups" class="headerlink" title="Implementing Control Groups"></a>Implementing Control Groups</h1><p>控制组（也称为 cgroups）是 Linux 内核的一项功能，有助于限制和优先处理进程可以利用的系统资源数量。</p>
+<p>例如，可以限制诸如应用程序之类的进程仅使用一定数量的 RAM 或处理能力，或者使其优先于其他进程。这通常可以提高系统稳定性，并允许管理员更好地跟踪系统资源使用情况。</p>
+<p>在 Docker 环境中，实施 cgroups 有助于实现隔离和稳定性。由于 cgroups 可用于确定容器使用的资源数量（或优先级），因此有助于防止有故障或恶意的容器耗尽系统。当然，最好的机制是防止这种情况发生，但防止容器破坏整个系统是极好的第二道防线。</p>
+<p>Docker 上默认不启用此行为，必须在启动容器时为每个容器启用。下表提供了用于指定容器可以使用的资源限制的开关：</p>
+<table>
+<thead>
+<tr>
+<th><strong>Type of Resource</strong></th>
+<th><strong>Argument</strong></th>
+<th><strong>Example</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CPU</td>
+<td><code>--cpus</code> (in core count)</td>
+<td><code>docker run -it --cpus="1" mycontainer</code></td>
+</tr>
+<tr>
+<td>Memory</td>
+<td><code>--memory</code> （以 k、m、g 表示千字节、兆字节或千兆字节）</td>
+<td><code>docker run -it --memory="20m" mycontainer</code></td>
+</tr>
+</tbody></table>
+<p>您还可以在容器运行后更新此设置。为此，请使用 <code>docker update</code> 命令、新的内存值和容器名称。例如：<code>docker update --memory="40m" mycontainer</code>。</p>
+<p>您可以使用 <code>docker inspect containername</code> 命令查看有关容器的信息（包括设置的资源限制）。如果资源限制设置为 <strong>0</strong>，则表示未设置任何资源限制。</p>
+<p>使用 Docker inspect 列出为容器设置的资源限制。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">cmnatic@thm:~# docker inspect mycontainer</span><br><span class="line">--cropped for brevity--</span><br><span class="line">            "Memory": 0,</span><br><span class="line">            "CpuQuota": 0,</span><br><span class="line">            "CpuRealtimePeriod": 0,</span><br><span class="line">            "CpuRealtimeRuntime": 0,</span><br><span class="line">            "CpusetCpus": "",</span><br><span class="line">            "CpusetMems": "",</span><br><span class="line">            "CpuCount": 0,</span><br><span class="line">            "CpuPercent": 0,</span><br><span class="line">--cropped for brevity--</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Docker 使用命名空间来创建隔离环境。例如，命名空间是一种在不影响其他进程的情况下执行不同操作的方式。可以将它们想象成办公室里的房间；每个房间都有各自的用途。这个办公室的一个房间里发生的事情不会影响另一个办公室发生的事情。这些命名空间通过将进程彼此隔离来提供安全性。</p>
+<h1 id="Preventing-“Over-Privileged”-Containers"><a href="#Preventing-“Over-Privileged”-Containers" class="headerlink" title="Preventing “Over-Privileged” Containers"></a>Preventing “Over-Privileged” Containers</h1><p>首先，我们需要了解特权容器在此上下文中的含义。特权容器是指对主机具有不受限制访问权限的容器。</p>
+<p>容器化的全部意义在于将容器与主机“隔离”。通过在“特权”模式下运行 Docker 容器，可以绕过将容器与主机隔离的正常安全机制。虽然特权容器可以有合法用途，例如运行 Docker-In-Docker（容器中的容器）或用于调试目的，但它们极其危险。</p>
+<p>在“特权”模式下运行 Docker 容器时，Docker 会将所有可能的功能分配给容器，这意味着容器可以执行和访问主机上的任何内容（例如文件系统）。</p>
+<p><img src="https://assets.tryhackme.com/additional/docker-rodeo/privileged-container/privileged-container-layers.png" alt="depicting the level of access a non-privileged and privileged container has to the host"></p>
+<p>您可能会问，什么是能力？能力是 Linux 的一项安全功能，它决定了进程在细粒度上可以做什么和不能做什么。传统上，进程可以拥有完全的 root 权限，也可以没有任何权限，这可能很危险，因为我们可能不希望进程拥有完全的 root 权限，因为这意味着它将不受限制地访问系统。</p>
+<p>能力使我们能够微调进程拥有的权限。我在下表中列出了一些标准能力、它们转换为哪些权限以及它们可能在何处使用：</p>
+<table>
+<thead>
+<tr>
+<th><strong>Capability</strong></th>
+<th><strong>Description</strong></th>
+<th><strong>Use Case</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CAP_NET_BIND_SERVICE</td>
+<td>此功能允许服务绑定到端口，特别是 1024 以下的端口，这通常需要 root 权限。</td>
+<td>允许 Web 服务器绑定到端口 80，无需 root 访问权限。</td>
+</tr>
+<tr>
+<td>CAP_SYS_ADMIN</td>
+<td>此功能提供各种管理权限，包括能够挂载/卸载文件系统、更改网络设置、执行系统重启、关机等。</td>
+<td>您可能会在自动执行管理任务的过程中发现此功能。例如，修改用户或启动/停止服务。</td>
+</tr>
+<tr>
+<td>CAP_SYS_RESOURCE</td>
+<td>此功能允许进程修改可用资源的最大限制。例如，进程可以使用更多内存或带宽。</td>
+<td>此功能可以精细地控制进程可以消耗的资源数量。这可以是增加资源量，也可以是减少资源量。</td>
+</tr>
+</tbody></table>
+<p>总而言之，特权容器是被分配了完全权限（即完全 root 访问权限）的容器。攻击者可以使用此方法逃离容器。如果您想要做家庭作业，此过程已在 <a target="_blank" rel="noopener" href="https://tryhackme.com/room/containervulnerabilitiesDG">容器漏洞</a> 房间中进行了演示。</p>
+<p>建议单独为容器分配功能，而不是使用 <code>--privileged</code> 标志运行容器（这将分配所有功能）。例如，您可以在运行容器时包含 <code>--cap-add=NET_BIND_SERVICE</code>，为在端口 80 上运行 Web 服务器的容器分配 <code>NET_BIND_SERVICE</code> 功能。</p>
+<p>为容器分配 NET_BIND_SERVICE 功能</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">cmnatic@thm:~# docker run -it --rm --cap-drop=ALL --cap-add=NET_BIND_SERVICE mywebserver</span><br></pre></td></tr></tbody></table></figure>
+
+<p>最后，可以使用命令“capsh –print”来确定分配给进程的功能。</p>
+<p>使用 capsh 列出当前分配的功能</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">cmnatic@thm:~# capsh --print</span><br><span class="line">Current: =</span><br><span class="line">Bounding set = cap_chown,cap_dac_override,cap_dac_read_search,cap_fowner</span><br><span class="line">-- cut for brevity ---</span><br><span class="line">cap_sys_rawio,cap_sys_chroot,cap_sys_ptrace,cap_sys_pacct,cap_sys_admin,</span><br><span class="line">cap_sys_boot,cap_sys_nice,cap_sys_resource,cap_sys_time,cap_sys_tty_config,cap_mknod</span><br><span class="line">-- cut for brevity ---</span><br><span class="line">Ambient set =</span><br><span class="line">Current IAB:</span><br><span class="line">Securebits: 00/0x0/1'b0</span><br><span class="line"> secure-noroot: no (unlocked)</span><br><span class="line"> secure-no-suid-fixup: no (unlocked)</span><br><span class="line"> secure-keep-caps: no (unlocked)</span><br><span class="line"> secure-no-ambient-raise: no (unlocked)</span><br><span class="line">uid=1000(cmnatic) euid=1000(cmnatic)</span><br><span class="line">gid=1000(cmnatic)</span><br><span class="line">groups=4(adm),20(dialout),24(cdrom),25(floppy),27(sudo),1000(cmnatic)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>经常检查分配给容器的功能非常重要。当容器具有特权时，它会与主机共享相同的命名空间，这意味着容器可以访问主机上的资源 - 从而打破“隔离”环境。</p>
+<h1 id="Seccomp-AppArmor-101"><a href="#Seccomp-AppArmor-101" class="headerlink" title="Seccomp &amp; AppArmor 101"></a>Seccomp &amp; AppArmor 101</h1><p>Seccomp 是 Linux 的一个重要安全功能，它限制了程序可以执行和不能执行的操作。为了解释这一点，我们可以想象一下办公室入口处的保安。保安负责确保只有授权人员才能进入大楼，并且他们必须做他们应该做的事情。在这种情况下，Seccomp 就是保安。</p>
+<p>Seccomp 允许您创建并执行应用程序可以执行的操作（系统调用）的规则列表。例如，允许应用程序进行系统调用以读取文件，但不允许它进行系统调用以打开新的网络连接（例如反向 shell）。</p>
+<p>这些配置文件很有用，因为它们降低了攻击者执行恶意命令的能力，同时保持了应用程序的功能。例如，Web 服务器的 Seccomp 配置文件可能如下所示：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">{</span><br><span class="line">  "defaultAction": "SCMP_ACT_ALLOW",</span><br><span class="line">  "architectures": [</span><br><span class="line">    "SCMP_ARCH_X86_64",</span><br><span class="line">    "SCMP_ARCH_X86",</span><br><span class="line">    "SCMP_ARCH_X32"</span><br><span class="line">  ],</span><br><span class="line">  "syscalls": [</span><br><span class="line">    { "names": [ "read", "write", "exit", "exit_group", "open", "close", "stat", "fstat", "lstat", "poll", "getdents", "munmap", "mprotect", "brk", "arch_prctl", "set_tid_address", "set_robust_list" ], "action": "SCMP_ACT_ALLOW" },</span><br><span class="line">    { "names": [ "execve", "execveat" ], "action": "SCMP_ACT_ERRNO" }</span><br><span class="line">  ]</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>此 Seccomp 配置文件：</p>
+<p>允许读取和写入文件</p>
+<p>允许创建网络套接字</p>
+<p>但不允许执行（例如，execve）</p>
+<p>要创建 Seccomp 配置文件，您只需使用您最喜欢的文本编辑器创建配置文件即可。此房间将使用 nano。下面提供了一个示例 Seccomp 配置文件 (profile.json)。此配置文件将允许读取和写入文件，但不允许网络连接。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">{</span><br><span class="line">  "defaultAction": "SCMP_ACT_ALLOW",</span><br><span class="line">  "architectures": ["SCMP_ARCH_X86_64"],</span><br><span class="line">  "syscalls": [</span><br><span class="line">    {</span><br><span class="line">      "name": "socket",</span><br><span class="line">      "action": "SCMP_ACT_ERRNO",</span><br><span class="line">      "args": []</span><br><span class="line">    },</span><br><span class="line">    {</span><br><span class="line">      "name": "connect",</span><br><span class="line">      "action": "SCMP_ACT_ERRNO",</span><br><span class="line">      "args": []</span><br><span class="line">    },</span><br><span class="line">    {</span><br><span class="line">      "name": "bind",</span><br><span class="line">      "action": "SCMP_ACT_ERRNO",</span><br><span class="line">      "args": []</span><br><span class="line">    },</span><br><span class="line">    {</span><br><span class="line">      "name": "listen",</span><br><span class="line">      "action": "SCMP_ACT_ERRNO",</span><br><span class="line">      "args": []</span><br><span class="line">    },</span><br><span class="line">    {</span><br><span class="line">      "name": "accept",</span><br><span class="line">      "action": "SCMP_ACT_ERRNO",</span><br><span class="line">      "args": []</span><br><span class="line">    }</span><br><span class="line">    {</span><br><span class="line">      "name": "read",</span><br><span class="line">      "action": "SCMP_ACT_ALLOW",</span><br><span class="line">      "args": []</span><br><span class="line">    },</span><br><span class="line">    {</span><br><span class="line">      "name": "write",</span><br><span class="line">      "action": "SCMP_ACT_ALLOW",</span><br><span class="line">      "args": []</span><br><span class="line">    }</span><br><span class="line">  ]</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>现在，我们的 Seccomp 配置文件已创建，我们可以在运行时使用 –security-opt seccomp 标志和 Seccomp 配置文件的位置将其应用到我们的容器中。例如：</p>
+<p>在运行容器时应用我们的 Seccomp 配置文件</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">cmnatic@thm:~# docker run --rm -it --security-opt seccomp=/home/cmnatic/container1/seccomp/profile.json mycontainer</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Docker 已在运行时应用了默认的 Seccomp 配置文件。但是，这可能不适合你的特定用例，特别是如果你希望在保持功能的同时进一步强化容器。你可以在此处了解有关将 Seccomp 与 Docker 结合使用的更多信息。</p>
+<h2 id="AppArmor"><a href="#AppArmor" class="headerlink" title="AppArmor"></a>AppArmor</h2><p>AppArmor 是 Linux 中类似的安全功能，因为它可以防止应用程序执行未经授权的操作。但是，它的工作方式与 Seccomp 不同，因为它不包含在应用程序中，而是包含在操作系统中。</p>
+<p>此机制是一种强制访问控制 (MAC) 系统，它根据操作系统级别的一组规则确定进程可以执行的操作。要使用 AppArmor，我们首先需要确保它已安装在我们的系统上：</p>
+<p>检查 AppArmor 是否已安装</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">cmnatic@thm:~# sudo aa-status</span><br><span class="line">apparmor module is loaded.</span><br><span class="line">34 profiles are loaded.</span><br></pre></td></tr></tbody></table></figure>
+
+<p>通过输出“apparmor module is loaded”，我们可以确认 AppArmor 已安装并启用。要将 AppArmor 配置文件应用于我们的容器，我们需要执行以下操作：</p>
+<p>创建 AppArmor 配置文件<br>将配置文件加载到 AppArmor<br>使用新配置文件运行我们的容器<br>首先，让我们创建我们的 AppArmor 配置文件。您可以使用您最喜欢的文本编辑器来执行此操作。请注意，有一些工具可以帮助您根据您的 Dockerfile 生成 AppArmor 配置文件。但是，这超出了本房间的范围，并且可能“不可靠”。</p>
+<p>下面提供了一个“Apache”Web 服务器的示例 AppArmor 配置文件 (profile.json)：</p>
+<p>可以读取位于 /var/www/、/etc/apache2/mime.types 和 /run/apache2 中的文件。<br>读取和写入 /var/log/apache2。<br>绑定到端口 80 的 TCP 套接字，但不绑定到其他端口或协议（如 UDP）。<br>无法从 /bin、/lib、/usr 等目录读取。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">/usr/sbin/httpd {</span><br><span class="line"></span><br><span class="line">  capability setgid,</span><br><span class="line">  capability setuid,</span><br><span class="line"></span><br><span class="line">  /var/www/** r,</span><br><span class="line">  /var/log/apache2/** rw,</span><br><span class="line">  /etc/apache2/mime.types r,</span><br><span class="line"></span><br><span class="line">  /run/apache2/apache2.pid rw,</span><br><span class="line">  /run/apache2/*.sock rw,</span><br><span class="line"></span><br><span class="line">  # Network access</span><br><span class="line">  network tcp,</span><br><span class="line"></span><br><span class="line">  # System logging</span><br><span class="line">  /dev/log w,</span><br><span class="line"></span><br><span class="line">  # Allow CGI execution</span><br><span class="line">  /usr/bin/perl ix,</span><br><span class="line"></span><br><span class="line">  # Deny access to everything else</span><br><span class="line">  /** ix,</span><br><span class="line">  deny /bin/**,</span><br><span class="line">  deny /lib/**,</span><br><span class="line">  deny /usr/**,</span><br><span class="line">  deny /sbin/**</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>现在我们已经创建了 AppArmor 配置文件，我们需要将其导入 AppArmor 程序以便被识别。</p>
+<p>将我们的 AppArmor 配置文件导入 AppArmor</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">cmnatic@thm:~# sudo apparmor_parser -r -W /home/cmnatic/container1/apparmor/profile.json</span><br></pre></td></tr></tbody></table></figure>
+
+<p>现在我们的 AppArmor 配置文件已导入，我们可以在运行时使用 –security-opt apparmor 标志和 AppArmor 配置文件的位置将其应用于我们的容器。例如：</p>
+<p>在运行容器时应用我们的 AppArmor 配置文件</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">cmnatic@thm:~# docker run --rm -it --security-opt apparmor=/home/cmnatic/container1/apparmor/profile.json mycontainer</span><br></pre></td></tr></tbody></table></figure>
+
+<p>和 Seccomp 一样，Docker 在运行时已经应用了默认的 AppArmor 配置文件。但是，这可能不适合您的特定用例，特别是如果您希望在保持功能的同时进一步强化容器。您可以在此处了解有关将 AppArmor 与 Docker 结合使用的更多信息。</p>
+<p>有什么区别<br>好吧，简而言之：</p>
+<p>AppArmor 决定应用程序可以访问哪些资源（即 CPU、RAM、网络接口、文件系统等）以及它可以对这些资源采取哪些操作。<br>Seccomp 位于程序本身内，它限制了进程可以进行的系统调用（即 CPU 和操作系统的哪些部分起作用）。<br>重要的是要注意，这不是“非此即彼”的情况。Seccomp 和 AppArmor 可以结合起来为容器创建安全层。</p>
+<h1 id="Reviewing-Docker-Images"><a href="#Reviewing-Docker-Images" class="headerlink" title="Reviewing Docker Images"></a>Reviewing Docker Images</h1><p>检查 Docker 镜像是一个非常重要的习惯。您会对在设备上运行未知代码持谨慎态度，那么为什么您会考虑在生产环境中运行它呢？</p>
+<p>不幸的是，有许多恶意 Docker 镜像造成破坏的例子。例如，在 2020 年，Palo Alto 发现了加密挖掘 Docker 镜像，这些镜像被拉取（并可能运行）了超过 200 万次。</p>
+<p>Docker Hub 上的镜像通常带有附加到存储库的 Dockerfile。例如，Docker Hub 显示 Dockerfile 的层（因此执行了命令）。</p>
+<p><img src="https://assets.tryhackme.com/additional/containerisation-module/t6/1.png" alt="depicting the layers of an image on DockerHub."></p>
+<p>在上图中，我们可以看到 DockerHub 上镜像的各个层。这些层是镜像构建过程中执行的步骤。</p>
+<p>此外，Docker Hub 上镜像的开源代码存储库通常会包含在内，以便您查看整个 Dockerfile。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5de96d9ca744773ea7ef8c00/room-content/c2732263dd323f0c347e956e7348595b.png" alt="depicting the Dockerfile of an image stored in the code repository of the application."></p>
+<p>在上图中，我们可以看到 Dockerfile 的代码。这使我们能够审核代码并准确了解容器中正在执行的操作。通过分析代码，我们可以检查漏洞或恶意操作。</p>
+<p>Dive 等工具允许您通过检查在构建过程中在镜像的每一层执行和更改的内容来对 Docker 镜像进行逆向工程。</p>
+<p><img src="https://resources.cmnatic.co.uk/TryHackMe/rooms/docker-rodeo/reversedockerimages/using-dive3.png" alt="Reverse Engineering Docker Images using Dive"></p>
+<h1 id="Compliance-Benchmarking"><a href="#Compliance-Benchmarking" class="headerlink" title="Compliance &amp; Benchmarking"></a>Compliance &amp; Benchmarking</h1><p>合规性和基准测试在保护资产（更不用说容器）方面发挥着至关重要的作用。让我们首先解释一下合规性。合规性是遵守法规和标准的过程，例如 NIST SP 800-190，这是美国国家标准与技术研究院制定的一套标准，为容器安全提供指导和最佳实践：</p>
+<table>
+<thead>
+<tr>
+<th>Compliance Framework</th>
+<th>Description</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>NIST SP 800-190</td>
+<td>该框架概述了与容器相关的潜在安全问题并提供了解决这些问题的建议。</td>
+<td><a target="_blank" rel="noopener" href="https://csrc.nist.gov/publications/detail/sp/800-190/final">https://csrc.nist.gov/publications/detail/sp/800-190/final</a></td>
+</tr>
+<tr>
+<td>ISO 27001</td>
+<td>该框架是信息安全的国际标准。该标准指导信息安全管理系统的实施、维护和改进。</td>
+<td><a target="_blank" rel="noopener" href="https://www.iso.org/standard/27001">https://www.iso.org/standard/27001</a></td>
+</tr>
+</tbody></table>
+<p>请注意，您可能必须遵守与您的行业相关的其他框架。例如，金融或医疗行业。所有行业都有法规。例如，在医疗领域，HIPPA 适用于处理医疗数据。</p>
+<p>另一方面，基准测试是一种用于查看组织遵守最佳实践情况的过程。基准测试使组织能够了解他们在哪些方面很好地遵循了最佳实践以及哪些方面需要进一步改进：</p>
+<table>
+<thead>
+<tr>
+<th>Benchmarking Tool</th>
+<th>Description</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CIS Docker Benchmark</td>
+<td>该工具可以评估容器是否符合CIS Docker Benchmark框架。</td>
+<td><a target="_blank" rel="noopener" href="https://www.cisecurity.org/benchmark/docker">https://www.cisecurity.org/benchmark/docker</a></td>
+</tr>
+<tr>
+<td>OpenSCAP</td>
+<td>该工具可以评估容器与多个框架的合规性，包括 CIS Docker Benchmark、NIST SP-800-190 等。</td>
+<td><a target="_blank" rel="noopener" href="https://www.open-scap.org/">https://www.open-scap.org/</a></td>
+</tr>
+<tr>
+<td>Docker Scout</td>
+<td>此工具是 Docker 本身提供的基于云的服务，用于扫描 Docker 镜像和库中的漏洞。此工具列出了存在的漏洞并提供了解决这些漏洞的步骤。</td>
+<td><a target="_blank" rel="noopener" href="https://docs.docker.com/scout/">https://docs.docker.com/scout/</a></td>
+</tr>
+<tr>
+<td>Anchore</td>
+<td>该工具可以评估容器与多个框架的合规性，包括 CIS Docker Benchmark、NIST SP-800-190 等。</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/anchore/anchore-engine">https://github.com/anchore/anchore-engine</a></td>
+</tr>
+<tr>
+<td>Grype</td>
+<td>此工具是一款现代且快速的 Docker 镜像漏洞扫描程序</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/anchore/grype">https://github.com/anchore/grype</a></td>
+</tr>
+</tbody></table>
+<p>下面的终端提供了使用 Docker Scout 工具分析 Docker 镜像的示例。请注意，这需要事先安装。您可以阅读 Docker Scout 文档以了解更多信息。</p>
+<p>使用 Docker Scout 扫描我们的“nginx”镜像以查找漏洞。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">cmnatic@thm:~# docker scout cves local://nginx:latest</span><br><span class="line">    ✓ SBOM of image already cached, 215 packages indexed</span><br><span class="line">    ✗ Detected 22 vulnerable packages with a total of 45 vulnerabilities</span><br><span class="line"></span><br><span class="line">## Overview</span><br><span class="line">                    │       Analyzed Image         </span><br><span class="line">────────────────────┼──────────────────────────────</span><br><span class="line">  Target            │  local://nginx:latest        </span><br><span class="line">    digest          │  4df6f9ac5341                </span><br><span class="line">    platform        │ linux/amd64                  </span><br><span class="line">    vulnerabilities │    0C     1H    18M    28L   </span><br><span class="line">    size            │ 91 MB                        </span><br><span class="line">    packages        │ 215                          </span><br><span class="line"></span><br><span class="line">## Packages and Vulnerabilities</span><br><span class="line">   0C     1H     1M     3L  glibc 2.35-0ubuntu3.1</span><br><span class="line">pkg:deb/ubuntu/glibc@2.35-0ubuntu3.1?os_distro=jammy&amp;os_name=ubuntu&amp;os_version=22.04</span><br><span class="line">    ✗ HIGH CVE-2023-4911</span><br><span class="line">      https://scout.docker.com/v/CVE-2023-4911</span><br><span class="line">      Affected range : &lt;2.35-0ubuntu3.4                              </span><br><span class="line">      Fixed version  : 2.35-0ubuntu3.4                               </span><br><span class="line">      CVSS Score     : 7.8                                           </span><br><span class="line">      CVSS Vector    : CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H  </span><br><span class="line">    </span><br><span class="line">    ✗ MEDIUM CVE-2023-5156</span><br><span class="line">      https://scout.docker.com/v/CVE-2023-5156</span><br><span class="line">      Affected range : &lt;2.35-0ubuntu3.5                              </span><br><span class="line">      Fixed version  : 2.35-0ubuntu3.5                               </span><br><span class="line">      CVSS Score     : 7.5                                           </span><br><span class="line">      CVSS Vector    : CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H  </span><br><span class="line">    </span><br><span class="line">    ✗ LOW CVE-2016-20013</span><br><span class="line">      https://scout.docker.com/v/CVE-2016-20013</span><br><span class="line">      Affected range : &gt;=0                                           </span><br><span class="line">      Fixed version  : not fixed                                     </span><br><span class="line">      CVSS Score     : 7.5                                           </span><br><span class="line">      CVSS Vector    : CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H  </span><br><span class="line">    </span><br><span class="line">    ✗ LOW CVE-2023-4813</span><br><span class="line">      https://scout.docker.com/v/CVE-2023-4813</span><br><span class="line">      Affected range : &lt;2.35-0ubuntu3.5                              </span><br><span class="line">      Fixed version  : 2.35-0ubuntu3.5                               </span><br><span class="line">      CVSS Score     : 5.9                                           </span><br><span class="line">      CVSS Vector    : CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H  </span><br><span class="line">    </span><br><span class="line">    ✗ LOW CVE-2023-4806</span><br><span class="line">      https://scout.docker.com/v/CVE-2023-4806</span><br><span class="line">      Affected range : &lt;2.35-0ubuntu3.5                              </span><br><span class="line">      Fixed version  : 2.35-0ubuntu3.5                               </span><br><span class="line">      CVSS Score     : 5.9                                           </span><br><span class="line">      CVSS Vector    : CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H</span><br></pre></td></tr></tbody></table></figure>
+
+<h1 id="Practical"><a href="#Practical" class="headerlink" title="Practical"></a>Practical</h1><p>按下绿色的“启动机器”按钮，部署连接到此任务的机器。机器将以分屏视图启动。如果未显示，您可以按下页面右上角的蓝色“显示分屏视图”按钮。您的任务是使用机器上的 Grype 漏洞扫描程序来分析一些 Docker 镜像。</p>
+<p>Grype 可用于分析 Docker 镜像和容器文件系统。您可以参考下表作为备忘单来回答此任务中的问题。</p>
+<table>
+<thead>
+<tr>
+<th>Example</th>
+<th>Description</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Scanning a Docker image</td>
+<td>Scan a Docker image for vulnerabilities.</td>
+<td>grype imagename –scope all-layers</td>
+</tr>
+<tr>
+<td>Scanning an exported container filesystem</td>
+<td>Scan an exported container filesystem (i.e. from docker image save).</td>
+<td>grype /path/to/image.tar</td>
+</tr>
+</tbody></table>
+<p>请注意，对于这个房间，您可以放心地忽略“无法检查漏洞数据库更新”警告信息。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://blog.mikannse.cn">Mikannse</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://blog.mikannse.cn/2025/03/03/THMContainerHardening/">https://blog.mikannse.cn/2025/03/03/THMContainerHardening/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://blog.mikannse.cn" target="_blank">MikannseのSekai</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a><a class="post-meta__tags" href="/tags/%E8%BF%90%E7%BB%B4/">运维</a><a class="post-meta__tags" href="/tags/DevSecOps/">DevSecOps</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2025/03/02/THMSAST/" title="THMSAST"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">THMSAST</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/03/16/IntrotoDockerTHM/" title="IntrotoDockerTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-03-16</div><div class="title">IntrotoDockerTHM</div></div></a></div><div><a href="/2024/05/30/IntrotoKubernetesTHM/" title="IntrotoKubernetesTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-30</div><div class="title">IntrotoKubernetesTHM</div></div></a></div><div><a href="/2024/03/21/IntrotoLogsTHM/" title="IntrotoLogsTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-03-21</div><div class="title">IntrotoLogsTHM</div></div></a></div><div><a href="/2024/05/27/IntrotoLogAnalysisTHM/" title="IntrotoLogAnalysisTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-27</div><div class="title">IntrotoLogAnalysisTHM</div></div></a></div><div><a href="/2024/03/17/LinuxSystemHardeningTHM/" title="LinuxSystemHardeningTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-03-17</div><div class="title">LinuxSystemHardeningTHM</div></div></a></div><div><a href="/2025/02/28/THMDependencyManagement/" title="THMDependencyManagement"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-02-28</div><div class="title">THMDependencyManagement</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Mikannse</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">315</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">74</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mikannse/mikannse.github.io"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">暂时没有公告QAQ</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Introduction"><span class="toc-number">1.</span> <span class="toc-text">Introduction</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Protecting-the-Docker-Daemon"><span class="toc-number">2.</span> <span class="toc-text">Protecting the Docker Daemon</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Implementing-Control-Groups"><span class="toc-number">3.</span> <span class="toc-text">Implementing Control Groups</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Preventing-%E2%80%9COver-Privileged%E2%80%9D-Containers"><span class="toc-number">4.</span> <span class="toc-text">Preventing “Over-Privileged” Containers</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Seccomp-AppArmor-101"><span class="toc-number">5.</span> <span class="toc-text">Seccomp &amp; AppArmor 101</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#AppArmor"><span class="toc-number">5.1.</span> <span class="toc-text">AppArmor</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Reviewing-Docker-Images"><span class="toc-number">6.</span> <span class="toc-text">Reviewing Docker Images</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Compliance-Benchmarking"><span class="toc-number">7.</span> <span class="toc-text">Compliance &amp; Benchmarking</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Practical"><span class="toc-number">8.</span> <span class="toc-text">Practical</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/03/03/THMContainerHardening/" title="THMContainerHardening">THMContainerHardening</a><time datetime="2025-03-03T06:59:56.000Z" title="发表于 2025-03-03 14:59:56">2025-03-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/03/02/THMSAST/" title="THMSAST">THMSAST</a><time datetime="2025-03-01T17:49:48.000Z" title="发表于 2025-03-02 01:49:48">2025-03-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/28/THMDependencyManagement/" title="THMDependencyManagement">THMDependencyManagement</a><time datetime="2025-02-28T12:59:01.000Z" title="发表于 2025-02-28 20:59:01">2025-02-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/03/25-1%E6%9D%82%E8%B0%88/" title="25-1杂谈">25-1杂谈</a><time datetime="2025-02-03T04:48:34.000Z" title="发表于 2025-02-03 12:48:34">2025-02-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/01/15/%E6%89%93%E9%9D%B6%E8%AE%B0%E5%BD%95(%E4%B8%80%E5%85%AD%E4%B9%9D)%E4%B9%8BVulnHubSNAKEOIL/" title="打靶记录(一六九)之VulnHubSNAKEOIL">打靶记录(一六九)之VulnHubSNAKEOIL</a><time datetime="2025-01-15T08:34:34.000Z" title="发表于 2025-01-15 16:34:34">2025-01-15</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2025 By Mikannse</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function loadDisqus () {
+  const disqus_config = function () {
+    this.page.url = 'https://blog.mikannse.cn/2025/03/03/THMContainerHardening/'
+    this.page.identifier = '/2025/03/03/THMContainerHardening/'
+    this.page.title = 'THMContainerHardening'
+  }
+
+  const disqusReset = () => {
+    DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addModeChange('disqus', disqusReset)
+
+  if (window.DISQUS) disqusReset()
+  else {
+    (function() { 
+      var d = document, s = d.createElement('script');
+      s.src = 'https://.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  }
+}
+
+if ('Valine' === 'Disqus' || !true) {
+  if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+  else loadDisqus()
+} else {
+  function loadOtherComment () {
+    loadDisqus()
+  }
+}
+</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
