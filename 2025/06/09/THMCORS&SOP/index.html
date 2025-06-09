@@ -1,0 +1,500 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>THMCORS&amp;SOP | MikannseのSekai</title><meta name="author" content="Mikannse"><meta name="copyright" content="Mikannse"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="Introduction跨域资源共享 (CORS) 是一种允许 Web 应用程序安全地从不同域请求资源的机制。这在 Web 安全中至关重要，因为它可以防止一个页面上的恶意脚本通过浏览器访问另一个网页上的敏感数据。 同源策略 (SOP) 是一种安全措施，用于限制网页与不同来源的资源进行交互。来源由方案 (scheme)、主机名 (hostname) 和 URL 端口定义。 目标 了解 CORS 和">
+<meta property="og:type" content="article">
+<meta property="og:title" content="THMCORS&amp;SOP">
+<meta property="og:url" content="https://blog.mikannse.cn/2025/06/09/THMCORS&SOP/index.html">
+<meta property="og:site_name" content="MikannseのSekai">
+<meta property="og:description" content="Introduction跨域资源共享 (CORS) 是一种允许 Web 应用程序安全地从不同域请求资源的机制。这在 Web 安全中至关重要，因为它可以防止一个页面上的恶意脚本通过浏览器访问另一个网页上的敏感数据。 同源策略 (SOP) 是一种安全措施，用于限制网页与不同来源的资源进行交互。来源由方案 (scheme)、主机名 (hostname) 和 URL 端口定义。 目标 了解 CORS 和">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg">
+<meta property="article:published_time" content="2025-06-09T07:17:53.000Z">
+<meta property="article:modified_time" content="2025-06-09T07:19:35.379Z">
+<meta property="article:author" content="Mikannse">
+<meta property="article:tag" content="笔记">
+<meta property="article:tag" content="渗透测试">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg"><link rel="shortcut icon" href="/img/icon.jpg"><link rel="canonical" href="https://blog.mikannse.cn/2025/06/09/THMCORS&amp;SOP/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Mikannse","link":"链接: ","source":"来源: MikannseのSekai","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'THMCORS&SOP',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: undefined,
+  isToc: true,
+  postUpdate: '2025-06-09 15:19:35'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">334</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">75</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="MikannseのSekai"><span class="site-name">MikannseのSekai</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">THMCORS&amp;SOP</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-06-09T07:17:53.000Z" title="发表于 2025-06-09 15:17:53">2025-06-09</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-06-09T07:19:35.379Z" title="更新于 2025-06-09 15:19:35">2025-06-09</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BD%91%E5%AE%89/">网安</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">5.5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>18分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="THMCORS&amp;SOP"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>跨域资源共享 (CORS) 是一种允许 Web 应用程序安全地从不同域请求资源的机制。这在 Web 安全中至关重要，因为它可以防止一个页面上的恶意脚本通过浏览器访问另一个网页上的敏感数据。</p>
+<p>同源策略 (SOP) 是一种安全措施，用于限制网页与不同来源的资源进行交互。来源由方案 (scheme)、主机名 (hostname) 和 URL 端口定义。</p>
+<h4 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h4><ol>
+<li>了解 CORS 和 SOP 的基本原理。</li>
+<li>识别并理解 CORS 和 SOP 配置的安全隐患。</li>
+<li>在受控环境中利用与 CORS 和 SOP 相关的漏洞。</li>
+<li>了解并应用缓解和预防这些漏洞的措施。</li>
+</ol>
+<h4 id="先决条件"><a href="#先决条件" class="headerlink" title="先决条件"></a>先决条件</h4><ol>
+<li>对 Web 应用程序架构和服务端脚本有基本的了解。</li>
+<li>熟悉 Web 服务器配置和 <a target="_blank" rel="noopener" href="https://tryhackme.com/room/httpindetail">HTTP</a> 标头。</li>
+<li>了解 JavaScript 的 XMLHttpRequest (XHR) 或 Fetch API。</li>
+</ol>
+<h1 id="Understanding-SOP"><a href="#Understanding-SOP" class="headerlink" title="Understanding SOP"></a>Understanding SOP</h1><h4 id="同源策略"><a href="#同源策略" class="headerlink" title="同源策略"></a>同源策略</h4><p>同源策略（SOP）是一种指示 Web 浏览器如何在网页之间进行交互的策略。根据此策略，只有当两个网页共享同一来源时，一个网页上的脚本才能访问另一个网页上的数据。此“来源”通过 URI 方案、主机名和端口号的组合来标识。下图展示了 URL 及其所有功能的样子（它并非在每个请求中都使用所有功能）。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/645b19f5d5848d004ab9c9e2/room-content/d721041f6137c9ea50cfa9b661cc1baa.png" alt="What URL looks like"></p>
+<p>此策略旨在防止一个页面上的恶意脚本通过浏览器访问另一个网页上的敏感数据。</p>
+<h4 id="SOP-示例"><a href="#SOP-示例" class="headerlink" title="SOP 示例"></a>SOP 示例</h4><ol>
+<li><strong>同域，不同端口</strong>：来自 <code>https://test.com:80</code> 的脚本可以访问来自 <code>https://test.com:80/about</code> 的数据，因为两者共享相同的协议、域和端口。但是，由于端口不同，它无法访问来自 <code>https://test.com:8080</code> 的数据。</li>
+<li><strong>HTTP/HTTPS 交互</strong>：在 <code>http://test.com</code>（非安全 HTTP）上运行的脚本不允许访问 <code>https://test.com</code>（安全 HTTPS）上的资源，即使它们共享相同的域，因为协议不同。</li>
+</ol>
+<h4 id="常见误解"><a href="#常见误解" class="headerlink" title="常见误解"></a>常见误解</h4><ol>
+<li><strong>SOP 的范围</strong>：人们普遍误以为 SOP 仅适用于脚本。实际上，它适用于所有网页元素，包括嵌入的图片、样式表和框架，并根据资源的来源限制其交互方式。</li>
+<li><strong>SOP 限制所有跨域交互</strong>：另一个误解是 SOP 完全阻止所有跨域交互。虽然 SOP 确实限制了某些交互，但现代 Web 应用程序通常会利用各种技术（例如 CORS、postMessage 等）来实现安全可控的跨域通信。</li>
+<li><strong>同域即同源</strong>：人们通常认为，如果两个 URL 共享同一个域，那么它们就是同源的。然而，SOP 还会考虑协议和端口，因此两个具有相同域但不同协议或端口的 URL 会被视为不同源。</li>
+</ol>
+<h4 id="SOP-决策流程"><a href="#SOP-决策流程" class="headerlink" title="SOP 决策流程"></a>SOP 决策流程</h4><p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/645b19f5d5848d004ab9c9e2/room-content/f750c8230ca04378b11f320d4b720640.png" alt="SOP decision process"></p>
+<p>上面的流程图展示了浏览器在 SOP 下执行的检查顺序：首先检查协议是否匹配，然后检查主机名，最后检查端口号。如果三者都匹配，则允许该资源；否则，则阻止该资源。此图简化了概念，使其更易于理解和记忆。</p>
+<h1 id="Understanding-CORS"><a href="#Understanding-CORS" class="headerlink" title="Understanding CORS"></a>Understanding CORS</h1><h4 id="跨域资源共享"><a href="#跨域资源共享" class="headerlink" title="跨域资源共享"></a>跨域资源共享</h4><p>跨域资源共享 (CORS) 是一种由 HTTP 标头定义的机制，允许服务器指定如何从不同来源请求资源。同源策略 (SOP) 默认限制网页只能向同一域名发出请求，而 CORS 允许服务器声明此策略的例外情况，允许网页在受控条件下从其他域名请求资源。</p>
+<p>CORS 通过服务器作为响应的一部分发送给浏览器的一组 HTTP 标头来运行。这些标头告知浏览器服务器的 CORS 策略，例如允许哪些来源访问资源、允许哪些 HTTP 方法以及是否可以在请求中包含凭据。需要注意的是，服务器不会阻止或允许基于 CORS 的请求；相反，它会处理请求并在响应中包含 CORS 标头。然后，浏览器会解释这些标头，并通过根据指定的规则授予或拒绝网页的 JavaScript 对响应的访问权限来执行 CORS 策略。</p>
+<h4 id="CORS-中涉及的不同-HTTP-标头"><a href="#CORS-中涉及的不同-HTTP-标头" class="headerlink" title="CORS 中涉及的不同 HTTP 标头"></a>CORS 中涉及的不同 HTTP 标头</h4><ol>
+<li><strong>Access-Control-Allow-Origin</strong>：此标头指定哪些域可以访问资源。例如，<code>Access-Control-Allow-Origin: example.com</code> 仅允许来自 <code>example.com</code> 的请求。</li>
+<li><strong>Access-Control-Allow-Methods</strong>：指定请求期间可以使用的 HTTP 方法（GET、POST 等）。</li>
+<li><strong>Access-Control-Allow-Headers</strong>：指示实际请求期间可以使用的 HTTP 标头。</li>
+<li><strong>Access-Control-Max-Age</strong>：定义预检请求结果的缓存时长。</li>
+<li><strong>Access-Control-Allow-Credentials</strong>：此标头指示浏览器在请求中包含 Cookie、HTTP 身份验证或客户端 SSL 证书等凭据时，是否将响应公开给前端 JavaScript 代码。如果将 Access-Control-Allow-Credentials 设置为 true，则允许浏览器在请求中包含凭据的情况下访问来自服务器的响应。需要注意的是，使用此标头时，Access-Control-Allow-Origin 不能设置为 *，并且必须指定明确的域名以确保安全性。</li>
+</ol>
+<h4 id="CORS-的常见应用场景"><a href="#CORS-的常见应用场景" class="headerlink" title="CORS 的常见应用场景"></a>CORS 的常见应用场景</h4><p>CORS 通常应用于以下场景：</p>
+<ol>
+<li><strong>API 和 Web 服务</strong>：当一个域中的 Web 应用程序需要访问托管在另一个域中的 API 时，CORS 会启用此交互。例如，位于 <code>example-client.com</code> 的前端应用程序可能需要从 <code>example-api.com</code> 获取数据。</li>
+<li>**内容分发网络 (CDN)**：许多网站使用 CDN 来加载 jQuery 或字体等库。CORS 使这些资源能够在不同域之间安全地共享。</li>
+<li><strong>Web 字体</strong>：要跨域使用 Web 字体，必须设置 CORS 标头，以便网站从集中位置加载字体。</li>
+<li><strong>第三方插件/小工具</strong>：在网站上启用社交媒体按钮或来自外部来源的聊天机器人等功能。</li>
+<li><strong>多域用户身份验证</strong>：提供单点登录 (SSO) 或使用令牌（如 OAuth）跨域验证用户的服务依赖 CORS 来安全地交换身份验证数据。</li>
+</ol>
+<h4 id="简单请求与预检请求"><a href="#简单请求与预检请求" class="headerlink" title="简单请求与预检请求"></a>简单请求与预检请求</h4><p>CORS 中主要有两种类型的请求：简单请求和预检请求。</p>
+<ol>
+<li><p><strong>简单请求</strong>：这些请求符合 CORS 设定的某些标准，因此被称为“简单请求”。它们的处理方式与同源请求类似，但有一些限制。如果请求使用 GET、HEAD 或 POST 方法，并且 POST 请求的“Content-Type”标头为“application/x-www-form-urlencoded”、“multipart/form-data”或“text/plain”，则该请求被视为简单请求。此外，请求不应包含未列入 CORS 安全列表的自定义标头。简单请求会使用“Origin”标头直接发送到服务器，响应将根据“Access-Control-Allow-Origin”标头执行 CORS 策略。重要的是，如果站点先前设置了 Cookie 和 HTTP 身份验证数据，即使“Access-Control-Allow-Credentials”标头未设置为 true，简单请求中也会包含这些凭据。</p>
+</li>
+<li><p><strong>预检请求</strong>：这些是 CORS 请求，浏览器在发送实际请求之前会使用 OPTIONS 请求进行“预检”，以确保服务器愿意根据其 CORS 策略接受该请求。当请求不符合“简单请求”的条件时，例如使用 GET、HEAD 或 POST 以外的 HTTP 方法，或者 POST 请求使用了简单请求允许值以外的其他“Content-Type”，或者包含自定义标头时，就会触发预检。预检 OPTIONS 请求包含“Access-Control-Request-Method”和“Access-Control-Request-Headers”等标头，用于指示实际请求的方法和自定义标头。服务器必须响应</p>
+</li>
+<li><p>适当的 CORS 标头，例如 <code>Access-Control-Allow-Methods</code>、<code>Access-Control-Allow-Headers</code> 和 <code>Access-Control-Allow-Origin</code>，用于指示实际请求是否被允许。如果预检成功，且 <code>Access-Control-Allow-Credentials</code> 设置为 true，浏览器将发送包含凭据的实际请求。</p>
+<h4 id="CORS-请求流程"><a href="#CORS-请求流程" class="headerlink" title="CORS 请求流程"></a>CORS 请求流程</h4></li>
+</ol>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/645b19f5d5848d004ab9c9e2/room-content/9eadd502f90ab196f359029a63494fbe.svg" alt="Process of CORS request"></p>
+<p>以上流程图展示了 CORS 请求的基本流程。</p>
+<ol>
+<li>浏览器首先向服务器发送 HTTP 请求。</li>
+<li>然后，服务器根据其允许的来源列表检查 Origin 标头。</li>
+<li>如果来源允许，服务器将使用相应的 <code>Access-Control-Allow-Origin</code> 标头进行响应。</li>
+<li>如果来源不允许，浏览器将阻止跨源请求。</li>
+</ol>
+<h1 id="ACAO-in-depth"><a href="#ACAO-in-depth" class="headerlink" title="ACAO in depth"></a>ACAO in depth</h1><h4 id="Access-Control-Allow-Origin-标头"><a href="#Access-Control-Allow-Origin-标头" class="headerlink" title="Access-Control-Allow-Origin 标头"></a>Access-Control-Allow-Origin 标头</h4><p>Access-Control-Allow-Origin 或 ACAO 标头是跨域资源共享 (CORS) 策略的重要组成部分。服务器使用它来指示网站上的资源是否允许来自不同来源的网页访问。此标头是服务器提供的 HTTP 响应的一部分。</p>
+<p>当浏览器发出跨域请求时，它会在 HTTP 请求中包含请求站点的来源。然后，服务器会根据其 CORS 策略检查此来源。如果来源被允许，服务器会在响应中包含 <code>Access-Control-Allow-Origin</code> 标头，指定允许的来源或通配符 (<code>*</code>)，通配符表示允许任何来源。</p>
+<h4 id="ACAO-配置"><a href="#ACAO-配置" class="headerlink" title="ACAO 配置"></a>ACAO 配置</h4><ol>
+<li>单源：</li>
+</ol>
+<ul>
+<li>配置：<code>Access-Control-Allow-Origin: https://example.com</code></li>
+<li>含义：仅允许来自 <code>https://example.com</code> 的请求。这是一种安全的配置，因为它将访问限制在已知的、受信任的来源。</li>
+</ul>
+<ol start="2">
+<li>多源：</li>
+</ol>
+<ul>
+<li>配置：根据允许的源列表动态设置。</li>
+<li>含义：允许来自特定源的请求。虽然这比单源更灵活，但需要谨慎管理以确保仅包含受信任的源。</li>
+</ul>
+<ol start="3">
+<li>通配符源：</li>
+</ol>
+<ul>
+<li>配置：<code>Access-Control-Allow-Origin: *</code></li>
+<li>含义：允许来自任何源的请求。这是最不安全的配置，应谨慎使用。它适用于不包含敏感信息的可公开访问资源。</li>
+</ul>
+<ol start="4">
+<li>使用凭据：</li>
+</ol>
+<ul>
+<li>配置：将 <code>Access-Control-Allow-Origin</code> 设置为特定源（不允许使用通配符），同时将 <code>Access-Control-Allow-Credentials: true</code> 设置为特定源。</li>
+<li>含义：允许在跨源请求中发送凭据，例如 Cookie 和 HTTP 身份验证数据。不过，需要注意的是，对于某些 GET 和 POST 请求等简单请求，浏览器会发送不带 Access-Control-Allow-Credentials 标头的 Cookie 和身份验证数据。对于使用 GET/POST 以外的方法或自定义标头的预检请求，Access-Control-Allow-Credentials 标头必须为 <strong>true</strong>，浏览器才能发送凭据。</li>
+</ul>
+<h4 id="ACAO-流程"><a href="#ACAO-流程" class="headerlink" title="ACAO 流程"></a>ACAO 流程</h4><p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/645b19f5d5848d004ab9c9e2/room-content/881dfef075517f43959632a99815ecf6.svg" alt="Access-Control-Allow-Origin Flow"></p>
+<p>上面的流程图展示了服务器端确定“Access-Control-Allow-Origin”标头的简化流程。首先，它会检查 HTTP 请求是否包含源。如果不包含，则设置通配符（“*”）。如果存在源，服务器会检查该源是否在允许的源列表中。如果在，则服务器将 ACAO 标头设置为该特定源；否则，服务器不会设置 ACAO 标头，从而有效地拒绝访问。这有助于直观地了解 CORS 策略实施背后的决策过程。</p>
+<h1 id="Common-Misconfigurations"><a href="#Common-Misconfigurations" class="headerlink" title="Common Misconfigurations"></a>Common Misconfigurations</h1><h4 id="常见的-CORS-配置错误"><a href="#常见的-CORS-配置错误" class="headerlink" title="常见的 CORS 配置错误"></a>常见的 CORS 配置错误</h4><p>CORS 配置错误会在 Web 应用程序中造成严重的安全漏洞。了解这些常见的配置错误对于开发人员和安全专业人员都至关重要。我们将探讨几种典型的配置错误及其利用方式。</p>
+<ol>
+<li><strong>空源配置错误</strong>：当服务器接受来自“空”源的请求时，就会发生这种情况。这种情况可能发生在请求的来源不是标准浏览器环境的情况下，例如来自文件（“file://”）或数据 URL。攻击者可以制作一封包含指向恶意 HTML 文件的链接的钓鱼邮件。当受害者打开该文件时，它会向易受攻击的服务器发送请求，服务器会错误地将这些请求视为来自“空”源。服务器应配置为明确验证“空”源，除非必要且了解其含义，否则不应信任该源。</li>
+<li><strong>来源检查中的错误正则表达式</strong>：来源检查中配置不正确的正则表达式可能会导致接受来自非预期来源的请求。例如，像“/example.com$/”这样的正则表达式会错误地允许“badexample.com”。攻击者可以注册一个与有缺陷的正则表达式匹配的域名，并创建一个恶意网站向目标服务器发送请求。另一个糟糕的正则表达式示例可能与子域名有关。例如，如果允许以“example.com”开头的域名，攻击者可以使用“example.com.attacker123.com”。应用程序应确保用于验证来源的正则表达式模式经过全面测试，并且足够具体，以排除意外匹配。</li>
+<li><strong>信任任意提供的来源</strong>：某些服务器配置为在“Access-Control-Allow-Origin”响应标头中回显“Origin”标头值，从而有效地允许任何来源。攻击者可以构造一个具有受控来源的自定义 HTTP 请求。由于服务器回显了此来源，攻击者的站点可以绕过 SOP 限制。与其回显来源，不如维护一个允许来源的白名单并对其进行验证。</li>
+</ol>
+<h4 id="安全处理原产地检查"><a href="#安全处理原产地检查" class="headerlink" title="安全处理原产地检查"></a>安全处理原产地检查</h4><p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/645b19f5d5848d004ab9c9e2/room-content/d378a6adb3fe3a15bc9e64dbaa680a40.png" alt="Secure handling of origin checks"></p>
+<p>上述流程图展示了一种处理 CORS 请求的安全方法。它首先检查来源是否为“null”，如果为“null”，则拒绝此类请求。如果不是，则检查来源是否在预定义的白名单中。如果来源在白名单中，服务器会将“Access-Control-Allow-Origin”设置为来源并继续处理请求。否则，服务器将拒绝请求，确保只允许白名单中的来源。此方法可以最大限度地降低 CORS 相关漏洞的风险。</p>
+<p><strong>注意：</strong> 务必理解 CORS 配置中的“安全性”与具体情况高度相关。虽然使用白名单并拒绝未指定的来源可以增强安全性，但在某些情况下，将“Access-Control-Allow-Origin”设置为“*”（允许所有来源）是一种有效且安全的选择。例如，对于不包含敏感信息且不依赖 Cookie 或身份验证令牌进行访问控制的可公开访问资源，可以安全地使用通配符 ACAO 标头。</p>
+<h1 id="Lab-Connection"><a href="#Lab-Connection" class="headerlink" title="Lab Connection"></a>Lab Connection</h1><h4 id="网络设置"><a href="#网络设置" class="headerlink" title="网络设置"></a>网络设置</h4><p>首先将 <code>corssop.thm</code>、<code>exploit.evilcors.thm</code> 和 <code>corssop.thm.evilcors.thm</code> 添加到您的 <code>/etc/hosts</code> 文件。我们使用多个域名是为了模拟不同域名之间的交互。</p>
+<table>
+<thead>
+<tr>
+<th><strong>主机地址</strong></th>
+<th><strong>IP 地址</strong></th>
+<th><strong>应用程序名称 - 描述</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>corssop.thm</td>
+<td>10.10.240.244</td>
+<td>易受攻击的网站</td>
+</tr>
+<tr>
+<td>explore.evilcors.thm</td>
+<td>10.10.240.244</td>
+<td>漏洞利用服务器 - 您可以在此处保存漏洞利用代码并将其直接发送给受害者。</td>
+</tr>
+<tr>
+<td>corssop.thm.evilcors.thm</td>
+<td>10.10.240.244</td>
+<td>托管网站 - 受害者可在此处访问上述网站中保存的漏洞利用代码。</td>
+</tr>
+</tbody></table>
+<p><strong>注意：</strong>漏洞利用服务器和托管网站位于同一 Web 服务器下。为了演示以下任务，我们将使用漏洞利用服务器来保存将在托管网站上提供的漏洞利用代码。</p>
+<p>以下是示例 hosts 文件：</p>
+<p>/etc/hosts</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">127.0.0.1       localhost</span><br><span class="line">127.0.1.1       tryhackme.lan   tryhackme</span><br><span class="line">10.10.240.244      corssop.thm exploit.evilcors.thm corssop.thm.evilcors.thm</span><br><span class="line"></span><br><span class="line"># The following lines are desirable for IPv6 capable hosts</span><br><span class="line">::1     localhost ip6-localhost ip6-loopback</span><br><span class="line">ff02::1 ip6-allnodes</span><br><span class="line">ff02::2 ip6-allrouters</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="渗透服务器设置"><a href="#渗透服务器设置" class="headerlink" title="渗透服务器设置"></a>渗透服务器设置</h4><p>在以下任务中，我们将从目标网站获取受害者收到的响应。执行此操作需要 Apache。如果您使用 AttackBox，Apache 已安装并运行在 81 端口上。</p>
+<p>如果您使用自己的机器，请使用命令“sudo apt install php apache2”安装 Apache 和 PHP。完成后，请前往“/var/www/html/”目录验证其是否已正确安装。</p>
+<p>我们将使用 PHP 捕获从受害者服务器获取的数据。以下是“receiver.php”的内容。以下脚本从“php://input”捕获数据，然后将数据保存到文本文件中。将以下脚本另存为“receiver.php”，并将其保存到“/var/www/html/”目录。</p>
+<figure class="highlight php"><table><tbody><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="title function_ invoke__">header</span>(<span class="string">"Access-Control-Allow-Origin: <span class="subst">{$_SERVER['HTTP_ORIGIN']}</span>"</span>);</span><br><span class="line"><span class="title function_ invoke__">header</span>(<span class="string">'Access-Control-Allow-Credentials: true'</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable">$postdata</span> = <span class="title function_ invoke__">file_get_contents</span>(<span class="string">"php://input"</span>);</span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">file_put_contents</span>(<span class="string">'data.txt'</span>, <span class="variable">$postdata</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>要确保 data.txt 文件可写，请执行以下一系列命令：</p>
+<p>/var/www/html</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">root@attackbox:/var/www/html# touch data.txt</span><br><span class="line">root@attackbox:/var/www/html# ls</span><br><span class="line">data.txt  index.html  receiver.php</span><br><span class="line">root@attackbox:/var/www/html# chmod 0777 data.txt </span><br><span class="line">root@attackbox:/var/www/html# ls -lah</span><br><span class="line">total 24K</span><br><span class="line">drwxr-xr-x 2 root root 4.0K Mar 12 13:17 .</span><br><span class="line">drwxr-xr-x 3 root root 4.0K Jan 24 13:51 ..</span><br><span class="line">-rwxrwxrwx 1 root root    0 Mar 12 13:17 data.txt</span><br><span class="line">-rw-r--r-- 1 root root  11K Jan 24 13:51 index.html</span><br><span class="line">-rw-r--r-- 1 root root  215 Mar 12 13:09 receiver.php</span><br></pre></td></tr></tbody></table></figure>
+
+<h1 id="Arbitrary-Origin"><a href="#Arbitrary-Origin" class="headerlink" title="Arbitrary Origin"></a>Arbitrary Origin</h1><h4 id="任意源"><a href="#任意源" class="headerlink" title="任意源"></a>任意源</h4><p>与其他 CORS 漏洞相比，利用任意源漏洞相对容易，因为应用程序可以接受来自任何域名的跨域请求。例如，以下是 <a target="_blank" rel="noopener" href="http://corssop.thm/arbitrary.php">http://corssop.thm/arbitrary.php</a> 的漏洞代码：</p>
+<figure class="highlight php"><table><tbody><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable">$_SERVER</span>[<span class="string">'HTTP_ORIGIN'</span>])){</span><br><span class="line">    <span class="title function_ invoke__">header</span>(<span class="string">"Access-Control-Allow-Origin: "</span>.<span class="variable">$_SERVER</span>[<span class="string">'HTTP_ORIGIN'</span>].<span class="string">""</span>);</span><br><span class="line">    <span class="title function_ invoke__">header</span>(<span class="string">'Access-Control-Allow-Credentials: true'</span>);</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>上述代码实现了一个有缺陷的 CORS 策略，因为它在未进行适当验证的情况下，将客户端请求中的 Origin 标头回显到 Access-Control-Allow-Origin 标头中。攻击者可能会使用类似 <a target="_blank" rel="noopener" href="http://evilcors.thm/">http://evilcors.thm</a> 的来源，服务器就会将其回显。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/645b19f5d5848d004ab9c9e2/room-content/abf822675dac1bfbafd2bbbb02594aba.png" alt="Server echo the supplied origin"></p>
+<p>要利用上述易受攻击的代码，请访问 <a target="_blank" rel="noopener" href="http://exploit.evilcors.thm/">http://exploit.evilcors.thm</a>。漏洞利用服务器已包含一段 JavaScript 代码，用于向目标应用程序发出跨域请求。示例漏洞利用代码位于 <a target="_blank" rel="noopener" href="http://corssop.thm/exploits/arbitrary.html">http://corssop.thm/exploits/data_exfil.html</a>。该漏洞利用代码使用“XMLHttpRequest”向易受攻击的应用程序发送请求并处理响应。处理后的响应将与 receiver.php 文件一起发送到 Web 服务器。</p>
+<p>在漏洞利用代码中，将目标 URL 更改为 <a target="_blank" rel="noopener" href="http://corssop.thm/arbitrary.php%E3%80%82">http://corssop.thm/arbitrary.php。</a></p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/645b19f5d5848d004ab9c9e2/room-content/faa8adc00361b57760fa969dd68beeaa.png" alt="change the target to arbitrary.php"></p>
+<p>另外，请更改接收窃取数据的 Web 服务器的 URL。如果您使用的是 AttackBox，请使用 ATTACKER_IP:81 模式，因为 Apache 在 81 端口运行。如果您使用的是自己的机器，请随意更改端口。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/645b19f5d5848d004ab9c9e2/room-content/9ab9bd2af426a6c746cc93e57b58fd5e.png" alt="Change the exfiltrator server"></p>
+<p>完成更新后，点击“保存”按钮。要验证漏洞利用代码是否有效，请点击“查看漏洞利用代码”按钮。这将打开一个新标签页，其中包含托管服务器中保存的漏洞利用代码。</p>
+<p>在新打开的标签页中，依次打开“开发者工具”&gt;“网络”。应该有两个 XHR 连接。第一个请求发送到目标网站，第二个请求发送到窃取服务器。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/645b19f5d5848d004ab9c9e2/room-content/c971783cf5edbc13c3c80853944d3467.png" alt="two XHR requests in the network tab"></p>
+<p>现在，您可以点击漏洞利用服务器主页上的“发送至受害者”按钮。</p>
+<p><strong>注意：</strong>受害者将自动通过 <a target="_blank" rel="noopener" href="http://evilcors.thm/">http://evilcors.thm</a> 访问包含漏洞利用代码的恶意网站。</p>
+<p>要检查受害者是否已成功执行漏洞利用代码，请点击导航栏中的“日志”按钮检查漏洞利用服务器的日志。日志中应该包含来自 IP <strong>10.10.39.12</strong> 的请求，因为这是受害者的 IP 地址。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/645b19f5d5848d004ab9c9e2/room-content/ec2dff335090cdc761b5ef689a312501.png" alt="Server logs showing the victim interaction"></p>
+<p>在你的渗透服务器中，你应该会收到来自受害者的 POST 请求。此 POST 请求包含我们漏洞利用中第一个 XHR 请求的完整网页响应。</p>
+<p><strong>注意：</strong> 由于受害者是在内部网络中模拟的，因此 IP 地址与上图不同。因此，出站连接将使用受害者机器的 IP 地址。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/645b19f5d5848d004ab9c9e2/room-content/51e8e4d4205a53d866cdf2763f93e725.png" alt="Outbound connection from the victim"></p>
+<p>打开位于 <code>/var/www/html</code> 中的 <strong>data.txt</strong> 来查看从用户那里窃取的数据。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/645b19f5d5848d004ab9c9e2/room-content/76f5f06cb3069d2df23eef69b3966bc6.png" alt="Exfiltrated data from victim"></p>
+<p>在现实世界中，如果目标响应包含敏感数据（例如用户数据、令牌和 API 令牌），您的 JavaScript 可以捕获这些数据，并可能将其发送到您控制的服务器。总结一下，以下是用户点击或访问托管的漏洞利用代码后的整个利用过程：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/645b19f5d5848d004ab9c9e2/room-content/12e2121045eae59b895d54b8f00f6d1b.png" alt="Process of exploitation"></p>
+<h1 id="Bad-Regex-in-Origin"><a href="#Bad-Regex-in-Origin" class="headerlink" title="Bad Regex in Origin"></a>Bad Regex in Origin</h1><h4 id="来源中的错误正则表达式"><a href="#来源中的错误正则表达式" class="headerlink" title="来源中的错误正则表达式"></a>来源中的错误正则表达式</h4><p>利用 CORS 来源处理中的错误正则表达式（regex）是一种利用 Web 应用程序用来验证 CORS 标头中来源的、实现不佳的正则表达式模式的技术。例如，以下是 <a target="_blank" rel="noopener" href="http://corssop.thm/badregex.php">http://corssop.thm/badregex.php</a> 的易受攻击代码：</p>
+<figure class="highlight php"><table><tbody><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable">$_SERVER</span>[<span class="string">'HTTP_ORIGIN'</span>]) &amp;&amp; <span class="title function_ invoke__">preg_match</span>(<span class="string">'#corssop.thm#'</span>, <span class="variable">$_SERVER</span>[<span class="string">'HTTP_ORIGIN'</span>])) {</span><br><span class="line">    <span class="title function_ invoke__">header</span>(<span class="string">"Access-Control-Allow-Origin: "</span>.<span class="variable">$_SERVER</span>[<span class="string">'HTTP_ORIGIN'</span>].<span class="string">""</span>);</span><br><span class="line">    <span class="title function_ invoke__">header</span>(<span class="string">'Access-Control-Allow-Credentials: true'</span>);</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>上述代码实施的 CORS 策略存在缺陷，因为它会验证包含“corssop.thm”一词的域名。攻击者可能会使用类似“<a target="_blank" rel="noopener" href="http://corssop.thm.evilcors.thm”这样的来源,从技术上来说,该来源与该模式相符./">http://corssop.thm.evilcors.thm”这样的来源，从技术上来说，该来源与该模式相符。</a></p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/645b19f5d5848d004ab9c9e2/room-content/6815765c9ea5422bf078964c9245f3b9.png" alt="supplied origin in the response"></p>
+<p>我们可以重复使用之前用来利用上述漏洞代码的漏洞代码。只需将目标 URL 更改为 <a target="_blank" rel="noopener" href="http://corssop.thm/badregex.php">http://corssop.thm/badregex.php</a> 即可。由于漏洞代码托管在 <a target="_blank" rel="noopener" href="http://corssop.thm.evilcors.thm/">http://corssop.thm.evilcors.thm</a> 中，因此可以绕过 CORS。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/645b19f5d5848d004ab9c9e2/room-content/09dd9972280f1ce4c80ec50951435e63.png" alt="change the target to badregex.php"></p>
+<p>完成更新后，再次点击“保存”按钮。要验证漏洞利用代码是否有效，请点击“查看漏洞利用代码”按钮。这将打开一个新标签页，其中包含托管服务器中保存的漏洞利用代码。</p>
+<p>在新打开的标签页中，依次打开“开发者工具”&gt;“网络”。应该有两个 XHR 连接。第一个请求发送到目标网站 (badregex.php)，第二个请求发送到窃取服务器。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/645b19f5d5848d004ab9c9e2/room-content/5e379f8f610d8f420823404ab2bb63ef.png" alt="XHR connections in the network tab"></p>
+<p>然后，您可以通过点击漏洞利用服务器主页上的“发送至受害者”按钮，将漏洞利用代码发送给受害者。</p>
+<p>注意：受害者会自动跳转到包含漏洞利用代码的页面。但是，在本例中，受害者访问的是域名（<a target="_blank" rel="noopener" href="http://corssop.thm.evilcors.thm/">http://corssop.thm.evilcors.thm</a>），而不是任务 7 中之前的域名。</p>
+<p>要检查受害者是否成功执行了漏洞利用代码，请点击导航栏中的“日志”按钮查看漏洞利用服务器的日志。日志中应该包含来自 IP <strong>10.10.39.12</strong> 的请求，因为这是受害者的 IP 地址。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/645b19f5d5848d004ab9c9e2/room-content/3386f7278f365d64da5c4a704ab2696c.png" alt="Server logs with victim interaction"></p>
+<p>In your exfiltrator server, you should receive a POST request from the victim. This POST request contains the whole webpage response of the first XHR request in our exploit.</p>
+<p><strong>Note:</strong> The IP differs from the previous image since the victim is simulated in an internal network. So, an outbound connection will use the IP of the machine instead.</p>
+<p>Once the request is saved, you can check the contents of the exfiltrated data in the text file.</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/645b19f5d5848d004ab9c9e2/room-content/01d3c77786fc09dd73995d3a0a8b0dfd.png" alt="Exfiltrated data from the victim"></p>
+<p>So, in a nutshell, below is the entire process of the exploitation once the user clicks or visits the hosted exploit code:</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/645b19f5d5848d004ab9c9e2/room-content/0451e7a3fc7b3cf9259fcfff90846915.png" alt="Entire process of exploitation"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://blog.mikannse.cn">Mikannse</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://blog.mikannse.cn/2025/06/09/THMCORS&amp;SOP/">https://blog.mikannse.cn/2025/06/09/THMCORS&amp;SOP/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://blog.mikannse.cn" target="_blank">MikannseのSekai</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a><a class="post-meta__tags" href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">渗透测试</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2025/06/09/kaggleIntrotoMachineLearning%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C/" title="kaggleIntrotoMachineLearning模型如何工作"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">kaggleIntrotoMachineLearning模型如何工作</div></div></a></div><div class="next-post pull-right"><a href="/2025/06/05/25-5%E6%9D%82%E8%B0%88/" title="25-5杂谈"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">25-5杂谈</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/06/15/AdvancedSQLInjectionTHM/" title="AdvancedSQLInjectionTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-06-15</div><div class="title">AdvancedSQLInjectionTHM</div></div></a></div><div><a href="/2023/09/13/CVE-2016-4437shiro%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/" title="CVE-2016-4437shiro反序列化漏洞复现"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-09-13</div><div class="title">CVE-2016-4437shiro反序列化漏洞复现</div></div></a></div><div><a href="/2024/04/06/CVE-2019-11043PHP-FPM%E8%BF%9C%E7%A8%8BRCE%E5%A4%8D%E7%8E%B0/" title="CVE-2019-11043PHP-FPM远程RCE复现"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-06</div><div class="title">CVE-2019-11043PHP-FPM远程RCE复现</div></div></a></div><div><a href="/2025/04/24/CVE-2021-44228Log4j%E5%A4%8D%E7%8E%B0/" title="CVE-2021-44228Log4j复现"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-04-24</div><div class="title">CVE-2021-44228Log4j复现</div></div></a></div><div><a href="/2024/03/14/ContainerVulnerabilitiesTHM/" title="ContainerVulnerabilitiesTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-03-14</div><div class="title">ContainerVulnerabilitiesTHM</div></div></a></div><div><a href="/2023/11/17/Cross-Site%20Scripting%20(XSS)HTB/" title="Cross-Site Scripting (XSS)HTB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-17</div><div class="title">Cross-Site Scripting (XSS)HTB</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Mikannse</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">334</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">75</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mikannse/mikannse.github.io"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">暂时没有公告QAQ</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Introduction"><span class="toc-number">1.</span> <span class="toc-text">Introduction</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9B%AE%E6%A0%87"><span class="toc-number">1.0.0.1.</span> <span class="toc-text">目标</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%88%E5%86%B3%E6%9D%A1%E4%BB%B6"><span class="toc-number">1.0.0.2.</span> <span class="toc-text">先决条件</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Understanding-SOP"><span class="toc-number">2.</span> <span class="toc-text">Understanding SOP</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%90%8C%E6%BA%90%E7%AD%96%E7%95%A5"><span class="toc-number">2.0.0.1.</span> <span class="toc-text">同源策略</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SOP-%E7%A4%BA%E4%BE%8B"><span class="toc-number">2.0.0.2.</span> <span class="toc-text">SOP 示例</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E8%AF%AF%E8%A7%A3"><span class="toc-number">2.0.0.3.</span> <span class="toc-text">常见误解</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SOP-%E5%86%B3%E7%AD%96%E6%B5%81%E7%A8%8B"><span class="toc-number">2.0.0.4.</span> <span class="toc-text">SOP 决策流程</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Understanding-CORS"><span class="toc-number">3.</span> <span class="toc-text">Understanding CORS</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%B7%A8%E5%9F%9F%E8%B5%84%E6%BA%90%E5%85%B1%E4%BA%AB"><span class="toc-number">3.0.0.1.</span> <span class="toc-text">跨域资源共享</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CORS-%E4%B8%AD%E6%B6%89%E5%8F%8A%E7%9A%84%E4%B8%8D%E5%90%8C-HTTP-%E6%A0%87%E5%A4%B4"><span class="toc-number">3.0.0.2.</span> <span class="toc-text">CORS 中涉及的不同 HTTP 标头</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CORS-%E7%9A%84%E5%B8%B8%E8%A7%81%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">3.0.0.3.</span> <span class="toc-text">CORS 的常见应用场景</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AE%80%E5%8D%95%E8%AF%B7%E6%B1%82%E4%B8%8E%E9%A2%84%E6%A3%80%E8%AF%B7%E6%B1%82"><span class="toc-number">3.0.0.4.</span> <span class="toc-text">简单请求与预检请求</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CORS-%E8%AF%B7%E6%B1%82%E6%B5%81%E7%A8%8B"><span class="toc-number">3.0.0.5.</span> <span class="toc-text">CORS 请求流程</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ACAO-in-depth"><span class="toc-number">4.</span> <span class="toc-text">ACAO in depth</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Access-Control-Allow-Origin-%E6%A0%87%E5%A4%B4"><span class="toc-number">4.0.0.1.</span> <span class="toc-text">Access-Control-Allow-Origin 标头</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ACAO-%E9%85%8D%E7%BD%AE"><span class="toc-number">4.0.0.2.</span> <span class="toc-text">ACAO 配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ACAO-%E6%B5%81%E7%A8%8B"><span class="toc-number">4.0.0.3.</span> <span class="toc-text">ACAO 流程</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Common-Misconfigurations"><span class="toc-number">5.</span> <span class="toc-text">Common Misconfigurations</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84-CORS-%E9%85%8D%E7%BD%AE%E9%94%99%E8%AF%AF"><span class="toc-number">5.0.0.1.</span> <span class="toc-text">常见的 CORS 配置错误</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E5%85%A8%E5%A4%84%E7%90%86%E5%8E%9F%E4%BA%A7%E5%9C%B0%E6%A3%80%E6%9F%A5"><span class="toc-number">5.0.0.2.</span> <span class="toc-text">安全处理原产地检查</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Lab-Connection"><span class="toc-number">6.</span> <span class="toc-text">Lab Connection</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E8%AE%BE%E7%BD%AE"><span class="toc-number">6.0.0.1.</span> <span class="toc-text">网络设置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B8%97%E9%80%8F%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%AE%BE%E7%BD%AE"><span class="toc-number">6.0.0.2.</span> <span class="toc-text">渗透服务器设置</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Arbitrary-Origin"><span class="toc-number">7.</span> <span class="toc-text">Arbitrary Origin</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%BB%E6%84%8F%E6%BA%90"><span class="toc-number">7.0.0.1.</span> <span class="toc-text">任意源</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Bad-Regex-in-Origin"><span class="toc-number">8.</span> <span class="toc-text">Bad Regex in Origin</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9D%A5%E6%BA%90%E4%B8%AD%E7%9A%84%E9%94%99%E8%AF%AF%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="toc-number">8.0.0.1.</span> <span class="toc-text">来源中的错误正则表达式</span></a></li></ol></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/06/09/kaggleIntrotoMachineLearning%E9%9A%8F%E6%9C%BA%E6%A3%AE%E6%9E%97/" title="kaggleIntrotoMachineLearning随机森林">kaggleIntrotoMachineLearning随机森林</a><time datetime="2025-06-09T07:27:13.000Z" title="发表于 2025-06-09 15:27:13">2025-06-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/06/09/kaggleIntrotoMachineLearning%E6%AC%A0%E6%8B%9F%E5%90%88%E5%92%8C%E8%BF%87%E6%8B%9F%E5%90%88/" title="kaggleIntrotoMachineLearning欠拟合和过拟合">kaggleIntrotoMachineLearning欠拟合和过拟合</a><time datetime="2025-06-09T07:26:27.000Z" title="发表于 2025-06-09 15:26:27">2025-06-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/06/09/kaggleIntrotoMachineLearning%E7%AC%AC%E4%B8%80%E4%B8%AA%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%A8%A1%E5%9E%8B/" title="kaggleIntrotoMachineLearning第一个机器学习模型">kaggleIntrotoMachineLearning第一个机器学习模型</a><time datetime="2025-06-09T07:24:43.000Z" title="发表于 2025-06-09 15:24:43">2025-06-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/06/09/kaggleIntrotoMachineLearning%E6%A8%A1%E5%9E%8B%E9%AA%8C%E8%AF%81/" title="kaggleIntrotoMachineLearning模型验证">kaggleIntrotoMachineLearning模型验证</a><time datetime="2025-06-09T07:23:43.000Z" title="发表于 2025-06-09 15:23:43">2025-06-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/06/09/kaggleIntrotoMachineLearning%E5%9F%BA%E7%A1%80%E6%95%B0%E6%8D%AE%E6%8E%A2%E7%B4%A2/" title="kaggleIntrotoMachineLearning基础数据探索">kaggleIntrotoMachineLearning基础数据探索</a><time datetime="2025-06-09T07:21:54.000Z" title="发表于 2025-06-09 15:21:54">2025-06-09</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2025 By Mikannse</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function loadDisqus () {
+  const disqus_config = function () {
+    this.page.url = 'https://blog.mikannse.cn/2025/06/09/THMCORS&SOP/'
+    this.page.identifier = '/2025/06/09/THMCORS&SOP/'
+    this.page.title = 'THMCORS&SOP'
+  }
+
+  const disqusReset = () => {
+    DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addModeChange('disqus', disqusReset)
+
+  if (window.DISQUS) disqusReset()
+  else {
+    (function() { 
+      var d = document, s = d.createElement('script');
+      s.src = 'https://.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  }
+}
+
+if ('Valine' === 'Disqus' || !true) {
+  if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+  else loadDisqus()
+} else {
+  function loadOtherComment () {
+    loadDisqus()
+  }
+}
+</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
