@@ -1,0 +1,652 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>THMTheLayoftheLand | MikannseのSekai</title><meta name="author" content="Mikannse"><meta name="copyright" content="Mikannse"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="Introduction在红队作战中，熟悉最初访问受感染机器的环境至关重要。因此，执行侦察和枚举是至关重要的，其主要目标是收集尽可能多的信息，以供下一阶段使用。 建立初步立足点后，后渗透过程就开始了！ 本会议室将介绍我们需要了解的常用概念、技术和安全产品。 在本会议室中，我们假设我们已经获得了机器的访问权限，并准备通过执行以下枚举来进一步扩展我们对环境的了解：  网络基础设施 Active Dir">
+<meta property="og:type" content="article">
+<meta property="og:title" content="THMTheLayoftheLand">
+<meta property="og:url" content="https://blog.mikannse.cn/2025/06/13/THMTheLayoftheLand/index.html">
+<meta property="og:site_name" content="MikannseのSekai">
+<meta property="og:description" content="Introduction在红队作战中，熟悉最初访问受感染机器的环境至关重要。因此，执行侦察和枚举是至关重要的，其主要目标是收集尽可能多的信息，以供下一阶段使用。 建立初步立足点后，后渗透过程就开始了！ 本会议室将介绍我们需要了解的常用概念、技术和安全产品。 在本会议室中，我们假设我们已经获得了机器的访问权限，并准备通过执行以下枚举来进一步扩展我们对环境的了解：  网络基础设施 Active Dir">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg">
+<meta property="article:published_time" content="2025-06-13T08:52:38.000Z">
+<meta property="article:modified_time" content="2025-06-13T08:53:10.195Z">
+<meta property="article:author" content="Mikannse">
+<meta property="article:tag" content="笔记">
+<meta property="article:tag" content="后渗透">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg"><link rel="shortcut icon" href="/img/icon.jpg"><link rel="canonical" href="https://blog.mikannse.cn/2025/06/13/THMTheLayoftheLand/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Mikannse","link":"链接: ","source":"来源: MikannseのSekai","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'THMTheLayoftheLand',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: undefined,
+  isToc: true,
+  postUpdate: '2025-06-13 16:53:10'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">343</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">76</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="MikannseのSekai"><span class="site-name">MikannseのSekai</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">THMTheLayoftheLand</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-06-13T08:52:38.000Z" title="发表于 2025-06-13 16:52:38">2025-06-13</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-06-13T08:53:10.195Z" title="更新于 2025-06-13 16:53:10">2025-06-13</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BD%91%E5%AE%89/">网安</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">8.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>27分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="THMTheLayoftheLand"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>在红队作战中，熟悉最初访问受感染机器的环境至关重要。因此，执行侦察和枚举是至关重要的，其主要目标是收集尽可能多的信息，以供下一阶段使用。</p>
+<p>建立初步立足点后，后渗透过程就开始了！</p>
+<p>本会议室将介绍我们需要了解的常用概念、技术和安全产品。</p>
+<p>在本会议室中，我们假设我们已经获得了机器的访问权限，并准备通过执行以下枚举来进一步扩展我们对环境的了解：</p>
+<ul>
+<li>网络基础设施</li>
+<li>Active Directory 环境</li>
+<li>用户和组</li>
+<li>基于主机的安全解决方案</li>
+<li>基于网络的安全解决方案</li>
+<li>应用程序和服务</li>
+</ul>
+<h1 id="Network-Infrastructure"><a href="#Network-Infrastructure" class="headerlink" title="Network Infrastructure"></a>Network Infrastructure</h1><p>一旦进入未知网络，我们的首要目标是确定我们的位置以及可以访问哪些内容。在红队作战期间，我们需要了解我们正在处理的目标系统是什么、该机器提供什么服务以及我们处于哪种类型的网络中。因此，在获得初始访问权限后对受感染机器进行枚举是回答这些问题的关键。本任务将讨论我们在作战期间可能遇到的常见网络类型。</p>
+<p>网络分段是一层额外的网络安全措施，它被划分为多个子网。它用于增强网络的安全性和管理。例如，它用于防止未经授权访问公司最有价值的资产，例如客户数据、财务记录等。</p>
+<p>虚拟局域网 (VLAN) 是一种用于网络分段的网络技术，用于控制网络问题（例如本地网络中的广播问题）并提高安全性。VLAN 内的主机只能与同一 VLAN 网络中的其他主机通信。</p>
+<p>如果您想了解更多网络基础知识，建议您尝试以下 TryHackMe 模块：<a target="_blank" rel="noopener" href="https://tryhackme.com/module/network-fundamentals">网络基础知识</a>。</p>
+<p>内部网络</p>
+<p>内部网络是根据内部设备的重要性或其数据可访问性的重要性进行分段和分离的子网络。内部网络的主要目的是在组织内共享信息、实现更快速、更便捷的通信、协作工具、操作系统和网络服务。在企业网络中，网络管理员出于各种原因使用网络分段，包括控制网络流量、优化网络性能和改善安全态势。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5d617515c8cd8348d0b4e68f/room-content/f86b9cce1276f4c317bcb4bae7686891.png" alt="img"></p>
+<p>上图展示了网络分段的简单概念，即将网络划分为两个网络。第一个网络用于员工工作站和个人设备。第二个网络用于提供内部服务（例如 DNS、内部 Web 服务、电子邮件服务等）的私有网络和内部网络设备。</p>
+<p>非军事区 (DMZ)</p>
+<p>DMZ 网络是一种边缘网络，它为公司内部局域网提供保护，并为之增加一层额外的安全层，以抵御不受信任的流量。DMZ 的常见设计是位于公共互联网和内部网络之间的子网。</p>
+<p>公司内部网络的设计取决于其需求。例如，假设一家公司提供网站、DNS、FTP、代理、VPN 等公共服务。在这种情况下，他们可能会设计一个 DMZ 网络来隔离公共网络流量（不受信任的流量）并对其进行访问控制。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5d617515c8cd8348d0b4e68f/room-content/df4d771470f80491ece99e42ee574ebf.png" alt="img"></p>
+<p>在上图中，我们用红色表示流向 DMZ 网络的网络流量，这些流量不受信任（直接来自互联网）。内部网络之间的绿色网络流量是受控流量，可能经过一个或多个网络安全设备。</p>
+<p>枚举系统和内部网络是发现阶段，攻击者可以利用此阶段了解系统和内部网络。基于获取的信息，我们可以进行横向移动或提权，从而在系统或 AD 环境上获得更多权限。</p>
+<p>网络枚举</p>
+<p>需要检查与网络相关的各种事项，例如 TCP 和 UDP 端口、已建立的连接、路由表、ARP 表等。</p>
+<p>让我们开始检查目标计算机的 TCP 和 UDP 开放端口。可以使用 netstat 命令完成此操作，如下所示。</p>
+<p>Command Prompt</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">PS C:\Users\thm&gt; netstat -na</span><br><span class="line"></span><br><span class="line">Active Connections</span><br><span class="line"></span><br><span class="line">  Proto  Local Address          Foreign Address        State</span><br><span class="line">  TCP    0.0.0.0:80             0.0.0.0:0              LISTENING</span><br><span class="line">  TCP    0.0.0.0:88             0.0.0.0:0              LISTENING</span><br><span class="line">  TCP    0.0.0.0:135            0.0.0.0:0              LISTENING</span><br><span class="line">  TCP    0.0.0.0:389            0.0.0.0:0              LISTENING</span><br></pre></td></tr></tbody></table></figure>
+
+<p>输出显示了开放的端口以及已建立的连接。接下来，让我们列出 ARP 表，其中包含与网络内目标计算机通信的计算机的 IP 地址和物理地址。这有助于查看网络内的通信，以便扫描其他计算机是否存在开放端口和漏洞。</p>
+<p>Command Prompt</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">PS C:\Users\thm&gt; arp -a</span><br><span class="line"></span><br><span class="line">Interface: 10.10.141.51 --- 0xa</span><br><span class="line">  Internet Address      Physical Address      Type</span><br><span class="line">  10.10.0.1             02-c8-85-b5-5a-aa     dynamic</span><br><span class="line">  10.10.255.255         ff-ff-ff-ff-ff-ff     static</span><br></pre></td></tr></tbody></table></figure>
+
+<p>内部网络服务</p>
+<p>它为内部网络设备提供私有和内部网络通信访问。网络服务的示例包括内部 DNS、Web 服务器、自定义应用程序等。需要注意的是，内部网络服务在网络外部无法访问。但是，一旦我们初始访问了访问这些网络服务的网络之一，它们就可访问并进行通信。</p>
+<p>我们将在任务 9 中讨论更多 Windows 应用程序和服务，包括 DNS 和自定义 Web 应用程序。</p>
+<h1 id="Active-Directory-AD-environment"><a href="#Active-Directory-AD-environment" class="headerlink" title="Active Directory (AD) environment"></a>Active Directory (AD) environment</h1><p>什么是 Active Directory (AD) 环境？</p>
+<p>它是一种基于 Windows 的目录服务，用于存储内部网络环境并提供数据对象。它允许集中管理身份验证和授权。AD 包含有关网络和环境的重要信息，包括用户、计算机、打印机等。例如，AD 可能包含用户的详细信息，例如职位、电话号码、地址、密码、群组、权限等。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5d617515c8cd8348d0b4e68f/room-content/59664b98a3a0b01cf6b7e83e039ddb84.png" alt="img"></p>
+<p>该图展示了 Active Directory 的设计方式。AD 控制器位于服务器子网中（如上图所示，为服务器网络），而 AD 客户端位于单独的网络中，它们可以加入域并通过防火墙使用 AD 服务。</p>
+<p>以下是我们需要熟悉的 Active Directory 组件列表：</p>
+<ul>
+<li>域控制器</li>
+<li>组织单位</li>
+<li>AD 对象</li>
+<li>AD 域</li>
+<li>林</li>
+<li>AD 服务帐户：内置本地用户、域用户、托管服务帐户</li>
+<li>域管理员</li>
+</ul>
+<p><strong>域控制器</strong> 是一台提供 Active Directory 服务并控制整个域的 Windows 服务器。它是一种集中式用户管理方式，可以加密用户数据并控制对网络的访问，包括用户、组、策略和计算机。它还支持资源访问和共享。这些都是攻击者瞄准域中域控制器的原因，因为它包含大量高价值信息。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5d617515c8cd8348d0b4e68f/room-content/c982e300552d540f0fc456cc05be21cd.png" alt="img"></p>
+<p><strong>组织单位 (OU)</strong> 是 AD 域内具有层级结构的容器。</p>
+<p><strong>Active Directory 对象</strong> 可以是单个用户、组，也可以是硬件组件，例如计算机或打印机。每个域都包含一个数据库，其中包含创建 AD 环境的对象身份信息，这些信息包括：</p>
+<ul>
+<li>用户 - 允许向域中的计算机进行身份验证的安全主体</li>
+<li>计算机 - 一种特殊类型的用户帐户</li>
+<li>GPO - 应用于其他 AD 对象的策略集合</li>
+</ul>
+<p><strong>AD 域</strong> 是 AD 网络中 Microsoft 组件的集合。</p>
+<p><strong>AD 林</strong> 是相互信任的域的集合。<br><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5d617515c8cd8348d0b4e68f/room-content/bb4bec81a78f745e8cbc38f7879002dd.png" alt="img"></p>
+<p>如需了解更多关于 Active Directory 基础知识的信息，我们建议您尝试以下 TryHackMe 聊天室：<a target="_blank" rel="noopener" href="https://tryhackme.com/room/winadbasics">Active Directory 基础知识</a>。</p>
+<p>获得初始访问权限后，在企业网络中查找 AD 环境至关重要，因为 Active Directory 环境会向已加入的用户提供大量有关该环境的信息。作为红队成员，我们会利用这一点，枚举 AD 环境并获取各种详细信息，以便在横向移动阶段使用这些信息。</p>
+<h1 id="Users-and-Groups-Management"><a href="#Users-and-Groups-Management" class="headerlink" title="Users and Groups Management"></a>Users and Groups Management</h1><p>在本任务中，我们将进一步了解用户和组，尤其是在 Active Directory 中。收集有关受感染计算机的信息至关重要，这些信息可能在下一阶段派上用场。账户发现是获得受感染计算机的初始访问权限后的第一步，旨在了解我们拥有哪些账户以及系统中还有哪些其他账户。</p>
+<p>Active Directory 环境包含各种账户，这些账户具有用于不同目的的必要权限、访问权限和角色。常见的 Active Directory 服务账户包括内置本地用户账户、域用户账户、托管服务账户和虚拟账户。</p>
+<ul>
+<li>内置本地用户账户用于本地管理系统，该系统不属于 AD 环境。</li>
+<li>具有 Active Directory 环境访问权限的域用户账户可以使用 AD 服务（由 AD 管理）。</li>
+<li>AD 托管服务账户是具有更高权限的受限域用户账户，可以管理 AD 服务。</li>
+<li>域管理员是可以管理 Active Directory 环境中信息的用户帐户，包括 AD 配置、用户、组、权限、角色、服务等。红队的目标之一是寻找能够让域管理员完全控制 AD 环境的信息。</li>
+</ul>
+<p>以下是 Active Directory 管理员帐户：</p>
+<table>
+<thead>
+<tr>
+<th>BUILTIN\Administrator</th>
+<th>域控制器上的本地管理员访问权限</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>域管理员</td>
+<td>对域中所有资源的管理访问权限</td>
+</tr>
+<tr>
+<td>企业管理员</td>
+<td>仅在林根目录中可用</td>
+</tr>
+<tr>
+<td>架构管理员</td>
+<td>能够修改域/林；对红队成员有用</td>
+</tr>
+<tr>
+<td>服务器操作员</td>
+<td>可以管理域服务器</td>
+</tr>
+<tr>
+<td>帐户操作员</td>
+<td>可以管理不属于特权组的用户</td>
+</tr>
+</tbody></table>
+<p>现在我们了解了 AD 环境中的各种帐户类型。让我们枚举我们在初始访问阶段可以访问的 Windows 计算机。作为当前用户，我们拥有查看或管理计算机和 AD 环境中内容的特定权限。</p>
+<p>Active Directory (AD) 枚举</p>
+<p>现在，在 AD 环境中进行枚举需要不同的工具和技术。一旦我们确认计算机属于 AD 环境的一部分，我们就可以开始查找任何以后可能用到的变量信息。在此阶段，我们使用 PowerShell 来枚举用户和组。</p>
+<p>以下 PowerShell 命令用于获取所有 Active Directory 用户帐户。请注意，我们需要使用 -Filter 参数。</p>
+<p>PowerShell</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">PS C:\Users\thm&gt; Get-ADUser  -Filter *</span><br><span class="line">DistinguishedName : CN=Administrator,CN=Users,DC=thmredteam,DC=com</span><br><span class="line">Enabled           : True</span><br><span class="line">GivenName         :</span><br><span class="line">Name              : Administrator</span><br><span class="line">ObjectClass       : user</span><br><span class="line">ObjectGUID        : 4094d220-fb71-4de1-b5b2-ba18f6583c65</span><br><span class="line">SamAccountName    : Administrator</span><br><span class="line">SID               : S-1-5-21-1966530601-3185510712-10604624-500</span><br><span class="line">Surname           :</span><br><span class="line">UserPrincipalName :</span><br><span class="line">PS C:\Users\thm&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们还可以使用 <a target="_blank" rel="noopener" href="http://www.ietf.org/rfc/rfc2253.txt">LDAP 分层树结构</a> 在 AD 环境中查找用户。可分辨名称 (DN) 是由逗号分隔的键值对组成的集合，用于标识目录中的唯一记录。DN 由域组件 (DC)、组织单元名称 (OU)、通用名称 (CN) 等组成。以下“CN=User1,CN=Users,DC=thmredteam,DC=com”是 DN 的一个示例，其可视化形式如下：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5d617515c8cd8348d0b4e68f/room-content/764c72d40ec3d823b05d6473702e00f5.png" alt="img"></p>
+<p>使用 SearchBase 选项，我们可以在活动目录中指定特定的 Common-Name CN。例如，我们可以指定列出属于“用户”部分的任何用户。</p>
+<p>PowerShell</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">PS C:\Users\thm&gt; Get-ADUser -Filter * -SearchBase "CN=Users,DC=THMREDTEAM,DC=COM"</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">DistinguishedName : CN=Administrator,CN=Users,DC=thmredteam,DC=com</span><br><span class="line">Enabled           : True</span><br><span class="line">GivenName         :</span><br><span class="line">Name              : Administrator</span><br><span class="line">ObjectClass       : user</span><br><span class="line">ObjectGUID        : 4094d220-fb71-4de1-b5b2-ba18f6583c65</span><br><span class="line">SamAccountName    : Administrator</span><br><span class="line">SID               : S-1-5-21-1966530601-3185510712-10604624-500</span><br><span class="line">Surname           :</span><br><span class="line">UserPrincipalName :</span><br></pre></td></tr></tbody></table></figure>
+
+<p>请注意，根据 CN 的配置，结果可能包含多个用户。尝试使用以下命令查找 THM OU 内的所有用户，并回答下面的问题 1。</p>
+<h1 id="Host-Security-Solution-1"><a href="#Host-Security-Solution-1" class="headerlink" title="Host Security Solution #1"></a>Host Security Solution #1</h1><p>在采取进一步行动之前，我们需要了解现有安全解决方案的一般知识。记住，列举端点上的防病毒和安全检测方法非常重要，这样才能尽可能地不被发现，并降低被抓的风险。</p>
+<p>本任务将讨论企业网络中常用的安全解决方案，分为主机安全解决方案和网络安全解决方案。</p>
+<p>主机安全解决方案</p>
+<p>它是一组用于监控和检测主机内异常和恶意活动的软件应用程序，包括：</p>
+<ol>
+<li>防病毒软件</li>
+<li>Microsoft Windows Defender</li>
+<li>基于主机的防火墙</li>
+<li>安全事件日志记录和监控</li>
+<li>基于主机的入侵检测系统 (HIDS)/基于主机的入侵防御系统 (HIPS)</li>
+<li>端点检测和响应 (EDR)</li>
+</ol>
+<p>让我们更详细地了解在红队演练中可能遇到的基于主机的安全解决方案。</p>
+<p>防病毒软件 (AV)</p>
+<p>防病毒软件，也称为反恶意软件，主要用于监控、检测和阻止恶意软件在主机内执行。大多数防病毒软件应用程序都使用一些众所周知的功能，包括后台扫描、完整系统扫描和病毒库。在后台扫描中，防病毒软件会实时运行，并在后台扫描所有打开和使用的文件。首次安装防病毒软件时，完整系统扫描至关重要。最有趣的部分是病毒库，防病毒软件会根据预定义的病毒库进行响应。因此，防病毒软件需要定期更新。</p>
+<p>防病毒软件使用多种检测技术，包括：</p>
+<ul>
+<li>基于签名的检测</li>
+<li>基于启发式的检测</li>
+<li>基于行为的检测</li>
+</ul>
+<p><strong>基于签名的检测</strong>是防病毒软件中用于识别恶意文件的常用传统技术之一。研究人员或用户通常会将受感染的文件提交到防病毒引擎平台，供防病毒软件供应商进一步分析。如果确认文件为恶意文件，则该签名会被注册到他们的数据库中。杀毒软件会将扫描到的文件与已知签名数据库进行比较，以检测客户端是否存在攻击和恶意软件。如果匹配，则认为存在威胁。</p>
+<p>启发式检测使用机器学习来判断是否存在恶意文件。它会实时扫描并进行静态分析，以查找应用程序代码中的可疑属性，或检查其是否使用了不常见的 Windows 或系统 API。它并不依赖基于签名的攻击来做出判断，有时也会依赖。这取决于杀毒软件的实现方式。</p>
+<p>最后，<strong>基于行为的检测</strong>依赖于监控和检查应用程序的执行情况，以发现异常行为和不常见的活动，例如创建/更新注册表项的值、终止/创建进程等。</p>
+<p>作为一名红队成员，了解是否存在杀毒软件至关重要。它会阻止我们进行我们试图做的事情。我们可以使用 Windows 内置工具（例如 wmic）枚举 AV 软件。</p>
+<p>PowerShell</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">PS C:\Users\thm&gt; wmic /namespace:\\root\securitycenter2 path antivirusproduct</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这也可以使用 PowerShell 来完成，并产生相同的结果。</p>
+<p>PowerShell</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">PS C:\Users\thm&gt; Get-CimInstance -Namespace root/SecurityCenter2 -ClassName AntivirusProduct</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">displayName              : Bitdefender Antivirus</span><br><span class="line">instanceGuid             : {BAF124F4-FA00-8560-3FDE-6C380446AEFB}</span><br><span class="line">pathToSignedProductExe   : C:\Program Files\Bitdefender\Bitdefender Security\wscfix.exe</span><br><span class="line">pathToSignedReportingExe : C:\Program Files\Bitdefender\Bitdefender Security\bdservicehost.exe</span><br><span class="line">productState             : 266240</span><br><span class="line">timestamp                : Wed, 15 Dec 2021 12:40:10 GMT</span><br><span class="line">PSComputerName           :</span><br><span class="line"></span><br><span class="line">displayName              : Windows Defender</span><br><span class="line">instanceGuid             : {D58FFC3A-813B-4fae-9E44-DA132C9FAA36}</span><br><span class="line">pathToSignedProductExe   : windowsdefender://</span><br><span class="line">pathToSignedReportingExe : %ProgramFiles%\Windows Defender\MsMpeng.exe</span><br><span class="line">productState             : 393472</span><br><span class="line">timestamp                : Fri, 15 Oct 2021 22:32:01 GMT</span><br><span class="line">PSComputerName           :</span><br></pre></td></tr></tbody></table></figure>
+
+<p>因此，计算机上安装了第三方防病毒软件（Bitdefender Antivirus）和 Windows Defender。<strong>注意</strong> Windows 服务器可能没有 SecurityCenter2 命名空间，该命名空间可能无法在连接的虚拟机上运行。相反，它适用于 Windows 工作站！</p>
+<p>Microsoft Windows Defender</p>
+<p>Microsoft Windows Defender 是一款预装的防病毒安全工具，运行在终端上。它使用各种算法进行检测，包括机器学习、大数据分析、深入的威胁防御研究以及 Microsoft 云基础架构，以防御恶意软件和病毒。Microsoft Defender 提供三种防护模式：主动模式、被动模式和禁用模式。</p>
+<p><strong>主动</strong>模式是指 Microsoft Defender 作为计算机上的主要防病毒软件运行，提供保护和修复。<strong>被动</strong>模式是指安装了第三方防病毒软件时运行的模式。因此，它作为辅助防病毒软件运行，扫描文件并检测威胁，但不提供修复。最后，<strong>禁用</strong>模式是指从系统中禁用或卸载 MS Defender。</p>
+<p>我们可以使用以下 PowerShell 命令来<strong>检查</strong> Windows Defender 的服务状态：</p>
+<p>PowerShell</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">PS C:\Users\thm&gt; Get-Service WinDefend</span><br><span class="line"></span><br><span class="line">Status   Name               DisplayName</span><br><span class="line">------   ----               -----------</span><br><span class="line">Running  WinDefend          Windows Defender Antivirus Service</span><br></pre></td></tr></tbody></table></figure>
+
+<p>接下来，我们可以开始使用 Get-MpComputerStatus cmdlet 获取当前的 Windows Defender 状态。它提供了安全解决方案元素的当前状态，包括反间谍软件、防病毒、LoavProtection、实时保护等。我们可以使用 select 来指定所需的内容，如下所示：</p>
+<p>PowerShell</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">PS C:\Users\thm&gt; Get-MpComputerStatus | select RealTimeProtectionEnabled</span><br><span class="line"></span><br><span class="line">RealTimeProtectionEnabled</span><br><span class="line">-------------------------</span><br><span class="line">                    False</span><br></pre></td></tr></tbody></table></figure>
+
+<p>因此，MpComputerStatus 会突出显示 Windows Defender 是否已启用。</p>
+<ol start="3">
+<li><strong>基于主机的防火墙</strong>：它是一种安装并运行在主机上的安全工具，可以阻止攻击者或红队成员的攻击尝试。因此，在我们初始访问的机器中枚举并收集有关防火墙及其规则的详细信息至关重要。</li>
+</ol>
+<p>基于主机的防火墙的主要目的是控制通过设备接口的入站和出站流量。它保护主机免受同一网络上不受信任设备的攻击。现代基于主机的防火墙在建立连接时使用多层级的流量分析，包括数据包分析。</p>
+<p>防火墙充当网络层的控制访问。它能够允许和拒绝网络数据包。例如，可以配置防火墙以阻止来自同一网络中其他机器通过 ping 命令发送的 ICMP 数据包。下一代防火墙还可以检查其他 OSI 层，例如应用层。因此，它可以检测并阻止SQL注入和其他应用层攻击。</p>
+<p>PowerShell</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">PS C:\Users\thm&gt; Get-NetFirewallProfile | Format-Table Name, Enabled</span><br><span class="line"></span><br><span class="line">Name    Enabled</span><br><span class="line">----    -------</span><br><span class="line">Domain     True</span><br><span class="line">Private    True</span><br><span class="line">Public     True</span><br></pre></td></tr></tbody></table></figure>
+
+<p>如果我们对当前登录的用户具有管理员权限，那么我们会尝试使用 Set-NetFirewallProfile cmdlet 禁用一个或多个防火墙配置文件。</p>
+<p>PowerShell</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">PS C:\Windows\system32&gt; Set-NetFirewallProfile -Profile Domain, Public, Private -Enabled False</span><br><span class="line">PS C:\Windows\system32&gt; Get-NetFirewallProfile | Format-Table Name, Enabled</span><br><span class="line">---- -------</span><br><span class="line">Domain False</span><br><span class="line">Private False</span><br><span class="line">Public False</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们还可以了解和检查当前的防火墙规则，看看防火墙是否允许或拒绝了这些规则。</p>
+<p>PowerShell</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">PS C:\Users\thm&gt; Get-NetFirewallRule | select DisplayName, Enabled, Description</span><br><span class="line"></span><br><span class="line">DisplayName                                                                  Enabled</span><br><span class="line">-----------                                                                  -------</span><br><span class="line">Virtual Machine Monitoring (DCOM-In)                                           False</span><br><span class="line">Virtual Machine Monitoring (Echo Request - ICMPv4-In)                          False</span><br><span class="line">Virtual Machine Monitoring (Echo Request - ICMPv6-In)                          False</span><br><span class="line">Virtual Machine Monitoring (NB-Session-In)                                     False</span><br><span class="line">Virtual Machine Monitoring (RPC)                                               False</span><br><span class="line">SNMP Trap Service (UDP In)                                                     False</span><br><span class="line">SNMP Trap Service (UDP In)                                                     False</span><br><span class="line">Connected User Experiences and Telemetry                                        True</span><br><span class="line">Delivery Optimization (TCP-In)                                                  True</span><br></pre></td></tr></tbody></table></figure>
+
+<p>在红队参与过程中，我们并不清楚防火墙会拦截哪些数据。不过，我们可以利用一些 PowerShell 命令，例如 Test-NetConnection 和 TcpClient。假设我们知道防火墙已经到位，并且需要在没有额外工具的情况下测试入站连接，那么我们可以执行以下操作：</p>
+<p>PowerShell</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">PS C:\Users\thm&gt; Test-NetConnection -ComputerName 127.0.0.1 -Port 80</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">ComputerName     : 127.0.0.1</span><br><span class="line">RemoteAddress    : 127.0.0.1</span><br><span class="line">RemotePort       : 80</span><br><span class="line">InterfaceAlias   : Loopback Pseudo-Interface 1</span><br><span class="line">SourceAddress    : 127.0.0.1</span><br><span class="line">TcpTestSucceeded : True</span><br><span class="line"></span><br><span class="line">PS C:\Users\thm&gt; (New-Object System.Net.Sockets.TcpClient("127.0.0.1", "80")).Connected</span><br><span class="line">True</span><br></pre></td></tr></tbody></table></figure>
+
+<p>因此，我们可以确认端口 80 上的入站连接已打开并被防火墙允许。请注意，我们还可以通过在 Test-NetConnection 的 -ComputerName 参数中指定名称来测试同一网络或域名中的远程目标。</p>
+<h1 id="Host-Security-Solution-2"><a href="#Host-Security-Solution-2" class="headerlink" title="Host Security Solution #2"></a>Host Security Solution #2</h1><p>在本任务中，我们将继续讨论主机安全解决方案。</p>
+<p>安全事件日志记录和监控</p>
+<p>默认情况下，操作系统使用日志文件记录系统中的各种活动事件。事件日志记录功能可供 IT 系统和网络管理员监控和分析重要事件，无论是在主机端还是网络端。在协作网络中，安全团队利用日志记录事件技术来跟踪和调查安全事件。</p>
+<p>Windows 操作系统记录的事件信息种类繁多，包括应用程序、系统、安全、服务等。此外，安全和网络设备将事件信息存储在日志文件中，以便系统管理员深入了解正在发生的事情。</p>
+<p>我们可以使用 Get-EventLog 命令获取本地计算机上可用的事件日志列表。</p>
+<p>PowerShell</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">PS C:\Users\thm&gt; Get-EventLog -List</span><br><span class="line"></span><br><span class="line">  Max(K) Retain OverflowAction        Entries Log</span><br><span class="line">  ------ ------ --------------        ------- ---</span><br><span class="line">     512      7 OverwriteOlder             59 Active Directory Web Services</span><br><span class="line">  20,480      0 OverwriteAsNeeded         512 Application</span><br><span class="line">     512      0 OverwriteAsNeeded         170 Directory Service</span><br><span class="line"> 102,400      0 OverwriteAsNeeded          67 DNS Server</span><br><span class="line">  20,480      0 OverwriteAsNeeded       4,345 System</span><br><span class="line">  15,360      0 OverwriteAsNeeded       1,692 Windows PowerShell</span><br></pre></td></tr></tbody></table></figure>
+
+<p>有时，可用事件日志列表可以让您深入了解计算机上安装了哪些应用程序和服务！例如，我们可以看到本地计算机上安装了 Active Directory、DNS 服务器等。有关 Get-EventLog cmdlet 的更多信息和示例，请访问 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.management/get-eventlog?view=powershell-5.1">Microsoft 文档网站</a>。</p>
+<p>在企业网络中，客户端上会安装日志代理软件，用于收集来自不同传感器的日志，从而分析和监控网络内的活动。我们将在“网络安全解决方案”任务中进一步讨论它们。</p>
+<p>System Monitor (Sysmon)</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5d617515c8cd8348d0b4e68f/room-content/8c77acd6d831c3b9f4c5b5f0cdc0d08c.png" alt=" "></p>
+<p>Windows 系统监视器 sysmon 是一个服务和设备驱动程序。它是 Microsoft Sysinternals 套件之一。sysmon 工具并非必备工具（默认情况下未安装），但安装后会开始收集和记录事件。这些日志指标可以显著帮助系统管理员和蓝队成员追踪和调查恶意活动，并协助进行常规故障排除。</p>
+<p>sysmon 工具的一大优势在于它可以记录许多重要事件，您还可以创建自己的规则和配置来监控：</p>
+<ul>
+<li>进程创建和终止</li>
+<li>网络连接</li>
+<li>文件修改</li>
+<li>远程威胁</li>
+<li>进程和内存访问</li>
+<li>以及其他许多事件</li>
+</ul>
+<p>要了解更多关于 sysmon 的信息，请访问 Windows 文档页面 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/sysinternals/downloads/sysmon">此处</a>。</p>
+<p>作为红队成员，主要目标之一是保持不被发现，因此必须了解这些工具，并避免生成和触发警报事件。以下是一些可用于检测受害机器上 sysmon 是否可用的技巧。</p>
+<p>我们可以在当前进程或服务中查找名为“Sysmon”的进程或服务，如下所示：</p>
+<p>PowerShell</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">PS C:\Users\thm&gt; Get-Process | Where-Object { $_.ProcessName -eq "Sysmon" }</span><br><span class="line"></span><br><span class="line">Handles  NPM(K)    PM(K)      WS(K)     CPU(s)     Id  SI ProcessName</span><br><span class="line">-------  ------    -----      -----     ------     --  -- -----------</span><br><span class="line">    373      15    20212      31716              3316   0 Sysmon</span><br></pre></td></tr></tbody></table></figure>
+
+<p>或查找以下服务，</p>
+<p>PowerShell</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">PS C:\Users\thm&gt; Get-CimInstance win32_service -Filter "Description = 'System Monitor service'"</span><br><span class="line"># or</span><br><span class="line">Get-Service | where-object {$_.DisplayName -like "*sysm*"}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>也可以通过检查 Windows 注册表来完成</p>
+<p>PowerShell</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">PS C:\Users\thm&gt; reg query HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-Sysmon/Operational</span><br></pre></td></tr></tbody></table></figure>
+
+<p>所有这些命令都用于确认 sysmon 工具是否已安装。一旦检测到，我们就可以尝试查找 sysmon 配置文件（前提是我们有可读权限），以了解系统管理员正在监控哪些内容。</p>
+<p>PowerShell</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">PS C:\Users\thm&gt; findstr /si '&lt;ProcessCreate onmatch="exclude"&gt;' C:\tools\*</span><br><span class="line">C:\tools\Sysmon\sysmonconfig.xml:      </span><br><span class="line">C:\tools\Sysmon\sysmonconfig.xml:      </span><br></pre></td></tr></tbody></table></figure>
+
+<p>有关 Windows sysmon 工具的更多详细信息以及如何在终端内使用它，我们建议您尝试 TryHackMe 聊天室：<a target="_blank" rel="noopener" href="https://tryhackme.com/room/sysmon">Sysmon</a>。</p>
+<p>基于主机的入侵检测/防御系统 (HIDS/HIPS)</p>
+<p><strong>HIDS</strong> 代表基于主机的入侵检测系统。它是一款能够监控和检测主机中异常和恶意活动的软件。HIDS 的主要目的是检测可疑活动，而不是阻止它们。基于主机或网络的入侵检测系统有两种工作方式，包括：</p>
+<ul>
+<li>基于签名的入侵检测系统 - 它检查校验和和消息身份验证。</li>
+<li>基于异常的入侵检测系统查找意外活动，包括异常的带宽使用、协议和端口。</li>
+</ul>
+<p>基于主机的入侵防御系统 (<strong>HIPS</strong>) 保护安装设备的操作系统活动。它是一种针对常见攻击和异常行为的检测和防御解决方案。 HIPS 可以审计主机日志文件、监控进程并保护系统资源。HIPS 集多种产品功能于一身，例如防病毒、行为分析、网络、应用程序防火墙等。</p>
+<p>此外，HIPS 还提供基于网络的入侵检测系统 (IDS)/入侵防御系统 (IPS)，我们将在下一个任务中介绍。</p>
+<p>端点检测和响应 (EDR)</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5d617515c8cd8348d0b4e68f/room-content/92a60622a80d64cc6dbedaa6c207662b.png" alt=" "></p>
+<p>它也被称为端点检测和威胁响应 (EDTR)。EDR 是一种网络安全解决方案，可以防御恶意软件和其他威胁。EDR 可以查找恶意文件，监控端点、系统和网络事件，并将其记录到数据库中，以便进一步分析、检测和调查。EDR 是下一代防病毒软件，可以实时检测主机上的恶意活动。</p>
+<p>EDR 分析系统数据和行为，以识别威胁，包括：</p>
+<ul>
+<li>恶意软件，包括病毒、木马、广告软件和键盘记录器</li>
+<li>漏洞利用链</li>
+<li>勒索软件</li>
+</ul>
+<p>以下是一些常见的端点 EDR 软件：</p>
+<ul>
+<li>Cylance</li>
+<li>Crowdstrike</li>
+<li>Symantec</li>
+<li>SentinelOne</li>
+<li>其他</li>
+</ul>
+<p>即使攻击者成功投递了有效载荷并绕过 EDR 接收反向 Shell，EDR 仍在运行并监控系统。如果它发出警报，可能会阻止我们执行其他操作。</p>
+<p>我们可以使用脚本枚举机器内的安全产品，例如 <a target="_blank" rel="noopener" href="https://github.com/PwnDexter/Invoke-EDRChecker">Invoke-EDRChecker</a> 和 <a target="_blank" rel="noopener" href="https://github.com/PwnDexter/SharpEDRChecker">SharpEDRChecker</a>。它们通过检查文件元数据、进程、加载到当前进程的 DLL、服务、驱动程序和目录，来检查常用的防病毒、EDR 和日志监控产品。</p>
+<h1 id="Network-Security-Solutions"><a href="#Network-Security-Solutions" class="headerlink" title="Network Security Solutions"></a>Network Security Solutions</h1><p>本任务将讨论企业网络中常见的网络安全解决方案。</p>
+<p>网络安全解决方案</p>
+<p>网络安全解决方案可以是用于监控、检测和阻止网络内恶意活动的软件或硬件设备。它专注于保护连接到协作网络的客户端和设备。网络安全解决方案包括但不限于：</p>
+<ul>
+<li>网络防火墙</li>
+<li>安全信息和事件管理 (SIEM)</li>
+<li>入侵检测系统/入侵防御系统 (IDS/IPS)</li>
+</ul>
+<p>网络防火墙</p>
+<p>防火墙是进入网络的不可信流量的第一个检查点。防火墙会根据规则和策略，在不可信流量进入网络之前对其进行过滤。此外，防火墙还可用于将网络与外部流量源、内部流量源甚至特定应用程序隔离。如今，防火墙产品是内置的网络路由器或其他提供各种安全功能的安全产品。以下是一些企业可能使用的防火墙类型。</p>
+<ul>
+<li>包过滤防火墙</li>
+<li>代理防火墙</li>
+<li>NAT 防火墙</li>
+<li>Web 应用防火墙</li>
+</ul>
+<p>安全信息和事件管理 (SIEM)</p>
+<p>SIEM 结合了安全信息管理 (SIM) 和安全事件管理 (SEM)，用于监控和分析事件，并实时跟踪和记录数据。SIEM 帮助系统管理员和蓝队成员监控和跟踪潜在的安全威胁和漏洞，防止其对组织造成损害。</p>
+<p>SIEM 解决方案充当日志数据聚合中心，从传感器收集日志文件，并对收集到的数据执行各种功能，以识别和检测安全威胁或攻击。以下是 SIEM 可能提供的一些功能：</p>
+<ul>
+<li>日志管理：实时捕获和收集整个企业网络的数据。</li>
+<li>事件分析：应用高级分析来检测异常模式或行为，并在仪表板上以图表和统计数据的形式显示。</li>
+<li>事件监控和安全警报：监控整个网络，包括连接的用户、设备、应用程序等，一旦检测到攻击，立即向管理员发出警报，以便采取适当的措施进行缓解。</li>
+<li>合规性管理和报告：随时生成实时报告。</li>
+</ul>
+<p>SIEM 能够利用集成的威胁情报和人工智能技术检测高级和未知威胁，包括内部威胁、安全漏洞、网络钓鱼攻击、Web 攻击、DDoS 攻击、数据泄露等。</p>
+<p>以下是一些企业中常见的 SIEM 产品：</p>
+<ul>
+<li>Splunk</li>
+<li>LogRhythm NextGen SIEM 平台</li>
+<li>SolarWinds 安全事件管理器</li>
+<li>Datadog 安全监控</li>
+<li>其他</li>
+</ul>
+<p>入侵检测系统 (NIDS) 和入侵防御系统 (NIPS)</p>
+<p>基于网络的 IDS/IPS 与基于主机的 IDS/IPS 概念相似。主要区别在于，基于网络的产品关注的是网络的安全，而不是主机的安全。基于网络的解决方案将基于分布在网络设备和主机上的传感器和代理来收集数据。入侵检测系统 (IDS) 和入侵防御系统 (IPS) 都是企业用来保护其内部系统的检测和监控网络安全解决方案。它们都读取网络数据包，查找异常行为和预先加载到先前数据库中的已知威胁。两种解决方案之间的显著区别在于，IDS 需要人工交互或第三方软件来分析数据并采取行动。IPS 是一个控制系统，它根据策略和规则接受或拒绝数据包。</p>
+<p>以下是常见的企业 IDS/IPS 产品：</p>
+<ul>
+<li>Palo Alto Networks</li>
+<li>Cisco 的下一代</li>
+<li>McAfee 网络安全平台 (NSP)</li>
+<li>Trend Micro TippingPoint</li>
+<li>Suricata</li>
+</ul>
+<p>有关 IDS/IPS 的更多信息，请访问参考<a target="_blank" rel="noopener" href="https://geekflare.com/ids-vs-ips-network-security-solutions/">链接</a>。</p>
+<h1 id="Applications-and-Services"><a href="#Applications-and-Services" class="headerlink" title="Applications and Services"></a>Applications and Services</h1><p>这项任务将扩展我们了解系统所需的知识。在之前的任务中，我们讨论了系统内的帐户发现和安全产品。我们将继续学习更多关于系统的知识，包括：</p>
+<ul>
+<li>已安装的应用程序</li>
+<li>服务和进程</li>
+<li>共享文件和打印机</li>
+<li>内部服务：DNS 和本地 Web 应用程序</li>
+</ul>
+<p>为了充分利用这些信息，有必要了解系统提供的功能。</p>
+<p>已安装的应用程序</p>
+<p>首先，我们通过检查应用程序的名称和版本来枚举系统中已安装的应用程序。作为红队成员，这些信息将对我们大有裨益。我们可能会发现系统中安装了漏洞软件，这些软件会利用漏洞来提升我们的系统权限。此外，我们可能会发现一些信息（例如纯文本凭据）残留在系统中，这些信息属于其他系统或服务。</p>
+<p>我们将使用 Windows 命令 wmic 列出所有已安装的应用程序及其版本。</p>
+<p>PowerShell</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">PS C:\Users\thm&gt; wmic product get name,version</span><br><span class="line">Name                                                            Version</span><br><span class="line">Microsoft Visual C++ 2019 X64 Minimum Runtime - 14.28.29910     14.28.29910</span><br><span class="line">AWS Tools for Windows                                           3.15.1248</span><br><span class="line">Amazon SSM Agent                                                3.0.529.0</span><br><span class="line">aws-cfn-bootstrap                                               2.0.5</span><br><span class="line">AWS PV Drivers                                                  8.3.4</span><br><span class="line">Microsoft Visual C++ 2019 X64 Additional Runtime - 14.28.29910  14.28.29910</span><br></pre></td></tr></tbody></table></figure>
+
+<p>另一个有趣的方法是查找特定的文本字符串、隐藏目录和备份文件。然后，我们可以使用 PowerShell cmdlet Get-ChildItem，如下所示：</p>
+<p>PowerShell</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">PS C:\Users\thm&gt; Get-ChildItem -Hidden -Path C:\Users\kkidd\Desktop\</span><br></pre></td></tr></tbody></table></figure>
+
+<p>服务和进程</p>
+<p>Windows 服务使系统管理员能够在我们自己的 Windows 会话中创建长时间运行的可执行应用程序。有时，Windows 服务的权限配置错误，会导致当前用户的访问权限级别提升。因此，我们必须查看正在运行的服务并执行服务和进程侦察。更多详细信息，请参阅 <a target="_blank" rel="noopener" href="https://attack.mitre.org/techniques/T1057/">Attack MITRE</a> 上的进程发现。</p>
+<p>进程发现是一个枚举步骤，用于了解系统提供的功能。红队应该获取有关系统上运行的服务和进程的信息和详细信息。我们需要尽可能多地了解我们的目标。这些信息可以帮助我们了解网络中其他系统上运行的常用软件。例如，受感染的系统可能包含用于内部用途的自定义客户端应用程序。自定义内部开发的软件是升级向量的最常见根本原因。因此，值得进一步挖掘以获取有关当前进程的详细信息。</p>
+<p>想从蓝队角度了解更多 Windows 核心进程的详细信息，请访问 TryHackMe 聊天室：<a target="_blank" rel="noopener" href="https://tryhackme.com/room/btwindowsinternals">核心 Windows 进程</a>。</p>
+<p>共享文件和打印机</p>
+<p>在个人和企业环境中，共享文件和网络资源非常常见。系统管理员可能会错误配置访问权限，而他们可能掌握有关其他帐户和系统的有用信息。想了解更多关于打印机黑客攻击的信息，我们建议您尝试以下 TryHackMe 聊天室：<a target="_blank" rel="noopener" href="https://tryhackme.com/room/printerhacking101">打印机黑客攻击 101</a>。</p>
+<p>内部服务：DNS、本地 Web 应用程序等</p>
+<p>内部网络服务是扩展我们对其他系统和整个环境知识的另一个信息来源。想了解更多关于用于外部和内部网络服务的网络服务的详细信息，我们建议您尝试以下聊天室：<a target="_blank" rel="noopener" href="https://tryhackme.com/room/networkservices">网络服务</a>、<a target="_blank" rel="noopener" href="https://tryhackme.com/room/networkservices2">网络服务 2</a>。</p>
+<p>以下是我们感兴趣的一些常用内部服务：</p>
+<ul>
+<li>DNS 服务</li>
+<li>电子邮件服务</li>
+<li>网络文件共享</li>
+<li>Web 应用程序</li>
+<li>数据库服务</li>
+</ul>
+<h1 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h1><p>本课程将介绍企业环境中的客户端系统。学员应更好地理解客户端在企业网络中的使用方式，包括：</p>
+<ul>
+<li>网络基础设施</li>
+<li>AD 环境</li>
+<li>安全措施（HIPS、AV 等）</li>
+<li>内部应用程序和服务</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://blog.mikannse.cn">Mikannse</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://blog.mikannse.cn/2025/06/13/THMTheLayoftheLand/">https://blog.mikannse.cn/2025/06/13/THMTheLayoftheLand/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://blog.mikannse.cn" target="_blank">MikannseのSekai</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a><a class="post-meta__tags" href="/tags/%E5%90%8E%E6%B8%97%E9%80%8F/">后渗透</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2025/06/13/THMEnumeration/" title="THMEnumeration"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">THMEnumeration</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2025/06/13/THMEnumeration/" title="THMEnumeration"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-06-13</div><div class="title">THMEnumeration</div></div></a></div><div><a href="/2024/06/15/AdvancedSQLInjectionTHM/" title="AdvancedSQLInjectionTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-06-15</div><div class="title">AdvancedSQLInjectionTHM</div></div></a></div><div><a href="/2023/09/13/CVE-2016-4437shiro%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/" title="CVE-2016-4437shiro反序列化漏洞复现"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-09-13</div><div class="title">CVE-2016-4437shiro反序列化漏洞复现</div></div></a></div><div><a href="/2024/07/19/CSS%E9%9A%8F%E6%89%8B%E8%AE%B0/" title="CSS随手记"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-19</div><div class="title">CSS随手记</div></div></a></div><div><a href="/2024/04/06/CVE-2019-11043PHP-FPM%E8%BF%9C%E7%A8%8BRCE%E5%A4%8D%E7%8E%B0/" title="CVE-2019-11043PHP-FPM远程RCE复现"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-06</div><div class="title">CVE-2019-11043PHP-FPM远程RCE复现</div></div></a></div><div><a href="/2025/04/24/CVE-2021-44228Log4j%E5%A4%8D%E7%8E%B0/" title="CVE-2021-44228Log4j复现"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-04-24</div><div class="title">CVE-2021-44228Log4j复现</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Mikannse</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">343</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">76</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mikannse/mikannse.github.io"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">暂时没有公告QAQ</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Introduction"><span class="toc-number">1.</span> <span class="toc-text">Introduction</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Network-Infrastructure"><span class="toc-number">2.</span> <span class="toc-text">Network Infrastructure</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Active-Directory-AD-environment"><span class="toc-number">3.</span> <span class="toc-text">Active Directory (AD) environment</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Users-and-Groups-Management"><span class="toc-number">4.</span> <span class="toc-text">Users and Groups Management</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Host-Security-Solution-1"><span class="toc-number">5.</span> <span class="toc-text">Host Security Solution #1</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Host-Security-Solution-2"><span class="toc-number">6.</span> <span class="toc-text">Host Security Solution #2</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Network-Security-Solutions"><span class="toc-number">7.</span> <span class="toc-text">Network Security Solutions</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Applications-and-Services"><span class="toc-number">8.</span> <span class="toc-text">Applications and Services</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Conclusion"><span class="toc-number">9.</span> <span class="toc-text">Conclusion</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/06/13/THMTheLayoftheLand/" title="THMTheLayoftheLand">THMTheLayoftheLand</a><time datetime="2025-06-13T08:52:38.000Z" title="发表于 2025-06-13 16:52:38">2025-06-13</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/06/13/THMEnumeration/" title="THMEnumeration">THMEnumeration</a><time datetime="2025-06-13T08:51:27.000Z" title="发表于 2025-06-13 16:51:27">2025-06-13</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/06/13/kagglePandas%E9%87%8D%E5%91%BD%E5%90%8D%E5%92%8C%E5%90%88%E5%B9%B6/" title="kagglePandas重命名和合并">kagglePandas重命名和合并</a><time datetime="2025-06-13T02:28:23.000Z" title="发表于 2025-06-13 10:28:23">2025-06-13</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/06/13/kagglePandas%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E5%92%8C%E7%BC%BA%E5%A4%B1%E5%80%BC/" title="kagglePandas数据类型和缺失值">kagglePandas数据类型和缺失值</a><time datetime="2025-06-13T02:23:10.000Z" title="发表于 2025-06-13 10:23:10">2025-06-13</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/06/13/kagglePandas%E5%88%86%E7%BB%84%E5%92%8C%E6%8E%92%E5%BA%8F/" title="kagglePandas分组和排序">kagglePandas分组和排序</a><time datetime="2025-06-13T02:20:42.000Z" title="发表于 2025-06-13 10:20:42">2025-06-13</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2025 By Mikannse</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function loadDisqus () {
+  const disqus_config = function () {
+    this.page.url = 'https://blog.mikannse.cn/2025/06/13/THMTheLayoftheLand/'
+    this.page.identifier = '/2025/06/13/THMTheLayoftheLand/'
+    this.page.title = 'THMTheLayoftheLand'
+  }
+
+  const disqusReset = () => {
+    DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addModeChange('disqus', disqusReset)
+
+  if (window.DISQUS) disqusReset()
+  else {
+    (function() { 
+      var d = document, s = d.createElement('script');
+      s.src = 'https://.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  }
+}
+
+if ('Valine' === 'Disqus' || !true) {
+  if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+  else loadDisqus()
+} else {
+  function loadOtherComment () {
+    loadDisqus()
+  }
+}
+</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
