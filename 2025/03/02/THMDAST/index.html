@@ -1,0 +1,580 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>THMDAST | MikannseのSekai</title><meta name="author" content="Mikannse"><meta name="copyright" content="Mikannse"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="Introduction测试应用程序漏洞的众多方法之一是获取正在运行的实例并像外部攻击者一样对其进行攻击。此过程称为动态应用程序安全测试 (DAST)，将成为当前房间的重点。 房间目标  了解如何应用 DAST 来查找实际应用程序中的弱点。 了解使用 DAST 而不是其他技术的利弊。 熟悉用于 DAST 的一些工具。  房间先决条件 在尝试这个房间之前，您应该了解 Web 应用程序和 HTTP 协">
+<meta property="og:type" content="article">
+<meta property="og:title" content="THMDAST">
+<meta property="og:url" content="https://blog.mikannse.cn/2025/03/02/THMDAST/index.html">
+<meta property="og:site_name" content="MikannseのSekai">
+<meta property="og:description" content="Introduction测试应用程序漏洞的众多方法之一是获取正在运行的实例并像外部攻击者一样对其进行攻击。此过程称为动态应用程序安全测试 (DAST)，将成为当前房间的重点。 房间目标  了解如何应用 DAST 来查找实际应用程序中的弱点。 了解使用 DAST 而不是其他技术的利弊。 熟悉用于 DAST 的一些工具。  房间先决条件 在尝试这个房间之前，您应该了解 Web 应用程序和 HTTP 协">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg">
+<meta property="article:published_time" content="2025-03-02T12:17:02.000Z">
+<meta property="article:modified_time" content="2025-06-13T02:29:55.490Z">
+<meta property="article:author" content="Mikannse">
+<meta property="article:tag" content="笔记">
+<meta property="article:tag" content="DevSecOps">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg"><link rel="shortcut icon" href="/img/icon.jpg"><link rel="canonical" href="https://blog.mikannse.cn/2025/03/02/THMDAST/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Mikannse","link":"链接: ","source":"来源: MikannseのSekai","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'THMDAST',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: undefined,
+  isToc: true,
+  postUpdate: '2025-06-13 10:29:55'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">341</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">75</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="MikannseのSekai"><span class="site-name">MikannseのSekai</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">THMDAST</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-03-02T12:17:02.000Z" title="发表于 2025-03-02 20:17:02">2025-03-02</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-06-13T02:29:55.490Z" title="更新于 2025-06-13 10:29:55">2025-06-13</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BD%91%E5%AE%89/">网安</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">8.6k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>26分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="THMDAST"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>测试应用程序漏洞的众多方法之一是获取正在运行的实例并像外部攻击者一样对其进行攻击。此过程称为动态应用程序安全测试 (DAST)，将成为当前房间的重点。</p>
+<p>房间目标</p>
+<ul>
+<li>了解如何应用 DAST 来查找实际应用程序中的弱点。</li>
+<li>了解使用 DAST 而不是其他技术的利弊。</li>
+<li>熟悉用于 DAST 的一些工具。</li>
+</ul>
+<p>房间先决条件</p>
+<p>在尝试这个房间之前，您应该了解 Web 应用程序和 HTTP 协议的工作原理。了解常见的 Web 漏洞也是可取的。如果您需要复习上述任何主题，请务必查看以下房间：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://tryhackme.com/room/howwebsiteswork">网站工作原理</a></li>
+<li><a target="_blank" rel="noopener" href="https://tryhackme.com/room/httpindetail">HTTP 详细信息</a></li>
+<li><a target="_blank" rel="noopener" href="https://tryhackme.com/room/owasptop102021">OWASP Top 10</a></li>
+</ul>
+<h1 id="Dynamic-Application-Security-Testing-DAST"><a href="#Dynamic-Application-Security-Testing-DAST" class="headerlink" title="Dynamic Application Security Testing (DAST)"></a>Dynamic Application Security Testing (DAST)</h1><p>什么是 DAST？</p>
+<p><strong>动态应用程序安全测试 (DAST)</strong> 是测试正在运行的 Web 应用程序实例是否存在弱点和漏洞的过程。它侧重于黑盒测试方法，在这种方法中，漏洞的发现方式与普通攻击者发现漏洞的方式一样。简而言之，DAST 通过尝试利用漏洞来识别漏洞，无论是手动还是通过自动化工具。</p>
+<p>通过从外部角度测试应用程序，我们可以从其内部工作中抽象出来，专注于识别攻击者可能发现的漏洞。这意味着从 DAST 获得的结果通常会指向需要优先关注的漏洞，因为预计这些漏洞会在不了解应用程序的情况下被发现。</p>
+<p>需要注意的是，DAST 不会取代其他方法来查找应用程序中的漏洞，而是对它们进行补充。安全开发生命周期通常会混合使用多种技术，以提供足够好的漏洞覆盖率。</p>
+<p>手动与自动 DAST</p>
+<p>DAST 有两种执行方式：</p>
+<ul>
+<li><strong>手动 DAST：</strong>安全工程师将手动对应用程序执行测试以检查漏洞。</li>
+<li><strong>自动 DAST</strong>：自动化工具将扫描 Web 应用程序以查找漏洞。</li>
+</ul>
+<p>这两个过程是互补的，可以在<strong>软件开发生命周期 (SDLC)</strong> 的不同阶段使用。结合使用手动和自动化工具通常会产生最佳效果，而不是单独依赖其中任何一种。</p>
+<p>手动 DAST 将帮助我们发现自动化工具无法轻易发现的弱点，因为它们无法从功能角度理解应用程序。</p>
+<p>手动完成所有操作的问题在于，在开发阶段对代码中的每次提交或小更改运行手动测试将花费太多时间。这就是自动化 DAST 的优势所在，因为它提供了一种快速的方法，可以针对目标应用程序运行许多测试，而无需人工交互。</p>
+<p>SDLC 中的 DAST</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/d5b8c1597d4d218692e466e39364c9cb.png" alt="DAST in the SSDLC"></p>
+<p>虽然每种情况都不同，但在测试阶段使用自动化 DAST 是很常见的。自动化 DAST 工具通常会针对速度进行优化，以便开发人员能够快速获得反馈，而传统的 Web 应用程序漏洞扫描程序可能需要几个小时才能运行。这里的想法不是对应用程序进行广泛的扫描，而是尽早发现容易发现的问题。</p>
+<p>另一方面，手动 DAST 通常会定期运行，以避免减慢整个开发过程的速度。在开发应用程序时，通常每周运行一次手动扫描，但这在很大程度上取决于每个项目。在这些手动扫描中可以使用更密集的扫描配置文件来识别更多漏洞。</p>
+<p>当应用程序准备好投入生产时，运行全面的 Web 应用程序渗透测试始终是很好的做法，可以发现最终产品实施中的任何缺陷。</p>
+<p><strong>注意：</strong>大多数文献通常将自动化 DAST 简称为 DAST，并经常将手动 DAST 视为 Web 应用程序渗透测试的一部分。手动 DAST 也可能被称为“传统 DAST”。</p>
+<p>DAST 的优缺点</p>
+<p>与用于查找应用程序中的漏洞的任何其他流程一样，DAST 也有其优点和缺点：</p>
+<table>
+<thead>
+<tr>
+<th><strong>优点：</strong>在运行时发现漏洞。这将包括特定于部署过程的漏洞，这些漏洞无法通过仅分析代码来发现。DAST 将发现使用 SAST 无法发现的漏洞，例如 HTTP 请求走私、缓存中毒和参数污染。DAST 工具不关心应用程序使用的编程语言。由于 DAST 是黑盒测试，因此所有应用程序都以与语言无关的方式处理。与 SAST 相比，误报数量减少。DAST 工具可能能够发现一些业务逻辑缺陷。有效性取决于工具，不应将其视为手动测试的替代品。</th>
+<th><strong>缺点：</strong>代码覆盖率不是最好的。DAST 可能无法覆盖仅由应用程序中的特定用例触发的特定情况。与静态代码分析技术相比，使用 DAST 可能更难发现某些漏洞。某些应用程序难以抓取。现代应用程序严重依赖客户端的 javascript 处理。这使得 DAST 工具更难遍历它们。DAST 扫描器无法告诉您如何详细修复某些漏洞，因为它们不知道底层代码。某些类型的扫描可能需要大量时间才能完成。您需要一个正在运行的应用程序来进行测试。</th>
+</tr>
+</thead>
+<tbody><tr>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>准备好使用 DAST 了吗？</p>
+<p>大多数情况下，您会发现 DAST 被当做一系列自动化测试。但是，我们将探索手动过程的工作原理，以便更好地了解大多数工具的基本功能。一般来说，DAST 工具将针对目标网站执行至少以下两项任务：</p>
+<ul>
+<li><strong>蜘蛛/爬取</strong>：该工具将浏览 Web 应用程序，尝试映射应用程序并识别可能受到攻击的页面和参数列表。</li>
+<li><strong>漏洞扫描</strong>：该工具将尝试针对已识别的页面和参数启动攻击负载。用户通常可以自定义攻击类型，以仅包含与目标应用程序相关的攻击。</li>
+</ul>
+<p>我们将在此房间中使用 ZAP 代理作为我们的 DAST 工具进行演示。但是，请考虑企业设置中使用的许多 DAST 工具都是付费的，而且价格相当昂贵，但将使用与任何其他 Web 应用程序漏洞扫描程序相同的基本原理。工具之间的主要区别在于它们的漏洞检测能力以及它们在产品中添加了多少对企业有用的附加功能，例如仪表板、票务系统集成等等。</p>
+<h1 id="Spiders-and-Crawlers"><a href="#Spiders-and-Crawlers" class="headerlink" title="Spiders and Crawlers"></a>Spiders and Crawlers</h1><p>使用 ZAP 爬取应用程序</p>
+<p>我们采取的第一步是获取目标 Web 应用程序中所有资源的地图，以确定分析范围。ZAP 提供了一个爬取模块，我们可以使用它来实现此目的。<strong>Spider</strong> 将导航到您提供的起始页，并通过跟踪它可以检测到的所有链接从根本上探索网站。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/9a6c2409ddb76cc7d67e97dc4ab9e118.png" alt="Spidering"></p>
+<p>要抓取某个网站，我们可以转到<strong>工具 -&gt; 蜘蛛</strong>。这将显示蜘蛛对话框，我们只需在其中指定一个网站作为起点。现在，我们将上下文和用户框留空。如果需要，您可以检查以下附加选项：</p>
+<ul>
+<li><strong>递归</strong>：递归抓取网站上的链接。</li>
+<li><strong>仅抓取子树</strong>：将抓取限制在起点 URL 的子文件夹中。</li>
+<li><strong>显示高级选项</strong>：启用高级选项卡，您可以在其中指定其他参数来调整抓取。</li>
+</ul>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/1cc8aecf25ac7dd193f23eda02aaf643.png" alt="Spider Window"></p>
+<p>指向 <a target="_blank" rel="noopener" href="http://10.10.36.45:8082/">http://10.10.36.45:8082/</a> 并按“开始扫描”。片刻之后，您应该会在“站点”选项卡上看到蜘蛛找到的所有 URL：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/70b413458e34d59dfab7730076a6d299.png" alt="Sites Tab"></p>
+<p>现在您应该会看到站点列表，其中包含在爬取过程中找到的所有 URL。起始页 URL 之外的任何项目都被视为超出范围，不会添加到列表中。</p>
+<p>您可能会注意到，如果您手动导航到 <a target="_blank" rel="noopener" href="http://10.10.36.45:8082/%EF%BC%8C%E6%82%A8%E5%BA%94%E8%AF%A5%E4%BC%9A%E5%9C%A8%E8%8F%9C%E5%8D%95%E4%B8%AD%E7%9C%8B%E5%88%B0%E6%8C%87%E5%90%91">http://10.10.36.45:8082/，您应该会在菜单中看到指向</a> <code>/nospiders-gallery.php</code> 的链接，但是如果您在 ZAP 上展开站点列表，您将看不到此 URL。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/d3cc974c61c619d9d1c8ad3a105693e9.png" alt="Spider Limitations"></p>
+<p>发生这种情况的原因是，此特定链接并非直接嵌入到页面的 HTML 代码中，而是使用浏览器上的 JavaScript 即时生成的（许多现代应用程序都是这样）。由于 ZAP 中的常规蜘蛛没有 JavaScript 引擎，因此无法找到该链接。</p>
+<p>更多蜘蛛</p>
+<p>为了克服 ZAP 常规蜘蛛的局限性，ZAP 可以利用 Firefox 或 Chrome 等真实浏览器来处理附加到网站的任何脚本并检索生成的 HTML 代码。它不是直接从 HTTP 响应解析链接，而是从浏览器处理网站的结果中解析链接。这可以通过使用 <strong>AJAX 蜘蛛</strong> 来实现。</p>
+<p>利用真正的浏览器非常有利，因为 ZAP 不必处理当前 javascript 引擎的所有复杂问题，而是将此任务委托给浏览器，从而保证结果与用户使用相同浏览器时看到的结果相匹配。</p>
+<p>使用 AJAX 蜘蛛的过程与常规蜘蛛类似。只需转到 <strong>工具 -&gt; AJAX 蜘蛛</strong>，配置 URL 作为起点并检查您认为合适的选项。您唯一的新选项是浏览器选择，这次我们将选择 Firefox。浏览器列表还有无头选项，它将运行所选浏览器而不显示其图形界面，但现在，让我们坚持使用常规 Firefox，因为它可以更轻松地理解 AJAX 蜘蛛的工作原理。您的配置应如下所示：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/279812c28d032528c9e21a242556a55d.png" alt="AJAX Spider"></p>
+<p>让我们点击“开始扫描”来让它工作。您应该会看到 Firefox 弹出并浏览网站一小会儿。当 AJAX 蜘蛛完成后，它将像常规蜘蛛一样填充 ZAP 中的站点。由于 AJAX 蜘蛛利用 Firefox 的强大功能来获得更好的结果，您现在应该会在 ZAP 中的站点列表中看到“/nospiders-gallery.php”。</p>
+<h1 id="Scanning-for-Vulnerabilities"><a href="#Scanning-for-Vulnerabilities" class="headerlink" title="Scanning for Vulnerabilities"></a>Scanning for Vulnerabilities</h1><p>在 ZAP 中配置扫描策略</p>
+<p>运行 DAST 工具时，自定义针对应用程序运行的测试类型至关重要。扫描配置文件越适合 Web 应用程序，扫描器发送与特定场景无关的有效负载所花费的时间就越少。由于 DAST 工具主要在白盒设置中使用，因此用于支持应用程序的底层技术的所有细节都是已知的。以下是我们将在整个房间中使用的应用程序的详细信息：</p>
+<ul>
+<li><strong>操作系统</strong>：Linux</li>
+<li><strong>Web 服务器</strong>：Apache 2.4</li>
+<li><strong>编程语言</strong>：PHP（未使用框架）</li>
+<li><strong>数据库</strong>：无</li>
+</ul>
+<p>例如，我们的应用程序不使用数据库。如果您运行默认扫描配置文件，扫描器将尝试在这种情况下毫无意义的 SQL 注入等操作。这会让您的扫描花费更长时间，对于像这个房间中的应用程序这样的小型应用程序来说，这可能没问题，但在扫描更复杂的应用程序时，时间的增加会变得明显。</p>
+<p>要在 ZAP 中创建或修改扫描策略，请转到 <strong>分析 -&gt; 扫描策略管理器</strong>。在那里，让我们单击添加按钮来创建一个新的：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/1ac88f365d495e2e16d2c08a3b72f1f8.png" alt="Creating a Scan Policy"></p>
+<p>从这里，您可以控制作为策略的一部分要运行的测试类型。对于每个类别，您将有两个参数需要配置：</p>
+<ul>
+<li><strong>阈值</strong>：此参数控制每个类别的详细程度。较低的阈值意味着 ZAP 更有可能根据少量信息报告漏洞。这样，您就会获得更多发现，但 ZAP 可能会报告可能不存在的漏洞（误报）。较高的阈值将指示 ZAP 仅报告具有高度确定性的发现。这样，您就会得到较少的结果，但这些结果更有可能得到证实。使用较高阈值的风险是 ZAP 可能不会报告可能实际存在的某些漏洞（误报）。您还可以将阈值设置为 OFF 以禁用类别。</li>
+<li><strong>强度</strong>：此参数控制每个类别运行的测试次数。较高的强度级别可能会报告更多发现，但代价是显著增加扫描时间。</li>
+</ul>
+<p>由于每个应用程序都不同，因此必须相应地调整这些参数。将其视为一个需要随着时间的推移而改进的反复试验过程。</p>
+<p>在我们的应用程序中，由于没有使用数据库，也没有进行任何 XML 处理，我们可以安全地禁用所有相关测试，如下图所示：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/66f829c81447674a82d4471f20ee5415.png" alt="Injection Policy"></p>
+<p>确保这次禁用跨站点脚本（基于 DOM）测试，因为它们会占用大量资源并且可能会减慢您对这个房间的扫描速度：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/3d6bb6853578feee1cf0244963e4a666.png" alt="Disabling Client Browser Checks"></p>
+<p>运行我们的第一次扫描</p>
+<p>现在我们有了自定义的扫描策略，让我们通过菜单中的 <strong>工具 -&gt; 主动扫描</strong> 来运行漏洞扫描。在这里，我们可以从之前爬取的资源和我们新创建的扫描策略中选择一个起点。让我们使用 <a target="_blank" rel="noopener" href="http://10.10.36.45:8082/">http://10.10.36.45:8082/</a> 作为起点，并选中“递归”框以确保扫描除起点以外的任何页面。让我们暂时忽略其余选项，然后单击 <strong>开始扫描</strong>。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/9c098496f5c0fde49e12cd2cc8dd8665.png" alt="Running a Scan"></p>
+<p>过了一会儿，我们应该会在<strong>警报</strong>部分看到一些结果。您可以获得每个发现的描述，这些描述应该可以概括地表明发现了什么。您还可以检查 ZAP 用于检测漏洞的特定请求和相应的响应。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/1fccaddf7d53f1d4ff346ccb3a0c5dcb.png" alt="Checking Alerts"></p>
+<p>这样您就可以检查结果以确保它们都是正确的。如果您认为其中任何一个是误报，您可以通过右键单击结果并选择标记为误报来将其标记为误报。</p>
+<h1 id="Authenticated-Scans"><a href="#Authenticated-Scans" class="headerlink" title="Authenticated Scans"></a>Authenticated Scans</h1><p>处理登录</p>
+<p>到目前为止，我们已经成功运行了扫描，并在目标应用程序中发现了一些漏洞。但是，我们的应用程序仍有漏洞需要发现。如果我们手动导航到我们的应用程序，我们将看到一个只能使用正确凭据访问的管理控制台。由于 ZAP 不知道这些凭据，因此它将无法检查任何需要身份验证的内容。</p>
+<p>我们必须教 ZAP 如何进行身份验证并确保其会话处于活动状态才能解决此问题。为此，我们将身份验证过程记录到 ZEST 脚本中，以便 ZAP 可以在扫描期间复制该过程。现在，将 ZEST 脚本视为一种保存和重现一系列请求的方法。</p>
+<p><strong>注意：</strong>对于此任务，请确保从工具栏禁用 ZAP HUD。如果启用它，某些功能将无法按预期工作。您可以在工具栏末尾找到执行此操作的按钮：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/ff24a4999f2585c783868e9831c541e6.png" alt="Disabling ZAP HUD"></p>
+<p>记录身份验证</p>
+<p>要记录身份验证，我们将点击工具栏上的<strong>记录新的 ZEST 脚本</strong>按钮：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/e2b64ff46306fcaa73f43ef6d03f8f55.png" alt="Recording ZEST Scripts"></p>
+<p>让我们为脚本设置一个标题并选择类型<strong>身份验证</strong>。我们还想将前缀设置为应用程序的基本 URL，因为这将过滤掉对其他网站的任何请求<strong>：</strong></p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/1010de6ca8abc4959cfb08c3038f7d16.png" alt="Record ZEST Script"></p>
+<p>一旦我们点击<strong>开始录制</strong>按钮，通过 ZAP 代理的每个 HTTP 请求都将被记录为脚本的一部分。让我们这样做，并通过单击工具栏上的<strong>打开浏览器</strong>按钮打开浏览器：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/0388f61af29511f725930e7276b24b65.png" alt="Open Firefox From ZAP"></p>
+<p>在新打开的浏览器中导航到 <a target="_blank" rel="noopener" href="http://10.10.36.45:8082/login.php%E3%80%82%E6%88%91%E4%BB%AC%E5%B0%86%E6%89%8B%E5%8A%A8%E7%99%BB%E5%BD%95%E7%BD%91%E7%AB%99%EF%BC%8C%E4%BB%A5%E4%BE%BF">http://10.10.36.45:8082/login.php。我们将手动登录网站，以便</a> ZAP 可以记录该过程。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/1d0b37c6177d140a7d56e54b6b34824f.png" alt="Website login"></p>
+<p>您可以使用以下凭据从菜单中的登录页面访问 Web 应用程序：</p>
+<table>
+<thead>
+<tr>
+<th><strong>Username</strong></th>
+<th>nospiders</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Password</strong></td>
+<td>nospiders</td>
+</tr>
+</tbody></table>
+<p>一旦我们正确登录到应用程序，我们将再次单击<strong>记录新的 ZEST 脚本</strong>按钮来停止录制。也可以随时关闭 ZAP 的浏览器。一些捕获的请求可能对于身份验证过程不是必需的，可以删除。在这种情况下，这些是唯一重要的请求：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/222ed38cf31852051a655d82837c3269.png" alt="Recorded Authentication Script"></p>
+<p>对于每个请求，ZAP 将检查状态代码和响应长度以查看它们是否匹配。如果匹配，ZAP 将假定登录成功。现在，您可以通过按下 <strong>脚本控制台</strong> 上的 <strong>运行</strong> 按钮来测试录制的脚本：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/a9adece360ec6c218e18c19fedce7404.png" alt="Replaying the Recorded Authentication"></p>
+<p>通过检查对请求的响应，您可以测试是否正确记录了该过程。我们的应用程序应该响应对 <code>login.php</code> 的 POST 请求，并重定向到 <code>cowsay.php</code>：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/3c14c45c4b8d5de40535cf43067b1407.png" alt="Checking the Authentication Result"></p>
+<p>创建上下文</p>
+<p>现在我们的身份验证过程已记录，我们需要告诉 ZAP 在哪里使用它。这可以通过创建 <strong>上下文</strong> 来完成，它只是定义一组 URL 的一种方式。</p>
+<p>由于这是一个简单的应用程序，因此记录的身份验证将应用于整个应用程序。因此，我们必须定义一个包含应用程序中的每个 URL 的上下文，以便我们可以将我们的 ZEST 脚本链接到它。</p>
+<p><strong>注意：</strong>根据您的目标应用程序，记录的身份验证可能仅授予对应用程序部分内容的访问权限。例如，想象一下有老师和学生的教育平台。根据他们的角色，教师和学生可以访问应用程序的不同部分。为了让 ZAP 覆盖应用程序的两侧，我们需要记录两个身份验证 ZEST 脚本（一个用于学生帐户，一个用于教师），并将它们附加到具有相应 URL 的两个不同上下文中。</p>
+<p>要创建新上下文，请转到 <strong>站点</strong> 选项卡，右键单击 <strong>站点</strong> 选项卡上目标应用程序的基本 URL，然后选择 <strong>包含在上下文中 -&gt; 新建上下文</strong>：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/477b3e232d8941566c7bbbc1f2e50eb3.png" alt="Creating a Context"></p>
+<p>这将自动创建一个与 Web 应用程序上的任何页面匹配的正则表达式。您可以在上下文中配置许多选项。现在，单击身份验证，然后使用<strong>基于脚本的身份验证</strong>链接您的 zest 脚本：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/43e47a26527ef59d5a680578be12f05b.png" alt="Authentication Configuration"></p>
+<p>请务必单击脚本名称右侧的 <strong>Load</strong> 按钮。您还可以在此选项卡中配置身份验证验证，以便 ZAP 可以检查其是否具有有效会话或是否需要在扫描期间重新进行身份验证，但我们稍后会以更简单的方式执行此操作。</p>
+<p>要进行经过身份验证的扫描，ZAP 还需要您在 <strong>Users</strong> 部分中定义至少一个用户。在我们的例子中根本不会使用它，因为我们的 ZEST 脚本嵌入了我们将使用的用户和密码。但是，ZAP 需要定义一个用户，否则它将完全跳过身份验证。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/1a8f38f5a68497ac2440bb108ad04fbe.png" alt="Users Configuration"></p>
+<p>完成后，按“确定”，您应该会看到网站的所有资源现在都标有目标图标，这意味着它们现在是已定义上下文的一部分。</p>
+<p>重新抓取应用程序</p>
+<p>现在我们已经使用身份验证脚本设置了上下文，让我们重新运行抓取程序，但设置正确的上下文和我们创建的用户：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/36544ecae3c4accf94f905d77ce6aa71.png" alt="Authenticated Spidering"></p>
+<p>这次，ZAP 应该能够找到任何需要身份验证且之前未检测到的资源。让我们点击<strong>开始扫描</strong>按钮，看看我们得到了什么。如果您想查看在蜘蛛扫描会话期间是否发现了任何新资源，您可以随时检查<strong>添加的节点</strong>选项卡：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/ce5af212852eb375ebb04ba68c92cb85.png" alt="Authenticated Spider Results"></p>
+<p>ZAP 发现了几个额外的 PHP 脚本。其中一个脚本负责注销用户，可能会造成问题。如果 ZAP 尝试访问它，它将注销其会话。</p>
+<p>避免注销</p>
+<p>为了防止 ZAP 自行注销，我们将右键单击“站点”选项卡中的 logout.php 脚本，并从我们的上下文中排除该脚本：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/822f88eccd14b5cae0a1b7628b19720f.png" alt="Excluding Logout From Context"></p>
+<p>现在，ZAP 将避免在抓取或扫描期间与注销脚本交互。请注意，根据应用程序的不同，可能还需要排除其他一些脚本。了解应用程序的工作原理对于充分利用扫描过程至关重要。</p>
+<p>除了防止直接注销之外，我们还可以指定 ZAP 的指标来识别其会话是否仍处于活动状态，并在必要时重复登录脚本。这可以通过选择仅在您登录或注销时出现的响应部分轻松完成。</p>
+<p>例如，我们知道只有在您成功登录后才能访问 <code>cowsay.php</code>，因此它可能具有我们可以用于 ZAP 的良好指标。让我们从“站点”选项卡中选择 <code>cowsay.php</code>，然后选择与注销链接相对应的文本。右键单击所选文本并选择<strong>标记为上下文 -&gt; (您的上下文名称)：身份验证登录指示器：</strong></p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/d69810f47d95da3ea83578209d03e95c.png" alt="Defining a Logged-in Indicator"></p>
+<p>从现在开始，ZAP 将在每个响应中搜索注销链接。如果不存在，它将假定其会话需要更新，并使用我们记录的 ZEST 脚本重新登录应用程序。</p>
+<p>您也可以执行相同操作来选择已注销指示器。由于我们知道登录链接只有在您注销后才可见，因此我们可以按照类似的程序将其用于此目的。让我们从“站点”选项卡中的“aboutme.php”脚本中获取链接的 HTML：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/e9c500784d6e3c0fa6d83dd2ac776a26.png" alt="Defining a Logged-out Indicator"></p>
+<p>我们将右键单击选定的文本并选择<strong>标记为上下文 -&gt;（您的上下文名称）：身份验证已注册此时。</strong></p>
+<p><strong>注意：</strong>ZAP 可能已缓存 <code>aboutme.php</code> 的验证响应。在这种情况下，您需要通过内置浏览器向该 URL 重新发送请求以获取正确的模式。</p>
+<p>现在ZAP有模式来识别它是否已登录正确，我们需要选择<strong>验证策略</strong>来告诉它如何正确使用配置其模式。根据您正在检查的网站，您将需要使用不同的策略并进行调整以适应目标应用程序。在这种情况下，我们将使用<strong>轮询指定的URL</strong>策略并告诉它每60个请求轮询一次<code>/aboutme.php</code>资源以检查登录/注销模式。因此，上面并更改<strong>身份验证</strong>下的以下设置：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/82bf35da966f39f6a8e1d01612c41766.png" alt="Verification Strategy"></p>
+<p>最后一次重新扫描应用程序</p>
+<p>我们终于准备好对应用程序运行新的扫描，知道它现在将覆盖需要身份验证的应用程序区域。让我们转到<strong>工具 -&gt; 主动扫描</strong>，然后选择我们创建的<strong>上下文</strong>和<strong>用户</strong>：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/ab0ec48b4dc540aa44d5fce75bed3ac5.png" alt="Authenticated Scan"></p>
+<p>如果您正确遵循了这些步骤，ZAP 现在将发现一个新的高风险漏洞。请务必记下它以回答任务结束时的问题。</p>
+<h1 id="Checking-APIs-with-ZAP"><a href="#Checking-APIs-with-ZAP" class="headerlink" title="Checking APIs with ZAP"></a>Checking APIs with ZAP</h1><p>如今，Web 应用程序依赖 API 来执行部分或全部任务。到目前为止，我们展示的 DAST 过程涉及能够抓取传统的 Web 应用程序，但 API 并不是可以轻松抓取的东西。API 的端点通常不会公开有关其他端点的信息，这使得发现过程更加困难。此外，即使我们获得了端点的名称，我们仍然需要知道可以传递给它的参数。</p>
+<p>我们不会抓取 API，而是依靠开发团队为我们提供 API 中可用端点的精确规范以及我们可以发送给它们的所有参数。这样，我们就不需要花时间在发现过程上，而可以直接专注于测试其安全性。</p>
+<p>API 描述</p>
+<p>存在几个用于记录 API 的标准，这些标准通常包括开发人员构建正确请求所需的所有信息，并了解每个可用端点的响应内容。这也是我们开始测试安全漏洞所需的全部内容。</p>
+<p>ZAP 可以导入由 <strong>OpenAPI</strong>（以前称为 <strong>Swagger</strong>）、<strong>SOAP</strong> 或 <strong>GraphQL</strong> 定义的 API。根据您正在测试的 API，您可能会从开发团队那里获得其中一种格式。</p>
+<p>为了让您更好地了解这些文件包含的内容，让我们看一下在 <a target="_blank" rel="noopener" href="http://10.10.36.45:8081/swagger.json">http://10.10.36.45:8081/swagger.json</a> 上发布的文件，它遵循 OpenAPI 2.0 标准。在文件中，您将找到一个名为“paths”的部分，其中列出了 API 的每个端点。对于每个端点，都会显示可用参数的完整列表。例如，这里有关于如何与“/asciiart/{art_id}”交互的规范部分：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">"/asciiart/{art_id}": {</span><br><span class="line">  "get": {</span><br><span class="line">    "parameters": [</span><br><span class="line">      {</span><br><span class="line">        "description": "art id",</span><br><span class="line">        "in": "path",</span><br><span class="line">        "name": "art_id",</span><br><span class="line">        "required": true,</span><br><span class="line">        "type": "string"</span><br><span class="line">      }</span><br><span class="line">    ],</span><br><span class="line">    "responses": {</span><br><span class="line">      "default": {</span><br><span class="line">        "description": "",</span><br><span class="line">        "schema": {</span><br><span class="line">          "$ref": "#/definitions/ASCIIArt"</span><br><span class="line">        }</span><br><span class="line">      }</span><br><span class="line">    }</span><br><span class="line">  }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>该文件表明，您可以通过在 URL 中发送字符串形式的 <code>art_id</code> 参数，使用 GET 方法调用 <code>/asciiart/{art_id}</code>。您可以找到其他路径的类似定义，如 <code>/asciiart/generate</code> 或 <code>/asciiart/add</code>。</p>
+<p>API 定义文件预计由机器处理，因此其格式可能难以阅读。为了让我们更容易理解它们，一些 API 还将提供更友好的 UI，我们可以使用它来运行快速测试并探索可用的端点。您可以访问 <a target="_blank" rel="noopener" href="http://10.10.36.45:8081/swagger-ui/">http://10.10.36.45:8081/swagger-ui/</a> 进行检查。</p>
+<p><strong>注意：</strong>生产应用程序可能会隐藏 API 定义，以防止外部攻击者知道如何与它们交互。请记住，如果需要（如果存在），您可以随时向开发团队索取它们。</p>
+<p>在 ZAP 中导入 OpenAPI 定义</p>
+<p>ZAP 支持两种导入 API 定义的方法：您可以提供离线文件或下载它们的 URL。由于我们的 API 在 <a target="_blank" rel="noopener" href="http://10.10.36.45:8081/swagger.json">http://10.10.36.45:8081/swagger.json</a> 中公开了其定义文件，因此我们使用 URL 选项。转到 <strong>导入 -&gt; 从 URL 导入 OpenAPI 定义</strong>。指定相应的 URL 并点击 <strong>导入</strong> 按钮。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/9244ab35510e9ede17da5288dec678f1.png" alt="Importing OpenAPI Definition"></p>
+<p>现在您应该看到“站点”选项卡中加载的所有可用端点和参数。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/c5ed878d9c4a18dabcdc7da7ecfb0c82.png" alt="Sites Tab with API Endpoints"></p>
+<p>ZAP 还将自动对端点进行被动扫描并报告一些警报。导入 API 定义后，ZAP 将把 API 视为任何其他普通网页。</p>
+<p>扫描 API</p>
+<p>将 API 定义加载到 ZAP 后，您可以像对待任何其他网站一样使用可用的工具。要对 API 运行扫描，请右键单击其 URL 并选择 <strong>攻击 -&gt; 主动扫描</strong>。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/88c61f3f3e892283034832da488dfa6a.png" alt="Scanning the API"></p>
+<p>运行扫描后，ZAP 应该发现 API 中的一些漏洞。使用扫描结果来回答任务结束时的问题。</p>
+<h1 id="Integrating-DAST-into-the-development-pipeline"><a href="#Integrating-DAST-into-the-development-pipeline" class="headerlink" title="Integrating DAST into the development pipeline"></a>Integrating DAST into the development pipeline</h1><p>通常，在讨论 DAST 时，人们会提到在开发流程中实施自动漏洞扫描，而不是我们介绍过的手动流程。因此，该术语与您通常所说的应用程序渗透测试不同。</p>
+<p>将 DAST 添加到开发流程中可能听起来很简单，但也有一些注意事项：</p>
+<ul>
+<li>我们必须决定在开发流程的哪个阶段运行扫描。</li>
+<li>我们必须决定什么会触发扫描。我们可以在每次提交代码时或按计划运行扫描。</li>
+<li>我们必须确定每次扫描的强度。对中型应用程序进行完整的漏洞扫描需要大量时间，我们不想拖慢开发团队的速度。</li>
+</ul>
+<p>由于没有适合所有场景的解决方案，因此必须在开发团队的帮助下确定所有这些，以便满足安全要求而不会对其既定流程造成重大干扰。</p>
+<p>在此任务中，我们将研究如何快速将 DAST 直接实施到开发流程中，以提供漏洞的早期可见性。扫描将在每次提交时自动运行，并且仅测试一部分漏洞，以避免在管道中引入长时间延迟。</p>
+<p>审查我们的 CI/CD 管道</p>
+<p>我们当前的机器为您之前扫描的 Web 应用程序和 API 实现了整个开发管道。以下两个组件负责执行此操作：</p>
+<ul>
+<li>Gitea 存储库在 <a target="_blank" rel="noopener" href="http://10.10.36.45:3000/">http://10.10.36.45:3000/</a> 上运行，两个应用程序的代码都存储在其中。</li>
+<li>运行 CI/CD 管道的 Jenkins 实例。您可以通过 <a target="_blank" rel="noopener" href="http://10.10.36.45:8080/">http://10.10.36.45:8080/</a> 访问 Jenkins。</li>
+</ul>
+<p>每次在 Gitea 中进行提交时，Jenkins 都会从存储库中获取代码并将其编译为 Docker 实例。这些 Docker 实例就是您迄今为止扫描的内容。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/2cb91a58ca81963c65e2cc15c7d320d8.png" alt="CI/CD Pipeline in Action"></p>
+<p>要访问 Gitea 或 Jenkins，您可以使用以下凭据：</p>
+<table>
+<thead>
+<tr>
+<th><strong>Username</strong></th>
+<th>thm</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Password</strong></td>
+<td>thm</td>
+</tr>
+</tbody></table>
+<p>使用 zap2docker 运行自动扫描</p>
+<p>为了将 ZAP 集成到我们的管道中，我们将使用 <strong>zap2docker</strong>，这是 ZAP 代理的 docker 化版本，主要目的是实现自动化。zap2docker 的完整文档可在 <a target="_blank" rel="noopener" href="https://www.zaproxy.org/docs/docker/">此处</a> 找到。</p>
+<p><strong>注意：</strong>本节中的命令仅供参考。您无需手动运行它们，因为我们稍后会让 Jenkins 为我们执行此操作。</p>
+<p>要安装 zap2docker，您可以使用以下命令从 Docker Hub 中拉取它：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">docker pull owasp/zap2docker-stable</span><br></pre></td></tr></tbody></table></figure>
+
+<p>您可以使用其中一个打包的扫描脚本从 docker 实例运行 ZAP，这将允许您运行以下扫描配置文件之一：</p>
+<p><strong>基线扫描</strong>：ZAP 将对目标网站进行最长 1 分钟的蜘蛛扫描。不会执行任何主动扫描。如果需要，您可以选择运行 AJAX 蜘蛛扫描。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">docker run -t owasp/zap2docker-stable zap-baseline.py -t https://www.example.com</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>全面扫描</strong>：ZAP 将运行不受时间限制的蜘蛛程序，然后进行主动扫描。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">docker run -t owasp/zap2docker-stable zap-full-scan.py -t https://www.example.com</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>API 扫描</strong>：ZAP 将对 API 执行主动扫描。您需要提供 API 描述文件 (OpenAPI、GraphQL 或 SOAP) 的 URL。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">docker run -t owasp/zap2docker-stable zap-api-scan.py -t https://www.example.com/swagger.json -f openapi</span><br></pre></td></tr></tbody></table></figure>
+
+<p>在任何扫描中，被动扫描的结果将限制为 10 条警报。除了基本命令之外，您还可以添加 <code>-j</code> 开关以对基线和完整扫描执行 AJAX 扫描。</p>
+<p>将 ZAP 集成到管道中</p>
+<p>您有权访问的环境已经有一个可供使用的 zap2docker 实例。我们需要做的就是告诉 Jenkins 使用我们需要的选项运行 zap2docker，就这样。</p>
+<p>在开始之前，让我们先探索一下 Jenkins 中的内容。登录 Jenkins 时，您会发现一个名为 thm 的 <strong>组织</strong>，其中包含用于 Web 应用程序和 API 的两个 <strong>存储库</strong>。对于每个存储库，您都可以看到可用的 <strong>分支</strong>。</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/573d790980b009dc97643c03e6357207.png" alt="Organization, Repositories and Branches"></p>
+<p>两个项目中都会有一个名为“main”的分支。如果单击该分支，您将能够看到它的构建。例如，“simple-webapp”项目已经构建了两次：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/49813ba174a02e86bd73d39ec73d1c82.png" alt="Jenkins Builds"></p>
+<p>对于每个构建，我们可以看到配置了两个阶段：</p>
+<ul>
+<li><strong>构建 Docker 镜像</strong>：此阶段将根据每个项目上的 Dockerfile 构建 Docker 容器。</li>
+<li><strong>部署 Docker 镜像</strong>：此阶段将部署 Docker 容器。</li>
+</ul>
+<p>这两个阶段都在每个存储库中的 <strong>Jenkinsfile</strong> 中定义。如果我们转到 Gitea 并打开 simple-webapp 存储库上的 <a target="_blank" rel="noopener" href="http://10.10.36.45:3000/thm/simple-webapp/src/branch/main/Jenkinsfile">Jenkinsfile</a>，我们可以看到在每个阶段上运行的具体命令：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/cf141221964b4306947780a09c1f5ef3.png" alt="Jenkinsfile Example"></p>
+<p>例如，在第二阶段，您可以看到手动扫描的 Web 应用程序如何部署到端口 8082。</p>
+<p>如果我们想将 zap2docker 纳入我们的管道，我们可以添加第三阶段，在构建容器后为我们运行扫描。为方便起见，该阶段已在 Jenkinsfile 末尾定义，您可以取消注释以使其运行。如果您觉得更方便，请随意使用“git”向存储库发送提交，或者使用 Gitea 的内置编辑器：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/edc92bcb8a4db9cc674e9dc6dcbf887d.png" alt="Editing Jenkinsfile from Gitea"></p>
+<p>请注意，我们仅运行<strong>基线扫描</strong>，因为此扫描将针对对存储库的每次提交运行，因此用可能需要数小时才能完成的完整扫描来延迟管道是不明智的。此扫描仅用于查找容易实现的目标。这意味着您不会看到任何 SQL 注入、跨站点脚本或任何其他需要主动扫描的内容。</p>
+<p>由于 Jenkins 会捕获存储库中的任何更改，因此它会在您编辑文件后立即启动构建过程。您可以切换回 Jenkins 中的 simple-webapp 项目以实时查看进度：</p>
+<p> <img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/66397388a1c813a454cb7622db12e884.png" alt="Build with ZAP Stage"></p>
+<p>您可以看到当前构建现在添加了“使用 OWASP ZAP 扫描”阶段。扫描大约需要 5 分钟。完成后，构建将失败，因为 ZAP 会在应用程序中发现一些漏洞。要检查报告，请打开构建并转到菜单上的 <strong>工作区</strong> 部分：</p>
+<p><img src="https://tryhackme-images.s3.amazonaws.com/user-uploads/5ed5961c6276df568891c3ea/room-content/d91ad74b7900ca2039e91711852c09b2.png" alt="Build Failed with Vulnerabilities"></p>
+<p>您可以在此处浏览项目文件，ZAP 会将其报告放在 zap-reports 文件夹中。下载并检查报告以回答任务结束时的问题。</p>
+<p><strong>注意：</strong>您应该在打开报告之前右键单击并保存它。直接从 Jenkins 打开它会破坏格式。</p>
+<p>重复相同的过程以在 simple-api 存储库上启用 ZAP 并获取相应的报告。使用该报告回答此任务结束时的问题。</p>
+<h1 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h1><p>在本会议室中，我们介绍了 DAST 的工作原理，并介绍了 ZAP 代理，这是一种可以手动和自动执行 DAST 的工具。DAST 只是检查应用程序漏洞的众多方法之一，应与其他类型的测试（如 SAST、SCA、渗透测试等）结合使用，以确保我们的应用程序具有合理的安全级别。与任何其他技术一样，DAST 不是万能的解决方案，但将有助于提高应用程序在整个软件开发生命周期中的整体安全性。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://blog.mikannse.cn">Mikannse</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://blog.mikannse.cn/2025/03/02/THMDAST/">https://blog.mikannse.cn/2025/03/02/THMDAST/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://blog.mikannse.cn" target="_blank">MikannseのSekai</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a><a class="post-meta__tags" href="/tags/DevSecOps/">DevSecOps</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2025/03/03/THMContainerHardening/" title="THMContainerHardening"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">THMContainerHardening</div></div></a></div><div class="next-post pull-right"><a href="/2025/03/02/THMSAST/" title="THMSAST"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">THMSAST</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2025/03/25/Cloud-basedIaCTHM/" title="Cloud-basedIaCTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-03-25</div><div class="title">Cloud-basedIaCTHM</div></div></a></div><div><a href="/2025/03/24/On-PremisesIaCTHM/" title="On-PremisesIaCTHM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-03-24</div><div class="title">On-PremisesIaCTHM</div></div></a></div><div><a href="/2025/03/03/THMContainerHardening/" title="THMContainerHardening"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-03-03</div><div class="title">THMContainerHardening</div></div></a></div><div><a href="/2025/02/28/THMDependencyManagement/" title="THMDependencyManagement"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-02-28</div><div class="title">THMDependencyManagement</div></div></a></div><div><a href="/2025/03/02/THMSAST/" title="THMSAST"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-03-02</div><div class="title">THMSAST</div></div></a></div><div><a href="/2024/07/19/CSS%E9%9A%8F%E6%89%8B%E8%AE%B0/" title="CSS随手记"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-19</div><div class="title">CSS随手记</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Mikannse</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">341</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">75</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mikannse/mikannse.github.io"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">暂时没有公告QAQ</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Introduction"><span class="toc-number">1.</span> <span class="toc-text">Introduction</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Dynamic-Application-Security-Testing-DAST"><span class="toc-number">2.</span> <span class="toc-text">Dynamic Application Security Testing (DAST)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Spiders-and-Crawlers"><span class="toc-number">3.</span> <span class="toc-text">Spiders and Crawlers</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Scanning-for-Vulnerabilities"><span class="toc-number">4.</span> <span class="toc-text">Scanning for Vulnerabilities</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Authenticated-Scans"><span class="toc-number">5.</span> <span class="toc-text">Authenticated Scans</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Checking-APIs-with-ZAP"><span class="toc-number">6.</span> <span class="toc-text">Checking APIs with ZAP</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Integrating-DAST-into-the-development-pipeline"><span class="toc-number">7.</span> <span class="toc-text">Integrating DAST into the development pipeline</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Conclusion"><span class="toc-number">8.</span> <span class="toc-text">Conclusion</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/06/13/kagglePandas%E9%87%8D%E5%91%BD%E5%90%8D%E5%92%8C%E5%90%88%E5%B9%B6/" title="kagglePandas重命名和合并">kagglePandas重命名和合并</a><time datetime="2025-06-13T02:28:23.000Z" title="发表于 2025-06-13 10:28:23">2025-06-13</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/06/13/kagglePandas%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E5%92%8C%E7%BC%BA%E5%A4%B1%E5%80%BC/" title="kagglePandas数据类型和缺失值">kagglePandas数据类型和缺失值</a><time datetime="2025-06-13T02:23:10.000Z" title="发表于 2025-06-13 10:23:10">2025-06-13</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/06/13/kagglePandas%E5%88%86%E7%BB%84%E5%92%8C%E6%8E%92%E5%BA%8F/" title="kagglePandas分组和排序">kagglePandas分组和排序</a><time datetime="2025-06-13T02:20:42.000Z" title="发表于 2025-06-13 10:20:42">2025-06-13</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/06/13/kagglePandas%E6%91%98%E8%A6%81%E5%87%BD%E6%95%B0%E5%92%8C%E6%98%A0%E5%B0%84/" title="kagglePandas摘要函数和映射">kagglePandas摘要函数和映射</a><time datetime="2025-06-13T02:19:15.000Z" title="发表于 2025-06-13 10:19:15">2025-06-13</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/06/13/kagglePandas%E7%B4%A2%E5%BC%95%E3%80%81%E9%80%89%E6%8B%A9%E5%92%8C%E5%88%86%E9%85%8D/" title="kagglePandas索引、选择和分配">kagglePandas索引、选择和分配</a><time datetime="2025-06-13T02:17:56.000Z" title="发表于 2025-06-13 10:17:56">2025-06-13</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2025 By Mikannse</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function loadDisqus () {
+  const disqus_config = function () {
+    this.page.url = 'https://blog.mikannse.cn/2025/03/02/THMDAST/'
+    this.page.identifier = '/2025/03/02/THMDAST/'
+    this.page.title = 'THMDAST'
+  }
+
+  const disqusReset = () => {
+    DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addModeChange('disqus', disqusReset)
+
+  if (window.DISQUS) disqusReset()
+  else {
+    (function() { 
+      var d = document, s = d.createElement('script');
+      s.src = 'https://.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  }
+}
+
+if ('Valine' === 'Disqus' || !true) {
+  if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+  else loadDisqus()
+} else {
+  function loadOtherComment () {
+    loadDisqus()
+  }
+}
+</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
