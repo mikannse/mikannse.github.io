@@ -1,0 +1,969 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>kagglePandas重命名和合并 | MikannseのSekai</title><meta name="author" content="Mikannse"><meta name="copyright" content="Mikannse"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="Introduction我们经常会收到一些带有列名、索引名或其他命名约定的数据，而这些约定我们并不满意。在这种情况下，您将学习如何使用 Pandas 函数将有问题的条目更改为更合适的名称。 您还将学习如何合并来自多个 DataFrame 和&#x2F;或 Series 的数据。 要开始本主题的练习，请点击此处。 Renaming我们首先要介绍的函数是 rename()，它允许你更改索引名称和&#x2F;或列名称。例如">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kagglePandas重命名和合并">
+<meta property="og:url" content="https://blog.mikannse.cn/2025/06/13/kagglePandas%E9%87%8D%E5%91%BD%E5%90%8D%E5%92%8C%E5%90%88%E5%B9%B6/index.html">
+<meta property="og:site_name" content="MikannseのSekai">
+<meta property="og:description" content="Introduction我们经常会收到一些带有列名、索引名或其他命名约定的数据，而这些约定我们并不满意。在这种情况下，您将学习如何使用 Pandas 函数将有问题的条目更改为更合适的名称。 您还将学习如何合并来自多个 DataFrame 和&#x2F;或 Series 的数据。 要开始本主题的练习，请点击此处。 Renaming我们首先要介绍的函数是 rename()，它允许你更改索引名称和&#x2F;或列名称。例如">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg">
+<meta property="article:published_time" content="2025-06-13T02:28:23.000Z">
+<meta property="article:modified_time" content="2025-06-13T02:28:54.631Z">
+<meta property="article:author" content="Mikannse">
+<meta property="article:tag" content="笔记">
+<meta property="article:tag" content="机器学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg"><link rel="shortcut icon" href="/img/icon.jpg"><link rel="canonical" href="https://blog.mikannse.cn/2025/06/13/kagglePandas%E9%87%8D%E5%91%BD%E5%90%8D%E5%92%8C%E5%90%88%E5%B9%B6/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Mikannse","link":"链接: ","source":"来源: MikannseのSekai","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'kagglePandas重命名和合并',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: undefined,
+  isToc: true,
+  postUpdate: '2025-06-13 10:28:54'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">340</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">75</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="MikannseのSekai"><span class="site-name">MikannseのSekai</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">kagglePandas重命名和合并</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-06-13T02:28:23.000Z" title="发表于 2025-06-13 10:28:23">2025-06-13</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-06-13T02:28:54.631Z" title="更新于 2025-06-13 10:28:54">2025-06-13</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/AI/">AI</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>8分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="kagglePandas重命名和合并"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>我们经常会收到一些带有列名、索引名或其他命名约定的数据，而这些约定我们并不满意。在这种情况下，您将学习如何使用 Pandas 函数将有问题的条目更改为更合适的名称。</p>
+<p>您还将学习如何合并来自多个 DataFrame 和/或 Series 的数据。</p>
+<p><strong>要开始本主题的练习，请点击<a target="_blank" rel="noopener" href="https://www.kaggle.com/kernels/fork/638064">此处</a>。</strong></p>
+<h1 id="Renaming"><a href="#Renaming" class="headerlink" title="Renaming"></a>Renaming</h1><p>我们首先要介绍的函数是 <code>rename()</code>，它允许你更改索引名称和/或列名称。例如，要将数据集中的 <code>points</code> 列更改为 <code>score</code>，我们可以这样做：</p>
+<p>In [1]:</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">import pandas as pd</span><br><span class="line">pd.set_option('display.max_rows', 5)</span><br><span class="line">reviews = pd.read_csv("../input/wine-reviews/winemag-data-130k-v2.csv", index_col=0)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>In [2]:</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">reviews.rename(columns={'points': 'score'})</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Out[2]:</p>
+<table>
+<thead>
+<tr>
+<th align="left"></th>
+<th align="left">country</th>
+<th align="left">description</th>
+<th align="left">designation</th>
+<th align="left">score</th>
+<th align="left">price</th>
+<th align="left">province</th>
+<th align="left">region_1</th>
+<th align="left">region_2</th>
+<th align="left">taster_name</th>
+<th align="left">taster_twitter_handle</th>
+<th align="left">title</th>
+<th align="left">variety</th>
+<th align="left">winery</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">0</td>
+<td align="left">Italy</td>
+<td align="left">Aromas include tropical fruit, broom, brimston…</td>
+<td align="left">Vulkà Bianco</td>
+<td align="left">87</td>
+<td align="left">NaN</td>
+<td align="left">Sicily &amp; Sardinia</td>
+<td align="left">Etna</td>
+<td align="left">NaN</td>
+<td align="left">Kerin O’Keefe</td>
+<td align="left">@kerinokeefe</td>
+<td align="left">Nicosia 2013 Vulkà Bianco (Etna)</td>
+<td align="left">White Blend</td>
+<td align="left">Nicosia</td>
+</tr>
+<tr>
+<td align="left">1</td>
+<td align="left">Portugal</td>
+<td align="left">This is ripe and fruity, a wine that is smooth…</td>
+<td align="left">Avidagos</td>
+<td align="left">87</td>
+<td align="left">15.0</td>
+<td align="left">Douro</td>
+<td align="left">NaN</td>
+<td align="left">NaN</td>
+<td align="left">Roger Voss</td>
+<td align="left">@vossroger</td>
+<td align="left">Quinta dos Avidagos 2011 Avidagos Red (Douro)</td>
+<td align="left">Portuguese Red</td>
+<td align="left">Quinta dos Avidagos</td>
+</tr>
+<tr>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+</tr>
+<tr>
+<td align="left">129969</td>
+<td align="left">France</td>
+<td align="left">A dry style of Pinot Gris, this is crisp with …</td>
+<td align="left">NaN</td>
+<td align="left">90</td>
+<td align="left">32.0</td>
+<td align="left">Alsace</td>
+<td align="left">Alsace</td>
+<td align="left">NaN</td>
+<td align="left">Roger Voss</td>
+<td align="left">@vossroger</td>
+<td align="left">Domaine Marcel Deiss 2012 Pinot Gris (Alsace)</td>
+<td align="left">Pinot Gris</td>
+<td align="left">Domaine Marcel Deiss</td>
+</tr>
+<tr>
+<td align="left">129970</td>
+<td align="left">France</td>
+<td align="left">Big, rich and off-dry, this is powered by inte…</td>
+<td align="left">Lieu-dit Harth Cuvée Caroline</td>
+<td align="left">90</td>
+<td align="left">21.0</td>
+<td align="left">Alsace</td>
+<td align="left">Alsace</td>
+<td align="left">NaN</td>
+<td align="left">Roger Voss</td>
+<td align="left">@vossroger</td>
+<td align="left">Domaine Schoffit 2012 Lieu-dit Harth Cuvée Car…</td>
+<td align="left">Gewürztraminer</td>
+<td align="left">Domaine Schoffit</td>
+</tr>
+</tbody></table>
+<p>129971 行 × 13 列</p>
+<p><code>rename()</code> 函数允许您通过分别指定 <code>index</code> 或 <code>column</code> 关键字参数来重命名索引或列的值。它支持多种输入格式，但通常使用 Python 字典最为方便。以下是使用它重命名索引中某些元素的示例。</p>
+<p>In [3]:</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">reviews.rename(index={0: 'firstEntry', 1: 'secondEntry'})</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Out[3]:</p>
+<table>
+<thead>
+<tr>
+<th align="left"></th>
+<th align="left">country</th>
+<th align="left">description</th>
+<th align="left">designation</th>
+<th align="left">points</th>
+<th align="left">price</th>
+<th align="left">province</th>
+<th align="left">region_1</th>
+<th align="left">region_2</th>
+<th align="left">taster_name</th>
+<th align="left">taster_twitter_handle</th>
+<th align="left">title</th>
+<th align="left">variety</th>
+<th align="left">winery</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">firstEntry</td>
+<td align="left">Italy</td>
+<td align="left">Aromas include tropical fruit, broom, brimston…</td>
+<td align="left">Vulkà Bianco</td>
+<td align="left">87</td>
+<td align="left">NaN</td>
+<td align="left">Sicily &amp; Sardinia</td>
+<td align="left">Etna</td>
+<td align="left">NaN</td>
+<td align="left">Kerin O’Keefe</td>
+<td align="left">@kerinokeefe</td>
+<td align="left">Nicosia 2013 Vulkà Bianco (Etna)</td>
+<td align="left">White Blend</td>
+<td align="left">Nicosia</td>
+</tr>
+<tr>
+<td align="left">secondEntry</td>
+<td align="left">Portugal</td>
+<td align="left">This is ripe and fruity, a wine that is smooth…</td>
+<td align="left">Avidagos</td>
+<td align="left">87</td>
+<td align="left">15.0</td>
+<td align="left">Douro</td>
+<td align="left">NaN</td>
+<td align="left">NaN</td>
+<td align="left">Roger Voss</td>
+<td align="left">@vossroger</td>
+<td align="left">Quinta dos Avidagos 2011 Avidagos Red (Douro)</td>
+<td align="left">Portuguese Red</td>
+<td align="left">Quinta dos Avidagos</td>
+</tr>
+<tr>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+</tr>
+<tr>
+<td align="left">129969</td>
+<td align="left">France</td>
+<td align="left">A dry style of Pinot Gris, this is crisp with …</td>
+<td align="left">NaN</td>
+<td align="left">90</td>
+<td align="left">32.0</td>
+<td align="left">Alsace</td>
+<td align="left">Alsace</td>
+<td align="left">NaN</td>
+<td align="left">Roger Voss</td>
+<td align="left">@vossroger</td>
+<td align="left">Domaine Marcel Deiss 2012 Pinot Gris (Alsace)</td>
+<td align="left">Pinot Gris</td>
+<td align="left">Domaine Marcel Deiss</td>
+</tr>
+<tr>
+<td align="left">129970</td>
+<td align="left">France</td>
+<td align="left">Big, rich and off-dry, this is powered by inte…</td>
+<td align="left">Lieu-dit Harth Cuvée Caroline</td>
+<td align="left">90</td>
+<td align="left">21.0</td>
+<td align="left">Alsace</td>
+<td align="left">Alsace</td>
+<td align="left">NaN</td>
+<td align="left">Roger Voss</td>
+<td align="left">@vossroger</td>
+<td align="left">Domaine Schoffit 2012 Lieu-dit Harth Cuvée Car…</td>
+<td align="left">Gewürztraminer</td>
+<td align="left">Domaine Schoffit</td>
+</tr>
+</tbody></table>
+<p>129971 行 × 13 列</p>
+<p>您可能经常重命名列，但很少重命名索引值。因此，使用 <code>set_index()</code> 通常更方便。</p>
+<p>行索引和列索引都可以拥有各自的 <code>name</code> 属性。可以使用配套的 <code>rename_axis()</code> 方法来更改这些名称。例如：</p>
+<p>In [4]:</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">reviews.rename_axis("wines", axis='rows').rename_axis("fields", axis='columns')</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Out[4]:</p>
+<table>
+<thead>
+<tr>
+<th align="left">fields</th>
+<th align="left">country</th>
+<th align="left">description</th>
+<th align="left">designation</th>
+<th align="left">points</th>
+<th align="left">price</th>
+<th align="left">province</th>
+<th align="left">region_1</th>
+<th align="left">region_2</th>
+<th align="left">taster_name</th>
+<th align="left">taster_twitter_handle</th>
+<th align="left">title</th>
+<th align="left">variety</th>
+<th align="left">winery</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">wines</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">0</td>
+<td align="left">Italy</td>
+<td align="left">Aromas include tropical fruit, broom, brimston…</td>
+<td align="left">Vulkà Bianco</td>
+<td align="left">87</td>
+<td align="left">NaN</td>
+<td align="left">Sicily &amp; Sardinia</td>
+<td align="left">Etna</td>
+<td align="left">NaN</td>
+<td align="left">Kerin O’Keefe</td>
+<td align="left">@kerinokeefe</td>
+<td align="left">Nicosia 2013 Vulkà Bianco (Etna)</td>
+<td align="left">White Blend</td>
+<td align="left">Nicosia</td>
+</tr>
+<tr>
+<td align="left">1</td>
+<td align="left">Portugal</td>
+<td align="left">This is ripe and fruity, a wine that is smooth…</td>
+<td align="left">Avidagos</td>
+<td align="left">87</td>
+<td align="left">15.0</td>
+<td align="left">Douro</td>
+<td align="left">NaN</td>
+<td align="left">NaN</td>
+<td align="left">Roger Voss</td>
+<td align="left">@vossroger</td>
+<td align="left">Quinta dos Avidagos 2011 Avidagos Red (Douro)</td>
+<td align="left">Portuguese Red</td>
+<td align="left">Quinta dos Avidagos</td>
+</tr>
+<tr>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+</tr>
+<tr>
+<td align="left">129969</td>
+<td align="left">France</td>
+<td align="left">A dry style of Pinot Gris, this is crisp with …</td>
+<td align="left">NaN</td>
+<td align="left">90</td>
+<td align="left">32.0</td>
+<td align="left">Alsace</td>
+<td align="left">Alsace</td>
+<td align="left">NaN</td>
+<td align="left">Roger Voss</td>
+<td align="left">@vossroger</td>
+<td align="left">Domaine Marcel Deiss 2012 Pinot Gris (Alsace)</td>
+<td align="left">Pinot Gris</td>
+<td align="left">Domaine Marcel Deiss</td>
+</tr>
+<tr>
+<td align="left">129970</td>
+<td align="left">France</td>
+<td align="left">Big, rich and off-dry, this is powered by inte…</td>
+<td align="left">Lieu-dit Harth Cuvée Caroline</td>
+<td align="left">90</td>
+<td align="left">21.0</td>
+<td align="left">Alsace</td>
+<td align="left">Alsace</td>
+<td align="left">NaN</td>
+<td align="left">Roger Voss</td>
+<td align="left">@vossroger</td>
+<td align="left">Domaine Schoffit 2012 Lieu-dit Harth Cuvée Car…</td>
+<td align="left">Gewürztraminer</td>
+<td align="left">Domaine Schoffit</td>
+</tr>
+</tbody></table>
+<p>129971 行 × 13 列</p>
+<h1 id="Combining"><a href="#Combining" class="headerlink" title="Combining"></a>Combining</h1><p>在对数据集执行操作时，我们有时需要以非同寻常的方式组合不同的 DataFrame 和/或 Series。Pandas 提供了三种核心方法来实现这一点。按复杂度依次递增，这三种方法分别是 <code>concat()</code>、<code>join()</code> 和 <code>merge()</code>。<code>merge()</code> 的大部分功能也可以用 <code>join()</code> 更简单地实现，因此我们将省略它，并重点介绍前两个函数。</p>
+<p>最简单的组合方法是 <code>concat()</code>。给定一个元素列表，此函数会沿某个轴将这些元素合并在一起。</p>
+<p>当数据位于不同的 DataFrame 或 Series 对象中，但具有相同的字段（列）时，这种方法非常有用。例如：<a target="_blank" rel="noopener" href="https://www.kaggle.com/datasnaek/youtube-new">YouTube 视频数据集</a>，它根据原产国（例如，本例中为加拿大和英国）对数据进行拆分。如果我们想同时研究多个国家/地区，可以使用 <code>concat()</code> 将它们合并在一起：</p>
+<p>In [5]:</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">canadian_youtube = pd.read_csv("../input/youtube-new/CAvideos.csv")</span><br><span class="line">british_youtube = pd.read_csv("../input/youtube-new/GBvideos.csv")</span><br><span class="line"></span><br><span class="line">pd.concat([canadian_youtube, british_youtube])</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Out[5]:</p>
+<table>
+<thead>
+<tr>
+<th align="left"></th>
+<th align="left">video_id</th>
+<th align="left">trending_date</th>
+<th align="left">title</th>
+<th align="left">channel_title</th>
+<th align="left">category_id</th>
+<th align="left">publish_time</th>
+<th align="left">tags</th>
+<th align="left">views</th>
+<th align="left">likes</th>
+<th align="left">dislikes</th>
+<th align="left">comment_count</th>
+<th align="left">thumbnail_link</th>
+<th align="left">comments_disabled</th>
+<th align="left">ratings_disabled</th>
+<th align="left">video_error_or_removed</th>
+<th align="left">description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">0</td>
+<td align="left">n1WpP7iowLc</td>
+<td align="left">17.14.11</td>
+<td align="left">Eminem - Walk On Water (Audio) ft. Beyoncé</td>
+<td align="left">EminemVEVO</td>
+<td align="left">10</td>
+<td align="left">2017-11-10T17:00:03.000Z</td>
+<td align="left">Eminem|”Walk”|”On”|”Water”|”Aftermath/Shady/In…</td>
+<td align="left">17158579</td>
+<td align="left">787425</td>
+<td align="left">43420</td>
+<td align="left">125882</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://i.ytimg.com/vi/n1WpP7iowLc/default.jpg">https://i.ytimg.com/vi/n1WpP7iowLc/default.jpg</a></td>
+<td align="left">False</td>
+<td align="left">False</td>
+<td align="left">False</td>
+<td align="left">Eminem’s new track Walk on Water ft. Beyoncé i…</td>
+</tr>
+<tr>
+<td align="left">1</td>
+<td align="left">0dBIkQ4Mz1M</td>
+<td align="left">17.14.11</td>
+<td align="left">PLUSH - Bad Unboxing Fan Mail</td>
+<td align="left">iDubbbzTV</td>
+<td align="left">23</td>
+<td align="left">2017-11-13T17:00:00.000Z</td>
+<td align="left">plush|”bad unboxing”|”unboxing”|”fan mail”|”id…</td>
+<td align="left">1014651</td>
+<td align="left">127794</td>
+<td align="left">1688</td>
+<td align="left">13030</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://i.ytimg.com/vi/0dBIkQ4Mz1M/default.jpg">https://i.ytimg.com/vi/0dBIkQ4Mz1M/default.jpg</a></td>
+<td align="left">False</td>
+<td align="left">False</td>
+<td align="left">False</td>
+<td align="left">STill got a lot of packages. Probably will las…</td>
+</tr>
+<tr>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+</tr>
+<tr>
+<td align="left">38914</td>
+<td align="left">-DRsfNObKIQ</td>
+<td align="left">18.14.06</td>
+<td align="left">Eleni Foureira - Fuego - Cyprus - LIVE - First…</td>
+<td align="left">Eurovision Song Contest</td>
+<td align="left">24</td>
+<td align="left">2018-05-08T20:32:32.000Z</td>
+<td align="left">Eurovision Song Contest|”2018”|”Lisbon”|”Cypru…</td>
+<td align="left">14317515</td>
+<td align="left">151870</td>
+<td align="left">45875</td>
+<td align="left">26766</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://i.ytimg.com/vi/-DRsfNObKIQ/default.jpg">https://i.ytimg.com/vi/-DRsfNObKIQ/default.jpg</a></td>
+<td align="left">False</td>
+<td align="left">False</td>
+<td align="left">False</td>
+<td align="left">Eleni Foureira represented Cyprus at the first…</td>
+</tr>
+<tr>
+<td align="left">38915</td>
+<td align="left">4YFo4bdMO8Q</td>
+<td align="left">18.14.06</td>
+<td align="left">KYLE - Ikuyo feat. 2 Chainz &amp; Sophia Black [A…</td>
+<td align="left">SuperDuperKyle</td>
+<td align="left">10</td>
+<td align="left">2018-05-11T04:06:35.000Z</td>
+<td align="left">Kyle|”SuperDuperKyle”|”Ikuyo”|”2 Chainz”|”Soph…</td>
+<td align="left">607552</td>
+<td align="left">18271</td>
+<td align="left">274</td>
+<td align="left">1423</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://i.ytimg.com/vi/4YFo4bdMO8Q/default.jpg">https://i.ytimg.com/vi/4YFo4bdMO8Q/default.jpg</a></td>
+<td align="left">False</td>
+<td align="left">False</td>
+<td align="left">False</td>
+<td align="left">Debut album ‘Light of Mine’ out now: <a target="_blank" rel="noopener" href="http://ky/">http://ky</a>…</td>
+</tr>
+</tbody></table>
+<p>79797 行 × 16 列</p>
+<p>就复杂度而言，中间的组合器是 <code>join()</code>。<code>join()</code> 可以组合具有共同索引的不同 DataFrame 对象。例如，要提取恰好在同一天在加拿大和英国都流行的视频，我们可以执行以下操作：</p>
+<p>In [6]:</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">left = canadian_youtube.set_index(['title', 'trending_date'])</span><br><span class="line">right = british_youtube.set_index(['title', 'trending_date'])</span><br><span class="line"></span><br><span class="line">left.join(right, lsuffix='_CAN', rsuffix='_UK')</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Out[6]:</p>
+<table>
+<thead>
+<tr>
+<th align="left"></th>
+<th align="left"></th>
+<th align="left">video_id_CAN</th>
+<th align="left">channel_title_CAN</th>
+<th align="left">category_id_CAN</th>
+<th align="left">publish_time_CAN</th>
+<th align="left">tags_CAN</th>
+<th align="left">views_CAN</th>
+<th align="left">likes_CAN</th>
+<th align="left">dislikes_CAN</th>
+<th align="left">comment_count_CAN</th>
+<th align="left">thumbnail_link_CAN</th>
+<th align="left">…</th>
+<th align="left">tags_UK</th>
+<th align="left">views_UK</th>
+<th align="left">likes_UK</th>
+<th align="left">dislikes_UK</th>
+<th align="left">comment_count_UK</th>
+<th align="left">thumbnail_link_UK</th>
+<th align="left">comments_disabled_UK</th>
+<th align="left">ratings_disabled_UK</th>
+<th align="left">video_error_or_removed_UK</th>
+<th align="left">description_UK</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">title</td>
+<td align="left">trending_date</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">!! THIS VIDEO IS NOTHING BUT PAIN !! | Getting Over It - Part 7</td>
+<td align="left">18.04.01</td>
+<td align="left">PNn8sECd7io</td>
+<td align="left">Markiplier</td>
+<td align="left">20</td>
+<td align="left">2018-01-03T19:33:53.000Z</td>
+<td align="left">getting over it|”markiplier”|”funny moments”|”…</td>
+<td align="left">835930</td>
+<td align="left">47058</td>
+<td align="left">1023</td>
+<td align="left">8250</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://i.ytimg.com/vi/PNn8sECd7io/default.jpg">https://i.ytimg.com/vi/PNn8sECd7io/default.jpg</a></td>
+<td align="left">…</td>
+<td align="left">NaN</td>
+<td align="left">NaN</td>
+<td align="left">NaN</td>
+<td align="left">NaN</td>
+<td align="left">NaN</td>
+<td align="left">NaN</td>
+<td align="left">NaN</td>
+<td align="left">NaN</td>
+<td align="left">NaN</td>
+<td align="left">NaN</td>
+</tr>
+<tr>
+<td align="left">#1 Fortnite World Rank - 2,323 Solo Wins!</td>
+<td align="left">18.09.03</td>
+<td align="left">DvPW66IFhMI</td>
+<td align="left">AlexRamiGaming</td>
+<td align="left">20</td>
+<td align="left">2018-03-09T07:15:52.000Z</td>
+<td align="left">PS4 Battle Royale|”PS4 Pro Battle Royale”|”Bat…</td>
+<td align="left">212838</td>
+<td align="left">5199</td>
+<td align="left">542</td>
+<td align="left">11</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://i.ytimg.com/vi/DvPW66IFhMI/default.jpg">https://i.ytimg.com/vi/DvPW66IFhMI/default.jpg</a></td>
+<td align="left">…</td>
+<td align="left">NaN</td>
+<td align="left">NaN</td>
+<td align="left">NaN</td>
+<td align="left">NaN</td>
+<td align="left">NaN</td>
+<td align="left">NaN</td>
+<td align="left">NaN</td>
+<td align="left">NaN</td>
+<td align="left">NaN</td>
+<td align="left">NaN</td>
+</tr>
+<tr>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+</tr>
+<tr>
+<td align="left">🚨 BREAKING NEWS 🔴 Raja Live all Slot Channels Welcome 🎰</td>
+<td align="left">18.07.05</td>
+<td align="left">Wt9Gkpmbt44</td>
+<td align="left">TheBigJackpot</td>
+<td align="left">24</td>
+<td align="left">2018-05-07T06:58:59.000Z</td>
+<td align="left">Slot Machine|”win”|”Gambling”|”Big Win”|”raja”…</td>
+<td align="left">28973</td>
+<td align="left">2167</td>
+<td align="left">175</td>
+<td align="left">10</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://i.ytimg.com/vi/Wt9Gkpmbt44/default.jpg">https://i.ytimg.com/vi/Wt9Gkpmbt44/default.jpg</a></td>
+<td align="left">…</td>
+<td align="left">NaN</td>
+<td align="left">NaN</td>
+<td align="left">NaN</td>
+<td align="left">NaN</td>
+<td align="left">NaN</td>
+<td align="left">NaN</td>
+<td align="left">NaN</td>
+<td align="left">NaN</td>
+<td align="left">NaN</td>
+<td align="left">NaN</td>
+</tr>
+<tr>
+<td align="left">🚨Active Shooter at YouTube Headquarters - LIVE BREAKING NEWS COVERAGE</td>
+<td align="left">18.04.04</td>
+<td align="left">Az72jrKbANA</td>
+<td align="left">Right Side Broadcasting Network</td>
+<td align="left">25</td>
+<td align="left">2018-04-03T23:12:37.000Z</td>
+<td align="left">YouTube shooter|”YouTube active shooter”|”acti…</td>
+<td align="left">103513</td>
+<td align="left">1722</td>
+<td align="left">181</td>
+<td align="left">76</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://i.ytimg.com/vi/Az72jrKbANA/default.jpg">https://i.ytimg.com/vi/Az72jrKbANA/default.jpg</a></td>
+<td align="left">…</td>
+<td align="left">NaN</td>
+<td align="left">NaN</td>
+<td align="left">NaN</td>
+<td align="left">NaN</td>
+<td align="left">NaN</td>
+<td align="left">NaN</td>
+<td align="left">NaN</td>
+<td align="left">NaN</td>
+<td align="left">NaN</td>
+<td align="left">NaN</td>
+</tr>
+</tbody></table>
+<p>40900 行 × 28 列</p>
+<p>此处 <code>lsuffix</code> 和 <code>rsuffix</code> 参数是必需的，因为该数据在英国和加拿大数据集中的列名相同。如果不是这样（比如说，我们事先重命名了它们），我们就不需要它们了。</p>
+<h1 id="Your-turn"><a href="#Your-turn" class="headerlink" title="Your turn"></a>Your turn</h1><p>如果你还没有开始练习，你可以**<a target="_blank" rel="noopener" href="https://www.kaggle.com/kernels/fork/638064">从这里开始</a>**。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://blog.mikannse.cn">Mikannse</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://blog.mikannse.cn/2025/06/13/kagglePandas%E9%87%8D%E5%91%BD%E5%90%8D%E5%92%8C%E5%90%88%E5%B9%B6/">https://blog.mikannse.cn/2025/06/13/kagglePandas重命名和合并/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://blog.mikannse.cn" target="_blank">MikannseのSekai</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a><a class="post-meta__tags" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2025/06/13/kagglePandas%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E5%92%8C%E7%BC%BA%E5%A4%B1%E5%80%BC/" title="kagglePandas数据类型和缺失值"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">kagglePandas数据类型和缺失值</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2025/06/09/kaggleIntrotoMachineLearning%E5%9F%BA%E7%A1%80%E6%95%B0%E6%8D%AE%E6%8E%A2%E7%B4%A2/" title="kaggleIntrotoMachineLearning基础数据探索"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-06-09</div><div class="title">kaggleIntrotoMachineLearning基础数据探索</div></div></a></div><div><a href="/2025/06/09/kaggleIntrotoMachineLearning%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C/" title="kaggleIntrotoMachineLearning模型如何工作"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-06-09</div><div class="title">kaggleIntrotoMachineLearning模型如何工作</div></div></a></div><div><a href="/2025/06/09/kaggleIntrotoMachineLearning%E6%A8%A1%E5%9E%8B%E9%AA%8C%E8%AF%81/" title="kaggleIntrotoMachineLearning模型验证"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-06-09</div><div class="title">kaggleIntrotoMachineLearning模型验证</div></div></a></div><div><a href="/2025/06/09/kaggleIntrotoMachineLearning%E6%AC%A0%E6%8B%9F%E5%90%88%E5%92%8C%E8%BF%87%E6%8B%9F%E5%90%88/" title="kaggleIntrotoMachineLearning欠拟合和过拟合"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-06-09</div><div class="title">kaggleIntrotoMachineLearning欠拟合和过拟合</div></div></a></div><div><a href="/2025/06/09/kaggleIntrotoMachineLearning%E7%AC%AC%E4%B8%80%E4%B8%AA%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%A8%A1%E5%9E%8B/" title="kaggleIntrotoMachineLearning第一个机器学习模型"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-06-09</div><div class="title">kaggleIntrotoMachineLearning第一个机器学习模型</div></div></a></div><div><a href="/2025/06/09/kaggleIntrotoMachineLearning%E9%9A%8F%E6%9C%BA%E6%A3%AE%E6%9E%97/" title="kaggleIntrotoMachineLearning随机森林"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-06-09</div><div class="title">kaggleIntrotoMachineLearning随机森林</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Mikannse</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">340</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">75</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mikannse/mikannse.github.io"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">暂时没有公告QAQ</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Introduction"><span class="toc-number">1.</span> <span class="toc-text">Introduction</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Renaming"><span class="toc-number">2.</span> <span class="toc-text">Renaming</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Combining"><span class="toc-number">3.</span> <span class="toc-text">Combining</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Your-turn"><span class="toc-number">4.</span> <span class="toc-text">Your turn</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/06/13/kagglePandas%E9%87%8D%E5%91%BD%E5%90%8D%E5%92%8C%E5%90%88%E5%B9%B6/" title="kagglePandas重命名和合并">kagglePandas重命名和合并</a><time datetime="2025-06-13T02:28:23.000Z" title="发表于 2025-06-13 10:28:23">2025-06-13</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/06/13/kagglePandas%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E5%92%8C%E7%BC%BA%E5%A4%B1%E5%80%BC/" title="kagglePandas数据类型和缺失值">kagglePandas数据类型和缺失值</a><time datetime="2025-06-13T02:23:10.000Z" title="发表于 2025-06-13 10:23:10">2025-06-13</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/06/13/kagglePandas%E5%88%86%E7%BB%84%E5%92%8C%E6%8E%92%E5%BA%8F/" title="kagglePandas分组和排序">kagglePandas分组和排序</a><time datetime="2025-06-13T02:20:42.000Z" title="发表于 2025-06-13 10:20:42">2025-06-13</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/06/13/kagglePandas%E6%91%98%E8%A6%81%E5%87%BD%E6%95%B0%E5%92%8C%E6%98%A0%E5%B0%84/" title="kagglePandas摘要函数和映射">kagglePandas摘要函数和映射</a><time datetime="2025-06-13T02:19:15.000Z" title="发表于 2025-06-13 10:19:15">2025-06-13</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/06/13/kagglePandas%E7%B4%A2%E5%BC%95%E3%80%81%E9%80%89%E6%8B%A9%E5%92%8C%E5%88%86%E9%85%8D/" title="kagglePandas索引、选择和分配">kagglePandas索引、选择和分配</a><time datetime="2025-06-13T02:17:56.000Z" title="发表于 2025-06-13 10:17:56">2025-06-13</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2025 By Mikannse</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function loadDisqus () {
+  const disqus_config = function () {
+    this.page.url = 'https://blog.mikannse.cn/2025/06/13/kagglePandas%E9%87%8D%E5%91%BD%E5%90%8D%E5%92%8C%E5%90%88%E5%B9%B6/'
+    this.page.identifier = '/2025/06/13/kagglePandas%E9%87%8D%E5%91%BD%E5%90%8D%E5%92%8C%E5%90%88%E5%B9%B6/'
+    this.page.title = 'kagglePandas重命名和合并'
+  }
+
+  const disqusReset = () => {
+    DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addModeChange('disqus', disqusReset)
+
+  if (window.DISQUS) disqusReset()
+  else {
+    (function() { 
+      var d = document, s = d.createElement('script');
+      s.src = 'https://.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  }
+}
+
+if ('Valine' === 'Disqus' || !true) {
+  if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+  else loadDisqus()
+} else {
+  function loadOtherComment () {
+    loadDisqus()
+  }
+}
+</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
