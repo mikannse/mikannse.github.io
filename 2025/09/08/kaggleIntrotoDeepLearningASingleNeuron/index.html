@@ -1,0 +1,353 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>kaggleIntrotoDeepLearningASingleNeuron | MikannseのSekai</title><meta name="author" content="Mikannse"><meta name="copyright" content="Mikannse"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="Welcome to Deep Learning!欢迎来到 Kaggle 的“深度学习入门”课程！您将学习构建自己的深度神经网络所需的一切知识。您将学习如何使用 Keras 和 Tensorflow：  创建全连接神经网络架构 将神经网络应用于两个经典的机器学习问题：回归和分类 使用随机梯度下降训练神经网络，以及 使用dropout、批量归一化和其他技术提升性能  本教程将通过完整的示例向您介绍这">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kaggleIntrotoDeepLearningASingleNeuron">
+<meta property="og:url" content="https://blog.mikannse.cn/2025/09/08/kaggleIntrotoDeepLearningASingleNeuron/index.html">
+<meta property="og:site_name" content="MikannseのSekai">
+<meta property="og:description" content="Welcome to Deep Learning!欢迎来到 Kaggle 的“深度学习入门”课程！您将学习构建自己的深度神经网络所需的一切知识。您将学习如何使用 Keras 和 Tensorflow：  创建全连接神经网络架构 将神经网络应用于两个经典的机器学习问题：回归和分类 使用随机梯度下降训练神经网络，以及 使用dropout、批量归一化和其他技术提升性能  本教程将通过完整的示例向您介绍这">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg">
+<meta property="article:published_time" content="2025-09-08T03:30:37.000Z">
+<meta property="article:modified_time" content="2025-09-08T03:33:00.903Z">
+<meta property="article:author" content="Mikannse">
+<meta property="article:tag" content="笔记">
+<meta property="article:tag" content="深度学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg"><link rel="shortcut icon" href="/img/icon.jpg"><link rel="canonical" href="https://blog.mikannse.cn/2025/09/08/kaggleIntrotoDeepLearningASingleNeuron/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Mikannse","link":"链接: ","source":"来源: MikannseのSekai","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'kaggleIntrotoDeepLearningASingleNeuron',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: undefined,
+  isToc: true,
+  postUpdate: '2025-09-08 11:33:00'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">361</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">78</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="MikannseのSekai"><span class="site-name">MikannseのSekai</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">kaggleIntrotoDeepLearningASingleNeuron</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-09-08T03:30:37.000Z" title="发表于 2025-09-08 11:30:37">2025-09-08</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-09-08T03:33:00.903Z" title="更新于 2025-09-08 11:33:00">2025-09-08</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/AI/">AI</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>4分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="kaggleIntrotoDeepLearningASingleNeuron"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Welcome-to-Deep-Learning"><a href="#Welcome-to-Deep-Learning" class="headerlink" title="Welcome to Deep Learning!"></a>Welcome to Deep Learning!</h1><p>欢迎来到 Kaggle 的“深度学习入门”课程！您将学习构建自己的深度神经网络所需的一切知识。您将学习如何使用 Keras 和 Tensorflow：</p>
+<ul>
+<li>创建<strong>全连接</strong>神经网络架构</li>
+<li>将神经网络应用于两个经典的机器学习问题：<strong>回归</strong>和<strong>分类</strong></li>
+<li>使用<strong>随机梯度下降</strong>训练神经网络，以及</li>
+<li>使用<strong>dropout</strong>、<strong>批量归一化</strong>和其他技术提升性能</li>
+</ul>
+<p>本教程将通过完整的示例向您介绍这些主题，然后在练习中，您将更深入地探索这些主题，并将其应用于实际数据集。</p>
+<p>让我们开始吧！</p>
+<h1 id="What-is-Deep-Learning"><a href="#What-is-Deep-Learning" class="headerlink" title="What is Deep Learning?"></a>What is Deep Learning?</h1><p>近年来，人工智能领域一些最令人瞩目的进步都集中在<em>深度学习</em>领域。在自然语言翻译、图像识别和游戏玩法等任务中，深度学习模型的表现已经接近甚至超越了人类水平。</p>
+<p>那么，什么是深度学习呢？<strong>深度学习</strong>是一种以深度计算为特征的机器学习方法。正是这种计算深度使得深度学习模型能够解析现实世界中最具挑战性数据集中各种复杂且层次化的模式。</p>
+<p>凭借其强大的功能和可扩展性，<strong>神经网络</strong>已成为深度学习的标志性模型。神经网络由神经元组成，每个神经元单独执行简单的计算。神经网络的强大之处在于这些神经元能够形成的连接的复杂性。</p>
+<h1 id="The-Linear-Unit"><a href="#The-Linear-Unit" class="headerlink" title="The Linear Unit"></a>The Linear Unit</h1><p>那么，让我们从神经网络的基本组成部分——单个神经元——开始。一个具有一个输入的<strong>神经元</strong>（或<strong>单元</strong>）的示意图如下：</p>
+<p><img src="https://storage.googleapis.com/kaggle-media/learn/images/mfOlDR6.png" alt="Diagram of a linear unit.">线性单位：y=wx+b</p>
+<p>输入为“x”。它与神经元的连接具有<strong>权重</strong>，即“w”。每当一个值流经连接时，就将该值乘以连接的权重。对于输入“x”，到达神经元的值是“w * x”。神经网络通过修改其权重来“学习”。</p>
+<p>“b”是一种特殊的权重，我们称之为<strong>偏差</strong>。偏差不与任何输入数据关联；相反，我们在图中放置一个“1”，这样到达神经元的值就是“b”（因为“1 * b = b”）。偏差使神经元能够独立于输入修改输出。</p>
+<p>“y”是神经元最终输出的值。为了得到输出，神经元会将其通过连接接收到的所有值相加。该神经元的激活函数为“y = w * x + b”，或者用公式 y=wx+b 表示。</p>
+<blockquote>
+<p><strong>y=wx+b 这个公式看起来熟悉吗？</strong><br>这是一条直线方程！它是一个斜率截距方程，其中 w 是斜率，b 是 y 轴截距。</p>
+</blockquote>
+<h1 id="Example-The-Linear-Unit-as-a-Model"><a href="#Example-The-Linear-Unit-as-a-Model" class="headerlink" title="Example - The Linear Unit as a Model"></a>Example - The Linear Unit as a Model</h1><p>虽然单个神经元通常只作为大型网络的一部分发挥作用，但以单神经元模型作为基线通常很有用。单神经元模型是<em>线性</em>模型。</p>
+<p>让我们思考一下这在像 <a target="_blank" rel="noopener" href="https://www.kaggle.com/crawford/80-cereals">80 Cereals</a> 这样的数据集上如何运作。以“糖”（每份含糖量）作为输入，“卡路里”（每份卡路里）作为输出来训练模型，我们可能会发现偏差为“b=90”，权重为“w=2.5”。我们可以像这样估算每份含糖 5 克的谷物的卡路里含量：</p>
+<p><img src="https://storage.googleapis.com/kaggle-media/learn/images/yjsfFvY.png" alt="Computing with the linear unit."></p>
+<p>使用线性单位计算。</p>
+<p>根据我们的公式，卡路里=2.5×5+90=102.5，正如我们预期的那样。</p>
+<h1 id="Multiple-Inputs"><a href="#Multiple-Inputs" class="headerlink" title="Multiple Inputs"></a>Multiple Inputs</h1><p><em>80 种谷物</em> 数据集包含的功能远不止“糖”。如果我们想扩展模型，使其包含纤维或蛋白质含量等信息，该怎么办？这很简单。我们只需为神经元添加更多输入连接，每个新增功能对应一个连接。为了计算输出，我们将每个输入与其连接权重相乘，然后将它们全部相加。</p>
+<p><img src="https://storage.googleapis.com/kaggle-media/learn/images/vyXSnlZ.png" alt="Three input connections: x0, x1, and x2, along with the bias.">具有三个输入的线性单元。</p>
+<p>该神经元的公式为 y=w0x0+w1x1+w2x2+b。具有两个输入的线性单元将拟合一个平面，而具有更多输入的单元将拟合一个超平面。</p>
+<h1 id="Linear-Units-in-Keras"><a href="#Linear-Units-in-Keras" class="headerlink" title="Linear Units in Keras"></a>Linear Units in Keras</h1><p>在 Keras 中创建模型最简单的方法是使用 <code>keras.Sequential</code>，它会创建一个由多个 <em>层</em> 组成的神经网络。我们可以使用 <em>dense</em> 层（我们将在下一课中详细了解）来创建类似上述模型。</p>
+<p>我们可以定义一个线性模型，接受三个输入特征（“糖”、“纤维”和“蛋白质”），并产生一个输出（“卡路里”），如下所示：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">from tensorflow import keras</span><br><span class="line">from tensorflow.keras import layers</span><br><span class="line"></span><br><span class="line"># Create a network with 1 linear unit</span><br><span class="line">model = keras.Sequential([</span><br><span class="line">    layers.Dense(units=1, input_shape=[3])</span><br><span class="line">])</span><br></pre></td></tr></tbody></table></figure>
+
+<p>第一个参数 <code>units</code> 定义了所需的输出数量。在本例中，我们只预测 <code>'calories''，因此我们将使用 </code>units=1`。</p>
+<p>第二个参数 <code>input_shape</code> 指定了 Keras 输入的维度。设置 <code>input_shape=[3]</code> 可确保模型接受三个特征作为输入（“糖”、“纤维”和“蛋白质”）。</p>
+<p>现在，该模型已准备好用于训练数据拟合！</p>
+<blockquote>
+<p><strong>为什么 <code>input_shape</code> 是一个 Python 列表？</strong><br>本课程中使用的数据将是表格数据，类似于 Pandas 数据框。数据集中的每个特征都会有一个输入。这些特征按列排列，因此 <code>input_shape</code> 始终为 [列数]。Keras 在这里使用列表是为了允许使用更复杂的数据集。例如，图像数据可能需要三个维度：<code>[高度, 宽度, 通道数]</code>。</p>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://blog.mikannse.cn">Mikannse</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://blog.mikannse.cn/2025/09/08/kaggleIntrotoDeepLearningASingleNeuron/">https://blog.mikannse.cn/2025/09/08/kaggleIntrotoDeepLearningASingleNeuron/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://blog.mikannse.cn" target="_blank">MikannseのSekai</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a><a class="post-meta__tags" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2025/09/08/kaggleIntrotoDeepLearningDeepNeuralNetworks/" title="kaggleIntrotoDeepLearningDeepNeuralNetworks"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">kaggleIntrotoDeepLearningDeepNeuralNetworks</div></div></a></div><div class="next-post pull-right"><a href="/2025/09/07/kaggleIntermediateMachineLearningDataLeakage/" title="kaggleIntermediateMachineLearningDataLeakage"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">kaggleIntermediateMachineLearningDataLeakage</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2025/09/08/kaggleIntrotoDeepLearningBinaryClassification/" title="kaggleIntrotoDeepLearningBinaryClassification"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-08</div><div class="title">kaggleIntrotoDeepLearningBinaryClassification</div></div></a></div><div><a href="/2025/09/08/kaggleIntrotoDeepLearningDropoutandBatchNormalization/" title="kaggleIntrotoDeepLearningDropoutandBatchNormalization"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-08</div><div class="title">kaggleIntrotoDeepLearningDropoutandBatchNormalization</div></div></a></div><div><a href="/2025/09/08/kaggleIntrotoDeepLearningDeepNeuralNetworks/" title="kaggleIntrotoDeepLearningDeepNeuralNetworks"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-08</div><div class="title">kaggleIntrotoDeepLearningDeepNeuralNetworks</div></div></a></div><div><a href="/2025/09/08/kaggleIntrotoDeepLearningOverfittingandUnderfitting/" title="kaggleIntrotoDeepLearningOverfittingandUnderfitting"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-08</div><div class="title">kaggleIntrotoDeepLearningOverfittingandUnderfitting</div></div></a></div><div><a href="/2025/09/08/kaggleIntrotoDeepLearningStochasticGradientDescent/" title="kaggleIntrotoDeepLearningStochasticGradientDescent"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-08</div><div class="title">kaggleIntrotoDeepLearningStochasticGradientDescent</div></div></a></div><div><a href="/2024/04/06/CVE-2019-11043PHP-FPM%E8%BF%9C%E7%A8%8BRCE%E5%A4%8D%E7%8E%B0/" title="CVE-2019-11043PHP-FPM远程RCE复现"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-06</div><div class="title">CVE-2019-11043PHP-FPM远程RCE复现</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2023/06/22/PMAjL6lORKa5CGy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Mikannse</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">361</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">78</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mikannse/mikannse.github.io"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">暂时没有公告QAQ</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Welcome-to-Deep-Learning"><span class="toc-number">1.</span> <span class="toc-text">Welcome to Deep Learning!</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#What-is-Deep-Learning"><span class="toc-number">2.</span> <span class="toc-text">What is Deep Learning?</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#The-Linear-Unit"><span class="toc-number">3.</span> <span class="toc-text">The Linear Unit</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Example-The-Linear-Unit-as-a-Model"><span class="toc-number">4.</span> <span class="toc-text">Example - The Linear Unit as a Model</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Multiple-Inputs"><span class="toc-number">5.</span> <span class="toc-text">Multiple Inputs</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Linear-Units-in-Keras"><span class="toc-number">6.</span> <span class="toc-text">Linear Units in Keras</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/08/25-8%E6%9D%82%E8%B0%88/" title="25-8杂谈">25-8杂谈</a><time datetime="2025-09-08T04:10:39.000Z" title="发表于 2025-09-08 12:10:39">2025-09-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/08/kaggleIntrotoDeepLearningBinaryClassification/" title="kaggleIntrotoDeepLearningBinaryClassification">kaggleIntrotoDeepLearningBinaryClassification</a><time datetime="2025-09-08T04:09:47.000Z" title="发表于 2025-09-08 12:09:47">2025-09-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/08/kaggleIntrotoDeepLearningDropoutandBatchNormalization/" title="kaggleIntrotoDeepLearningDropoutandBatchNormalization">kaggleIntrotoDeepLearningDropoutandBatchNormalization</a><time datetime="2025-09-08T04:05:50.000Z" title="发表于 2025-09-08 12:05:50">2025-09-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/08/kaggleIntrotoDeepLearningOverfittingandUnderfitting/" title="kaggleIntrotoDeepLearningOverfittingandUnderfitting">kaggleIntrotoDeepLearningOverfittingandUnderfitting</a><time datetime="2025-09-08T03:37:41.000Z" title="发表于 2025-09-08 11:37:41">2025-09-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/08/kaggleIntrotoDeepLearningStochasticGradientDescent/" title="kaggleIntrotoDeepLearningStochasticGradientDescent">kaggleIntrotoDeepLearningStochasticGradientDescent</a><time datetime="2025-09-08T03:34:56.000Z" title="发表于 2025-09-08 11:34:56">2025-09-08</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/yjr-1100/Photobag/githubioimg/background_4k.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2025 By Mikannse</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function loadDisqus () {
+  const disqus_config = function () {
+    this.page.url = 'https://blog.mikannse.cn/2025/09/08/kaggleIntrotoDeepLearningASingleNeuron/'
+    this.page.identifier = '/2025/09/08/kaggleIntrotoDeepLearningASingleNeuron/'
+    this.page.title = 'kaggleIntrotoDeepLearningASingleNeuron'
+  }
+
+  const disqusReset = () => {
+    DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addModeChange('disqus', disqusReset)
+
+  if (window.DISQUS) disqusReset()
+  else {
+    (function() { 
+      var d = document, s = d.createElement('script');
+      s.src = 'https://.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  }
+}
+
+if ('Valine' === 'Disqus' || !true) {
+  if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+  else loadDisqus()
+} else {
+  function loadOtherComment () {
+    loadDisqus()
+  }
+}
+</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
